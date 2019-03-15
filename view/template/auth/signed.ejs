@@ -1,0 +1,17 @@
+<% layout(_view.get('_layout/auth')) -%>
+
+<% block('title', _t('Signed in')) -%>
+
+<form action="auth/sign-out" method="post" class="form">
+    <div class="text-center">
+        <p>
+            <%- _t('Signed in as') %>
+            <b><%- model.get('name') %></b>
+        </p>
+    </div>
+    <div class="mt20">
+        <button type="submit" class="btn btn-danger btn-block">
+            <%- _t('Sign out') %>
+        </button>
+    </div>
+</form>

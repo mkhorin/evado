@@ -1,0 +1,27 @@
+<!-- _part/attr/download -->
+
+<% let params = {
+    'fileUrl': `file/download?id=${model.getId()}`,
+    'previewSizeKey': typeof previewSizeKey === 'undefined' ? 1 : previewSizeKey
+}; %>
+<%- include('_params', {params}) %>
+
+<div class="form-attr form-group">
+    <label class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <% if (model.isImage()) { %>
+        <p class="form-control-static">
+            <a href="<%- params.fileUrl %>" target="_blank">
+                <img src="file/preview?id=<%- model.getId() %>&s=<%- params.previewSizeKey %>"
+                     alt="<%- params.value %>">
+            </a>
+        </p>
+        <% } else { %>
+        <p class="form-control-static">
+            <a href="<%- params.fileUrl %>" target="_blank">
+                <%- params.value %>
+            </a>
+        </p>
+        <% } %>
+    </div>
+</div>

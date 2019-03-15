@@ -1,0 +1,43 @@
+<!-- _part/attr/valueMap -->
+
+<% let params = {}; %>
+<%- include('_params', {params}) %>
+
+<div class="value-map form-attr form-group<%- params.required %>" data-type="valueMap">
+    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>">
+        <%- params.label %>
+    </label>
+    <div class="<%- params.valueCss %>">
+        <input id="<%- params.id %>" name="<%- params.name %>" type="hidden" class="form-value"
+               value="<%= params.value ? JSON.stringify(params.value) : '' %>">
+
+        <div class="error-block"></div>
+
+        <div class="value-map-items">
+            <div class="value-map-item">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <input type="text" class="form-control text-right param value-param" placeholder="Value">
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="text" class="form-control param text-param" placeholder="Text">
+                    </div>
+                </div>
+                <div class="value-map-item-controls btn-group">
+                    <button type="button" class="btn btn-success btn-light control-add" title="Add">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                    <button type="button" class="btn btn-warning btn-light control-down" title="Down">
+                        <span class="glyphicon glyphicon-menu-down"></span>
+                    </button>
+                    <button type="button" class="btn btn-warning btn-light control-up" title="Up">
+                        <span class="glyphicon glyphicon-menu-up"></span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-light control-remove" title="Remove">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

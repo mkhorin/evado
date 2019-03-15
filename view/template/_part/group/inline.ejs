@@ -1,0 +1,19 @@
+<!-- _part/group/inline -->
+<%
+let params = {
+    'labelCss': typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss,
+    'valueCss': typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss
+};
+%>
+<div class="inline-group-container">
+    <div class="row">
+        <div class="<%- params.labelCss %>"></div>
+        <div class="<%- params.valueCss %>">
+            <%- include(_view.get('_part/group/columns'), {
+                'columnCss': typeof columnCss === 'undefined' ? '' : columnCss,
+                'labelCss': '',
+                'valueCss': ''
+            }) %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,161 @@
+<!-- _part/list/filter -->
+<%
+const params = {
+    ...filter
+};
+for (let column of params.columns) {
+    if (column.label === undefined) {
+        column.label = model.getAttrLabel(column.name);
+    }
+}
+%>
+
+<div class="list-filter" data-params="<%= JSON.stringify(params) %>">
+
+    <div class="filter-content"></div>
+
+    <div class="filter-group hidden"></div>
+
+    <div class="filter-condition hidden">
+        <div class="condition-logical">
+            <span class="condition-logical-and text-success">AND</span>
+            <span class="condition-logical-or text-warning">OR</span>
+        </div>
+        <div class="remove-condition text-danger" title="Remove condition">
+            <span class="glyphicon glyphicon-remove"></span>
+        </div>
+        <div class="condition-content row">
+            <div class="col-sm-5 condition-attr-container">
+                <select class="condition-attr form-control"></select>
+            </div>
+        </div>
+        <div class="condition-group"></div>
+    </div>
+
+    <div class="filter-types hidden">
+        <div data-id="boolean">
+            <div class="col-sm-2">
+                <select class="condition-operation form-control">
+                    <option>=</option>
+                </select>
+            </div>
+            <div class="col-sm-5">
+                <input class="condition-value" type="checkbox">
+            </div>
+        </div>
+
+        <div data-id="date">
+            <div class="col-sm-2">
+                <select class="condition-operation form-control">
+                    <option>=</option>
+                    <option>!=</option>
+                    <option><</option>
+                    <option>></option>
+                    <option>>=</option>
+                    <option><=</option>
+                </select>
+            </div>
+            <div class="col-sm-5">
+                <input class="condition-value" type="hidden">
+                <div class="input-group">
+                    <input class="form-control datepicker" type="text" placeholder="Select date...">
+                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div data-id="id">
+            <div class="col-sm-2">
+                <select class="condition-operation form-control">
+                    <option value="equal" class="l10n">equal</option>
+                    <option value="not equal" class="l10n">not equal</option>
+                </select>
+            </div>
+            <div class="col-sm-5">
+                <input class="condition-value form-control default-focus" type="text"
+                       placeholder="Input ID...">
+            </div>
+        </div>
+
+        <div data-id="number">
+            <div class="col-sm-2">
+                <select class="condition-operation form-control">
+                    <option>=</option>
+                    <option>!=</option>
+                    <option><</option>
+                    <option>></option>
+                    <option>>=</option>
+                    <option><=</option>
+                </select>
+            </div>
+            <div class="col-sm-5">
+                <input class="condition-value form-control default-focus" type="number" placeholder="Input number...">
+            </div>
+        </div>
+
+        <div data-id="selector">
+            <div class="col-sm-2">
+                <select class="condition-operation form-control">
+                    <option value="equal" class="l10n">equal</option>
+                    <option value="not equal" class="l10n">not equal</option>
+                    <option value="nested" class="l10n">nested</option>
+                </select>
+            </div>
+            <div class="col-sm-5">
+                <div class="simple-condition-content">
+                    <select class="condition-value form-control"></select>
+                </div>
+                <div class="nested-condition-content">
+                    <button class="add-condition btn btn-success btn-light" type="button" title="Add condition">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div data-id="string">
+            <div class="col-sm-2">
+                <select class="condition-operation form-control">
+                    <option value="contains" class="l10n">contains</option>
+                    <option value="equal" class="l10n">equal</option>
+                    <option value="begins" class="l10n">begins</option>
+                    <option value="ends" class="l10n">ends</option>
+                </select>
+            </div>
+            <div class="col-sm-5">
+                <input class="condition-value form-control default-focus" type="text"
+                       placeholder="Input value...">
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-controls row">
+        <div class="col-sm-3">
+            <button class="add-condition btn btn-success btn-light" type="button" title="Add condition">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            <button class="apply-filter btn btn-primary mr10 l10n" type="button">Apply</button>
+            <button class="reset-filter btn btn-default btn-light" type="button" title="Reset filter">
+                <span class="fa fa-times text-danger"></span>
+            </button>
+        </div>
+        <div class="visible-xs-block mb20"></div>
+        <!--
+        <div class="col-sm-9">
+            <div class="filter-save-controls">
+                <div class="filter-save-controls-container">
+                    <label class="control-label align-bottom mr5">Filter name</label>
+                    <input type="text" class="filter-name form-control">
+                    <button class="save-filter btn btn-default" type="button" title="Save filter">Save</button>
+                    <button class="remove-filter btn btn-danger btn-light ml5" title="Delete filter" type="button">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </div>
+                <div class="filter-error text-danger"></div>
+            </div>
+        </div>
+        -->
+    </div>
+
+    <div class="overlay"><i class="fa fa-spinner fa-spin"></i></div>
+</div>

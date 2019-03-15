@@ -1,0 +1,20 @@
+<!-- _part/attr/static -->
+
+<% let params = {}; %>
+<%- include('_params', {params}) %>
+<%
+if (params.value && typeof url !== 'undefined') {
+    params.displayValue = `<a href="${_url(url)}" class="modal-link">${params.displayValue}</a>`;
+}
+%>
+<div class="form-attr form-group">
+    <label class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <input id="<%- params.id %>" name="<%- params.name %>" type="hidden"
+               value="<%= params.value %>" class="form-value">
+        <div class="form-control-static">
+            <%- params.displayValue %>
+        </div>
+        <div class="error-block"></div>
+    </div>
+</div>

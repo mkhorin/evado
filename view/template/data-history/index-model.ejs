@@ -1,0 +1,24 @@
+<% layout(_view.get('_layout/modal/list')) -%>
+
+<% block('title', 'Model history') -%>
+
+<%- include(_view.get('_part/list/grid'), {
+    data: {
+        columns: [{
+            name: 'attr',
+            searchable: true,
+            sortable: true
+        },{
+            name: 'value'
+        },{
+            name: 'user'
+        },{
+            name: 'createdAt'
+        }],
+        order: {[model.PK]: -1},
+        list: _url(['list-model', params]),
+        create: null,
+        update: null,
+        remove: null
+    }
+}) %>

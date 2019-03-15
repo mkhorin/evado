@@ -1,0 +1,80 @@
+<!-- _layout/modal/model-form -->
+<%
+let data = {
+    'url': _controller.getOriginalUrl(),
+    'id': model.getId() || '',
+    'key': model.PK,
+    'className': model.NAME,
+    'timestamp': _controller.timestamp,
+    'view': _url('view'),
+    'remove': null // _url(['remove', model])
+};
+if (typeof params !== 'undefined') {
+    Object.assign(data, params);
+}
+%>
+<div class="box box-info ant-modal-scroll-container"
+     data-title="<%- blocks.title %>"
+     data-tab-title="<%- blocks.tabTitle %>">
+
+    <div class="box-header with-border scroll-header">
+        <div class="model-controls">
+            <button data-id="saveClose" class="btn btn-primary" type="button" title="Save and close">
+                <span class="glyphicon glyphicon-saved"></span>
+            </button>
+            <button data-id="save" class="btn btn-info" type="button" title="Save">
+                <span class="glyphicon glyphicon-save"></span>
+            </button>
+            <button data-id="cancel" class="btn btn-warning mr20" type="button" title="Cancel" autofocus>
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+
+            <% if (!model.isNew()) { %>
+                <% if (data.view) { %>
+                <button data-id="view" class="btn btn-default" type="button" title="View">
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                </button>
+                <% } %>
+                <% if (data.clone) { %>
+                <button data-id="clone" class="btn btn-success btn-light" type="button" title="Clone">
+                    <span class="fa fa-copy"></span>
+                </button>
+                <% } %>
+                <% if (data.remove) { %>
+                <button data-id="remove" class="btn btn-default" type="button" title="Delete">
+                    <span class="glyphicon glyphicon-trash text-danger"></span>
+                </button>
+                <% } %>
+            <% } %>
+
+            <button data-id="reload" class="btn btn-default mr15" type="button" title="Reload form">
+                <span class="fa fa-sync-alt"></span>
+            </button>
+
+            <%- include(_view.get('_part/tool/model-history')) %>
+
+            <%- include(_view.get('_part/universal-render'), {
+                data: _data.get('customControls')
+            }) %>
+
+            <div class="pull-right">
+                <button data-id="remove" class="btn btn-danger btn-light" type="button" title="Delete">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="box-body scroll-body">
+        <form class="ant-model form-horizontal form" data-params="<%= JSON.stringify(data) %>"
+              autocomplete="off" enctype="multipart/form-data">
+            <%- body -%>
+        </form>
+    </div>
+    <div class="model-loader overlay">
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+</div>
+
+<script>
+    Ant.modal.onLoad(Ant.Model.init.bind(Ant.Model));
+</script>

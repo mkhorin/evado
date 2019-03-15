@@ -1,0 +1,22 @@
+<%
+data = {
+    'valueKey': '_id',
+    'textKey': 'name',
+    'selectTitle': '',
+    'btnTitle': '',
+    ...data
+};
+%>
+<div class="list-control-group ml10" data-sample-class="<%- data.sampleClass %>">
+    <select class="form-control" title="<%- data.selectTitle %>">
+        <option value="">-</option>
+        <% for (let item of data.items) { %>
+        <option value="<%- item[data.valueKey] %>">
+            <%- item[data.textKey] %>
+        </option>
+        <% } %>
+    </select>
+    <button class="clone-by-select btn btn-success btn-light" type="button" title="<%- data.btnTitle %>">
+        <span class="fa fa-copy"></span>
+    </button>
+</div>

@@ -1,0 +1,211 @@
+<!-- _part/attr/relation -->
+
+<% let params = {}; %>
+<%- include('_params', {params}) %>
+<%
+let d = {
+    'showTop': false,
+    'key': model.PK,
+    'relName': attr,
+    'order': {[model.PK]: - 1},
+    'pageSize': 10,
+    'remove': true,
+    'unlink': true,
+    ...data
+};
+d.attr = attr;
+d.relName = d.relName || attr;
+
+let rel = model.getRelation(d.relName);
+let relController = rel.model.createController();
+let urlParams = {
+    'pid': model.getId(),
+    'rel': d.relName
+};
+d.multiple = rel.isMultiple();
+
+if (d.showBottom === undefined) {
+    d.showBottom = d.multiple && d.pageSize > 0;
+}
+if (d.list !== null) {
+    if (d.list === undefined) {
+        d.list = ['list-rel', urlParams];
+    } else if (typeof d.list === 'string') {
+        d.list = [d.list, urlParams];
+    }
+    d.list = _url(d.list);
+}
+if (d.view !== null) {
+    d.view = relController.createUrl(d.view === undefined ? 'view' : d.view);
+}
+if (d.create !== null) {
+    if (d.create === undefined) {
+        d.create = ['create', urlParams];
+    } else if (! (d.create instanceof Array) && typeof d.create === 'object') {
+        d.create = ['create', Object.assign(urlParams, d.create)];
+    }
+    d.create = relController.createUrl(d.create);
+}
+if (d.clone === true) {
+    d.clone = relController.createUrl('clone');
+} else if (d.clone instanceof Array) {
+    d.clone = relController.createUrl(d.clone);
+}
+if (d.update !== null) {
+    if (d.update === undefined) {
+        d.update = ['update', urlParams];
+    } else if (!(d.update instanceof Array) && typeof d.update === 'object') {
+        d.update = ['update', Object.assign(urlParams, d.update)];
+    }
+    d.update = relController.createUrl(d.update);
+}
+if (d.link !== null) {
+    if (d.link === undefined) {
+        d.link = ['select', urlParams];
+    } else if (typeof d.link === 'string') {
+        d.link = [d.link, urlParams];
+    }
+    d.link = relController.createUrl(d.link);
+}
+if (d.modalOrder) {
+    if (d.modalOrder === true) {
+        d.modalOrder = model.module.app.getRelativePath(model.CLASS_FILE);
+        d.modalOrder = `default/order-rel?id=${model.getId()}&cls=${d.modalOrder}&rel=${attr}`;
+    } else if (d.modalOrder instanceof Array) {
+        d.modalOrder = _url(d.modalOrder);
+    }
+}
+for (let col of d.columns) {
+    if (col.label === undefined) {
+        col.label = rel.model.getAttrLabel(col.name);
+    }
+}
+if (!d.customIdAttr) {
+    d.columns.unshift({
+        'name': model.PK,
+        'type': 'id',
+        'hidden': true,
+        'searchable': true,
+        'sortable': true
+    });
+}
+if (d.filter && !d.filter.url) {
+    d.filter.url = relController.createUrl('filter');
+}
+%>
+<div class="form-attr form-group<%- params.required %> <%- params.css %>" data-type="relation">
+    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <div class="box box-grid box-grid-field">
+            <input id="<%- params.id %>" name="<%- params.name %>" type="hidden" class="form-value" value="">
+            <div class="box-header">
+                <div class="list-controls">
+                    <% if (d.link) { %>
+                    <button data-id="link" class="btn btn-default" type="button" title="Link">
+                        <span class="fa fa-link"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.unlink) { %>
+                    <button data-id="unlink" class="btn btn-default mr10" type="button" title="Unlink">
+                        <span class="fa fa-unlink text-danger"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.view) { %>
+                    <button data-id="view" class="btn btn-default" type="button" title="View">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.create) { %>
+                    <button data-id="create" class="btn btn-success btn-light" type="button" title="Create">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.update) { %>
+                    <button data-id="update" class="btn btn-warning btn-light" type="button" title="Update">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.remove) { %>
+                    <button data-id="remove" class="btn btn-default" type="button" title="Remove">
+                        <span class="glyphicon glyphicon-trash text-danger"></span>
+                    </button>
+                    <% } %>
+                    <button data-id="reload" class="btn btn-default ml10" type="button" title="Reload">
+                        <span class="fa fa-sync-alt"></span>
+                    </button>
+                    <% if (d.modalOrder) { %>
+                    <button data-id="order" class="btn btn-white" type="button" title="Order">
+                        <span class="glyphicon glyphicon-sort"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.clone) { %>
+                    <button data-id="clone" class="btn btn-success btn-light" type="button" title="Clone">
+                        <span class="fa fa-copy"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.createMultiple) { %>
+                    <button data-id="createMultiple"  class="btn btn-success btn-light" type="button" title="Create multiple">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </button>
+                    <% } %>
+                    <% if (typeof tools !== 'undefined') { %>
+                    <%- include(_view.get('_part/universal-render'), {
+                        'data': tools
+                    }) %>
+                    <% } %>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="ant-attr-list data-grid" data-params="<%= JSON.stringify(d) %>">
+                    <% if (d.filter) { %>
+                    <div class="list-filter">
+                        <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
+                    </div>
+                    <% } %>
+                    <% if (d.showTop) { %>
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <div class="data-grid-common-search">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="advanced-toggle glyphicon glyphicon-cog"
+                                      title="Advanced search"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9">
+                            <div class="data-grid-column-manager">
+                                <button type="button" class="toggle btn btn-default">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </button>
+                            </div>
+                            <div class="data-grid-page-size hidden">
+                                <select class="form-control" title="Page size"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                    <div class="table-responsive">
+                        <table class="data-grid-table table table-bordered table-striped table-condensed">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <% if (d.showBottom) { %>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="data-grid-info"></div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="data-grid-pages">
+                                <div class="data-grid-pagination"></div>
+                                <select class="data-grid-page-jumper form-control hidden"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+            <div class="list-loader overlay"><i class="fa fa-spinner fa-spin"></i></div>
+        </div>
+        <div class="error-block"></div>
+    </div>
+</div>

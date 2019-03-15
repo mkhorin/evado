@@ -1,0 +1,12 @@
+
+.skin-black-light .main-header .module-toggle {
+    color: #333;
+}
+.skin-black-light .main-header .module-toggle:hover {
+    color: #999;
+    background: #fff;
+}
+.skin-black-light .main-header .module-toggle {
+    color: #333;
+    border-right: 1px solid #eee;
+}

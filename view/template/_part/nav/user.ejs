@@ -1,0 +1,34 @@
+<!-- _part/nav/user -->
+<%
+    let user = _controller.user ? _controller.user.model : null;
+%>
+<li class="dropdown user user-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="hidden-xs">
+            <%- user ? user.getTitle() : '[anonymous]' %>
+        </span>
+    </a>
+    <ul class="dropdown-menu">
+        <% if (user) { %>
+        <li class="user-body">
+            <% if (user.assignments) { %>
+            <p class="mb0">Role: <b><%- user.assignments %></b></p>
+            <% } %>
+        </li>
+        <li class="user-footer">
+            <form action="auth/sign-out" method="post">
+                <div class="pull-left">
+                    <a href="user/profile" class="btn btn-default btn-flat">Profile</a>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-default btn-flat">Sign out</button>
+                </div>
+            </form>
+        </li>
+        <% } else { %>
+        <li class="user-footer">
+            <a href="auth/sign-in" class="btn btn-default btn-flat">Sign in</a>
+        </li>
+        <% } %>
+    </ul>
+</li>

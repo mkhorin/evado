@@ -1,0 +1,54 @@
+<!-- _part/attr/select -->
+<%
+let params = {
+    'hasEmpty': typeof hasEmpty === 'undefined' ? true : hasEmpty,
+    'emptyText': typeof emptyText === 'undefined' ? '' : emptyText,
+    'valueKey': typeof valueKey === 'undefined' ? 'value' : valueKey,
+    'textKey': typeof textKey === 'undefined' ? 'text' : textKey,
+    'select2': typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
+    'url': typeof url === 'undefined' ? '' : url
+};
+if (items === 'labels') {
+    items = _controller.getLabelSelectItems(attr, model);
+}
+%>
+<%- include('_params', {params}) %>
+<%
+let content = params.hasEmpty ? `<option value="">${params.emptyText}</option>` : '';
+for (let item of items) {
+    if (item.separator) {
+        let text = item[params.textKey] === undefined ? '------' : item[params.textKey];
+        content += `<option disabled>${text}</option>`;
+    } else {
+        let selected = item[params.valueKey] == params.value ? 'selected' : '';
+        content += `<option ${selected} value="${item[params.valueKey]}">${item[params.textKey]}</option>`;
+    }
+}
+%>
+<div class="form-attr form-group<%- params.required %> <%- params.css %>"
+     data-type="select"
+     data-url="<%- params.url %>"
+     data-select2="<%- params.select2 %>"
+     data-attraction='<%- params.attraction %>'>
+    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <% if (params.url) { %>
+        <div class="input-group">
+            <select name="<%- params.name %>" <%- params.disabled %> class="form-control form-value">
+                <%- content %>
+            </select>
+            <div class="input-group-btn">
+                <button data-action="url" class="btn btn-default" type="button">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+            </div>
+        </div>
+        <% } else { %>
+        <select name="<%- params.name %>" <%- params.disabled %> class="form-control form-value">
+            <%- content %>
+        </select>
+        <% } %>
+        <div class="hint-block"><%- params.hint %></div>
+        <div class="error-block"></div>
+    </div>
+</div>

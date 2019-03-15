@@ -1,0 +1,51 @@
+<!-- _part/attr/json -->
+
+<% let params = {}; %>
+<%- include('_params', {params}) %>
+<%
+if (params.value) {
+    params.value = JSON.stringify(params.value, null, params.jsonSpace);
+    params.value = params.value.replace(/,/g, ', ').replace(/":/g, '": ');
+}
+%>
+<div class="<%- params.required %> <%- params.css %> form-attr form-group"
+     data-type="json"
+     data-attraction='<%- params.attraction %>'>
+    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <div class="input-group">
+            <input id="<%- params.id %>" name="<%- params.name %>" type="text"
+                   value="<%= params.value %>" class="form-control form-value">
+            <span class="input-group-btn">
+                <button class="edit btn btn-default" type="button" title="Editor">
+                    <i class="glyphicon glyphicon-pencil"></i>
+                </button>
+            </span>
+        </div>
+        <div class="hint-block"><%- params.hint %></div>
+        <div class="error-block"></div>
+    </div>
+
+    <div class="json-editor modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title l10n">JSON editor</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger light" style="display: none"></div>
+                    <textarea class="json-editor-text form-control" autofocus></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button class="save btn btn-primary" title="Save">
+                        <span class="glyphicon glyphicon-saved"></span>
+                    </button>
+                    <button class="btn btn-default" data-dismiss="modal" title="Cancel">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

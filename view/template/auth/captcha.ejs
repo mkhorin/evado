@@ -1,0 +1,17 @@
+<!-- _part/auth/captcha -->
+<%
+    let name = model.getFormAttrName(attr);
+    let holder = _t(typeof placeholder === 'undefined' ? model.getAttrLabel(attr) : placeholder);
+    let error = _t(model.getFirstError(attr));
+%>
+<div class="captcha mb10" data-url="<%- url %>">
+    <img src="<%- `${url}?_=${_controller.timestamp}` %>" class="captcha-image">
+    <a class="captcha-refresh" href="<%- `${url}?_=` %>" tabindex="-1">
+        <span class="fa fa-sync-alt"></span>
+    </a>
+</div>
+<div class="form-attr form-group has-feedback <%- error ? 'has-error' : '' %>">
+    <input name="<%- name %>" type="search" class="form-control" placeholder="<%- holder %>" autocomplete="off">
+    <span class="form-control-feedback <%- iconClass %>"></span>
+    <div class="error-block"><%- error %></div>
+</div>

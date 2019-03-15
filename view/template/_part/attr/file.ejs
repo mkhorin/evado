@@ -1,0 +1,40 @@
+<!-- _part/attr/file -->
+
+<% let params = {}; %>
+<%- include('_params', {params}) %>
+
+<div class="form-attr form-group<%- params.required %>" data-type="file">
+    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <input type="hidden" id="<%- params.id %>" name="<%- params.name %>" class="form-value">
+        <div class="uploader show-dropzone" data-attr="file" data-upload="file/upload"
+             data-options="<%= JSON.stringify(options)%>">
+            <div class="uploader-input">
+                <input type="file" class="uploader-input-file">
+                <div class="uploader-dropzone">
+                    <div class="uploader-dropzone-h1 l10n">Drag and drop or select files here</div>
+                </div>
+            </div>
+            <div class="uploader-overflow l10n">Too many files</div>
+            <div class="uploader-list clearfix">
+                <div class="uploader-item pending sample">
+                    <div class="uploader-thumb"></div>
+                    <div class="uploader-signs">
+                        <div class="uploader-sign-pending fa fa-spinner fa-spin"></div>
+                        <div class="uploader-sign-processing fa fa-spinner fa-spin"></div>
+                        <div class="uploader-sign-done glyphicon glyphicon-ok"></div>
+                        <div class="uploader-sign-failed glyphicon glyphicon-ban-circle"></div>
+                        <div class="uploader-sign-saved glyphicon glyphicon-saved"></div>
+                    </div>
+                    <div class="uploader-remove" title="Delete"><span class="glyphicon glyphicon-remove"></span></div>
+                    <div class="uploader-info">
+                        <div class="uploader-filename">File</div>
+                        <div class="progress progress-xxs"><div class="progress-bar"></div></div>
+                        <div class="uploader-message l10n">Preparing to upload...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="error-block"></p>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<!-- _part/group/tabs -->
+
+<% let params = {
+    'attraction': typeof attraction === 'undefined' ? '' : JSON.stringify(attraction)
+}; %>
+
+<div class="tabs form-tabs" data-attraction="<%= params.attraction %>">
+    <ul class="nav nav-tabs" role="tablist">
+    <% for (let item of items) { %>
+    <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
+        <a href="#" class="l10n"><%- item.label || item.id %></a>
+    </li>
+    <% } %>
+    </ul>
+    <div class="tab-content">
+        <% for (let item of items) { %>
+        <div class="form-base-group tab-pane <%- item.active ? 'active' : '' %>"
+             data-id="<%- item.id %>"
+             data-attraction="<%= item.attraction === undefined ? '' : JSON.stringify(item.attraction) %>">
+            <div class="form-base-group-body">
+            <% if (typeof item.content === 'string') { %>
+                <%- include(item.content) %>
+            <% } else if (item.content instanceof Array) { %>
+                <% for (let data of item.content) { %>
+                <% if (data.template) { %>
+                <%- include(data.template, data) %>
+                <% } else { %>
+                <%- data %>
+                <% }} %>
+            <% } %>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>

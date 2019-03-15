@@ -1,0 +1,172 @@
+<!-- _part/list/grid -->
+<%
+if (data.key === undefined) {
+    data.key = model.PK;
+}
+if (data.list !== null) {
+    if (data.list === undefined && typeof params !== 'undefined' && params.list) {
+        data.list = params.list;
+    }
+    data.list = _url(data.list === undefined ? 'list' : data.list);
+}
+if (!data.id) {
+    data.id = data.list;
+}
+if (data.select instanceof Array) {
+    data.select = _url(data.select);
+}
+if (data.view !== null) {
+    data.view = _url(data.view === undefined ? 'view' : data.view);
+}
+if (data.create !== null) {
+    data.create = _url(data.create === undefined ? 'create' : data.create);
+}
+if (data.update !== null) {
+    data.update = _url(data.update === undefined ? 'update' : data.update);
+}
+if (data.updateAttr !== null) {
+    data.updateAttr = _url(data.updateAttr === undefined ? 'update-attr' : data.updateAttr);
+}
+if (data.remove !== null) {
+    data.remove = _url(data.remove === undefined ? 'remove-list' : data.remove);
+}
+if (data.clone === true) {
+    data.clone = _url('clone');
+} else if (data.clone instanceof Array) {
+    data.clone = _url(data.clone);
+}
+if (data.order === undefined) {
+    data.order = {[model.PK]: -1};
+}
+for (let column of data.columns) {
+    if (column.label === undefined) {
+        column.label = model.getAttrLabel(column.name);
+    }
+}
+if (!data.customIdAttr) {
+    data.columns.unshift({
+        'name': model.PK,
+        'type': 'id',
+        'hidden': true,
+        'searchable': true,
+        'sortable': true
+    });
+}
+if (data.indexing === undefined || data.indexing) {
+    data.index = `indexing/view?id=${model.module.app.getRelativePath(model.CLASS_FILE)}`;
+}
+if (data.multiple === undefined) {
+    data.multiple = true;
+}
+if (data.filter && !data.filter.url) {
+    data.filter.url = _url('filter');
+}
+%>
+<div class="box box-grid ant-modal-scroll-container" data-title="<%- blocks.title %>">
+    <div class="box-header with-border scroll-header">
+
+        <% if (typeof title !== 'undefined' && title) { %>
+            <h4 class="box-title"><%= title %></h4>
+        <% } %>
+
+        <div class="list-controls clearfix">
+
+            <button data-id="selectAll" class="btn btn-white mr10" type="button" title="Select all">
+                <span class="glyphicon glyphicon-list"></span>
+            </button>
+
+            <% if (data.view) { %>
+            <button data-id="view" class="btn btn-default" type="button" title="View">
+                <span class="glyphicon glyphicon-eye-open"></span>
+            </button>
+            <% } %>
+            <% if (data.create) { %>
+            <button data-id="create" class="btn btn-success btn-light" type="button" title="Create">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            <% } %>
+            <% if (data.update) { %>
+            <button data-id="update" class="btn btn-warning btn-light" type="button" title="Update">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            <% } %>
+            <% if (data.remove) { %>
+            <button data-id="remove" class="btn btn-default" type="button" title="Remove">
+                <span class="glyphicon glyphicon-trash text-danger"></span>
+            </button>
+            <% } %>
+            <button data-id="reload" class="btn btn-default ml10" type="button" title="Reload">
+                <span class="fa fa-sync-alt"></span>
+            </button>
+
+            <% if (data.index) { %>
+            <button data-id="index" class="btn btn-white btn-light" type="button" title="Indexing">
+                <span class="glyphicon glyphicon-align-left"></span>
+            </button>
+            <% } %>
+            <% if (data.createMultiple) { %>
+            <button data-id="createMultiple" class="btn btn-success btn-light ml10" type="button" title="Create multiple">
+                <span class="glyphicon glyphicon-th"></span>
+            </button>
+            <% } %>
+            <% if (data.clone) { %>
+            <button data-id="clone" class="btn btn-success btn-light" type="button" title="Clone">
+                <span class="fa fa-copy"></span>
+            </button>
+            <% } %>
+            <% if (typeof tools !== 'undefined') { %>
+            <%- include(_view.get('_part/universal-render'), {
+                data: tools
+            }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="box-body scroll-body">
+        <div class="ant-list data-grid" data-params="<%= JSON.stringify(data) %>">
+            <% if (data.filter) { %>
+                <div class="list-filter">
+                    <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
+                </div>
+            <% } %>
+
+            <div class="row">
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="data-grid-common-search">
+                        <input type="search" class="form-control" placeholder="Search...">
+                        <span class="advanced-toggle glyphicon glyphicon-cog"
+                              title="Advanced search"></span>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-8 col-lg-9">
+                    <div class="data-grid-column-manager">
+                        <button type="button" class="toggle btn btn-default">
+                            <span class="glyphicon glyphicon-cog"></span>
+                        </button>
+                    </div>
+                    <div class="data-grid-page-size hidden">
+                        <select class="form-control" title="Page size"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="data-grid-table table table-bordered table-striped table-condensed">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="data-grid-info"></div>
+                </div>
+                <div class="col-md-7">
+                    <div class="data-grid-pages">
+                        <div class="data-grid-pagination"></div>
+                        <select class="data-grid-page-jumper form-control hidden"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="list-loader overlay"><i class="fa fa-spinner fa-spin"></i></div>
+</div>

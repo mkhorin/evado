@@ -1,0 +1,15 @@
+
+<% if (typeof utilTools !== 'undefined') { %>
+<div class="util-tools" style="display: none">
+    <div class="util-menu btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Utility
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu"></ul>
+    </div>
+    <div class="util-pool">
+        <%- utilTools %>
+    </div>
+</div>
+<% } %>

@@ -1,0 +1,49 @@
+<% let signIn = _t('Sign in'); %>
+
+<% layout(_view.get('_layout/auth')) -%>
+
+<% block('title', signIn) -%>
+
+<p class="login-box-msg">
+    <%- _t('Sign in to start your session') %>
+</p>
+
+<form action="auth/sign-in" method="post" class="form">
+
+    <%- include('./string', {
+        attr: 'email',
+        type: 'email',
+        iconClass: 'glyphicon glyphicon-envelope',
+        autocomplete: 'on'
+    }) %>
+
+    <%- include('./password', {
+        attr: 'password'
+    }) %>
+
+    <% if (model.isCaptchaRequired()) { %>
+    <%- include('./captcha', {
+        attr: 'captchaCode',
+        iconClass: 'glyphicon glyphicon-check',
+        url: 'auth/captcha'
+    }) %>
+    <% } %>
+
+    <% if (_controller.user.config.enableAutoLogin) { %>
+    <%- include('./checkbox', {
+        attr: 'rememberMe'
+    }) %>
+    <% } %>
+
+    <div class="form-attr form-group mt20">
+        <button type="submit" class="btn btn-primary btn-block btn-flat">
+            <%- signIn %>
+        </button>
+    </div>
+</form>
+
+<% if (true) { %>
+<div class="text-center">
+    <a href="auth/sign-up"><%- _t('Sign up new user') %></a>
+</div>
+<% } %>

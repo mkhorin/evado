@@ -1,0 +1,49 @@
+<% let signUp = _t('Sign up'); %>
+
+<% layout(_view.get('_layout/auth')) -%>
+
+<% block('title', signUp) -%>
+
+<p class="login-box-msg">
+    <%- _t('Register a new user') %>
+</p>
+
+<form action="auth/sign-up" method="post" class="form">
+
+    <%- include('./string', {
+        attr: 'name',
+        iconClass: 'glyphicon glyphicon-user'
+    }) %>
+
+    <%- include('./string', {
+        attr: 'email',
+        type: 'email',
+        iconClass: 'glyphicon glyphicon-envelope'
+    }) %>
+
+    <%- include('./password', {
+        attr: 'password'
+    }) %>
+
+    <%- include('./password', {
+        attr: 'passwordRepeat'
+    }) %>
+
+    <%- include('./captcha', {
+        attr: 'captchaCode',
+        iconClass: 'glyphicon glyphicon-check',
+        url: 'auth/captcha'
+    }) %>
+
+    <div class="form-attr form-group mt20">
+        <button type="submit" class="btn btn-primary btn-block btn-flat">
+            <%- signUp %>
+        </button>
+    </div>
+</form>
+
+<div class="text-center">
+    <a href="auth/sign-in">
+        <%- _t('Go to sign in') %>
+    </a>
+</div>

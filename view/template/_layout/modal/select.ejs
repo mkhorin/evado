@@ -1,0 +1,13 @@
+<!-- layouts/modal/select -->
+
+<%- body -%>
+
+<div class="before-list-controls">
+    <button data-id="select" class="btn btn-primary" type="button" title="Select">
+        <span class="glyphicon glyphicon-check"></span>
+    </button>
+</div>
+
+<script>
+    Ant.modal.onLoad(Ant.SelectList.init.bind(Ant.SelectList));
+</script>

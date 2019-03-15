@@ -1,0 +1,24 @@
+<!-- _part/attr/selection -->
+
+<% let params = {
+    'select2': typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
+    'sets': typeof sets === 'undefined' ? '' : JSON.stringify(sets)
+}; %>
+
+<%- include('_params', {params}) %>
+
+<div class="form-attr form-group<%- params.required %> <%- params.css %>"
+     data-type="selection"
+     data-value="<%= params.value %>"
+     data-sets="<%= params.sets %>"
+     data-select2="<%- params.select2 %>"
+     data-attraction='<%- params.attraction %>'>
+    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <select id="<%- params.id %>" name="<%- params.name %>" <%- params.disabled %>
+                class="form-control form-value">
+        </select>
+        <div class="hint-block"><%- params.hint %></div>
+        <div class="error-block"></div>
+    </div>
+</div>

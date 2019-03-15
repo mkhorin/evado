@@ -1,0 +1,12 @@
+<%
+    if (typeof _controller.req.flash === 'function') {
+        let flashes = _controller.req.flash();
+%>
+<% for (let key in flashes) { %>
+    <% let flash = flashes[key]; %>
+    <div class="alert alert-<%- key %>">
+        <% for (let item of flash) { %>
+            <p><%= item %></p>
+        <% } %>
+    </div>
+<% }} %>

@@ -1,0 +1,210 @@
+
+.data-grid-table {
+    margin-bottom: 10px;
+}
+.data-grid-table > thead > tr > th,
+.data-grid-table > tbody > tr > td {
+    border-color: #eee;
+    border-width: 1px;
+}
+.data-grid-table,
+.data-grid-table > thead > tr > th {
+    border-color: #ddd;
+}
+.data-grid-table > thead > tr > th {
+    font-weight: normal;
+    color:#666;
+}
+.data-grid-table > thead {
+    border-bottom: 2px solid #eee;
+}
+.data-grid-table > thead > tr > .group {
+    vertical-align: middle;
+    text-align: center;
+    color: #aaa;
+}
+.data-grid-table > thead > tr > .column {
+    position: relative;
+}
+.data-grid-table > thead > tr > .column.sortable {
+    padding-right: 24px;
+}
+.has-advanced-search thead > tr > .searchable .column-label {
+    color: #3c8dbc;
+    cursor: pointer;
+}
+
+.data-grid-table > thead .order-toggle {
+    display: none;
+    position: absolute;
+    right: 6px;
+    bottom: 7px;
+    min-width: 16px;
+    text-align: center;
+    color:#ccc;
+}
+.data-grid-table > thead .order-toggle:hover {
+    color:#000 !important;
+    cursor: pointer;
+}
+.data-grid-table > thead .sortable .order-toggle {
+    display: block;
+}
+.data-grid-table > thead .order-toggle:before {
+    content: '\f338';
+}
+.data-grid-table > thead .asc .order-toggle,
+.data-grid-table > thead .desc .order-toggle {
+    color: #666;
+}
+.data-grid-table > thead .asc .order-toggle:before {
+    content: '\f062';
+}
+.data-grid-table > thead .desc .order-toggle:before {
+    content: '\f063';
+}
+.data-grid-table > thead .asc,
+.data-grid-table > thead .desc {
+    background: #f8f8f8;
+}
+
+/* SEARCH */
+
+.data-grid-common-search {
+    position: relative;
+    margin-bottom: 10px;
+}
+.data-grid-common-search .advanced-toggle {
+    display: none;
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    color: #aaa;
+    cursor: pointer;
+    z-index: 11;
+}
+.data-grid-common-search .advanced-toggle:hover {
+    color:#444;
+}
+.has-advanced-search .data-grid-common-search input {
+    padding-right: 28px;
+}
+.has-advanced-search .data-grid-common-search .advanced-toggle {
+    display: block;
+}
+.active-advanced-search .data-grid-common-search .advanced-toggle {
+    color: #e80;
+}
+
+/* PAGE SIZE */
+
+.data-grid-page-size {
+    float:right;
+    margin-bottom: 10px;
+}
+.data-grid-page-size label {
+    font-weight: normal;
+    margin-right: 5px;
+    color: #aaa;
+}
+.data-grid-page-size select {
+    display: inline-block;
+    width: 50px;
+}
+
+/* COLUMN MANGER */
+
+.data-grid-column-manager {
+    position: relative;
+    float:right;
+    margin: 0 0 10px 5px;
+}
+.data-grid-column-manager .toggle {
+    vertical-align: baseline;
+}
+.data-grid-column-manager-menu {
+    display: none;
+    position: absolute;
+    max-height: 400px;
+    overflow: auto;
+    padding: 5px 0;
+    background: #fff;
+    border:1px solid #ccc;
+    z-index: 2002;
+    user-select: none;
+}
+.data-grid-column-manager-menu .item-label {
+    display: block;
+    position: relative;
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin:0;
+    padding: 3px 15px 3px 35px;
+    white-space: nowrap;
+    font-weight: normal;
+}
+.data-grid-column-manager-menu .item-label:hover {
+    background: #eee;
+}
+.data-grid-column-manager-menu .item-label input {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    margin:-6px 10px 0 0;
+}
+
+/* PAGINATION */
+
+.data-grid-pagination {
+    display: inline-block;
+    vertical-align: top;
+}
+.data-grid-pagination .btn {
+    background: #f8f8f8;
+}
+.data-grid-pagination .btn.active {
+    background: #e0e0e0;
+}
+.data-grid-pagination .ellipsis {
+    float: left;
+    display: inline-block;
+    line-height: 20px;
+    padding: 3px 8px;
+    color:#888;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+}
+.data-grid-pagination .ellipsis:before {
+    content: "..."
+}
+.data-grid-pages {
+    text-align: right;
+}
+.data-grid-info {
+    color:#aaa;
+}
+
+/* PAGE JUMPER */
+
+.data-grid-page-jumper {
+    display: inline-block;
+    width: auto;
+}
+
+/* MEDIA */
+
+@media (max-width: 991px) {
+    .data-grid-table,
+    .data-grid .table-responsive {
+        margin-bottom: 0;
+    }
+    .data-grid-pages,
+    .data-grid-info {
+        text-align: center;
+    }
+    .data-grid-info {
+        line-height: 35px;
+    }
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <base href="<%- _baseUrl %>">
+    <title><%- blocks.title %> - Evado.Main</title>
+
+    <%- include(_view.get('_part/asset/style/default')) %>
+
+    <link rel="stylesheet" href="css/local.css">
+
+    <!-- <%- _view.createHead() %> -->
+</head>
+<body class="hold-transition skin-black-light sidebar-mini">
+    <!-- _layout/main -->
+
+    <%- body -%>
+
+    <%- include(_view.get('_part/modal')) %>
+
+    <%- include(_view.get('_part/asset/script/areto')) %>
+    <%- include(_view.get('_part/asset/script/default')) %>
+
+    <%- _view.createBodyEnd() %>
+</body>
+</html>

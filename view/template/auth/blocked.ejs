@@ -1,0 +1,18 @@
+<% layout(_view.get('_layout/auth')) -%>
+
+<% const accessBlocked = _t('Access is blocked'); %>
+
+<% block('title', accessBlocked) -%>
+
+<div class="alert alert-danger text-center">
+    <% if (model.getAttempts()) { %>
+    <%- _t('Access is blocked for') %>
+    <b><%- _format(model.getBlockedTill() - (new Date), 'duration') %></b>
+    <% } else { %>
+    <%- accessBlocked %>
+    <% } %>
+</div>
+
+<div class="text-center">
+    <a href="/"><%- _t('Go to main') %></a>
+</div>

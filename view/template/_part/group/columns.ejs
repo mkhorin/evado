@@ -1,0 +1,34 @@
+<!-- _part/group/columns -->
+<%
+let params = {
+    css: typeof css === 'undefined' ? '' : css,
+    columnCss: typeof columnCss === 'undefined' ? 'col-sm-6' : columnCss,
+    labelCss: typeof labelCss === 'undefined' ? 'col-sm-4' : labelCss,
+    valueCss: typeof valueCss === 'undefined' ? 'col-sm-8' : valueCss
+};
+%>
+<div class="row <%- params.css %>">
+    <% for (let item of items) { %>
+    <% item.params = item.params || {}; %>
+    <% item.params.labelCss = item.params.labelCss === undefined ? params.labelCss : item.params.labelCss; %>
+    <% item.params.valueCss = item.params.valueCss === undefined ? params.valueCss : item.params.valueCss; %>
+    <div class="col <%- item.css === undefined ? params.columnCss : item.css %>">
+        <% if (item.items instanceof Array) { %>
+            <% for (let child of item.items) { %>
+                <% if (child.template) { %>
+                <% child.params = child.params || {}; %>
+                <% child.params.labelCss = child.params.labelCss === undefined ? item.params.labelCss : child.params.labelCss; %>
+                <% child.params.valueCss = child.params.valueCss === undefined ? item.params.valueCss : child.params.valueCss; %>
+                <%- include(child.template, child.params) %>
+                <% } else { %>
+                <%- child.content %>
+                <% } %>
+            <% } %>
+        <% } else if (item.template) { %>
+        <%- include(item.template, item.params) %>
+        <% } else { %>
+        <%- item.content %>
+        <% } %>
+    </div>
+    <% } %>
+</div>

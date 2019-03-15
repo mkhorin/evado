@@ -1,0 +1,131 @@
+<!-- _part/attr/relationSelect -->
+
+<% let params = {}; %>
+<%- include('_params', {params}) %>
+<%
+let d = {
+    'relName': attr,
+    'order': {[model.PK]: - 1},
+    'key': model.PK,
+    'remove': false,
+    'unlink': true,
+    ...data
+};
+d.attr = attr;
+d.relName = d.relName || attr;
+
+let rel = model.getRelation(d.relName);
+let relController = rel.model.createController();
+let urlParams = {
+    'pid': model.getId(),
+    'rel': d.relName
+};
+d.multiple = rel.isMultiple();
+if (d.list !== null) {
+    if (d.list === undefined) {
+        d.list = ['list-rel-select', urlParams];
+    } else if (typeof d.list === 'string') {
+        d.list = [d.list, urlParams];
+    }
+    d.list = _url(d.list);
+}
+if (d.view !== null) {
+    d.view = relController.createUrl(d.view === undefined ? 'view' : d.view);
+}
+if (d.viewTitle !== null) {
+    d.viewTitle = relController.createUrl(d.viewTitle === undefined ? 'view-title' : d.viewTitle);
+}
+if (d.create !== null) {
+    if (d.create === undefined) {
+        d.create = ['create', urlParams];
+    } else if (! (d.create instanceof Array) && typeof d.create === 'object') {
+        d.create = ['create', Object.assign(urlParams, d.create)];
+    }
+    d.create = relController.createUrl(d.create);
+}
+if (d.clone === true) {
+    d.clone = relController.createUrl('clone');
+} else if (d.clone instanceof Array) {
+    d.clone = relController.createUrl(d.clone);
+}
+if (d.update !== null) {
+    if (d.update === undefined) {
+        d.update = ['update', urlParams];
+    } else if (! (d.update instanceof Array) && typeof d.update === 'object') {
+        d.update = ['update', Object.assign(urlParams, d.update)];
+    }
+    d.update = relController.createUrl(d.update);
+}
+if (d.link !== null) {
+    if (d.link === undefined) {
+        d.link = ['select', urlParams];
+    } else if (typeof d.link === 'string') {
+        d.link = [d.link, urlParams];
+    }
+    d.link = relController.createUrl(d.link);
+}
+if (d.modalOrder) {
+    if (d.modalOrder === true) {
+        d.modalOrder = model.module.app.getRelativePath(model.CLASS_FILE);
+        d.modalOrder = `default/order-rel?id=${model.getId()}&cls=${d.modalOrder}&rel=${attr}`;
+    } else if (d.modalOrder instanceof Array) {
+        d.modalOrder = _url(d.modalOrder);
+    }
+}
+let related = model.rel(attr);
+%>
+<div class="form-attr form-group<%- params.required %> <%- params.css %>" data-type="relationSelect">
+    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <div class="box relation-select-box">
+            <input name="<%- params.name %>" type="hidden" class="form-value" value="">
+            <div class="box-body">
+                <div class="list-controls">
+                    <% if (d.unlink) { %>
+                    <button data-id="unlink" class="btn btn-default mr10" type="button" title="Unlink">
+                        <span class="fa fa-unlink text-danger"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.view) { %>
+                    <button data-id="view" class="btn btn-default" type="button" title="View">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.create) { %>
+                    <button data-id="create" class="btn btn-success btn-light" type="button" title="Create">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.update) { %>
+                    <button data-id="update" class="btn btn-warning btn-light" type="button" title="Update">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.remove) { %>
+                    <button data-id="remove" class="remove btn btn-default" type="button" title="Delete">
+                        <span class="glyphicon glyphicon-trash text-danger"></span>
+                    </button>
+                    <% } %>
+                    <% if (d.modalOrder) { %>
+                    <button data-id="order" class="btn btn-white" type="button" title="Sort">
+                        <span class="glyphicon glyphicon-sort"></span>
+                    </button>
+                    <% } %>
+                    <% if (typeof tools !== 'undefined') { %>
+                    <%- include(_view.get('_part/universal-render'), {'data': tools}) %>
+                    <% } %>
+                </div>
+                <select id="<%- params.id %>" class="form-control" <% if (d.multiple) { %>multiple<% } %>
+                        data-params="<%= JSON.stringify(d) %>">
+                    <% if (related instanceof Array) { %>
+                    <% for (let item of related) { %>
+                    <option value="<%- item.getId() %>" selected><%= item.getTitle() %></option>
+                    <% }} else if (related) { %>
+                    <option value="<%- related.getId() %>" selected><%= related.getTitle() %></option>
+                    <% } %>
+                </select>
+            </div>
+        </div>
+        <div class="error-block"></div>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<!-- _layout/modal/model-view -->
+<%
+let data = {
+    'id': model.getId(),
+    'key': model.PK,
+    'update': _url('update')
+};
+if (typeof params !== 'undefined') {
+    Object.assign(data, params);
+}
+%>
+<div class="box box-info content-box ant-modal-scroll-container"
+     data-title="<%- blocks.title %>">
+    <div class="box-header with-border scroll-header">
+        <div class="model-controls">
+            <% if (data.update) { %>
+            <button class="update btn btn-warning btn-light" type="button" title="Update">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            <% } %>
+            <button data-id="reload" class="reload btn btn-default" type="button" title="Reload">
+                <span class="fa fa-sync-alt"></span>
+            </button>
+
+            <%- include('../../_part/tool/model-history') %>
+        </div>
+    </div>
+    <div class="box-body scroll-body">
+        <div data-params="<%= JSON.stringify(data) %>" class="ant-model model-view form-horizontal form">
+            <%- body -%>
+        </div>
+    </div>
+</div>
+
+<script>
+    Ant.modal.onLoad(Ant.Model.init.bind(Ant.Model));
+</script>

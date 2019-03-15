@@ -1,0 +1,45 @@
+<%
+    params.id = typeof id === 'undefined' ? model.getFormAttrId(attr, _controller.timestamp) : id;
+    params.name = typeof name === 'undefined' ? model.getFormAttrName(attr) : name;
+    params.label = typeof label === 'undefined' ? model.getAttrLabel(attr) : label;
+    params.hint = typeof hint === 'undefined' ? model.getAttrHint(attr) : hint;
+    params.placeholder = typeof placeholder === 'undefined' ? '' : placeholder;
+    params.type = typeof type === 'undefined' ? '' : type;
+    params.disabled = typeof disabled === 'undefined' ? '' : disabled;
+    params.required = typeof required === 'undefined' ? model.isAttrRequired(attr) : required;
+    params.required = params.required ? ' required' : '';
+    params.format = typeof format === 'undefined' ? '' : format;
+    params.attraction = typeof attraction === 'undefined' ? '' : JSON.stringify(attraction);
+    params.css = typeof css === 'undefined' ? '' : css;
+    params.labelCss = typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss;
+    params.valueCss = typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss;
+
+    params.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
+    if (params.sourceValue === undefined && typeof defaultValue !== 'undefined') {
+        params.sourceValue = defaultValue;
+    }
+    params.value = params.sourceValue;
+    if (params.value instanceof Date) {
+        params.value = params.value.toISOString();
+    }
+    if (_view.MongoHelper.isObjectId(params.value)) {
+        params.value = params.value.toString();
+    }
+    params.displayValue = typeof displayValue === 'undefined' ? params.value : displayValue;
+
+    if (params.format) {
+        switch (params.format) {
+            case 'label':
+                params.displayValue = model.getAttrValueLabel(attr) || params.displayValue;
+                break;
+            default:
+                params.displayValue = _format(params.displayValue, params.format);
+        }
+    }
+    if (params.value === undefined || params.value === null) {
+        params.value = '';
+    }
+    if (params.displayValue === undefined || params.displayValue === null) {
+        params.displayValue = _format(null, 'raw');
+    }
+%>

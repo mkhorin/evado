@@ -1,0 +1,7 @@
+<!-- _part/tool/model-history -->
+<% if (model.isNew() && model.getBehavior('history')) { %>
+    <button class="history btn btn-default" type="button" title="History"
+        data-url="<%- _url(['history/index-modal', {oid: model.getId()}]) %>">
+        <span class="fa fa-history"></span>
+    </button>
+<% } %>

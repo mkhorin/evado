@@ -1,0 +1,17 @@
+<%
+let params = {
+    'id': typeof id === 'undefined' ? model.getFormAttrId(attr) : id,
+    'name': typeof name === 'undefined' ?  model.getFormAttrName(attr) : name,
+    'value': typeof value === 'undefined' ?  !!model.get(attr) : value,
+    'label': typeof label === 'undefined' ? model.getAttrLabel(attr) : label
+};
+%>
+<div class="form-attr form-group">
+    <div class="checkbox">
+        <label>
+            <input name="<%- params.name %>" type="checkbox"
+                   class="checkbox-control" <%- params.value ? 'checked' : '' %>>
+            <%- _t(params.label) %>
+        </label>
+    </div>
+</div>

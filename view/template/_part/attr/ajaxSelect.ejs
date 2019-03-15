@@ -1,0 +1,30 @@
+<!-- _part/attr/ajaxSelect -->
+
+<% let params = {
+    'hasEmpty': typeof hasEmpty === 'undefined' ? true : hasEmpty,
+    'emptyText': typeof emptyText === 'undefined' ? '' : emptyText,
+    'select2': typeof select2 === 'undefined' ? '' : JSON.stringify(select2)
+}; %>
+<%- include('_params', {params}) %>
+<%
+data.hasEmpty = params.hasEmpty;
+data.emptyText = params.emptyText;
+for (let item of data.depends) {
+    item.param = item.param || item.id;
+    item.id = model.getFormAttrName(item.id);
+}
+%>
+<div class="form-attr form-group<%- params.required %>"
+     data-type="ajaxSelect"
+     data-label="<%- params.label %>"
+     data-select2="<%= params.select2 %>"
+     data-attraction='<%- params.attraction %>'>
+    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <div id="<%- params.id %>" class="<%- params.valueCss %>">
+        <input type="hidden" name="<%- params.name %>" class="form-value"
+               value="<%= params.value %>" data-params="<%= JSON.stringify(data) %>">
+        <select class="form-control"></select>
+        <div class="hint-block"><%- params.hint %></div>
+        <div class="error-block"></div>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+<%
+let create = _url(['create', {id}]);
+let rebuild = _url(['rebuild', {id}]);
+let drop = _url(['drop', {id}]);
+%>
+<% layout(_view.get('_layout/modal/model-view')) -%>
+
+<% block('title', `Index table: ${model.TABLE}`) -%>
+
+<fieldset class="overlay-wrapper">
+    <legend>Active indexes</legend>
+    <div class="list-group-container overlay-wrapper">
+        <div class="overlay"><i class="fa fa-spinner fa-spin"></i></div>
+        <div class="list-group-controls mb20" data-rebuild="<%- rebuild %>" data-drop="<%- drop %>">
+            <button type="button" class="create btn btn-success btn-light" title="Create">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            <button type="button" class="rebuild btn btn-warning btn-light" title="Rebuild">
+                <span class="glyphicon glyphicon-retweet"></span>
+            </button>
+            <button type="button" class="drop btn btn-danger btn-light" title="Drop">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+        </div>
+        <div class="list-group list-indexes active-indexes" data-indexes="<%= JSON.stringify(indexes) %>"></div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>Model indexes</legend>
+    <% if (model.INDEXES) { %>
+    <div class="list-group-container overlay-wrapper">
+        <div class="overlay"><i class="fa fa-spinner fa-spin"></i></div>
+        <div class="list-group-controls mb20" data-activate="<%- create %>">
+            <button type="button" class="activate btn btn-primary" title="Activate">
+                <span class="glyphicon glyphicon-check"></span>
+            </button>
+        </div>
+        <div class="list-group list-indexes model-indexes">
+            <% for (let index of model.INDEXES) { %>
+            <% index = JSON.stringify(index) %>
+            <button type="button" class="list-group-item" data-params="<%= index %>"><%- index %></button>
+            <% } %>
+        </div>
+    </div>
+    <% } else { %>
+    <div class="alert alert-warning">
+        <p>Index define not found in the <%- model.constructor.name %> class</p>
+    </div>
+    <% } %>
+</fieldset>
+
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Create index</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" data-create="<%- create %>">
+                    <div class="form-group required">
+                        <label for="create-index-keys" class="col-sm-2 control-label">Keys</label>
+                        <div class="col-sm-10">
+                            <input id="create-index-keys" type="text" class="form-control" placeholder="key1: 1, key2: -1">
+                            <div class="error-block"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="create-index-name" class="col-sm-2 control-label">Name</label>
+                        <div class="col-sm-10">
+                            <input id="create-index-name" type="text" class="form-control">
+                            <div class="error-block"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label><input id="create-index-unique" type="checkbox"> Unique</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label><input id="create-index-dropdup" type="checkbox" disabled> Drop duplicates</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label><input id="create-index-background" type="checkbox"> Background</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="create-index-save" type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ant.modal.onLoad(Ant.DbIndexing.init.bind(Ant.DbIndexing));
+</script>

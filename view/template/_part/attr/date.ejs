@@ -1,0 +1,21 @@
+<!-- _part/attr/date -->
+
+<% let params = {}; %>
+<%- include('_params', {params}) %>
+<%
+let options = JSON.stringify(typeof options === 'object' ? options : {});
+%>
+<div class="form-attr form-group <%- required %>" data-type="date"
+     data-utc="<%- typeof utc === undefined || utc ? 'true' : '' %>"
+     data-params="<%= options %>">
+    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <input name="<%- params.name %>" type="hidden" class="form-value" value="<%- params.value %>">
+        <div class="input-group">
+            <input id="<%- params.id %>" type="text" class="form-control datepicker">
+            <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+        </div>
+        <div class="hint-block"><%- params.hint %></div>
+        <div class="error-block"></div>
+    </div>
+</div>
