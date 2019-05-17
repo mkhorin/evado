@@ -1,6 +1,6 @@
 <!-- _part/universal-render -->
 
-<% if (data instanceof Array) { %>
+<% if (Array.isArray(data)) { %>
     <% for (let item of data) { %>
     <%- include('universal-render', {data: item})%>
     <% } %>

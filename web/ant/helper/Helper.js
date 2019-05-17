@@ -201,7 +201,7 @@ Ant.ArrayHelper = class {
     }
 
     static searchByNestedValue (value, key, items) {
-        if (items instanceof Array) {
+        if (Array.isArray(items)) {
             for (let i = 0; i < items.length; ++i) {
                 if (Ant.ObjectHelper.getNestedValue(key, items[i]) === value) {
                     return i;
@@ -215,7 +215,7 @@ Ant.ArrayHelper = class {
 Ant.ObjectHelper = class {
 
     static push (value, key, map) {
-        if (map[key] instanceof Array) {
+        if (Array.isArray(map[key])) {
             map[key].push(value);
         } else {
             map[key] = [value];
@@ -253,13 +253,13 @@ Ant.ObjectHelper = class {
         if (!data || typeof key !== 'string') {
             return undefined;
         }
-        if (data.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
             return data[key];
         }
         let pos = key.indexOf('.');
         if (pos > 0) {
             let destKey = key.substring(0, pos);
-            if (data.hasOwnProperty(destKey)) {
+            if (Object.prototype.hasOwnProperty.call(data, destKey)) {
                 key = key.substring(pos + 1);
                 if (data[destKey]) {
                     return this.getNestedValue(key, data[destKey]);
@@ -293,8 +293,8 @@ Ant.UrlHelper = class {
 
     static openNewPage (url) {
         Object.assign(document.createElement('a'), {
-            'target': '_blank',
-            'href': url
+            target: '_blank',
+            href: url
         }).click();
     }
 
@@ -346,16 +346,16 @@ Ant.DateHelper = class {
     }
 
     static resolveClientDate ($container) {
-        $container.find('time[data-format]').each((index, element)=> {
-            let $element = $(element);
-            let format = $element.attr('data-format');
+        for (let item of $container.find('time[data-format]')) {
+            let $item = $(item);
+            let format = $item.attr('data-format');
             if (format) {
-                let date = $element.attr('datetime');
-                date = $element.data('utc') ? date.slice(0, -1) : date;
-                $element.html(moment(date).format(format));
+                let date = $item.attr('datetime');
+                date = $item.data('utc') ? date.slice(0, -1) : date;
+                $item.html(moment(date).format(format));
             }
-            $element.removeAttr('data-format');
-        });
+            $item.removeAttr('data-format');
+        }
     }
 
     static setTimeSelectAfterDay ($picker) {

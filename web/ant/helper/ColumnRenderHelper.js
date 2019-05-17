@@ -30,7 +30,7 @@ Ant.ColumnRenderHelper = class {
     }
 
     static prepareSelect (data) {
-        if (data && data.items instanceof Array) {
+        if (data && Array.isArray(data.items)) {
             data.itemIndex = Ant.ArrayHelper.index('value', data.items);
         }
         return data;
@@ -47,12 +47,10 @@ Ant.ColumnRenderHelper = class {
     }
 
     static asDefault (value, column) {
-        if (!(value instanceof Array)) {
+        if (!Array.isArray(value)) {
             return value;
         }
-        return value.join(column.hasOwnProperty('separator')
-            ? column.separator
-            : '<br>');
+        return value.join(column.hasOwnProperty('separator') ? column.separator : '<br>');
     }
 
     static asBoolean (value) {
@@ -89,7 +87,7 @@ Ant.ColumnRenderHelper = class {
     }
 
     static asList (value, column) {
-        if (!(value instanceof Array)) {
+        if (!Array.isArray(value)) {
             return '';
         }
         if (typeof column.format === 'string') {

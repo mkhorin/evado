@@ -1,9 +1,9 @@
 <%
 let params = {
-    'id': typeof id === 'undefined' ? model.getFormAttrId(attr) : id,
-    'name': typeof name === 'undefined' ?  model.getFormAttrName(attr) : name,
-    'value': typeof value === 'undefined' ?  !!model.get(attr) : value,
-    'label': typeof label === 'undefined' ? model.getAttrLabel(attr) : label
+    id: typeof id === 'undefined' ? model.getFormAttrId(attr) : id,
+    name: typeof name === 'undefined' ?  model.getFormAttrName(attr) : name,
+    value: typeof value === 'undefined' ?  !!model.get(attr) : value,
+    label: typeof label === 'undefined' ? model.getAttrLabel(attr) : label
 };
 %>
 <div class="form-attr form-group">

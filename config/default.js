@@ -14,20 +14,17 @@ module.exports = {
                 }
             }
         },
-        'console': {
-            Class: require('../component/console/Console')
-        },
         'view': {
-            //theme: 'test'
         },
         'connection': {
             schema: 'mongodb',
             settings: {
-                host: 'localhost',
-                port: 27017,
-                user: '',
-                password: '',
-                options: {
+                'host': process.env.MONGO_HOST || 'localhost',
+                'port': process.env.MONGO_PORT || 27017,
+                'database': process.env.MONGO_NAME || 'demo',
+                'user': '',
+                'password': '',
+                'options': {
                     bufferMaxEntries: 0,
                     keepAlive: true,
                     useNewUrlParser: true
@@ -44,7 +41,7 @@ module.exports = {
         'i18n': {
         },
         'formatter': {
-            Class: require('../component/Formatter')
+            Class: require('../component/misc/Formatter')
         },
         'bodyParser': {
             limit: '10mb'
@@ -58,25 +55,7 @@ module.exports = {
             Class: require('../component/rbac/Rbac')
         },
         'router': {
-            errors: {
-                'Controller': require('../controller/DefaultController')
-            }
-        },
-        'asset': {
-            bundles: [{
-                name: 'jquery',
-                js: ['js/jquery.js'],
-                css: ['css/jquery.css']
-            }, {
-                name: 'A1',
-                depends: ['C1']
-            }, {
-                name: 'B1',
-                depends: ['A1']
-            }, {
-                name: 'C1',
-                depends: ['jquery']
-            }]
+            errors: {Controller: require('../controller/DefaultController')}
         },
         'user': {
             Class: require('../component/user/User'),
@@ -87,25 +66,18 @@ module.exports = {
             returnUrl: '/',
             enableAutoLogin: true,
             identityCookie: {
-                'httpOnly': true,
-                'path': '/'
+                httpOnly: true,
+                path: '/'
             }
         },
         'meta': {
-            Class: require('../component/meta/Meta'),
-            FileModel: require('../model/File'),
+            Class: require('../component/meta/MetaHub'),
             UserModel: require('../model/User'),
             DataHistoryModel: require('../model/DataHistory'),
             rbacTablePrefix: 'sys_rbac_',
             inspectionEnabled: true
         },
-        'metaDeployer': {
-            Class: require('../component/meta/deploy/Deployer')
-        },
-        'metaView': {
-            Class: require('../component/meta/view/MetaView'),
-            // disabled: true // disable all project views
-        }
+        'fileStorage': require('./default-fileStorage')
     },
     modules: {
     },
@@ -115,63 +87,14 @@ module.exports = {
             extension: 'ejs'
         },
         'static': {},
-        // 'ignoreProjectConfiguration': true,
-        // 'activeProjects': ['test']
+        'metaRoot': 'meta'
     },
     metaModels: {
-        'doc': {
-            Class: require('areto-meta-doc/base/DocMeta')
-        },
-        'nav': {
-            Class: require('areto-meta-nav/base/NavMeta')
-        }
+        'doc': {Class: require('evado-meta-doc/base/DocMetaModel')},
+        'nav': {Class: require('evado-meta-nav/base/NavMetaModel')}
     },
-    upload: {
-        storeDir: 'upload/file',
-        thumbDir: 'upload/preview',
-        thumbSizes: {
-            1: [56, 56],
-            2: [256, 256],
-            3: [1024, 1024]
-        },
-        thumbDefaultSize: 1,
-        //maxTotalFiles: 100,
-        //maxTotalSize: 100,
-        rule: {
-            maxSize: 10000000
-        }
-    },
-    assets: {
-        source: 'asset/vendor/node_modules',
-        target: 'web/vendor',
-        defaults: {'base': ['dist', 'min', 'build']},
-        defaultBase: 'base',
-        files: {
-            '@fortawesome': [
-                'fontawesome-free/css',
-                'fontawesome-free/webfonts'
-            ],
-            'admin-lte': [
-                'dist/css',
-                'dist/js/adminlte.min.js'
-            ],
-            'async': true,
-            'bootstrap': true,
-            'bootstrap-daterangepicker': [
-                'daterangepicker.css',
-                'daterangepicker.js'
-            ],
-            'eonasdan-bootstrap-datetimepicker': true,
-            'jquery': true,
-            'inputmask': ['dist/min/jquery.inputmask.bundle.min.js'],
-            // 'ionicons-min': ['css','fonts'],
-            'moment': ['locale','min'],
-            'select2': true,
-            'store-js': [
-                'dist/store.modern.min.js'
-            ]
-        }
-    },
+    assets: require('./default-assets'),
+    classes: require('./default-classes'),
     widgets: {
         'globalMenu': {
             Class: require('../component/widget/GlobalMenu')            

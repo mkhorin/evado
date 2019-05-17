@@ -122,7 +122,7 @@ Ant.ModelAttr.Selection.Set = class {
 
     static createSets (data, selection) {
         let sets = [];
-        if (data instanceof Array) {
+        if (Array.isArray(data)) {
             for (let item of data) {
                 sets.push(new this(item, selection));
             }

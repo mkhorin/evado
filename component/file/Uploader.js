@@ -1,0 +1,57 @@
+'use strict';
+
+const Base = require('areto/base/Base');
+
+module.exports = class Uploader extends Base {
+
+    constructor (config) {
+        super({
+            root: '/',
+            fieldName: 'file',
+            ...config
+        });
+    }
+
+    async execute (req, res) {
+        let dir = this.generateDir();
+        let upload = this.createSingleMulter(dir);
+        await PromiseHelper.promise(upload.bind(this, req, res));
+        let file = req.file;
+        return file ? {
+            name: file.originalname,
+            filename: path.join(dir, file.filename),
+            size: file.size,
+            mime: file.mimetype,
+            extension: path.extname(file.originalname).substring(1).toLowerCase()
+        } : null;
+    }
+
+    createSingleMulter (dir) {
+        return multer({
+            storage: multer.diskStorage({
+                destination: this.generateDestination.bind(this, dir),
+                filename: this.generateFileName.bind(this)
+            })
+        }).single(this.fieldName);
+    }
+
+    generateDir () { // by months
+        let now = new Date;
+        return now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2);
+    }
+
+    generateDestination (dir, req, file, callback) {
+        dir = path.join(this.root, dir);
+        fs.mkdir(dir, {recursive: true}, err => callback(err, dir));
+    }
+
+    generateFileName (req, file, callback) {
+        callback(null, MongoHelper.createObjectId().toString());
+    }
+};
+
+const fs = require('fs');
+const multer = require('multer');
+const path = require('path');
+const MongoHelper = require('areto/helper/MongoHelper');
+const PromiseHelper = require('areto/helper/PromiseHelper');

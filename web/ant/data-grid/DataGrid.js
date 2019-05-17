@@ -39,8 +39,8 @@ Ant.DataGrid = class {
         setTimeout(this.load.bind(this), 0);
     }
 
-    translate () {
-        return Ant.I18n.translate.apply(Ant.I18n, arguments);
+    translate (...args) {
+        return Ant.I18n.translate(...args);
     }
 
     setParams (params) {

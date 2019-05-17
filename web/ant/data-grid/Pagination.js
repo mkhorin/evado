@@ -190,7 +190,7 @@ Ant.DataGrid.Pagination = class {
     // SIZES
 
     createPageSizes () {
-        if (this.$pageSize.length && this.params.pageSizes instanceof Array) {
+        if (this.$pageSize.length && Array.isArray(this.params.pageSizes)) {
             if (this.params.keepPageSize) {
                 this.pageSize = this.grid.getStoreData('pageSize', this.pageSize);
             }

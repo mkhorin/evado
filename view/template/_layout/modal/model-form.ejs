@@ -1,13 +1,13 @@
 <!-- _layout/modal/model-form -->
 <%
 let data = {
-    'url': _controller.getOriginalUrl(),
-    'id': model.getId() || '',
-    'key': model.PK,
-    'className': model.NAME,
-    'timestamp': _controller.timestamp,
-    'view': _url('view'),
-    'remove': null // _url(['remove', model])
+    url: _controller.getOriginalUrl(),
+    id: model.getId() || '',
+    key: model.PK,
+    className: model.NAME,
+    timestamp: _controller.timestamp,
+    view: _url('view'),
+    remove: _url('remove')
 };
 if (typeof params !== 'undefined') {
     Object.assign(data, params);

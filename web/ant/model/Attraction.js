@@ -10,13 +10,13 @@ Ant.ModelAttraction = class {
     }
 
     init () {
-        this.model.$form.find('[data-attraction]').each((index, element)=> {
-            let $item = $(element);
+        for (let item of this.model.$form.find('[data-attraction]')) {
+            let $item = $(item);
             let data = $item.data('attraction');
             if (data) {
                 this.elements.push(new Ant.ModelAttraction.Element($item, data, this));
             }
-        });
+        }
         this.model.event.on('change', this.update.bind(this));
         this.update();
     }
@@ -120,14 +120,14 @@ Ant.ModelAttraction.Valued = class extends Ant.ModelAttraction.Action {
 
     init () {
         if (!this.element.attr) {
-            return console.error('Attraction: Valued action without model attr');
+            return console.error('Attraction: Valued action without model attribute');
         }
         this.value = this.element.attr.normalizeValue(this.data[0]);
         this.condition = new Ant.ModelCondition(this.data[1], this.element.attraction.model);
     }
 
     getValue () {
-        return this.value instanceof Array
+        return Array.isArray(this.value)
             ? this.element.attraction.model.getValueFieldByName(this.value[0]).val()
             : this.value;
     }

@@ -34,7 +34,7 @@ Ant.ModelGrouper = class {
 
     loadStates () {
         let data = store.get(this.getStoreId());
-        if (data instanceof Array && data.length === this.groups.length) {
+        if (Array.isArray(data) && data.length === this.groups.length) {
             for (let i = 0; i < data.length; ++i) {
                 this.groups[i].toggleState(data[i]);
             }

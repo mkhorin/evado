@@ -14,28 +14,25 @@ Ant.ModelAttr.ValueMap = class extends Ant.ModelAttr {
 
     stringify () {
         let items = [];
-        this.getItems().each((index, element)=> {
-            items.push(this.getItemData($(element)));
-        });
-        for (let item of items) {
-            if (item.text === '') {
-                item.text = item.value;
-            }
+        for (let item of this.getItems()) {
+            item = this.getItemData($(item));
+            item.text = item.text === '' ? item.value : item.text;
+            items.push(item);
         }
         items = items.filter(item => item.text !== '');
         return items.length ? JSON.stringify(items) : '';
     }
 
     createItems (items) {
-        if (items instanceof Array) {
+        if (Array.isArray(items)) {
             let $items = this.getItems();
             let $item = $items.eq(0);
             for (let i = 1; i < items.length; ++i) {
                 $item.after($item.clone());
             }
-            this.getItems().each((index, element)=> {
-                this.setItemData($(element), items[index]);
-            });
+            for (let item of this.getItems()) {
+                this.setItemData($(item), items[index]);
+            }
         }
     }
 

@@ -46,17 +46,15 @@ module.exports = class User extends Base {
         };
     }
 
-    static findIdentity (id) {
-        return this.findById(id).and({
-            status: STATUS_ACTIVE
-        });
+    findIdentity (id) {
+        return this.findById(id).and({status: STATUS_ACTIVE});
     }
 
-    static findByEmail (email) {
+    findByEmail (email) {
         return this.find({email});
     }
 
-    static findSame (name, email) {
+    findSame (name, email) {
         return this.find().andFilter({name}).orFilter({email});
     }
 
@@ -105,7 +103,7 @@ module.exports = class User extends Base {
 
     setPasswordHash () {
         if (this.get('password')) {
-            this.set('passwordHash', SecurityHelper.encryptPassword(this.get('password')));
+            this.set('passwordHash', SecurityHelper.hashPassword(this.get('password')));
         }
     }
 
@@ -120,9 +118,9 @@ module.exports = class User extends Base {
     }
 
     setAuthKey () {
-        this.set('authKey', SecurityHelper.generateRandomString(this.AUTH_KEY_LENGTH));
+        this.set('authKey', SecurityHelper.getRandomString(this.AUTH_KEY_LENGTH));
     }
 };
-module.exports.init(module);
+module.exports.init();
 
 const SecurityHelper = require('areto/helper/SecurityHelper');

@@ -8,23 +8,23 @@ let params = {
 };
 %>
 <div class="row <%- params.css %>">
-    <% for (let item of items) { %>
-    <% item.params = item.params || {}; %>
-    <% item.params.labelCss = item.params.labelCss === undefined ? params.labelCss : item.params.labelCss; %>
-    <% item.params.valueCss = item.params.valueCss === undefined ? params.valueCss : item.params.valueCss; %>
+    <% for (let item of items) {
+        item.params = item.params || {};
+        item.params.labelCss = item.params.labelCss === undefined ? params.labelCss : item.params.labelCss;
+        item.params.valueCss = item.params.valueCss === undefined ? params.valueCss : item.params.valueCss;
+    %>
     <div class="col <%- item.css === undefined ? params.columnCss : item.css %>">
-        <% if (item.items instanceof Array) { %>
-            <% for (let child of item.items) { %>
-                <% if (child.template) { %>
-                <% child.params = child.params || {}; %>
-                <% child.params.labelCss = child.params.labelCss === undefined ? item.params.labelCss : child.params.labelCss; %>
-                <% child.params.valueCss = child.params.valueCss === undefined ? item.params.valueCss : child.params.valueCss; %>
-                <%- include(child.template, child.params) %>
-                <% } else { %>
-                <%- child.content %>
-                <% } %>
-            <% } %>
-        <% } else if (item.template) { %>
+        <% if (Array.isArray(item.items)) {
+            for (let child of item.items) {
+                if (child.template) {
+                child.params = child.params || {};
+                child.params.labelCss = child.params.labelCss === undefined ? item.params.labelCss : child.params.labelCss;
+                child.params.valueCss = child.params.valueCss === undefined ? item.params.valueCss : child.params.valueCss;
+        %>
+        <%- include(child.template, child.params) %>
+        <% } else { %>
+        <%- child.content %>
+        <% }}} else if (item.template) { %>
         <%- include(item.template, item.params) %>
         <% } else { %>
         <%- item.content %>

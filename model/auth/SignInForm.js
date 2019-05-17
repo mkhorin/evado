@@ -16,8 +16,8 @@ module.exports = class SignInForm extends Base {
                 ['captchaCode', require('areto/captcha/CaptchaValidator'), {on: [CAPTCHA_SCENARIO]}]
             ],
             ATTR_LABELS: {
-                'rememberMe': 'Remember me',
-                'captchaCode': 'Verification code'
+                rememberMe: 'Remember me',
+                captchaCode: 'Verification code'
             },
             CAPTCHA_SCENARIO
         };
@@ -25,10 +25,10 @@ module.exports = class SignInForm extends Base {
 
     constructor (config) {
         super({
-            // user: new WebUser
-            'rateLimit': SignInForm.module.get('rateLimit'),
-            'rateLimitType': 'signIn',
-            'rememberPeriod': 7 * 24 * 3600,
+            // user: [new WebUser]
+            rateLimit: config.module.get('rateLimit'),
+            rateLimitType: 'signIn',
+            rememberPeriod: 7 * 24 * 3600,
             ...config
         });
     }
@@ -67,11 +67,11 @@ module.exports = class SignInForm extends Base {
     }
 
     createLoginByEmail () {
-        return new LoginByEmail({
-            'email': this.get('email'),
-            'password': this.get('password'),
-            'rememberMe': this.get('rememberMe'),
-            'user': this.user
+        return this.spawn(LoginByEmail, {
+            email: this.get('email'),
+            password: this.get('password'),
+            rememberMe: this.get('rememberMe'),
+            user: this.user
         });
     }
 
@@ -86,7 +86,7 @@ module.exports = class SignInForm extends Base {
         }
     }
 };
-module.exports.init(module);
+module.exports.init();
 
 const RateLimit = require('areto/web/rate-limit/RateLimit');
-const LoginByEmail = require('../../component/helper/LoginByEmail');
+const LoginByEmail = require('../../component/misc/LoginByEmail');

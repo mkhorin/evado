@@ -1,6 +1,6 @@
 'use strict';
 
-const Base = require('../component/BaseController');
+const Base = require('../component/base/BaseController');
 
 module.exports = class IndexingController extends Base {
 
@@ -57,25 +57,23 @@ module.exports = class IndexingController extends Base {
     getModel (cb) {
         let ModelClass;
         try {
-            ModelClass = require(this.module.app.getPath(this.getQueryParam('id')));
+            ModelClass = this.module.require(this.getQueryParam('id'));
         } catch (err) {
-            throw new NotFound;
+            throw new BadRequest('Class not found');
         }
         if (!(ModelClass.prototype instanceof ActiveRecord)) {
             throw new BadRequest('Target is not ActiveRecord');
         }
-        return new ModelClass;
+        return this.spawn(ModelClass);
     }
 
     getValidParams () {
         let params = CommonHelper.parseJson(getPostParam('params'));
-        return params instanceof Array && params[0] && typeof params[0] === 'object'
-            ? params : null;
+        return Array.isArray(params) && params[0] && typeof params[0] === 'object' ? params : null;
     }
 };
 module.exports.init(module);
 
 const CommonHelper = require('areto/helper/CommonHelper');
 const BadRequest = require('areto/error/BadRequestHttpException');
-const NotFound = require('areto/error/NotFoundHttpException');
 const ActiveRecord = require('areto/db/ActiveRecord');

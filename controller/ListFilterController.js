@@ -1,6 +1,6 @@
 'use strict';
 
-const Base = require('../component/CrudController');
+const Base = require('../component/base/CrudController');
 
 module.exports = class ListFilterController extends Base {
 
@@ -15,13 +15,9 @@ module.exports = class ListFilterController extends Base {
     }
 
     async actionInlineList () {
-        let query = this.getModelClass().findByTarget(this.getQueryParam('target'));
-        let models = await query.and({
-            'author': this.user.getId()
-        }).all();
-        this.sendJson({
-            'data': models.map(model => model.getAttrs())
-        });
+        let query = this.createModel().findByTarget(this.getQueryParam('target'));
+        let models = await query.and({author: this.user.getId()}).all();
+        this.sendJson({data: models.map(model => model.getAttrs())});
     }
 
     async actionInlineCreate () {

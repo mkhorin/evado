@@ -1,9 +1,9 @@
 <!-- _layout/modal/model-view -->
 <%
 let data = {
-    'id': model.getId(),
-    'key': model.PK,
-    'update': _url('update')
+    id: model.getId(),
+    key: model.PK,
+    update: _url('update')
 };
 if (typeof params !== 'undefined') {
     Object.assign(data, params);

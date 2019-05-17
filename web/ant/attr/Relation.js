@@ -12,8 +12,8 @@ Ant.ModelAttr.Relation = class extends Ant.ModelAttr {
 
     createList (callback) {
         return new Ant.AttrList(this.$attr.find('.data-grid'), {
-            'attr': this,
-            'afterInit': callback
+            attr: this,
+            afterInit: callback
         });
     }
 };
@@ -33,7 +33,7 @@ Ant.AttrList = class extends Ant.List {
     }
 
     createNotice () {
-        return new Ant.Notice({'container': $notice => this.$grid.prepend($notice)});
+        return new Ant.Notice({container: $notice => this.$grid.prepend($notice)});
     }
 
     prepareRow (row, data, index) {
@@ -71,7 +71,7 @@ Ant.AttrList = class extends Ant.List {
         if (data && data.result) {
             this.linkObjects(data.result);
             if (data.reopen) {
-                this.loadModal(this.params.update, {'id': data.result});
+                this.loadModal(this.params.update, {id: data.result});
             }
         }
     }
@@ -90,9 +90,7 @@ Ant.AttrList = class extends Ant.List {
         if (!this.revertChanges()) {
             this.loadModal(this.params.link, null, (event, data)=> {
                 data && data.result && this.linkObjects(data.result);
-            },{
-                'multiple': this.params.multiple
-            });
+            },{multiple: this.params.multiple});
         }
     }
 

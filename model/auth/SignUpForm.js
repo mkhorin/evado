@@ -26,7 +26,7 @@ module.exports = class SignUpForm extends Base {
         if (!await this.validate()) {
             return false;
         }
-        let model = new User({scenario: 'create'});
+        let model = this.spawn(User, {scenario: 'create'});
         model.setAttrs(this);
         if (await model.save()) {
             await this.user.login(model, 0);
@@ -36,4 +36,4 @@ module.exports = class SignUpForm extends Base {
         return false;
     }
 };
-module.exports.init(module);
+module.exports.init();

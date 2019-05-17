@@ -2,18 +2,18 @@
 
 // EVENTS
 
-// uploader.error
-// uploader.selected - select new files
-// uploader.overflow - select too many files
-// uploader.finished - all files uploaded
+// uploader:error
+// uploader:selected - select new files
+// uploader:overflow - select too many files
+// uploader:finished - all files uploaded
 
-// uploader.file.appended - new uploader item cloned
-// uploader.file.validated - item validated
-// uploader.file.started - start upload
-// uploader.file.progress - progress upload - percents
-// uploader.file.uploaded - file uploaded
-// uploader.file.confirmRemove - remove file after user confirm
-// uploader.file.removed - remove file
+// uploader:file:appended - new uploader item cloned
+// uploader:file:validated - item validated
+// uploader:file:started - start upload
+// uploader:file:progress - progress upload - percents
+// uploader:file:uploaded - file uploaded
+// uploader:file:confirmRemove - remove file after user confirm
+// uploader:file:removed - remove file
 
 Ant.FileUploader = class {
 
@@ -44,7 +44,10 @@ Ant.FileUploader = class {
             underWidth: 'The width cannot be smaller than {limit} px',
             tooMany: 'Too many files',
             alreadyExists: 'This file has already been selected',
-            confirmRemoveStatus: ['done', 'uploading']
+            confirmRemoveStatus: ['done', 'uploading'],
+            attrName: 'file',
+            upload: 'file/upload',
+            remove: 'file/remove'
         };
     }
 
@@ -55,9 +58,6 @@ Ant.FileUploader = class {
             ...Ant.FileUploader.getDefaultOptions(),
             ...$uploader.data('options')
         };
-        this.uploadUrl = $uploader.data('upload');
-        this.removeUrl = $uploader.data('remove');
-        this.fileAttrName = $uploader.data('attr');
         this.files = [];
         this.$input = $uploader.find('[type="file"]');
         this.init();
@@ -86,6 +86,14 @@ Ant.FileUploader = class {
         this.hideDropZone(0);
     }
 
+    on (eventName, handler, data) {
+        this.$uploader.on(`uploader:${eventName}`, handler, data);
+    }
+
+    trigger (eventName, data) {
+        this.$uploader.trigger(`uploader:${eventName}`, data);
+    }
+
     onDragOver (event) {
         //$dropZone.addClass('drag');
         return false;
@@ -106,38 +114,40 @@ Ant.FileUploader = class {
         this.$input.click();
     }
 
-    fireEvent (eventName, data) {
-        this.$uploader.trigger(`uploader.${eventName}`, data);
-    }
-
-    isFinished () {
-        for (let i =0; i < this.files.length; ++i) { // 'of' not work
-            if (this.files[i].isProcessing()) {
-                return false;
+    isProcessing () {
+        for (let file of this.files) {
+            if (file.isProcessing()) {
+                return true;
             }
         }
-        return true;
+    }
+
+    abort () {
+        for (let file of this.files) {
+            file.abort();
+        }
     }
 
     setFiles (files) {
         let counter = this.count();
         counter.total += files.length;
-        if (counter.total > this.options.maxFiles) {
-            this.fireEvent('overflow', this.options.tooMany);
-        } else if (files.length) {
+        if (counter.total > Number(this.options.maxFiles)) {
+            return this.trigger('overflow', this.options.tooMany);
+        }
+        if (files.length) {
             for (let i = 0; i < files.length; ++i) { // 'of' not work
                 this.files.push(new Ant.FileUploader.File(files[i], this));
             }
             this.hideDropZone(counter.total);
             this.$input.wrap('<form>').closest('form').get(0).reset();
             this.$input.unwrap();
-            this.fireEvent('selected', counter);
+            this.trigger('selected', counter);
             this.processNext();
         }
     }
 
     hideDropZone (total) {
-        if (parseInt(total) >= parseInt(this.options.maxFiles)) {
+        if (Number(total) >= Number(this.options.maxFiles)) {
             this.toggleDropZone(false);
         }
     }
@@ -148,15 +158,15 @@ Ant.FileUploader = class {
 
     count () {
         let counter = {
-            'total': 0,
-            'failed': 0,
-            'done': 0
+            total: 0,
+            failed: 0,
+            done: 0
         };
-        for (let i = 0; i < this.files.length; ++i) { // 'of' not work
-            if (!this.files[i].removed) {
-                if (this.files[i].failed) {
+        for (let file of this.files) {
+            if (!file.removed) {
+                if (file.failed) {
                     ++counter.failed;
-                } else if (this.files[i].isDone()) {
+                } else if (file.isDone()) {
                     ++counter.done;
                 }
                 ++counter.total;
@@ -182,8 +192,7 @@ Ant.FileUploader = class {
 
     getFirstFilesByStatus () {
         let map = {};
-        for (let i = 0; i < this.files.length; ++i) { // 'of' not work
-            let file = this.files[i];
+        for (let file of this.files) {
             if (!file.removed && !file.failed && !map.hasOwnProperty(file.status)) {
                 map[file.status] = file;
             }
@@ -210,8 +219,8 @@ Ant.FileUploader.File = class {
         this.uploader = uploader;
     }
 
-    fireEvent (eventName) {
-        this.uploader.fireEvent(`file.${eventName}`, this);
+    trigger (eventName) {
+        this.uploader.trigger(`file:${eventName}`, this);
     }
 
     isDone () {
@@ -226,14 +235,20 @@ Ant.FileUploader.File = class {
         this.status = 'done';
         this.info = this.file;
         this.buildItem();
-        this.fireEvent('appended');
-        this.fireEvent('saved');
+        this.trigger('appended');
+        this.trigger('saved');
     }
 
     setError (error) {
         this.failed = true;
         this.error = error;
-        this.fireEvent('error');
+        this.trigger('error');
+    }
+
+    abort () {
+        if (this.xhr) {
+            this.xhr.abort();
+        }
     }
 
     remove (error) {
@@ -241,11 +256,9 @@ Ant.FileUploader.File = class {
         if (this.$item) {
             this.$item.remove();
         }
-        if (this.xhr) {
-            this.xhr.abort();
-        }
+        this.abort();
         this.uploader.toggleDropZone(true);
-        this.fireEvent('remove');
+        this.trigger('remove');
     }
 
     // APPEND
@@ -259,13 +272,13 @@ Ant.FileUploader.File = class {
     onRemoveFile () {
         this.failed || this.uploader.options.confirmRemoveStatus.indexOf(this.status) === -1
             ? this.remove()
-            : this.fireEvent('confirmRemove');
+            : this.trigger('confirmRemove');
     }
 
     append () {
         this.buildItem();
         this.status = 'appended';
-        this.fireEvent('appended');
+        this.trigger('appended');
         this.uploader.processNext();
     }
 
@@ -274,7 +287,7 @@ Ant.FileUploader.File = class {
     validate () {
         // SKIP VALIDATION
         /*this.status = 'validated';
-         this.fireEvent('validated');
+         this.trigger('validated');
          this.uploader.processNext();
          return; //*/
 
@@ -294,7 +307,7 @@ Ant.FileUploader.File = class {
     startValidate () {
         let error = this.validateFile();
         this.status = 'validated';
-        this.fireEvent('validated');
+        this.trigger('validated');
         error && this.setError(error);
         this.uploader.processNext();
     }
@@ -371,7 +384,7 @@ Ant.FileUploader.File = class {
 
     upload () {
         this.xhr = new XMLHttpRequest;
-        this.xhr.open('POST', this.uploader.uploadUrl);
+        this.xhr.open('POST', this.uploader.options.upload);
         if (this.xhr.upload) {
             this.xhr.upload.addEventListener('progress', event => {
                 this.progressUploading(event);
@@ -382,18 +395,18 @@ Ant.FileUploader.File = class {
         };
         // создать данные формы для выгрузки на сервер
         let data = new FormData;
-        data.append(this.uploader.fileAttrName, this.file.name);
-        data.append(this.uploader.fileAttrName, this.file);
+        data.append(this.uploader.options.attrName, this.file.name);
+        data.append(this.uploader.options.attrName, this.file);
         this.status = 'uploading';
-        this.fireEvent('started');
+        this.trigger('started');
         this.xhr.send(data);
     }
 
     progressUploading (event) {
         // can be FALSE if server never sent Content-Length header in the response
         if (event.lengthComputable) {
-            this.percent = parseInt(event.loaded * 100 / event.total);
-            this.fireEvent('progress');
+            this.percent = Math.round(event.loaded * 100 / event.total);
+            this.trigger('progress');
         }
     }
 
@@ -402,7 +415,7 @@ Ant.FileUploader.File = class {
             if (this.xhr.status === 200) {
                 this.status = 'done';
                 this.info = this.xhr.response;
-                this.fireEvent('uploaded');
+                this.trigger('uploaded');
             } else {
                 this.setError(this.xhr.response);
             }

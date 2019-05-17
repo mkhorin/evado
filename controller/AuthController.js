@@ -1,6 +1,6 @@
 'use strict';
 
-const Base = require('../component/BaseController');
+const Base = require('../component/base/BaseController');
 
 module.exports = class AuthController extends Base {
 
@@ -23,7 +23,7 @@ module.exports = class AuthController extends Base {
                     },{
                         actions: ['sign-in', 'sign-up'],
                         roles: ['?'],
-                        denyPromise: (action, user)=> action.render('signed', {'model': user.model})
+                        deny: (action, user)=> action.render('signed', {model: user.model})
                     }]
                 }
             },
@@ -39,7 +39,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionSignIn () {
-        let model = new SignInForm({'user': this.user});
+        let model = this.spawn(SignInForm, {user: this.user});
         await model.resolveRateLimit();
         if (model.isBlocked()) {
             return this.blockByRateLimit(model.rateLimitModel);
@@ -54,7 +54,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionSignUp () {
-        let model = new SignUpForm({'user': this.user});
+        let model = this.spawn(SignUpForm, {user: this.user});
         if (this.isGet()) {
             return this.render('sign-up', {model});
         }
@@ -65,7 +65,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionChangePassword () {
-        let model = new ChangePasswordForm({'userModel': this.user.model});
+        let model = this.spawn(ChangePasswordForm, {userModel: this.user.model});
         if (this.isGet()) {
             return this.render('change-password', {model});
         }

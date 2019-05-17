@@ -265,10 +265,10 @@ Ant.ListFilter.Condition = class {
         let value = this.getValue();
         if (operation && value !== undefined ) {
             return this.type.resolveRequestData({
-                'and': this.logical !== 'or',
-                'attr': this.getAttr(),
-                'op': operation,
-                'val': value
+                and: this.logical !== 'or',
+                attr: this.getAttr(),
+                op: operation,
+                val: value
             });
         }
     }
@@ -319,8 +319,8 @@ Ant.ListFilter.Type = class {
 
     resolveRequestData (data) {
         return Object.assign(data, {
-            'type': this.name,
-            'valType': this.params.valueType
+            type: this.name,
+            valType: this.params.valueType
         });
     }
 };
@@ -351,8 +351,8 @@ Ant.ListFilter.DateType = class extends Ant.ListFilter.Type {
         this.$picker.datetimepicker({
             ...$.fn.datetimepicker.defaultOptions,
             ...this.filter.params.datepicker,
-            'format': this.params.format || 'L',
-            'widgetParent': this.$picker.parent()
+            format: this.params.format || 'L',
+            widgetParent: this.$picker.parent()
         });
         this.picker = this.$picker.data('DateTimePicker');
         this.$picker.on('dp.change', this.onChangeDate.bind(this));
@@ -382,40 +382,38 @@ Ant.ListFilter.SelectorType = class extends Ant.ListFilter.Type {
     }
 
     createSimple () {
-        Ant.ObjectHelper.assignUndefined(this.params, {
-            'hasEmpty': true
-        });
+        Ant.ObjectHelper.assignUndefined(this.params, {hasEmpty: true});
         let items = Ant.Helper.renderSelectOptions(this.params);
         this.getValueItem().html(items).select2();
     }
 
     async createAjax () {
         let params = this.commonParams = {
-            'pageSize': 10,
-            'inputDelay': 500,
-            'minInputLength': 1,
-            'maxInputLength': 24,
-            'placeholder': '',
+            pageSize: 10,
+            inputDelay: 500,
+            minInputLength: 1,
+            maxInputLength: 24,
+            placeholder: '',
             ...this.commonParams,
             ...this.params
         };
         await this.getValueItem().select2({
-            'ajax': {
-                'type': 'POST',
-                'url': params.url,
-                'dataType': 'json',
-                'data': this.getQueryParams.bind(this),
-                'processResults': this.processResults.bind(this),
-                'delay': params.inputDelay,
-                'cache': true
+            ajax: {
+                type: 'POST',
+                url: params.url,
+                dataType: 'json',
+                data: this.getQueryParams.bind(this),
+                processResults: this.processResults.bind(this),
+                delay: params.inputDelay,
+                cache: true
             },
-            'width': '100%',
-            'allowClear': params.allowClear,
-            'placeholder': params.placeholder,
-            'minimumInputLength': params.minInputLength,
-            'maximumInputLength': params.maxInputLength,
-            'maximumSelectionLength': params.maxSelectionLength,
-            'minimumResultsForSearch': params.pageSize
+            width: '100%',
+            allowClear: params.allowClear,
+            placeholder: params.placeholder,
+            minimumInputLength: params.minInputLength,
+            maximumInputLength: params.maxInputLength,
+            maximumSelectionLength: params.maxSelectionLength,
+            minimumResultsForSearch: params.pageSize
         });
     }
 
@@ -426,26 +424,24 @@ Ant.ListFilter.SelectorType = class extends Ant.ListFilter.Type {
 
     getQueryParams (params) {
         return {
-            'id': this.params.id,
-            'search': params.term,
-            'page': params.page,
-            'pageSize': this.commonParams.pageSize
+            id: this.params.id,
+            search: params.term,
+            page: params.page,
+            pageSize: this.commonParams.pageSize
         };
     }
 
     processResults (data, params) {
         params.page = params.page || 1;
         return {
-            'pagination': {
-                'more': (params.page * this.commonParams.pageSize) < data.total
-            },
-            'results': data.items
+            pagination: {more: (params.page * this.commonParams.pageSize) < data.total},
+            results: data.items
         };
     }
 
     resolveRequestData (data) {
         return Object.assign(super.resolveRequestData(data), {
-            'rel': this.params.relation || ''
+            rel: this.params.relation || ''
         });
     }
 

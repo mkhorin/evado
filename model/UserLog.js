@@ -20,9 +20,7 @@ module.exports = class UserLog extends Base {
     }
 
     log (values) {
-        Object.assign(this._attrs, values, {
-            'createdAt': new Date
-        });
+        Object.assign(this._attrs, values, {createdAt: new Date});
         return this.forceSave();
     }
 
@@ -30,6 +28,6 @@ module.exports = class UserLog extends Base {
         return this.hasOne(User, User.PK, 'user');
     }
 };
-module.exports.init(module);
+module.exports.init();
 
 const User = require('./User');

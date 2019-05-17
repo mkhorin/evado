@@ -1,8 +1,8 @@
 <!-- _part/group/set -->
 
 <% let params = {
-    'active': typeof active !== 'undefined' && active ? 'active' : '',
-    'attraction': typeof attraction === 'undefined' ? '' : JSON.stringify(attraction)
+    active: typeof active !== 'undefined' && active ? 'active' : '',
+    attraction: typeof attraction === 'undefined' ? '' : JSON.stringify(attraction)
 }; %>
 
 <fieldset class="form-base-group form-set <%- params.active %>"

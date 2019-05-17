@@ -28,4 +28,4 @@ module.exports = class ListFilter extends Base {
         return this.find({target: [null, target]});
     }
 };
-module.exports.init(module);
+module.exports.init();

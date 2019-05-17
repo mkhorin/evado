@@ -2,7 +2,7 @@
 
 module.exports = {
     parent: 'default',
-    port: 3001,
+    port: 3000,
     components: {
         'logger': {
             level: 'trace'
@@ -12,6 +12,9 @@ module.exports = {
         }
     },
     params: {
-        // 'activeProjects': ['test']
-    }
+    },
+    metaModels: {
+        'nav': {            
+        }
+    },
 };

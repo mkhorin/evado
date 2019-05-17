@@ -7,6 +7,11 @@ Ant.ModelError = class {
         this.modal = model.modal;
         this.notice = model.notice;
         this.$form = model.$form;
+        this.$form.on('change', '.form-value', this.onChangeValue.bind(this));
+    }
+
+    onChangeValue (event) {
+        $(event.currentTarget).closest('.form-attr').removeClass('has-error');
     }
 
     parse (data) {
@@ -42,11 +47,11 @@ Ant.ModelError = class {
         }
         let $errorAttrs = this.$form.find('.has-error');
         $errorAttrs.parents('.form-base-group').addClass('has-group-error');
-        this.$form.find('.tab-pane.has-group-error').each((index, element)=> {
-            let $pane = $(element);
-            $pane.closest('.form-tabs').find(`> .nav-tabs [data-id="${$pane.data('id')}"]`)
+        for (let $pane of this.$form.find('.tab-pane.has-group-error')) {
+            $pane.closest('.form-tabs')
+                .find(`> .nav-tabs [data-id="${$pane.data('id')}"]`)
                 .addClass('has-group-error');
-        });
+        }
         return $errorAttrs;
     }
 

@@ -4,9 +4,7 @@ Ant.List = class {
 
     static init (modal, selector = '.ant-list') {
         let $content = modal ? modal.$modal : $(document.body);
-        return $content.find(selector).each((index, elem)=> {
-            this.create($(elem));
-        });
+        return $content.find(selector).each((index, element)=> this.create($(element)));
     }
 
     static create ($grid) {
@@ -32,7 +30,7 @@ Ant.List = class {
         this.$controls.append(this.$modal.find('.after-list-controls'));
         this.notice = this.createNotice();
         this.params = {
-            'multiple': true,
+            multiple: true,
             ...this.$grid.data('params')
         };
         this.init();
@@ -41,7 +39,7 @@ Ant.List = class {
     init () {
         this.$controls.on('click', '[data-id]', this.onClickControl.bind(this));
         this.getControl('selectAll').toggle(this.params.multiple);
-        this.$controls.find('.list-tool').each((index, elem)=> Ant.ListTool.create($(elem), this));
+        this.$controls.find('.list-tool').each((index, element)=> Ant.ListTool.create($(element), this));
 
         this.createDataGrid();
         this.createFilter();
@@ -76,11 +74,11 @@ Ant.List = class {
             this.$grid.toggleClass('active-advanced-search', data);
         });
         this.$thead = this.grid.renderer.$thead;
-        this.$thead.find('th').each((index, element)=> {
-            if (this.filter.getAttrParams(element.dataset.name)) {
-                $(element).addClass('searchable');
+        for (let cell of this.$thead.find('th')) {
+            if (this.filter.getAttrParams(cell.dataset.name)) {
+                $(cell).addClass('searchable');
             }
-        });
+        }
         this.$thead.on('click', '.searchable .search-toggle', event => {
             this.filter.toggle(true);
             this.filter.getEmptyCondition().setAttr($(event.currentTarget).closest('th').data('name'));
@@ -97,7 +95,7 @@ Ant.List = class {
             case 'remove': return this.remove();
             case 'reload': return this.reload();
             case 'index': return this.index();
-            case 'order': return this.order();
+            case 'sort': return this.sort();
             case 'executeByUrl': return this.executeByUrl(event);
             case 'selectAll': return this.selectAll();
         }
@@ -108,12 +106,12 @@ Ant.List = class {
         this.params.columns.forEach(this.prepareColumnData.bind(this));
         if (this.params.list) {
             this.params.ajax = {
-                'url': this.params.list
+                url: this.params.list
             };
         }
-        // 'rowCallback': this.prepareRow.bind(this),
+        // rowCallback: this.prepareRow.bind(this),
         this.params.overridenMethods = {
-            'isSearchableColumn': this.isSearchableColumn.bind(this)
+            isSearchableColumn: this.isSearchableColumn.bind(this)
         }
     }
 
@@ -128,8 +126,8 @@ Ant.List = class {
 
     createNotice () {
         return new Ant.Notice({
-            'container': $notice => this.$content.prepend($notice),
-            '$scrollTo': this.$content
+            container: $notice => this.$content.prepend($notice),
+            $scrollTo: this.$content
         });
     }
 
@@ -159,13 +157,13 @@ Ant.List = class {
 
     prepareRows () {
         this.findRows().each((index, row)=> {
-            this.prepareRow(row, this.grid.getData(row.dataset.id),  index);
+            this.prepareRow(row, this.grid.getData(row.dataset.id), index);
         });
     }
 
-    prepareRow () {
+    prepareRow (...args) {
         if (this[this.params.prepareRow] instanceof Function) {
-            this[this.params.prepareRow].apply(this, arguments);
+            this[this.params.prepareRow](...args);
         }
     }
 
@@ -204,7 +202,7 @@ Ant.List = class {
     }
 
     getObjectIdParam ($rows) {
-        return {'id': this.getObjectIds($rows)[0]};
+        return {id: this.getObjectIds($rows)[0]};
     }
 
     getObjectIds ($rows) {
@@ -239,7 +237,7 @@ Ant.List = class {
 
     removeObjects ($rows) {
         this.post(this.params.remove, {
-            'ids': this.serializeObjectIds($rows)
+            ids: this.serializeObjectIds($rows)
         }).done(this.reload.bind(this));
     }
 
@@ -255,7 +253,7 @@ Ant.List = class {
             this.currentRowId = data.result;
             this.reload();
             if (data.reopen) {
-                this.loadModal(this.params.update, {'id': data.result});
+                this.loadModal(this.params.update, {id: data.result});
             }
         }
     }
@@ -308,14 +306,14 @@ Ant.List = class {
 
     remove () {
         let $rows = this.getSelectedRows();
-        if ($rows && Ant.Helper.confirm(this.params.removeConfirm)) {
+        if ($rows && Ant.Helper.confirm('Delete this object?')) {
             this.removeObjects($rows);
         }
     }
 
-    order () {
-        this.modalOrder = this.modalOrder || new Ant.ListOrder(this, this.params.modalOrder);
-        this.modalOrder.execute();
+    sort () {
+        this.modalSort = this.modalSort || new Ant.ListSort(this, this.params.modalSort);
+        this.modalSort.execute();
     }
 
     executeByUrl (event) {
@@ -336,7 +334,7 @@ Ant.MainList = class extends Ant.List {
 
     init () {
         super.init();
-        this.utilTools = new Ant.UtilTools(this.$controls);
+        this.utilManager = new Ant.UtilManager(this.$controls, this);
     }
 };
 
@@ -369,7 +367,7 @@ Ant.SelectList = class extends Ant.List {
             ? this.getSelectedRows()
             : this.getSelectedRow();
         if ($rows) {
-            this.modal.close({'result': this.serializeObjectIds($rows)});
+            this.modal.close({result: this.serializeObjectIds($rows)});
         }
     }
 
@@ -380,10 +378,10 @@ Ant.SelectList = class extends Ant.List {
         if (!$rows) {
             return false;
         }
-        this.post(url, {'ids': this.serializeObjectIds($rows)}).done(id => {
+        this.post(url, {ids: this.serializeObjectIds($rows)}).done(id => {
             this.modal.close({
-                'result': id,
-                'saved': true
+                result: id,
+                saved: true
             });
         });
     }

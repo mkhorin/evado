@@ -4,10 +4,9 @@
 <div class="wrapper">
 
     <header class="main-header">
-        <a href="" class="logo">
-            <span class="logo-mini">E<b>M</b></span>
-            <span class="logo-lg">Evado.<b>Main</b></span>
-        </a>
+
+        <%- include(_view.get('_part/nav/logo')) %>
+
         <nav class="navbar navbar-static-top" role="navigation" class>
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"></a>
             <div class="navbar-custom-menu">
@@ -15,7 +14,7 @@
                     <%- include(_view.get('_part/nav/user')) %>
                 </ul>
             </div>
-            <%- include(_view.get('_part/nav/global-menu-toggle'), {'url': '/default/widget'}) %>
+            <%- include(_view.get('_part/nav/global-menu-toggle'), {url: '/default/widget'}) %>
             <%- include(_view.get('_part/tool/modal-back')) %>
         </nav>
     </header>
@@ -43,4 +42,8 @@
             <%- body -%>
         </section>
     </div>
+</div>
+
+<div id="global-loader" class="global-loader loader">
+    <span class="fa fa-spinner fa-spin spinner"></span>
 </div>

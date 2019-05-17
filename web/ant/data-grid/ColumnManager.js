@@ -60,8 +60,8 @@ Ant.DataGrid.ColumnManager = class {
     showMenu () {
         let offset = this.$toggle.offset();
         this.$menu.show().offset({
-            'left': offset.left + this.$toggle.outerWidth() - this.$menu.outerWidth(),
-            'top': offset.top + this.$toggle.outerHeight() + 1
+            left: offset.left + this.$toggle.outerWidth() - this.$menu.outerWidth(),
+            top: offset.top + this.$toggle.outerHeight() + 1
         });
     }
 
@@ -99,8 +99,8 @@ Ant.DataGrid.ColumnManager = class {
 
     getStoreData () {
         return this.params.columns.map(data => ({
-            'name': data.name,
-            'hidden': data.hidden
+            name: data.name,
+            hidden: data.hidden
         }));
     }
 };

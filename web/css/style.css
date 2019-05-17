@@ -48,11 +48,14 @@ body {
     color: #000;
     background: #ecf0f5;
 }
+
+
 label {
     font-weight: normal;
     color: #666;
 }
-label.radio {
+label.radio,
+label.checkbox {
     color: #000;
 }
 
@@ -232,7 +235,6 @@ a:focus, button:focus {
 }
 .navbar-tools .btn {
     margin-right: 3px;
-    border-color: #fff;
 }
 .notice-list > li .fa {
     margin-right: 10px;
@@ -250,26 +252,34 @@ a:focus, button:focus {
     height: 100%;
     width: 100%;
     z-index: 49;
+    background: rgba(255, 255, 255, 0.3) !important;
 }
 .overlay-wrapper {
     position: relative;
-}
-.box .overlay,
-.overlay-wrapper .overlay {
-    background: rgba(255, 255, 255, 0.3);
 }
 .overlay .fa,
 .box .overlay > .fa,
 .overlay-wrapper .overlay > .fa {
     color: #ccc;
-    font-size: 24px;
+    font-size: 18px;
     position: absolute;
     top: 50%;
     left: 50%;
 }
+.loading {
+    filter: grayscale(75%);
+}
+body.loading {
+    overflow: hidden;
+}
+.global-loader {
+    display: none;
+    z-index: 1049;
+}
 .loading > .overlay {
     display: block;
 }
+
 .box-grid + .box-grid {
     margin-top: -20px;
 }
@@ -426,6 +436,9 @@ a:focus, button:focus {
 .sidebar-menu {
     margin-top: 15px;
 }
+.sidebar-menu .menu-open > .treeview-menu {
+    display: block;
+}
 .sidebar-menu > li > a {
     padding: 4px 5px 4px 10px;
 }
@@ -510,12 +523,12 @@ a:focus, button:focus {
 }
 .form-group .error-block {
     display: none;
-    margin: 3px 0 0 0;
+    margin: 5px 0 0 0;
     color: #c00;
 }
 .form-group .hint-block {
-    margin: 3px 0 0 0;
-    color: #888;
+    margin: 5px 0 0 0;
+    color: #aaa;
 }
 .form-group .hint-block:empty {
     display: none;
@@ -573,6 +586,9 @@ a:focus, button:focus {
 }
 .captcha, .captcha-refresh {
     vertical-align: middle;
+}
+.captcha-refresh {
+    margin-left: 10px;
 }
 .form-control-static + .error-block {
     margin-top: 0;
@@ -699,6 +715,10 @@ textarea.form-control {
 
 .disabled.form-group .edit.btn {
     cursor: not-allowed;
+}
+
+.form-group .file-preview {
+    margin-top: 20px;
 }
 
 /* TABS */
@@ -1023,7 +1043,7 @@ div.dataTables_wrapper div.dataTables_info {
     position: relative;
     margin: 0 0 10px;
     padding: 10px;
-    background: #f6f6fa;
+    background: #f6f6f6;
 }
 .filter-tools {
     display: inline-block;
@@ -1180,7 +1200,7 @@ input[type=checkbox].condition-value {
     background: rgba(16, 16, 16, 0.1);
 }
 .ant-modal > .overlay {
-    background: rgba(255, 255, 255, 0.1);
+    background: transparent !important;
 }
 .ant-modal-container {
     max-width: 1280px;
@@ -1279,7 +1299,7 @@ input[type=checkbox].condition-value {
     color:#444;
 }
 .ant-modal-stack-toggle.active {
-    color: #444;
+    color: #333;
 }
 .ant-modal-stack-toggle:hover {
     color:#000;
@@ -1360,7 +1380,6 @@ input[type=checkbox].condition-value {
 
 body.ant-modal-active {
     overflow: hidden;
-    transition: filter 1s ease;
 }
 body.ant-modal-root-active {
     overflow: auto;
@@ -1377,6 +1396,9 @@ body.ant-modal-root-active .ant-modal-area {
 
 /* AJAX UPLOADER */
 
+.uploader {
+    padding-top: 2px;
+}
 .uploader-input .uploader-input-file {
     position: absolute;
     visibility: hidden;
@@ -1475,7 +1497,7 @@ body.ant-modal-root-active .ant-modal-area {
     float: right;
     margin: 17px 0 0 0;
     font-size: 15px;
-    color: #a99;
+    color: #ccc;
 }
 .uploader-remove:hover {
     cursor: pointer;
@@ -1509,21 +1531,19 @@ body.ant-modal-root-active .ant-modal-area {
 .uploader-dropzone {
     display: none;
     margin: 0 auto;
-    padding: 4px 10px;
+    padding: 3px 10px;
     vertical-align: middle;
     text-align: center;
-    border: 1px solid #ccc;
-    background-color: #f0f0f0;
+    border: 1px solid #d2d6de;
+    background-color: #f8f8f8;
     background-size: 28px 28px;
     background-position: 10px 10px;
-    background-image: linear-gradient(135deg, #f0f0f0 20%, #fff 20%, #fff 50%, #f0f0f0 50%, #f0f0f0 70%, #fff 70%, #fff);
+    background-image: linear-gradient(135deg, #f4f4f4 20%, #fff 20%, #fff 50%, #f4f4f4 50%, #f4f4f4 70%, #fff 70%, #fff);
 }
 .uploader-dropzone:hover {
     cursor: pointer;
-    border-color: #acf;
     background-color: #eef;
-    background-image: linear-gradient(135deg, #def 20%, #fff 20%, #fff 50%, #def 50%, #def 70%, #fff 70%, #fff);
-    animation: move-bg 2s linear infinite;
+    background-image: linear-gradient(135deg, #eee 20%, #fff 20%, #fff 50%, #eee 50%, #eee 70%, #fff 70%, #fff);
 }
 .show-dropzone .uploader-dropzone {
     display: block;
@@ -1538,6 +1558,7 @@ body.ant-modal-root-active .ant-modal-area {
     0% {background-position: 0 0;}
     100% {background-position: 28px 28px;}
 }
+
 /* NEWS LIST */
 
 .news-list {
@@ -1666,10 +1687,11 @@ body.ant-modal-root-active .ant-modal-area {
 
 /* UTIL */
 
-.util-tools {
+.util-container {
     display: inline-block;
+    margin-left: 10px;
 }
-.util-tools > .util-pool {
+.util-container > .util-pool {
     display: inline-block;
 }
 

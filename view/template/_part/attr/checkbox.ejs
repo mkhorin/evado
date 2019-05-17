@@ -4,13 +4,13 @@
 <%- include('_params', {params}) %>
 
 <div class="form-attr form-group <%- params.css %>" data-type="checkbox"
-     data-attraction='<%- params.attraction %>'>
+     data-attraction='<%= params.attraction %>'>
     <div class="<%- params.labelCss %>"></div>
     <div class="<%- params.valueCss %>">
         <div class="checkbox checkbox-init">
             <label title="<%- params.hint %>">
                 <input name="<%- params.name %>"
-                       type="hidden" class="form-value" value="<%- params.value ? 'on': ''%>">
+                       type="hidden" class="form-value" value="<%- params.value ? 'on' : ''%>">
                 <input type="checkbox" <%- params.value ? 'checked' : '' %>>
                 <span class="l10n"><%- params.label %></label>
             </label>

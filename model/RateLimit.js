@@ -21,10 +21,10 @@ module.exports = class RateLimit extends Base {
         };
     }
 
-    static async getModel (type, ip) {
+    async resolveModel (type, ip) {
         let model = await this.find({type, ip}).one();
         if (!model) {
-            model = model || new this;
+            model = model || this;
             model.assignAttrs({type, ip});
         }
         return model;
@@ -49,4 +49,4 @@ module.exports = class RateLimit extends Base {
         this.forceSave(()=>{});
     }
 };
-module.exports.init(module);
+module.exports.init();

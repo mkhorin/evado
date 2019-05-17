@@ -12,7 +12,7 @@
         <% if (user) { %>
         <li class="user-body">
             <% if (user.assignments) { %>
-            <p class="mb0">Role: <b><%- user.assignments %></b></p>
+            <p class="mb0">Role: <b><%- user.assignments.join(' ') %></b></p>
             <% } %>
         </li>
         <li class="user-footer">

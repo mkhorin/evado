@@ -17,22 +17,22 @@ Ant.DataGrid.AjaxProvider = class {
     load () {
         this.abort();
         let params = {
-            'method': 'post',
-            'dataType': 'json',
-            'contentType': 'application/json',
+            method: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
             ...this.params.ajax
         };
         let length = this.grid.pagination.pageSize;
         params.data = {
-            'columns': this.params.columns,
-            'start': this.grid.pagination.page * length,
-            'length': length,
-            'search': this.grid.commonSearch.getValue(),
-            'order': this.grid.order
+            columns: this.params.columns,
+            start: this.grid.pagination.page * length,            
+            search: this.grid.commonSearch.getValue(),
+            order: this.grid.order,
+            length
         };
         this.grid.event.trigger('beforeXhr', {
-            'params': params.data,
-            'grid': this.grid
+            params: params.data,
+            grid: this.grid
         });
         if (params.dataType === 'json') {
             params.data = JSON.stringify(params.data);
@@ -43,10 +43,7 @@ Ant.DataGrid.AjaxProvider = class {
     }
 
     done (data) {
-        this.grid.event.trigger('afterXhr', {
-            'data': data,
-            'grid': this.grid
-        });
+        this.grid.event.trigger('afterXhr', {grid: this.grid, data});
         let maxSize = data ? data.maxSize : 0;
         let totalSize = data ? data.totalSize : 0;
         let items = data ? data.items : [];

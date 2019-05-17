@@ -9,12 +9,12 @@ if (items === 'labels') {
 
 <div class="form-attr <%- params.css %> <%- params.required %> form-group"
      data-type="radioList"
-     data-attraction='<%- params.attraction %>'>
+     data-attraction='<%= params.attraction %>'>
     <label class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <input name="<%- params.name %>" value="<%- params.value %>" type="hidden" class="form-value">
         <div class="radio-list">
-            <% if (typeof emptyText !== 'undefined') { %>
+            <% if (!params.required && typeof emptyText !== 'undefined') { %>
             <label class="radio radio-inline">
                 <input type="radio" value="">
                 <span class="l10n"><%- emptyText %></span>

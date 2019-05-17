@@ -264,9 +264,7 @@ Ant.Modal.Item = class {
     scrollTo ($target) {
         let $scroll = this.$body.children('.ant-modal-scroll-container').children('.scroll-body');
         let top = $target.first().offset().top - $scroll.offset().top;
-        $scroll.animate({
-            'scrollTop': $scroll.scrollTop() + top
-        });
+        $scroll.animate({scrollTop: $scroll.scrollTop() + top});
     }
 };
 

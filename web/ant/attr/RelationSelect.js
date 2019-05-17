@@ -16,39 +16,40 @@ Ant.ModelAttr.RelationSelect = class extends Ant.ModelAttr {
         this.childModal = Ant.modal.create();
         this.$select = this.$attr.find('select');
         this.params = {
-            'pageSize': 10,
-            'inputDelay': 500,
-            'minInputLength': 0,
-            'maxInputLength': 10,
-            'placeholder': '',
+            pageSize: 10,
+            inputDelay: 500,
+            minInputLength: 0,
+            maxInputLength: 10,
+            placeholder: '',
             ...this.$select.data('params')
         };
         this.$container = this.$value.closest('.box');
         this.$content = this.$container.children('.box-body');
         this.$controls = this.$content.children('.list-controls');
-        this.notice = new Ant.Notice({'container': $notice => this.$content.prepend($notice)});
+        this.notice = new Ant.Notice({container: $notice => this.$content.prepend($notice)});
         this.select2ChoiceClass = '.select2-selection__choice';
 
         this.$container.mouseenter(this.showMouseEnter.bind(this));
         this.$container.mouseleave(this.hideMouseEnter.bind(this));
-        this.$container.on('click', this.select2ChoiceClass, this.clickSelect2Choice.bind(this));
+        this.$container.on('click', this.select2ChoiceClass, this.onClickSelect2Choice.bind(this));
+        this.$container.on('dblclick', this.select2ChoiceClass, this.onDoubleClickSelect2Choice.bind(this));
         this.$select.change(this.changeSelect.bind(this));
 
-        this.$controls.find('.btn').click(() => this.notice.hide());
+        this.$controls.find('.btn').click(()=> this.notice.hide());
         this.getControl('unlink').click(this.unlink.bind(this));
         this.getControl('view').click(this.view.bind(this));
         this.getControl('create').click(this.create.bind(this));
         this.getControl('update').click(this.update.bind(this));
         this.getControl('remove').click(this.remove.bind(this));
-        this.getControl('order').click(this.order.bind(this));
+        this.getControl('sort').click(this.sort.bind(this));
     }
 
     initChanges () {
-        this.changes = {'links':[], 'unlinks':[], 'removes':[]};
+        this.changes = {links: [], unlinks: [], removes: []};
         this.startValues = [];
-        this.$select.children().each((index, element)=> {
-            this.startValues.push($(element).attr('value'));
-        });
+        for (let option of this.$select.children()) {
+            this.startValues.push(option.getAttribute('value'));
+        }
         Object.assign(this.changes, Ant.Helper.parseJson(this.getValue()));
         if (this.changes.links.length) {
             this.selectValue(this.changes.links[0]).done(()=> {
@@ -59,23 +60,23 @@ Ant.ModelAttr.RelationSelect = class extends Ant.ModelAttr {
 
     createSelect2 () {
         this.$select.select2({
-            'ajax': {
-                'type': 'POST',
-                'url': this.params.list,
-                'dataType': 'json',
-                'data': this.getQueryParams.bind(this),
-                'processResults': this.processResults.bind(this),
-                'delay': this.params.inputDelay,
-                'cache': true
+            ajax: {
+                type: 'POST',
+                url: this.params.list,
+                dataType: 'json',
+                data: this.getQueryParams.bind(this),
+                processResults: this.processResults.bind(this),
+                delay: this.params.inputDelay,
+                cache: true
             },
-            'width': '100%',
-            'allowClear': this.params.allowClear,
-            'placeholder': this.params.placeholder,
-            'minimumInputLength': this.params.minInputLength,
-            'maximumInputLength': this.params.maxInputLength,
-            'maximumSelectionLength': this.params.maxSelectionLength,
-            'minimumResultsForSearch': this.params.pageSize,
-            "readonly": true
+            width: '100%',
+            allowClear: this.params.allowClear,
+            placeholder: this.params.placeholder,
+            minimumInputLength: this.params.minInputLength,
+            maximumInputLength: this.params.maxInputLength,
+            maximumSelectionLength: this.params.maxSelectionLength,
+            minimumResultsForSearch: this.params.pageSize,
+            readonly: true
         });
     }
 
@@ -85,23 +86,23 @@ Ant.ModelAttr.RelationSelect = class extends Ant.ModelAttr {
 
     getQueryParams (data) {
         return {
-            'search': data.term,
-            'page': data.page,
-            'pageSize': this.params.pageSize
+            search: data.term,
+            page: data.page,
+            pageSize: this.params.pageSize
         };
     }
 
     processResults (data, params) {
         params.page = params.page || 1;
         return {
-            'pagination': {'more': (params.page * this.params.pageSize) < data.total},
-            'results': data.items
+            pagination: {more: (params.page * this.params.pageSize) < data.total},
+            results: data.items
         };
     }
 
     getSelectedValue () {
         let value = this.$select.val();
-        if (value instanceof Array) {
+        if (Array.isArray(value)) {
             let $item = this.getSelect2ChoiceItems().filter('.active');
             return value[$item.index(this.select2ChoiceClass)];
         }
@@ -120,10 +121,19 @@ Ant.ModelAttr.RelationSelect = class extends Ant.ModelAttr {
         return this.$container.find(this.select2ChoiceClass);
     }
 
-    clickSelect2Choice (event) {
-        this.getSelect2ChoiceItems().not(event.currentTarget).removeClass('active');
-        $(event.currentTarget).toggleClass('active');
+    onClickSelect2Choice (event) {
+        if (event.ctrlKey) {
+            $(event.currentTarget).toggleClass('active');
+        } else {
+            this.getSelect2ChoiceItems().removeClass('active');
+            $(event.currentTarget).addClass('active');
+        }
         this.$select.select2('close');
+    }
+
+    onDoubleClickSelect2Choice (event) {
+        $(event.currentTarget).addClass('active');
+        this.getControl('update').click();
     }
 
     hasChanges () {
@@ -135,7 +145,7 @@ Ant.ModelAttr.RelationSelect = class extends Ant.ModelAttr {
     changeSelect () {
         this.changes.links = [];
         let value = this.$select.val();
-        if (value instanceof Array) {
+        if (Array.isArray(value)) {
             value.forEach(this.linkValue.bind(this));
         } else {
             value && this.linkValue(value);
@@ -201,14 +211,14 @@ Ant.ModelAttr.RelationSelect = class extends Ant.ModelAttr {
         }
     }
 
-    order (reset) {
-        this.loadModal(this.params.modalOrder, null, (event, data)=> {
+    sort (reset) {
+        this.loadModal(this.params.modalSort, null, (event, data)=> {
         });
     }
 
     removeSelect2Value (id) {
         let value = this.$select.val();
-        if (value instanceof Array) {
+        if (Array.isArray(value)) {
             value.splice(value.indexOf(id), 1);
             this.$select.val(value).change();
         } else {
@@ -227,7 +237,7 @@ Ant.ModelAttr.RelationSelect = class extends Ant.ModelAttr {
         if (data && data.result) {
             this.selectValue(data.result);
             if (data.reopen) {
-                this.loadModal(this.params.update, {'id': data.result});
+                this.loadModal(this.params.update, {id: data.result});
             }
         }
     }

@@ -44,4 +44,4 @@ module.exports = class ChangePasswordForm extends Base {
         return false;
     }
 };
-module.exports.init(module);
+module.exports.init();

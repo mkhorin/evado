@@ -3,9 +3,9 @@
 Ant.Model = class {
 
     static init (modal, selector) {
-        modal.$modal.find(selector || '.ant-model').each((index, element)=> {
-            this.create($(element));
-        });
+        for (let model of modal.$modal.find(selector || '.ant-model')) {
+            this.create($(model));
+        }
     }
 
     static create ($form) {
@@ -30,8 +30,8 @@ Ant.Model = class {
         this.event = new Ant.Event(this.constructor.name);
         this.tools = new Ant.ModelTools(this);
         this.notice = new Ant.Notice({
-            'container': this.$content,
-            '$scrollTo': this.$content
+            container: this.$content,
+            $scrollTo: this.$content
         });
         this.params = $form.data('params') || {};
         this.saved = false;
@@ -49,7 +49,7 @@ Ant.Model = class {
         this.getControl('copyId').click(this.copyId.bind(this));
         this.getControl('reload').click(this.reload.bind(this));
         this.getControl('postAction').click(this.postAction.bind(this));
-        this.getControl('modal-action').click(this.modalAction.bind(this));
+        this.getControl('modalAction').click(this.modalAction.bind(this));
 
         this.$history = this.getControl('history');
         this.$history.click(this.showHistory.bind(this));
@@ -60,16 +60,23 @@ Ant.Model = class {
         this.beforeCloseMethod = this.beforeClose.bind(this);
         this.modal.onClose(this.beforeCloseMethod);
         this.grouper = new Ant.ModelGrouper(this);
-        this.$attrs.each((index, element)=> Ant.ModelAttr.create($(element), this));
+        this.createAttrs();
         this.attraction = new Ant.ModelAttraction(this);
         if (this.params.hideEmptyGroups) {
             this.attraction.event.on('update', this.grouper.toggleEmpty.bind(this.grouper));
             this.grouper.toggleEmpty();
         }
         this.setInitValue();
-        this.errors = new Ant.ModelError(this);
-        this.utilTools = new Ant.UtilTools(this.$controls);
+        this.error = new Ant.ModelError(this);
+        this.utilManager = new Ant.UtilManager(this.$controls, this);
         this.trackChanges();
+    }
+
+    createAttrs () {
+        this.attrs = [];
+        for (let attr of this.$attrs) {
+            this.attrs.push(Ant.ModelAttr.create($(attr), this));
+        }
     }
 
     getControl (id) {
@@ -92,23 +99,27 @@ Ant.Model = class {
         return $attr.find('.form-value');
     }
 
-    formatAttrId (id, className) {
-        return `#${this.params.timestamp}-${className || this.params.className}-${id}`;
-    }
-
     formatAttrName (name, className) {
         return name.indexOf('[') === -1 ? `${className || this.params.className}[${name}]` : name;
     }
 
     beforeClose (event) {
         if (this.isChanged() && !Ant.Helper.confirm('Close without saving?')) {
-            event.stopPropagation();
+            return event.stopPropagation();
+        }
+        let message = this.inProgress();
+        if (message && !Ant.Helper.confirm(message)) {
+            return event.stopPropagation();
         }
         event.data = {
-            'result': this.id,
-            'saved': this.saved,
-            'reopen': this.reopen
+            result: this.id,
+            saved: this.saved,
+            reopen: this.reopen
         };
+    }
+
+    inProgress () {
+        return this.attrs.map(attr => attr.inProgress()).filter(message => message)[0];
     }
 
     translate (message) {
@@ -129,11 +140,11 @@ Ant.Model = class {
     }
 
     view () {
-        this.childModal.load(this.params.view, {'id': this.id});
+        this.childModal.load(this.params.view, {id: this.id});
     }
 
     update () {
-        this.childModal.load(this.params.update, {'id': this.id});
+        this.childModal.load(this.params.update, {id: this.id});
     }
 
     remove () {
@@ -141,9 +152,7 @@ Ant.Model = class {
             return false;
         }
         this.$loader.show();
-        $.post(this.params.remove, {
-            'ids': this.id
-        }).done(()=> {
+        $.post(this.params.remove, {id: this.id}).done(()=> {
             this.saved = true;
             this.setInitValue();
             this.modal.close();
@@ -179,9 +188,9 @@ Ant.Model = class {
         let $btn = $(event.currentTarget);
         this.notice.hide();
         this.childModal.load($btn.data('url'), $btn.data('params'));
-        this.childModal.one('closed', (event, data)=> {
-            if (data && data.saved && $btn.data('success')) {
-                this.notice.success(btn.data('success'));
+        this.childModal.one('afterClose', (event, data)=> {
+            if (data && data.saved) {
+                data.result && this.notice.success(data.result);
             }
         });
     }
@@ -196,7 +205,7 @@ Ant.Model = class {
             this.setInitValue();
             this.modal.close();
         }).fail(xhr => {
-            this.errors.parse(xhr.responseJSON || xhr.responseText);
+            this.error.parse(xhr.responseJSON || xhr.responseText);
         }).always(()=> {
             this.$loader.hide();
         });
@@ -205,10 +214,6 @@ Ant.Model = class {
     // VALIDATE
 
     validate () {
-        let uploader = this.$form.find('.uploader').data('uploader');
-        if (uploader && !uploader.isFinished()) {
-            return false;
-        }
         return true;
     }
 

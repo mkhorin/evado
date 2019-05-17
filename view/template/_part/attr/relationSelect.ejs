@@ -4,21 +4,20 @@
 <%- include('_params', {params}) %>
 <%
 let d = {
-    'relName': attr,
-    'order': {[model.PK]: - 1},
-    'key': model.PK,
-    'remove': false,
-    'unlink': true,
+    relName: attr,
+    order: {[model.PK]: - 1},
+    key: model.PK,
+    remove: false,
+    unlink: true,
     ...data
 };
 d.attr = attr;
 d.relName = d.relName || attr;
 
 let rel = model.getRelation(d.relName);
-let relController = rel.model.createController();
 let urlParams = {
-    'pid': model.getId(),
-    'rel': d.relName
+    rel: d.relName,
+    pid: model.getId()
 };
 d.multiple = rel.isMultiple();
 if (d.list !== null) {
@@ -29,47 +28,47 @@ if (d.list !== null) {
     }
     d.list = _url(d.list);
 }
+let relUrl = typeof relRoute === 'undefined' ? rel.model.getControllerClass().NAME : relRoute;
 if (d.view !== null) {
-    d.view = relController.createUrl(d.view === undefined ? 'view' : d.view);
+    d.view = _url(d.view === undefined ? `${relUrl}/view` : d.view);
 }
 if (d.viewTitle !== null) {
-    d.viewTitle = relController.createUrl(d.viewTitle === undefined ? 'view-title' : d.viewTitle);
+    d.viewTitle = _url(d.viewTitle === undefined ? `${relUrl}/view-title` : d.viewTitle);
 }
 if (d.create !== null) {
     if (d.create === undefined) {
-        d.create = ['create', urlParams];
-    } else if (! (d.create instanceof Array) && typeof d.create === 'object') {
-        d.create = ['create', Object.assign(urlParams, d.create)];
+        d.create = [`${relUrl}/create`, urlParams];
+    } else if (!Array.isArray(d.create) && typeof d.create === 'object') {
+        d.create = [`${relUrl}/create`, Object.assign(urlParams, d.create)];
     }
-    d.create = relController.createUrl(d.create);
+    d.create = _url(d.create);
 }
 if (d.clone === true) {
-    d.clone = relController.createUrl('clone');
-} else if (d.clone instanceof Array) {
-    d.clone = relController.createUrl(d.clone);
+    d.clone = _url(`${relUrl}/clone`);
+} else if (Array.isArray(d.clone)) {
+    d.clone = _url(d.clone);
 }
 if (d.update !== null) {
     if (d.update === undefined) {
-        d.update = ['update', urlParams];
-    } else if (! (d.update instanceof Array) && typeof d.update === 'object') {
-        d.update = ['update', Object.assign(urlParams, d.update)];
+        d.update = [`${relUrl}/update`, urlParams];
+    } else if (!Array.isArray(d.update) && typeof d.update === 'object') {
+        d.update = [`${relUrl}/update`, Object.assign(urlParams, d.update)];
     }
-    d.update = relController.createUrl(d.update);
+    d.update = _url(d.update);
 }
 if (d.link !== null) {
     if (d.link === undefined) {
-        d.link = ['select', urlParams];
+        d.link = [`${relUrl}/select`, urlParams];
     } else if (typeof d.link === 'string') {
         d.link = [d.link, urlParams];
     }
-    d.link = relController.createUrl(d.link);
+    d.link = _url(d.link);
 }
-if (d.modalOrder) {
-    if (d.modalOrder === true) {
-        d.modalOrder = model.module.app.getRelativePath(model.CLASS_FILE);
-        d.modalOrder = `default/order-rel?id=${model.getId()}&cls=${d.modalOrder}&rel=${attr}`;
-    } else if (d.modalOrder instanceof Array) {
-        d.modalOrder = _url(d.modalOrder);
+if (d.modalSort) {
+    if (d.modalSort === true) {
+        d.modalSort = _url(['sort-rel', urlParams]);
+    } else if (Array.isArray(d.modalSort)) {
+        d.modalSort = _url(d.modalSort);
     }
 }
 let related = model.rel(attr);
@@ -106,18 +105,18 @@ let related = model.rel(attr);
                         <span class="glyphicon glyphicon-trash text-danger"></span>
                     </button>
                     <% } %>
-                    <% if (d.modalOrder) { %>
-                    <button data-id="order" class="btn btn-white" type="button" title="Sort">
+                    <% if (d.modalSort) { %>
+                    <button data-id="sort" class="btn btn-white" type="button" title="Sort">
                         <span class="glyphicon glyphicon-sort"></span>
                     </button>
                     <% } %>
                     <% if (typeof tools !== 'undefined') { %>
-                    <%- include(_view.get('_part/universal-render'), {'data': tools}) %>
+                    <%- include(_view.get('_part/universal-render'), {data: tools}) %>
                     <% } %>
                 </div>
                 <select id="<%- params.id %>" class="form-control" <% if (d.multiple) { %>multiple<% } %>
                         data-params="<%= JSON.stringify(d) %>">
-                    <% if (related instanceof Array) { %>
+                    <% if (Array.isArray(related)) { %>
                     <% for (let item of related) { %>
                     <option value="<%- item.getId() %>" selected><%= item.getTitle() %></option>
                     <% }} else if (related) { %>

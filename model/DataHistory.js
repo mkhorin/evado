@@ -20,19 +20,19 @@ module.exports = class DataHistory extends Base {
 
     static findByModel (id, classFullName) {
         return this.find({
-            'class': classFullName,
-            'model': this.getDb().normalizeId(id)
+            class: classFullName,
+            model: this.getDb().normalizeId(id)
         }).with('user');
     }
 
     setData (data) {
         this.assignAttrs({
-            'attr': data.attr.name,
-            'class': data.attr.class.id,
-            'model': data.model.getId(),
-            'value': data.value,
-            'createdAt': new Date,
-            'user': data.user ? data.user.getId() : null
+            attr: data.attr.name,
+            class: data.attr.class.id,
+            model: data.model.getId(),
+            value: data.value,
+            createdAt: new Date,
+            user: data.user ? data.user.getId() : null
         });
     }
 
@@ -40,6 +40,6 @@ module.exports = class DataHistory extends Base {
         return this.hasOne(User, User.PK, 'user');
     }
 };
-module.exports.init(module);
+module.exports.init();
 
 const User = require('./User');

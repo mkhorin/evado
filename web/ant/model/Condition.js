@@ -8,13 +8,12 @@ Ant.ModelCondition = class {
         this.fieldCache = {};
     }
 
-    logError (msg) {
-        console.error(this.wrapClassMessage(msg));
-        return false;
+    isValid () {
+        return this.validate(this.data);
     }
 
-    logOperatorError (op, operands) {
-        return this.logError(`${op}: operands invalid: ${JSON.stringify(operands)}`);
+    isValueExists (value) {
+        return value !== '' && value !== null && value !== undefined;
     }
 
     getValue (name) {
@@ -24,33 +23,25 @@ Ant.ModelCondition = class {
         return this.fieldCache[name].val();
     }
 
-    isValid () {
-        return this.validate(this.data);
-    }
-
-    isValueExists (value) {
-        return value !== '' && value !== null && value !== undefined;
-    }
-
     validate (data) {
-        if (!(data instanceof Array)) {
+        if (!Array.isArray(data)) {
             return this.validateHash(data);
         }
-        let op = data[0];
-        if (op && typeof op === 'object') {
-            op = 'AND';
+        let operator = data[0];
+        if (operator && typeof operator === 'object') {
+            operator = 'AND';
         } else {
             data = data.slice(1)
         }
-        return Ant.ModelCondition.OPERATORS.hasOwnProperty(op)
-            ? this[Ant.ModelCondition.OPERATORS[op]](op, data)
-            : this.logError(`Not found operator "${op}"`);
+        return Ant.ModelCondition.OPERATORS.hasOwnProperty(operator)
+            ? this[Ant.ModelCondition.OPERATORS[operator]](operator, data)
+            : this.logError(`Not found operator: ${operator}`);
     }
 
     validateHash (data) {
         for (let name of Object.keys(data)) {
             let value = this.getValue(name);
-            if (data[name] instanceof Array) {
+            if (Array.isArray(data[name])) {
                 if (!data[name].includes(value)) {
                     return false;
                 }
@@ -61,9 +52,9 @@ Ant.ModelCondition = class {
         return true;
     }
 
-    validateAnd (op, operands) {
+    validateAnd (operator, operands) {
         if (operands.length === 0) {
-            return this.logOperatorError(op, operands);
+            return this.logDataError(operator, operands);
         }
         for (let operand of operands) {
             if (!this.validate(operand)) {
@@ -73,9 +64,9 @@ Ant.ModelCondition = class {
         return true;
     }
 
-    validateOr (op, operands) {
+    validateOr (operator, operands) {
         if (operands.length === 0) {
-            return this.logOperatorError(op, operands);
+            return this.logDataError(operator, operands);
         }
         for (let operand of operands) {
             if (this.validate(operand)) {
@@ -85,76 +76,85 @@ Ant.ModelCondition = class {
         return false;
     }
 
-    validateExists (op, operands) {
+    validateExists (operator, operands) {
         return operands.length !== 1
-            ? this.logOperatorError(op, operands)
+            ? this.logDataError(operator, operands)
             : this.isValueExists(this.getValue(operands[0]));
     }
 
-    validateNotExists (op, operands) {
-        return !this.validateExists(op, operands);
+    validateNotExists (operator, operands) {
+        return !this.validateExists(operator, operands);
     }
 
-    validateBetween (op, operands) {
+    validateBetween (operator, operands) {
         if (operands.length !== 3) {
-            return this.logOperatorError(op, operands);
+            return this.logDataError(operator, operands);
         }
         let value = this.getValue(operands[0]);
         return value >= operands[1] && value <= operands[2];
     }
 
-    validateNotBetween (op, operands) {
-        return !this.validateBetween(op, operands);
+    validateNotBetween (operator, operands) {
+        return !this.validateBetween(operator, operands);
     }
 
-    validateIn (op, operands) {
+    validateIn (operator, operands) {
         return operands.length !== 2 || !Array.isArray(operands[1])
-            ? this.logOperatorError(op, operands)
+            ? this.logDataError(operator, operands)
             : operands[1].includes(this.getValue(operands[0]));
     }
 
-    validateNotIn (op, operands) {
-        return !this.validateIn(op, operands);
+    validateNotIn (operator, operands) {
+        return !this.validateIn(operator, operands);
     }
 
-    validateRegExp (op, operands) {
+    validateRegExp (operator, operands) {
         return operands.length < 2
-            ? this.logOperatorError(op, operands)
+            ? this.logDataError(operator, operands)
             : (new RegExp(operands[1], operands[2])).test(this.getValue(operands[0]));
     }
 
-    validateEqual (op, operands) {
+    validateEqual (operator, operands) {
         return operands.length !== 2
-            ? this.logOperatorError(op, operands)
+            ? this.logDataError(operator, operands)
             : operands[1] === this.getValue(operands[0]);
     }
 
-    validateNotEqual (op, operands) {
-        return !this.validateEqual(op, operands);
+    validateNotEqual (operator, operands) {
+        return !this.validateEqual(operator, operands);
     }
 
-    validateGreater (op, operands) {
+    validateGreater (operator, operands) {
         return operands.length !== 2
-            ? this.logOperatorError(op, operands)
+            ? this.logDataError(operator, operands)
             : this.getValue(operands[0]) > operands[1];
     }
 
-    validateGreaterOrEqual (op, operands) {
+    validateGreaterOrEqual (operator, operands) {
         return operands.length !== 2
-            ? this.logOperatorError(op, operands)
+            ? this.logDataError(operator, operands)
             : this.getValue(operands[0]) >= operands[1];
     }
 
-    validateLess (op, operands) {
+    validateLess (operator, operands) {
         return operands.length !== 2
-            ? this.logOperatorError(op, operands)
+            ? this.logDataError(operator, operands)
             : this.getValue(operands[0]) < operands[1];
     }
 
-    validateLessOrEqual (op, operands) {
+    validateLessOrEqual (operator, operands) {
         return operands.length !== 2
-            ? this.logOperatorError(op, operands)
+            ? this.logDataError(operator, operands)
             : this.getValue(operands[0]) <= operands[1];
+    }
+
+    logDataError (operator, operands) {
+        return this.logError(`${operator}: operands invalid: ${JSON.stringify(operands)}`);
+    }
+
+    logError (msg) {
+        console.error(this.wrapClassMessage(msg));
+        return false;
     }
 };
 

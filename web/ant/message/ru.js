@@ -8,7 +8,6 @@ Ant.I18n.default = {
 
     'Can not restore ambiguous values': 'Не могу восстановить неоднозначные значения',
     'Cancel': 'Отменить',
-    'Caption': 'Заголовок',
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
     'Close without saving?': 'Закрыть без сохранения?',
@@ -18,12 +17,13 @@ Ant.I18n.default = {
     'Delete': 'Удалить',
     'Delete this object?': 'Удалить данный объект?',
     'Description': 'Описание',
-    'Drag and drop or select files here': 'Перетащите файл сюда или выберите из списка',
+    'Drop or select file here': 'Бросьте или выберит файл здесь',
 
     'Edit': 'Редактировать',
 
     'Group': 'Группа',
 
+    'Label': 'Ярлык',
     'Link': 'Добавить',
 
     'Name': 'Название',
@@ -44,7 +44,7 @@ Ant.I18n.default = {
     'Search...': 'Искать...',
     'Select': 'Выбрать',
     'Select all': 'Выбрать все',
-    'Select column to order': 'Выберите колонку для сортировки',
+    'Select column to sort': 'Выберите колонку для сортировки',
     'Select date...': 'Выберите дату...',
     'Select items to action': 'Выберите объекты для действия',
     'Select one item to action': 'Выберите один объект для действия',

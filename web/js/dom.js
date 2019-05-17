@@ -33,8 +33,6 @@ $('.loadable-tree-menu').each(function () {
         }
     });
 });
-// show opened treeview-menu
-$('.menu-open').children('.treeview-menu').show();
 // fix to close nested treeview-menu
 $('.tree-menu').on('click', '.treeview', function () {
     let $item = $(this);
@@ -84,21 +82,48 @@ $('.captcha-refresh').click(function (event) {
     $(this).prev().attr('src', this.href + Date.now());
 });
 
-// NAVBAR POST ACTION
+// ACTIONS
 
-$('#main-navbar').on('click', '[data-id="postAction"]', function () {
-    let notice = new Ant.ContentNotice;
-    notice.hide();
-    let $btn = $(this);
-    $btn.attr('disabled', true).addClass('loading');
-    Ant.postAction($btn).always(()=> {
-        $btn.removeAttr('disabled').removeClass('loading');
-    }).done(data => {
-        notice.success(data || 'Action is done');
-    }).fail(xhr => {
-        xhr && notice.danger(xhr.responseText || 'Action is fail');
-    });
-});
+(function () {
+
+    let $navBar = $('#main-navbar');
+
+    $navBar.on('click', '[data-action="post"]', executePostAction);
+    $navBar.on('click', '[data-action="modal"]', executeModalAction);
+
+    function executePostAction () {
+        let $btn = $(this);
+        toggleLoader($btn, true);
+        Ant.ContentNotice.clear();
+        Ant.postAction($btn)
+            .always(()=> toggleLoader($btn, false))
+            .done(data => afterAction($btn , data))
+            .fail(xhr => xhr && notice.danger(xhr.responseText || 'Action is failed'));
+    }
+
+    function executeModalAction () {
+        let $btn = $(this);
+        let modal = Ant.modal.create();
+        Ant.ContentNotice.clear();
+        modal.load($btn.data('url'), $btn.data('params'));
+        modal.one('afterClose', (event, data)=> data.result && afterAction($btn, data.result));
+    }
+
+    function afterAction ($btn, data) {
+        $btn.data('reloadPage')
+            ? location.reload(true)
+            : (new Ant.ContentNotice).success(data || 'Action is done');
+    }
+
+    function toggleLoader ($btn, state) {
+        if ($btn.data('globalLoader')) {
+            Ant.toggleGlobalLoading(state);
+        } else {
+            $btn.toggleClass('loading', state);
+            state ? $btn.attr('disabled', true) : $btn.removeAttr('disabled');
+        }
+    }
+})();
 
 // LOADABLE CONTENT
 

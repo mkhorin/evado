@@ -1,9 +1,9 @@
 <!-- _part/attr/ajaxSelect -->
 
 <% let params = {
-    'hasEmpty': typeof hasEmpty === 'undefined' ? true : hasEmpty,
-    'emptyText': typeof emptyText === 'undefined' ? '' : emptyText,
-    'select2': typeof select2 === 'undefined' ? '' : JSON.stringify(select2)
+    hasEmpty: typeof hasEmpty === 'undefined' ? true : hasEmpty,
+    emptyText: typeof emptyText === 'undefined' ? '' : emptyText,
+    select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2)
 }; %>
 <%- include('_params', {params}) %>
 <%
@@ -18,7 +18,7 @@ for (let item of data.depends) {
      data-type="ajaxSelect"
      data-label="<%- params.label %>"
      data-select2="<%= params.select2 %>"
-     data-attraction='<%- params.attraction %>'>
+     data-attraction='<%= params.attraction %>'>
     <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
     <div id="<%- params.id %>" class="<%- params.valueCss %>">
         <input type="hidden" name="<%- params.name %>" class="form-value"

@@ -1,12 +1,12 @@
 <!-- _part/attr/select -->
 <%
 let params = {
-    'hasEmpty': typeof hasEmpty === 'undefined' ? true : hasEmpty,
-    'emptyText': typeof emptyText === 'undefined' ? '' : emptyText,
-    'valueKey': typeof valueKey === 'undefined' ? 'value' : valueKey,
-    'textKey': typeof textKey === 'undefined' ? 'text' : textKey,
-    'select2': typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
-    'url': typeof url === 'undefined' ? '' : url
+    hasEmpty: typeof hasEmpty === 'undefined' ? true : hasEmpty,
+    emptyText: typeof emptyText === 'undefined' ? '' : emptyText,
+    valueKey: typeof valueKey === 'undefined' ? 'value' : valueKey,
+    textKey: typeof textKey === 'undefined' ? 'text' : textKey,
+    select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
+    url: typeof url === 'undefined' ? '' : url
 };
 if (items === 'labels') {
     items = _controller.getLabelSelectItems(attr, model);
@@ -28,8 +28,8 @@ for (let item of items) {
 <div class="form-attr form-group<%- params.required %> <%- params.css %>"
      data-type="select"
      data-url="<%- params.url %>"
-     data-select2="<%- params.select2 %>"
-     data-attraction='<%- params.attraction %>'>
+     data-select2="<%= params.select2 %>"
+     data-attraction='<%= params.attraction %>'>
     <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <% if (params.url) { %>

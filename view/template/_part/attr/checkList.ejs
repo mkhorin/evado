@@ -4,10 +4,9 @@
 <%- include('_params', {params}) %>
 
 <div class="form-attr <%- params.css %> <%- params.required %> form-group" data-type="checkboxList">
-    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <label class="control-label <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
-        <input id="<%- params.id %>" name="<%- params.name %>"
-               value="<%- params.value %>" type="hidden" class="form-value">
+        <input name="<%- params.name %>" value="<%- params.value %>" type="hidden" class="form-value">
         <div>
             <% for (let item of items) { %>
             <label class="checkbox checkbox-inline">

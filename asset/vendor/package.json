@@ -4,8 +4,7 @@
   "description": "Evado assets",
   "author": "Maxim Khorin",
   "license": "Apache-2.0",
-  "repository": {
-  },
+  "repository": {},
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.7.1",
     "admin-lte": "^2.4.5",

@@ -76,10 +76,10 @@ Ant.ModelAttr.AjaxSelect = class extends Ant.ModelAttr {
 
     setData (data) {
         this.$select.html(Ant.Helper.renderSelectOptions({
-            'items': data,
-            'defaultValue': this.defaultValue,
-            'hasEmpty': this.params.hasEmpty,
-            'emptyText': this.params.emptyText
+            items: data,
+            defaultValue: this.defaultValue,
+            hasEmpty: this.params.hasEmpty,
+            emptyText: this.params.emptyText
         }));
         if (this.select2) {
             this.$select.select2(this.select2);

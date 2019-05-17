@@ -1,15 +1,18 @@
+<!-- _part/tool/util -->
 
-<% if (typeof utilTools !== 'undefined') { %>
-<div class="util-tools" style="display: none">
+<% if (typeof hasUtils !== 'undefined' && hasUtils) { %>
+<div class="util-container" data-url="<%- _url('default/util')%>">
     <div class="util-menu btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            Utility
+        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
+            <span class="l10n">Utilities</span>
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu"></ul>
+        <ul class="dropdown-menu">
+            <li class="text-center">
+                <span class="fa fa-spinner fa-spin"></span>
+            </li>
+        </ul>
     </div>
-    <div class="util-pool">
-        <%- utilTools %>
-    </div>
+    <div class="util-pool"></div>
 </div>
 <% } %>

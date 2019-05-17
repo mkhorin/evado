@@ -59,6 +59,10 @@ Ant.ModelAttr = class {
         }
     }
 
+    inProgress () {
+        return false;
+    }
+
     isDisabled () {
         return this.$attr.hasClass('disabled');
     }
@@ -76,7 +80,7 @@ Ant.ModelAttr = class {
     }
 
     enable (state) {
-        this.$value.attr('disabled', !state);
+        this.$value.attr('readonly', !state);
         this.$value.toggleClass('disabled', !state);
         this.$attr.toggleClass('disabled', !state);
     }
@@ -126,8 +130,8 @@ Ant.ModelAttr.Checkbox = class extends Ant.ModelAttr {
     }
 
     enable (state) {
-        this.$value.attr('disabled', !state);
-        this.$checkbox.attr('disabled', !state);
+        this.$value.attr('readonly', !state);
+        this.$checkbox.attr('readonly', !state);
         this.$value.closest('.checkbox').toggleClass('disabled', !state);
     }
 
@@ -152,14 +156,14 @@ Ant.ModelAttr.CheckboxList = class extends Ant.ModelAttr {
     }
 
     enable (state) {
-        this.$value.attr('disabled', !state);
-        this.$itemList.attr('disabled', !state);
+        this.$value.attr('readonly', !state);
+        this.$itemList.attr('readonly', !state);
     }
 
     setValue (value) {
         this.$value.val(value);
         this.$itemList.prop('checked', false);
-        value = value instanceof Array ? value : typeof value === 'string' ? value.split(',') : [];
+        value = Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : [];
         for (let val of value) {
             this.$itemList.filter(`[value="${val}"]`).prop('checked', true);
         }
@@ -167,9 +171,9 @@ Ant.ModelAttr.CheckboxList = class extends Ant.ModelAttr {
 
     extractValues () {
         let values = [];
-        this.$itemList.filter(':checked').each((index, element)=> {
-           values.push($(element).val());
-        });
+        for (let item of this.$itemList.filter(':checked')) {
+            values.push($(item).val());
+        }
         return values;
     }
 
@@ -234,8 +238,8 @@ Ant.ModelAttr.RadioList = class extends Ant.ModelAttr {
     }
 
     enable (state) {
-        this.$value.attr('disabled', !state);
-        this.$itemList.attr('disabled', !state);
+        this.$value.attr('readonly', !state);
+        this.$itemList.attr('readonly', !state);
     }
 
     changeValue (event) {
@@ -276,7 +280,7 @@ Ant.ModelAttr.Select = class extends Ant.ModelAttr {
 
     loadModal () {
         this.childModal = this.childModal || Ant.modal.create();
-        this.childModal.load(this.url, {'id': this.getValue()}, ()=> {
+        this.childModal.load(this.url, {id: this.getValue()}, ()=> {
             this.childModal.one('afterClose', this.afterClose.bind(this));
         });
     }

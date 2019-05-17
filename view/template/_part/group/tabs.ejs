@@ -1,7 +1,7 @@
 <!-- _part/group/tabs -->
 
 <% let params = {
-    'attraction': typeof attraction === 'undefined' ? '' : JSON.stringify(attraction)
+    attraction: typeof attraction === 'undefined' ? '' : JSON.stringify(attraction)
 }; %>
 
 <div class="tabs form-tabs" data-attraction="<%= params.attraction %>">
@@ -20,7 +20,7 @@
             <div class="form-base-group-body">
             <% if (typeof item.content === 'string') { %>
                 <%- include(item.content) %>
-            <% } else if (item.content instanceof Array) { %>
+            <% } else if (Array.isArray(item.content)) { %>
                 <% for (let data of item.content) { %>
                 <% if (data.template) { %>
                 <%- include(data.template, data) %>

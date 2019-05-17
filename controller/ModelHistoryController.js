@@ -1,6 +1,6 @@
 'use strict';
 
-const Base = require('../component/CrudController');
+const Base = require('../component/base/CrudController');
 
 module.exports = class DataHistoryController extends Base {
 
@@ -10,13 +10,12 @@ module.exports = class DataHistoryController extends Base {
     }
 
     actionIndexModel () {
-        return super.actionIndex({
-            template: 'index-model'
-        });
+        return super.actionIndex({template: 'index-model'});
     }
 
     actionListModel () {
-        return super.actionList(DataHistory.findByModel(this.getQueryParam('m'), this.getQueryParam('c')));
+        let model = this.spawn(DataHistory);
+        return super.actionList(model.findByModel(this.getQueryParam('m'), this.getQueryParam('c')));
     }
 };
 module.exports.init(module);

@@ -1,6 +1,6 @@
 'use strict';
 
-const Base = require('../component/BaseController');
+const Base = require('../component/base/BaseController');
 
 module.exports = class MetaController extends Base {
 
@@ -20,39 +20,40 @@ module.exports = class MetaController extends Base {
 
     async actionReload () {
         await this.meta.reload();
-        this.send('Meta init is done');
+        this.send('Metadata has been reloaded');
     }
 
     async actionUpdateIndexes () {
-        let project = this.getMetaModelProjectFromQuery('doc');
-        let className = this.getQueryParam('class');
-        if (!className) {
-            await project.updateIndexes();
-            return this.send('Project indexes have been updated');
-        }
-        if (!project.getClass(className)) {
+        await this.meta.process(async ()=> await this.meta.updateIndexes());
+        return this.send('Indexes have been updated');
+    }
+
+    async actionUpdateClassIndexes () {
+        let name = this.getQueryParam('class');
+        let model = this.meta.getModel('doc').getClass(name);
+        if (!model) {
             throw new NotFound('Not found class');
         }
-        await project.getClass(className).updateIndexes();
+        await this.meta.process(async ()=> await model.updateIndexes());
         this.send('Class indexes have been updated');
     }
 
     // LIST META
 
     actionListClassSelect () {
-        let project = this.getMetaModelProjectFromQuery('doc');
-        this.sendJson(MetaSelectHelper.getCaptionItems(project.classes));
+        let metaModel = this.meta.getModel('doc');
+        this.sendJson(MetaSelectHelper.getLabelItems(metaModel.classes));
     }
 
     actionListViewSelect () {
         let cls = this.getClassFromQuery();
-        this.sendJson(MetaSelectHelper.getCaptionItems(cls.views));
+        this.sendJson(MetaSelectHelper.getLabelItems(cls.views));
     }
 
     actionListAttrSelect () {
         let cls = this.getClassFromQuery();
         let view = cls.getView(this.getQueryParam('view')) || cls;        
-        this.sendJson(MetaSelectHelper.getCaptionItems(view.attrs));
+        this.sendJson(MetaSelectHelper.getLabelItems(view.attrs));
     }
 
     async actionListObjectSelect () {
@@ -60,60 +61,55 @@ module.exports = class MetaController extends Base {
         let view = cls.getView(this.getQueryParam('view')) || cls;
         let models = await view.find().all();
         this.sendJson(models.map(item => ({
-            'value': item.getId(),
-            'text': item.getId()
+            value: item.getId(),
+            text: item.getId()
         })));
     }
 
     actionListNavSectionSelect () {
-        let project = this.getMetaModelProjectFromQuery('nav');
-        this.sendJson(MetaSelectHelper.getCaptionItems(project.sections.values()));
+        let metaModel = this.meta.getModel('nav');
+        this.sendJson(MetaSelectHelper.getLabelItems(metaModel.sections.values()));
     }
 
     actionListNavItemSelect () {
-        let project = this.getMetaModelProjectFromQuery('nav');
-        let section = project.getSection(this.getQueryParam('navSection'));
+        let metaModel = this.meta.getModel('nav');
+        let section = metaModel.getSection(this.getQueryParam('navSection'));
         if (!section) {
             throw new NotFound('Not found nav section');
         }
-        this.sendJson(MetaSelectHelper.getCaptionItems(section.items.values()));
+        this.sendJson(MetaSelectHelper.getLabelItems(section.items.values()));
     }
 
     actionListStateSelect () {
         let cls = this.getClassFromQuery();
-        this.sendJson(MetaSelectHelper.getCaptionItems(cls.states));
+        this.sendJson(MetaSelectHelper.getLabelItems(cls.states));
     }
 
     actionListTransitionSelect () {
         let cls = this.getClassFromQuery();
-        this.sendJson(MetaSelectHelper.getCaptionItems(cls.transitions));
+        this.sendJson(MetaSelectHelper.getLabelItems(cls.transitions));
     }
     
     // METHODS
 
     getClassFromQuery () {
-        let project = this.getMetaModelProjectFromQuery('doc');
-        let cls = project.getClass(this.getQueryParam('class'));
+        let metaModel = this.meta.getModel('doc');
+        let cls = metaModel.getClass(this.getQueryParam('class'));
         if (!cls) {
             throw new NotFound('Not found class');
         }
         return cls;
     }
 
-    getMetaModelProjectFromQuery (metaModelName) {
-        let project = this.getProjectFromQuery();
-        return this.meta.getModel(metaModelName).getProject(project.name);
-    }
-
-    getProjectFromQuery () {
-        let project = this.meta.getProject(this.getQueryParam('project'));
-        if (!project) {
-            throw new NotFound('Not found project');
+    getMetaModelFromQuery () {
+        let model = this.meta.getModel(this.getQueryParam('meta'));
+        if (!model) {
+            throw new NotFound('Not found meta model');
         }
-        return project;
+        return model;
     }
 };
 module.exports.init(module);
 
 const NotFound = require('areto/error/NotFoundHttpException');
-const MetaSelectHelper = require('../component/meta/helper/MetaSelectHelper');
+const MetaSelectHelper = require('../component/helper/MetaSelectHelper');

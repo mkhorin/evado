@@ -23,7 +23,7 @@ Ant.DataGrid.Provider = class {
         this.orderData(data, this.grid.order);
         let totalSize = data.length;
         let interval = this.grid.pagination.getDataInterval(totalSize);
-        let pageData = data.slice.apply(data, interval);
+        let pageData = data.slice(...interval);
         this.grid.afterLoad(pageData, totalSize, maxSize);
     }
 
@@ -95,7 +95,7 @@ Ant.DataGrid.Provider = class {
     // FORMAT
 
     createColumnFilterValues (column, data) {
-        let key = '_aretoDataGridFilter_'+ column.name;
+        let key = '_antDataGridFilter_'+ column.name;
         if (data.length && !data[0].hasOwnProperty(key)) {
             for (let doc of data) {
                 doc[key] = column.formatFilterValue(doc[column.name], column, doc)

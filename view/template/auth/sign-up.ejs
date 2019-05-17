@@ -10,23 +10,29 @@
 
 <form action="auth/sign-up" method="post" class="form">
 
-    <%- include('./string', {
+    <%- include('./input', {
         attr: 'name',
         iconClass: 'glyphicon glyphicon-user'
     }) %>
 
-    <%- include('./string', {
+    <%- include('./input', {
         attr: 'email',
         type: 'email',
         iconClass: 'glyphicon glyphicon-envelope'
     }) %>
 
-    <%- include('./password', {
-        attr: 'password'
+    <%- include('./input', {
+        attr: 'password',
+        type: 'password',
+        value: '',
+        autocomplete: 'new-password'
     }) %>
 
-    <%- include('./password', {
-        attr: 'passwordRepeat'
+    <%- include('./input', {
+        attr: 'passwordRepeat',
+        type: 'password',
+        value: '',
+        autocomplete: 'new-password'
     }) %>
 
     <%- include('./captcha', {

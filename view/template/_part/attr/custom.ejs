@@ -1,0 +1,21 @@
+<!-- _part/attr/custom -->
+<%
+let params = {
+    css: typeof css === 'undefined' ? '' : css,
+    labelCss: typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss,
+    valueCss: typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss,
+    contentCss: typeof contentCss === 'undefined' ? 'form-control-static' : contentCss,
+    label: typeof label === 'undefined' ? '' : label,
+    hint: typeof hint === 'undefined' ? '' : hint
+};
+%>
+<div class="form-group <%- params.css %>">
+    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <div class="<%- params.valueCss %>">
+        <div class="<%- params.contentCss %>">
+            <%- content %>
+        </div>
+        <div class="hint-block"><%- params.hint %></div>
+        <div class="error-block"></div>
+    </div>
+</div>

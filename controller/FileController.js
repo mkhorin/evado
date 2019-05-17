@@ -1,6 +1,6 @@
 'use strict';
 
-const Base = require('../component/BaseController');
+const Base = require('../component/base/BaseController');
 
 module.exports = class FileController extends Base {
 
@@ -17,46 +17,49 @@ module.exports = class FileController extends Base {
             },
             */
             METHODS: {
-                'upload': 'post'
+                'upload': 'post',
+                'remove': 'post'
             }
         };
     }
 
     async actionUpload () {
-        let model = new File({
-            'meta': this.parseMetaParams(this.getQueryParam('m')),
-            'req': this.req,
-            'res': this.res
-        });
-        model.set('author', this.user.getId());
-        if (!await model.save()) {
+        let model = this.spawn(RawFile, {user: this.user});
+        if (!await model.upload(this.req, this.res)) {
             return this.sendText(this.translate(model.getFirstError()), 400);
         }
         this.sendJson({
-            'id': model.getId(),
-            'size': this.format(model.get('size'), 'bytes'),
-            'message': this.translate('Uploading complete')
+            id: model.getId(),
+            size: this.format(model.get('size'), 'bytes')
         });
+    }
+
+    async actionRemove () {
+        let query = this.spawn(RawFile).findById(this.getPostParam('id'));
+        let model = await query.and({owner: null}).one();
+        if (model) {
+            await model.remove();
+        }
+        this.sendStatus(200);
     }
 
     async actionDownload () {
         let model = await this.getModel();
-        model.meta = this.parseMetaParams(this.getQueryParam('m'));
-        if (!model.isFileExists()) {
-            throw new Error(`File not exists`);
-        }
         this.setHttpHeader(model.getFileHeaders());
         this.sendFile(model.getPath());
     }
 
     async actionPreview () {
         let model = await this.getModel();
-        model.meta = this.parseMetaParams(this.getQueryParam('m'));
-        let thumbPath = await model.ensureThumb(this.getQueryParam('s'));
-        this.setHttpHeader(model.getThumbHeaders());
-        this.sendFile(thumbPath);
+        let file = await model.ensurePreview(this.getQueryParam('s'));
+        if (!file) {
+            return this.sendStatus(404);
+        }
+        this.setHttpHeader(model.getPreviewHeaders());
+        this.sendFile(file);
     }
+
 };
 module.exports.init(module);
 
-const File = require('../model/File');
+const RawFile = require('../model/RawFile');

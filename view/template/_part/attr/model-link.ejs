@@ -1,0 +1,8 @@
+<!-- _part/attr/model-link -->
+<%
+let relModel = model.rel(attr);
+%>
+<%- include('static', {
+    displayValue: relModel ? relModel.getTitle() : undefined,
+    url: relModel ? [url, model.rel(attr)] : undefined
+}) %>

@@ -1,8 +1,8 @@
 <!-- _part/attr/selection -->
 
 <% let params = {
-    'select2': typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
-    'sets': typeof sets === 'undefined' ? '' : JSON.stringify(sets)
+    select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
+    sets: typeof sets === 'undefined' ? '' : JSON.stringify(sets)
 }; %>
 
 <%- include('_params', {params}) %>
@@ -11,8 +11,8 @@
      data-type="selection"
      data-value="<%= params.value %>"
      data-sets="<%= params.sets %>"
-     data-select2="<%- params.select2 %>"
-     data-attraction='<%- params.attraction %>'>
+     data-select2="<%= params.select2 %>"
+     data-attraction='<%= params.attraction %>'>
     <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <select id="<%- params.id %>" name="<%- params.name %>" <%- params.disabled %>

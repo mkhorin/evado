@@ -10,15 +10,17 @@
 
 <form action="auth/sign-in" method="post" class="form">
 
-    <%- include('./string', {
+    <%- include('./input', {
         attr: 'email',
         type: 'email',
         iconClass: 'glyphicon glyphicon-envelope',
         autocomplete: 'on'
     }) %>
 
-    <%- include('./password', {
-        attr: 'password'
+    <%- include('./input', {
+        attr: 'password',
+        type: 'password',
+        value: ''
     }) %>
 
     <% if (model.isCaptchaRequired()) { %>

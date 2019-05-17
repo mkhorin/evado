@@ -11,11 +11,11 @@ Ant.DataGrid.Renderer = class {
         this.locale = this.params.locale;
         this.grid = grid;
         Ant.ObjectHelper.assignUndefined(this.params, {
-            'getRowId': this.getRowId.bind(this),
-            'renderBodyRow': this.renderBodyRow.bind(this),
-            'renderBodyCell': this.renderBodyCell.bind(this),
-            'renderHeadColumn': this.renderHeadColumn.bind(this),
-            'renderHeadGroup': this.renderHeadGroup.bind(this),
+            getRowId: this.getRowId.bind(this),
+            renderBodyRow: this.renderBodyRow.bind(this),
+            renderBodyCell: this.renderBodyCell.bind(this),
+            renderHeadColumn: this.renderHeadColumn.bind(this),
+            renderHeadGroup: this.renderHeadGroup.bind(this),
         });
         this.initColumns();
     }
@@ -100,7 +100,6 @@ Ant.DataGrid.Renderer = class {
     }
 
     renderBodyCellHtml (value, column, cssClass) {
-        value = column.render(value, column, this);
         return `<td class="${cssClass}" data-name="${column.name}">${value}</td>`;
     }
 

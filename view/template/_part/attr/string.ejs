@@ -5,7 +5,7 @@
 
 <div class="form-attr form-group<%- params.required %> <%- params.css %>"
      data-type="<%- params.type %>"
-     data-attraction='<%- params.attraction %>'
+     data-attraction='<%= params.attraction %>'
      data-handler="<%= JSON.stringify(typeof handler !== 'undefined' ? handler : null) %>">
     <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">

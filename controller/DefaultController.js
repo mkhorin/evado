@@ -1,14 +1,13 @@
 'use strict';
 
-const Base = require('../component/BaseController');
+const Base = require('../component/base/BaseController');
 
 module.exports = class DefaultController extends Base {
 
     static getConstants () {
         return {
             ACTIONS: {
-                'error': require('../component/action/ErrorAction'),
-                'order-rel': require('../component/action/OrderRelAction'),
+                'error': require('../component/action/ErrorAction'),                
                 'widget': require('../component/action/WidgetAction')
             }
         };

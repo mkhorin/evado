@@ -4,10 +4,8 @@ Ant.ListTool = class {
 
     static create ($item, owner) {
         switch ($item.data('type')) {
-            case 'history': 
-                return new Ant.ListTool.History($item, owner);
-            default: 
-                return new Ant.ListTool.Button($item, owner);
+            case 'history': return new Ant.ListTool.History($item, owner);
+            default: return new Ant.ListTool.Button($item, owner);
         }
     }
 
@@ -85,7 +83,7 @@ Ant.ListTool.History = class extends Ant.ListTool.Button {
         }
         if (Ant.Helper.confirm('Restore selected values?')) {
             this.post($elem.data('url'), {
-                'ids': this.list.serializeObjectIds(rows)
+                ids: this.list.serializeObjectIds(rows)
             }).done(data => {
                 this.list.modal.close(data);
             });

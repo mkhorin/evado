@@ -1,10 +1,10 @@
 /.hg/*
 /.idea/*
 
-# Logs
-logs
+log
 *.log
 npm-debug.log*
+temp
 
 # Runtime data
 pids
