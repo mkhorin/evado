@@ -304,16 +304,11 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaNavMap () {
-        let targets = [this.ALL, this.TARGET_NAV_SECTION, this.TARGET_NAV_ITEM];
-        let items = this.metaItems.filter(item => targets.includes(item.targetType));
-        let map = this.indexMetaItemsByRole(items);
-        for (let role of Object.keys(map)) {
-            map[role] = this.constructor.splitMetaItemsByType(map[role]);
-            for (let type of Object.keys(map[role])) {
-                map[role][type] = this.constructor.indexMetaItemsByTarget(map[role][type]);
-            }
-        }
-        this.metaNavMap = map;
+        let targets = [this.TARGET_NAV_SECTION, this.TARGET_NAV_ITEM];
+        let items = this.metaItems.filter(item => {
+            return item.type === this.DENY && item.actions[0] === this.READ && targets.includes(item.targetType);
+        });
+        this.metaNavMap = this.indexMetaItemsByRoleKey(items);
     }
 
     setUserFilters (items) {
@@ -390,7 +385,7 @@ module.exports = class Rbac extends Base {
     }
 
     getNavAccess (assignments, data) {
-        return (new this.MetaNavInspector({rbac: this, assignments})).execute(data);
+        return (new this.MetaNavInspector({rbac: this, assignments, ...data})).execute();
     }
 
     // DEFAULTS

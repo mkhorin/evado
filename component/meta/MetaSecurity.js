@@ -37,8 +37,8 @@ module.exports = class MetaSecurity extends Base {
         return this.resolve({
             targetType: Rbac.TARGET_NAV_ITEM,
             target: metaData.node,
-            targetClass: metaData.node.class,
-            targetView: metaData.node.view,
+            targetClass: metaData.class,
+            targetView: metaData.view,
             actions: [Rbac.READ, Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]
         });
     }

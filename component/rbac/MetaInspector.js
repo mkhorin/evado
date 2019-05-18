@@ -37,13 +37,13 @@ module.exports = class MetaInspector extends Base {
     }
 
     async execute () {
-        this.metaData = [];
+        let metaData = [];
         for (let role of this.assignments) {
             if (Object.prototype.hasOwnProperty.call(this.rbac.metaMap, role)) {
-                this.metaData.push(this.rbac.metaMap[role]);
+                metaData.push(this.rbac.metaMap[role]);
             }
         }
-        if (!this.metaData.length) {
+        if (!metaData.length) {
             return this;
         }
         this._targets = [[this.checkAllTarget]];
@@ -54,7 +54,7 @@ module.exports = class MetaInspector extends Base {
             case Rbac.TARGET_OBJECT: this.addObjectTargets(); break;
         }
         this.access = {};
-        for (let data of this.metaData) {
+        for (let data of metaData) {
             for (let action of this.actions) {
                 if (this.access[action] !== true) {
                     this.access[action] = await this.resolveActionAccess(action, data);
@@ -92,7 +92,7 @@ module.exports = class MetaInspector extends Base {
             this._targets.push([this.checkStateTarget, this.target]);
         }
         if (this.target.class !== this.target.view) {
-            this_targets.push([this.checkViewTarget, this.target.view]);
+            this._targets.push([this.checkViewTarget, this.target.view]);
         }
         this._targets.push([this.checkObjectTarget, this.target]);
     }
@@ -116,17 +116,27 @@ module.exports = class MetaInspector extends Base {
         }
     }
 
-    checkAllTarget (target, data) {
+    checkAllTarget (none, data) {
         return data[Rbac.ALL] ? this.checkItems(data[Rbac.ALL]) : false
     }
 
-    checkClassTarget (target, data) {
-        data = data[Rbac.TARGET_CLASS] && data[Rbac.TARGET_CLASS][target.getMetaId()];
+    checkNavSectionTarget (section, data) {
+        data = data[Rbac.TARGET_NAV_SECTION];
+        return data && data[section.id] ? this.checkItems(data[section.id]) : false;
+    }
+
+    checkNavItemTarget (item, data) {
+        data = data[Rbac.TARGET_NAV_ITEM];
+        return data && data[item.id] ? this.checkItems(data[item.id]) : false;
+    }
+
+    checkClassTarget (cls, data) {
+        data = data[Rbac.TARGET_CLASS] && data[Rbac.TARGET_CLASS][cls.getMetaId()];
         return data ? this.checkItems(data) : false;
     }
 
-    checkViewTarget (target, data) {
-        data = data[Rbac.TARGET_VIEW] && data[Rbac.TARGET_VIEW][target.getMetaId()];
+    checkViewTarget (view, data) {
+        data = data[Rbac.TARGET_VIEW] && data[Rbac.TARGET_VIEW][view.getMetaId()];
         return data ? this.checkItems(data) : false;
     }
 
@@ -151,7 +161,7 @@ module.exports = class MetaInspector extends Base {
     }
 
     async checkObjectTarget (model, data) {
-        data = data[Rbac.TARGET_OBJECT]; // && data[Rbac.TARGET_OBJECT][model.getMetaId()];
+        data = data[Rbac.TARGET_OBJECT];
         if (!data) {
             return false;
         }
@@ -237,27 +247,10 @@ module.exports = class MetaInspector extends Base {
         }
     }
 
-    async filterRoleObjects (filter) {
-        let roleConditions = [];
-        if (Array.isArray(filter.rules)) {
-            for (let rule of filter.rules) {
-                if (Object.prototype.hasOwnProperty.call(this._metaObjectRuleCache, rule.name)) {
-                    if (this._metaObjectRuleCache[rule.name]) {
-                        roleConditions.push(this._metaObjectRuleCache[rule.name]);
-                    }
-                } else {
-                    let model = new rule.Class(rule);
-                    model.params = rule.params
-                        ? {...rule.params, ...this.params}
-                        : this.params;
-                    let data = await model.getObjectCondition();
-                    if (data) {
-                        roleConditions.push(data);
-                    }
-                    this._metaObjectRuleCache[rule.name] = data;
-                }
-            }
-        }
+    filterRoleObjects (filter) {
+        let roleConditions = Array.isArray(filter.rules)
+            ? this.getRuleFilterConditions(filter.rules)
+            : [];
         if (filter.condition) {
             roleConditions.push(filter.condition);
         }
@@ -266,7 +259,29 @@ module.exports = class MetaInspector extends Base {
         }
         roleConditions.unshift('NOR');
         this._objectConditions.push(roleConditions);
-        await PromiseHelper.setImmediate();
+        return PromiseHelper.setImmediate();
+    }
+
+    async getRuleFilterConditions (rules) {
+        let conditions = [];
+        for (let rule of rules) {
+            if (Object.prototype.hasOwnProperty.call(this._metaObjectRuleCache, rule.name)) {
+                if (this._metaObjectRuleCache[rule.name]) {
+                    conditions.push(this._metaObjectRuleCache[rule.name]);
+                }
+            } else {
+                let model = new rule.Class(rule);
+                model.params = rule.params
+                    ? {...rule.params, ...this.params}
+                    : this.params;
+                let data = await model.getObjectCondition();
+                if (data) {
+                    conditions.push(data);
+                }
+                this._metaObjectRuleCache[rule.name] = data;
+            }
+        }
+        return conditions;
     }
 };
 
