@@ -41,6 +41,13 @@ module.exports = class MetaModels extends Base {
         for (let model of this) {
             await model.load();
         }
+        return this.afterLoad();
+    }
+
+    async afterLoad () {
+        for (let model of this) {
+            await model.afterLoad();
+        }
     }
 };
 

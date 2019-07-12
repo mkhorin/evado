@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Base');
@@ -5,14 +8,36 @@ const Base = require('areto/base/Base');
 module.exports = class AuthConsole extends Base {
 
     async createUsers () {
+        this.log('info', 'Create users...');
         let items = this.app.getConfig('users') || [];
         for (let data of items) {
             await this.createUser(data);
         }
+        this.log('info', 'Users created');
+    }
+
+    async createUser (data) {
+        let model = this.createUserModel({scenario: 'create'});
+        model.setSafeAttrs(data);
+        if (!await model.save()) {
+            return this.log('error', model.getFirstErrorMap());
+        }
+        this.log('info', `User created: ${data.email}`);
+        return model;
+    }
+
+    findUserByParams () {
+        return this.createUserModel().findSame(this.params.name, this.params.email);
+    }
+
+    createUserModel (params) {
+        return this.app.get('user').createUserModel(params);
     }
 
     async createRbac () {
+        this.log('info', 'Create RBAC...');
         await this.app.get('rbac').createByData(this.app.getConfig('rbac'));
+        this.log('info', 'RBAC created');
     }
 
     async signUp () {
@@ -30,8 +55,8 @@ module.exports = class AuthConsole extends Base {
         }
         user.set('password', this.params.password);
         await user.save()
-            ? this.log('info', `Password has been changed`)
-            : this.log('error', user.getFirstErrors());
+            ? this.log('info', `Password changed`)
+            : this.log('error', user.getFirstErrorMap());
     }
 
     async assignRole () {
@@ -57,25 +82,7 @@ module.exports = class AuthConsole extends Base {
         });
     }
 
-    async createUser (data) {
-        let model = this.createUserModel({scenario: 'create'});
-        model.setSafeAttrs(data);
-        if (!await model.save()) {
-            return this.log('error', model.getFirstErrors());
-        }
-        this.log('info', `User has been created: ${data.email}`);
-        return model;
-    }
-
-    findUserByParams () {
-        return this.createUserModel().findSame(this.params.name, this.params.email);
-    }
-
-    createUserModel (params) {
-        return this.app.get('user').createUserModel(params);
-    }
-
-    log (...args) {
-        this.console.log(...args);
+    log () {
+        this.console.log(...arguments);
     }
 };

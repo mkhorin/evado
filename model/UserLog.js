@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/db/ActiveRecord');
@@ -20,7 +23,7 @@ module.exports = class UserLog extends Base {
     }
 
     log (values) {
-        Object.assign(this._attrs, values, {createdAt: new Date});
+        Object.assign(this._attrMap, values, {createdAt: new Date});
         return this.forceSave();
     }
 

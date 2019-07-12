@@ -1,7 +1,10 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
-if (Ant.DataGrid) {
-    Object.assign(Ant.DataGrid.defaults.locale, {
+if (Jam.DataGrid) {
+    Object.assign(Jam.DataGrid.defaults.locale, {
         orderToggle: 'Сортировать',
         searchToggle: 'Искать',
         asc: 'По возрастанию',

@@ -193,6 +193,79 @@
     width: auto;
 }
 
+/* TREE VIEW */
+
+.tree-data-grid .data-grid-table tbody td:first-child {
+    position: relative;
+}
+.tree-data-grid .node-toggle {
+    display: none;
+    position: absolute;
+    top: 6px;
+    font-size: 12px;
+    color: #888;
+}
+.tree-data-grid .node-toggle span {
+    cursor: pointer;
+}
+.tree-data-grid .node-toggle span:before {
+    content: "\e258";
+}
+.tree-data-grid .has-children .node-toggle {
+    display: block;
+}
+.tree-data-grid tr.opened .node-toggle {
+    top: 7px;
+    color: #aaa;
+}
+.tree-data-grid tr.opened .node-toggle span:before {
+    content: "\e260";
+}
+
+.tree-data-grid [data-depth] td:first-child {
+    padding-left: 125px;
+}
+.tree-data-grid [data-depth="0"] td:first-child {
+    padding-left: 25px;
+}
+.tree-data-grid [data-depth="1"] td:first-child {
+    padding-left: 45px;
+}
+.tree-data-grid [data-depth="2"] td:first-child {
+    padding-left: 65px;
+}
+.tree-data-grid [data-depth="3"] td:first-child {
+    padding-left: 85px;
+}
+.tree-data-grid [data-depth="4"] td:first-child {
+    padding-left: 105px;
+}
+.tree-data-grid [data-depth="5"] td:first-child {
+    padding-left: 125px;
+}
+
+.tree-data-grid [data-depth] .node-toggle {
+    left: 105px;
+}
+.tree-data-grid [data-depth="0"] .node-toggle {
+    left: 6px;
+}
+.tree-data-grid [data-depth="1"] .node-toggle {
+    left: 25px;
+}
+.tree-data-grid [data-depth="2"] .node-toggle {
+    left: 45px;
+}
+.tree-data-grid [data-depth="3"] .node-toggle {
+    left: 65px;
+}
+.tree-data-grid [data-depth="4"] .node-toggle {
+    left: 85px;
+}
+.tree-data-grid [data-depth="5"] .node-toggle {
+    left: 105px;
+}
+
 /* MEDIA */
 
 @media (max-width: 991px) {

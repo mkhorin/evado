@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Base');
@@ -109,17 +112,15 @@ module.exports = class DataGrid extends Base {
     }
 
     filterByColumns (models) {
-        let result = [];
-        if (Array.isArray(this.request.columns)) {
-            for (let model of models) {
-                let data = {[this.ROW_KEY]: model.getId()};
-                for (let column of this.request.columns) {
-                    data[column.name] = model.getViewAttr(column.name);
-                }
-                result.push(data);
-            }
+        return Array.isArray(this.request.columns) ? models.map(this.renderModel, this) : [];
+    }
+
+    renderModel (model) {
+        let data = {[this.ROW_KEY]: model.getId()};
+        for (let column of this.request.columns) {
+            data[column.name] = model.getViewAttr(column.name);
         }
-        return result;
+        return data;
     }
 
     // FILTER

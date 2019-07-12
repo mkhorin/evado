@@ -9,8 +9,8 @@ if (typeof params !== 'undefined') {
     Object.assign(data, params);
 }
 %>
-<div class="box box-info content-box ant-modal-scroll-container"
-     data-title="<%- blocks.title %>">
+<div class="jmodal-scroll-container content-box box-info box" data-title="<%= blocks.title %>">
+
     <div class="box-header with-border scroll-header">
         <div class="model-controls">
             <% if (data.update) { %>
@@ -25,13 +25,11 @@ if (typeof params !== 'undefined') {
             <%- include('../../_part/tool/model-history') %>
         </div>
     </div>
-    <div class="box-body scroll-body">
-        <div data-params="<%= JSON.stringify(data) %>" class="ant-model model-view form-horizontal form">
+    <div class="scroll-body box-body">
+        <div class="model-view model form-horizontal form"
+             data-jam-class="Model"
+             data-params="<%= JSON.stringify(data) %>">
             <%- body -%>
         </div>
     </div>
 </div>
-
-<script>
-    Ant.modal.onLoad(Ant.Model.init.bind(Ant.Model));
-</script>

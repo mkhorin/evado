@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Application');
@@ -6,12 +9,8 @@ module.exports = class Evado extends Base {
 
     // EVENTS
 
-    async afterComponentInit () {
-        this.addSchedulerTasks(this);
-        await super.afterComponentInit();
-    }
-
     async afterModuleInit () {
+        await this.addSchedulerTasks(this);
         await this.loadMeta();
         await super.afterModuleInit();
     }
@@ -22,12 +21,12 @@ module.exports = class Evado extends Base {
         return this.components.get('meta');
     }
 
-    getMetaPath (...args) {
-        return this.getPath(this.getMetaDir(...args));
+    getMetaPath () {
+        return this.getPath(this.getMetaDir(...arguments));
     }
 
-    getMetaDir (...args) {
-        return path.join(this.getParam('metaRoot'), ...args);
+    getMetaDir () {
+        return path.join(this.getParam('metaRoot'), ...arguments);
     }
 
     async loadMeta () {
@@ -36,16 +35,10 @@ module.exports = class Evado extends Base {
         await meta.load();
     }
 
-    createServiceNav () {
-        let meta = this.getMeta();
-        let nav = meta.getModel('nav');
-        nav.createDocServiceNav(meta.getModel('doc'), ['doc']);
-    }
-
     // SCHEDULER
 
     addSchedulerTasks (module) {
-        this.get('scheduler').addTasks(module.getConfig('tasks'));
+        this.get('scheduler').addTasks(module.getConfig('tasks'), {module});
         for (let child of module.modules) {
             this.addSchedulerTasks(child);
         }

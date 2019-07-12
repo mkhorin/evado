@@ -2,7 +2,7 @@
 
 <% let params = {}; %>
 <%- include('_params', {params}) %>
-<% params.rows = typeof rows === 'undefined' ? 4 : rows; %>
+<% params.rows = typeof rows === 'undefined' ? 2 : rows; %>
 
 <div class="form-attr form-group<%- params.required %> <%- params.css %>"
      data-attraction='<%= params.attraction %>'>

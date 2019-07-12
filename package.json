@@ -1,7 +1,7 @@
 {
   "name": "evado",
   "version": "0.1.0",
-  "description": "Base metadata app built on Node.js Areto Framework",
+  "description": "Base metadata app built on Areto Framework",
   "author": {
     "name": "Maxim Khorin",
     "email": "maksimovichu@gmail.com"
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "areto": "~0.26.0",
-    "areto-ejs": "^0.1.0",
+    "areto-ejs": "^0.1.2",
     "js-yaml": "^3.10.0",
     "multer": "^1.4.1"
   },

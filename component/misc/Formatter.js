@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/i18n/Formatter');
@@ -15,8 +18,12 @@ module.exports = class Formatter extends Base {
         return `<a href="${value}" class="download-link" target="_blank">${params.text || value}</a>`;
     }
 
-    asInherited (value, params = {}) {
+    asInherited (value) {
         return `<span class="inherited-value" title="Inherited value">${this.format(value)}</span>`
+    }
+
+    asModalLink (value, params = {}) {
+        return `<a href="${value}" class="modal-link">${params.text || value}</a>`;
     }
 
     asNoAccess (value, params = {}) {

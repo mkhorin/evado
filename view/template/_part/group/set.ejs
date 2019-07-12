@@ -1,14 +1,13 @@
 <!-- _part/group/set -->
-
-<% let params = {
+<%
+let params = {
     active: typeof active !== 'undefined' && active ? 'active' : '',
     attraction: typeof attraction === 'undefined' ? '' : JSON.stringify(attraction)
-}; %>
-
-<fieldset class="form-base-group form-set <%- params.active %>"
-          data-attraction='<%- params.attraction %>'>
+};
+%>
+<fieldset class="form-base-group form-set <%- params.active %>" data-attraction='<%- params.attraction %>'>
     <legend><span class="form-set-toggle"><span class="fa fa-plus"></span>
-            <span class="l10n"><%- title %></span></span>
+        <span class="l10n"><%- title %></span></span>
     </legend>
     <div class="form-set-body form-base-group-body">
     <% for (let item of items) { %>

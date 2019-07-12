@@ -1,9 +1,9 @@
 <!-- _part/group/tabs -->
-
-<% let params = {
+<%
+let params = {
     attraction: typeof attraction === 'undefined' ? '' : JSON.stringify(attraction)
-}; %>
-
+};
+%>
 <div class="tabs form-tabs" data-attraction="<%= params.attraction %>">
     <ul class="nav nav-tabs" role="tablist">
     <% for (let item of items) { %>
@@ -26,8 +26,7 @@
                 <%- include(data.template, data) %>
                 <% } else { %>
                 <%- data %>
-                <% }} %>
-            <% } %>
+            <% }}} %>
             </div>
         </div>
         <% } %>

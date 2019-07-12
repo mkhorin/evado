@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/view/Widget');
@@ -20,11 +23,12 @@ module.exports = class GlobalMenu extends Base {
         return modules.map(this.getModuleItem.bind(this));
     }
 
-    getModuleItem (module) {
+    getModuleItem (module, config) {
         return {
             url: module.get('url').resolve(''),
             text: module.getTitle(),
-            active: module === this.module
+            active: module === this.module,
+            ...config
         };
     }
 

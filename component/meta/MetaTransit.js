@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Base');
@@ -19,9 +22,9 @@ module.exports = class MetaTransit extends Base {
             throw new BadRequest(this.controller.translate('Transition in progress...'));
         }
         await this.resolve(model);
-        let item = ArrayHelper.searchByProp(name, 'name', model.transitions);
-        if (item instanceof Transition) {
-            return model.startTransition(item);
+        let transition = ArrayHelper.searchByProp(name, 'name', model.transitions);
+        if (transition instanceof Transition) {
+            return model.transit(transition);
         }
         throw new Error(`Invalid transition: ${name}`);
     }
@@ -29,4 +32,4 @@ module.exports = class MetaTransit extends Base {
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
 const BadRequest = require('areto/error/BadRequestHttpException');
-//const Transition = require('areto-meta/base/Transition');
+const Transition = require('evado-meta-document/workflow/Transition');

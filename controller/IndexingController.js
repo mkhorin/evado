@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('../component/base/BaseController');
@@ -17,14 +20,12 @@ module.exports = class IndexingController extends Base {
     async actionView () {
         let id = this.getQueryParam('id');
         let model = this.getModel();
+        let indexes = null;
         try {
-            let indexes = await model.getDb().getIndexes(model.TABLE);
-            return this.render('view', {id, model, indexes});
+            indexes = await model.getDb().getIndexes(model.TABLE);
+            this.render('view', {id, model, indexes});
         } catch (err) {
-            if (err && err.message === 'no collection') {
-                return this.render('error', {id, model});
-            }
-            throw err;
+            this.render('error', {id, model});
         }
     }
 

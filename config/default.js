@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 module.exports = {
@@ -8,7 +11,7 @@ module.exports = {
     components: {
         'logger': {
             level: 'info',
-            types: { // optional: separate storage of error logs
+            types: { // optional: separate log storage
                 'error': {
                     store: require('areto/log/FileLogStore')
                 }
@@ -21,7 +24,7 @@ module.exports = {
             settings: {
                 'host': process.env.MONGO_HOST || 'localhost',
                 'port': process.env.MONGO_PORT || 27017,
-                'database': process.env.MONGO_NAME || 'demo',
+                'database': process.env.MONGO_NAME,
                 'user': '',
                 'password': '',
                 'options': {
@@ -32,10 +35,10 @@ module.exports = {
             }
         },
         'cookie': {
-            secret: 'evado'
+            secret: 'evado-app'
         },
         'session': {
-            secret: 'evado',
+            secret: 'evado-app',
             lifetime: 3600
         },
         'i18n': {
@@ -87,11 +90,13 @@ module.exports = {
             extension: 'ejs'
         },
         'static': {},
-        'metaRoot': 'meta'
+        'metaRoot': 'meta',
+        'allowSignUp': true
     },
     metaModels: {
-        'doc': {Class: require('evado-meta-doc/base/DocMetaModel')},
-        'nav': {Class: require('evado-meta-nav/base/NavMetaModel')}
+        'document': {Class: require('evado-meta-document/base/DocMetaModel')},
+        'navigation': {Class: require('evado-meta-navigation/base/NavMetaModel')},
+        'report': {Class: require('evado-meta-report/base/ReportMetaModel')}
     },
     assets: require('./default-assets'),
     classes: require('./default-classes'),

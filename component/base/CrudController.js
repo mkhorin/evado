@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('./BaseController');
@@ -122,7 +125,7 @@ module.exports = class CrudController extends Base {
         let sample = await this.getModelByClassName({
             className: this.getQueryParam('sampleClass')
         });
-        params.model.getBehavior('clone').setSample(sample);
+        params.model.getBehavior('clone').setOriginal(sample);
         return this.actionCreate(params);
     }
 
@@ -142,7 +145,7 @@ module.exports = class CrudController extends Base {
     // REMOVE
 
     async actionRemove () {
-        let model = await this.getModel({id: this.getPostParam('id')});
+        let model = await this.getModel();
         await model.remove();
         this.sendText(model.getId());
     }
@@ -170,11 +173,7 @@ module.exports = class CrudController extends Base {
     }
 
     actionListSelect (params) {
-        params = {
-            searchAttrs: ['name', 'label'],
-            ...params
-        };
-        return this.sendSelectList(this.createModel().find(), params)
+        return this.sendSelectList(this.createModel().find(), params);
     }
 
     async actionListRel (params) {
@@ -202,7 +201,6 @@ module.exports = class CrudController extends Base {
 
     actionListRelSelect (params) {
         params = {
-            searchAttrs: ['name'],
             pid: this.getQueryParam('pid'),
             rel: this.getQueryParam('rel'),
             ...params
@@ -231,14 +229,6 @@ module.exports = class CrudController extends Base {
             await afterSave.call(this, model);
         }
         this.sendText(model.getId());
-    }
-
-    async sendListSelect (query, labelName = 'name') {
-        let items = await query.all();
-        this.sendJson(items.map(item => ({
-            value: item.getId(),
-            text: item.get(labelName)
-        })));
     }
 };
 

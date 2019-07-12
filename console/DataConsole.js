@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Base');
@@ -43,7 +46,7 @@ module.exports = class DataConsole extends Base {
         return Array.isArray(data) ? data : [data];
     }
 
-    log (...args) {
-        this.console.log(...args);
+    log () {
+        this.console.log(...arguments);
     }
 };

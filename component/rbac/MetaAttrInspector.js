@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/rbac/Inspector');
@@ -48,25 +51,28 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     canRead (name) {
-        return !(Array.isArray(this.deniedAttrs[Rbac.READ]) && this.deniedAttrs[Rbac.READ].includes(name));
+        const data = this.forbiddenAttrMap;
+        return !(Array.isArray(data[Rbac.READ]) && data[Rbac.READ].includes(name));
     }
 
     canWrite (name) {
-        return !(Array.isArray(this.deniedAttrs[Rbac.CREATE]) && this.deniedAttrs[Rbac.CREATE].includes(name))
-            && !(Array.isArray(this.deniedAttrs[Rbac.UPDATE]) && this.deniedAttrs[Rbac.UPDATE].includes(name));
+        const data = this.forbiddenAttrMap;
+        return !(Array.isArray(data[Rbac.CREATE]) && data[Rbac.CREATE].includes(name))
+            && !(Array.isArray(data[Rbac.UPDATE]) && data[Rbac.UPDATE].includes(name));
     }
 
     can (action, name) {
-        return !Array.isArray(this.deniedAttrs[action]) || !this.deniedAttrs[action].includes(name);
+        const data = this.forbiddenAttrMap;
+        return !Array.isArray(data[action]) || !data[action].includes(name);
     }
 
     async execute () {
-        this.deniedAttrs = {};
+        this.forbiddenAttrMap = {};
         if (this.rbac.targetMetaAttrMap) {
             let items = this.getTargetAttrItems(this.rbac.targetMetaAttrMap);
             if (items) {
                 items = this.filterMetaAttrData(this.rbac.metaAttrMap, items);
-                this.deniedAttrs = await this.resolveAttrs(items);
+                this.forbiddenAttrMap = await this.resolveAttrs(items);
             }
         }
         return this;
@@ -137,36 +143,36 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     async resolveAttrs (items) {
-        let deniedAttrs = {};
+        let forbiddenAttrMap = {};
         for (let item of items) {
             for (let action of this.actions) {
-                if (deniedAttrs[action] === null) {
+                if (forbiddenAttrMap[action] === null) {
                     continue; // all action attrs is allowed (by other role)
                 }
                 if (!item.hasOwnProperty(action)) {
-                    deniedAttrs[action] = null;
+                    forbiddenAttrMap[action] = null;
                     continue;
                 }
                 let attrs = [];
                 await this.checkAttrItems(item[action], attrs);
                 if (!attrs.length) {
-                    deniedAttrs[action] = null;
-                } else if (deniedAttrs[action]) {
-                    deniedAttrs[action] = ArrayHelper.intersect(deniedAttrs[action], attrs);
+                    forbiddenAttrMap[action] = null;
+                } else if (forbiddenAttrMap[action]) {
+                    forbiddenAttrMap[action] = ArrayHelper.intersect(forbiddenAttrMap[action], attrs);
                 } else {
-                    deniedAttrs[action] = attrs;
+                    forbiddenAttrMap[action] = attrs;
                 }
             }
         }
-        return deniedAttrs;
+        return forbiddenAttrMap;
     }
 
-    async checkAttrItems (items, deniedAttrs) {
+    async checkAttrItems (items, forbiddenAttrs) {
         for (let item of items) {
             if (!item.rule) {
-                deniedAttrs.push(item.attr);
+                forbiddenAttrs.push(item.attr);
             } else if (await this.checkRule(item.rule)) {
-                deniedAttrs.push(item.attr);
+                forbiddenAttrs.push(item.attr);
             }
         }
     }
@@ -197,7 +203,7 @@ module.exports = class MetaAttrInspector extends Base {
         if (data) {
             let items = [];
             for (let item of data) {
-                if (!this.hasDeniedItem(item)) {
+                if (!this.hasForbiddenItem(item)) {
                     items.push(item);
                 }
             }
@@ -208,7 +214,7 @@ module.exports = class MetaAttrInspector extends Base {
         }
     }
 
-    hasDeniedItem (item) {
+    hasForbiddenItem (item) {
         for (let action of item.actions) {
             if (this.actions.includes(action) && this.can(action, item.attr)) {
                 return false;

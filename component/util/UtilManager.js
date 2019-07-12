@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Component');
@@ -19,7 +22,7 @@ module.exports = class UtilManager extends Base {
     }
 
     resolveUtilMap (map) {
-        return typeof map === 'string' ? this.module.getConfig(map) : map ? map : {};
+        return (typeof map === 'string' ? this.module.getConfig(map) : map) || {};
     }
 
     async hasEnabled (params) {

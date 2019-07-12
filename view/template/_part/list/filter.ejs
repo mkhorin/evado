@@ -7,6 +7,9 @@ for (let column of params.columns) {
     if (column.label === undefined) {
         column.label = model.getAttrLabel(column.name);
     }
+    if (column.items === 'labels') {
+        column.items = _controller.getLabelSelectItems(column.name, model);
+    } 
 }
 %>
 <div class="list-filter" data-params="<%= JSON.stringify(params) %>">

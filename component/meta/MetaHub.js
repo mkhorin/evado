@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Component');
@@ -12,8 +15,8 @@ module.exports = class MetaHub extends Base {
 
     constructor (config) {
         super({
-            'models': require('./MetaModels'),
-            'processing': {
+            models: require('./MetaModels'),
+            processing: {
                 Class: require('./SingleProcessing'),
                 busyMessage: 'Meta updating in progress'
             },
@@ -26,8 +29,8 @@ module.exports = class MetaHub extends Base {
         this.processing = this.spawn(this.processing, {owner: this});
     }
 
-    getMetaPath (...args) {
-        return this.module.getMetaPath(...args);
+    getMetaPath () {
+        return this.module.getMetaPath(...arguments);
     }
 
     getDb () {

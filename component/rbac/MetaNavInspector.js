@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/rbac/Inspector');
@@ -19,25 +22,26 @@ module.exports = class MetaNavInspector extends Base {
     }
 
     async execute () {
-        let deniedAccess = {};
+        if (!this.rbac.metaNavMap) {
+            return {};
+        }
         let data = this.filterMetaData(this.rbac.metaNavMap);
         if (!data) {
-            return deniedAccess;
+            return {};
         }
-        let deniedSection = data.hasOwnProperty(this.section.id)
+        let forbiddenSection = data.hasOwnProperty(this.section.id)
             ? await this.checkItems(data[this.section.id]) // check deny
             : false;
-
-        if (deniedSection) {
-            deniedAccess[this.section.id] = true;
-            return deniedAccess;
+        if (forbiddenSection) {
+            return {[this.section.id]: true};
         }
+        let forbiddenAccess = {};
         for (let item of this.items) {
             if (data[item.id]) {
-                deniedAccess[item.id] = await this.checkItems(data[item.id]);
+                forbiddenAccess[item.id] = await this.checkItems(data[item.id]);
             }
         }
-        return deniedAccess;
+        return forbiddenAccess;
     }
 
     filterMetaData (data) {
@@ -65,4 +69,3 @@ module.exports = class MetaNavInspector extends Base {
 };
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
-const Rbac = require('./Rbac');

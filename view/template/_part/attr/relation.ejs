@@ -7,7 +7,7 @@ let d = {
     showTop: false,
     key: model.PK,
     relName: attr,
-    order: {[model.PK]: - 1},
+    order: {[model.PK]: -1},
     pageSize: 10,
     remove: true,
     unlink: true,
@@ -42,7 +42,9 @@ if (d.view !== null) {
 if (d.create !== null) {
     if (d.create === undefined) {
         d.create = [`${relUrl}/create`, urlParams];
-    } else if (!Array.isArray(d.create) && typeof d.create === 'object') {
+    } else if (typeof d.create === 'string') {
+        d.create = [d.create, urlParams];
+    } else if (!Array.isArray(d.create)) {
         d.create = [`${relUrl}/create`, Object.assign(urlParams, d.create)];
     }
     d.create = _url(d.create);
@@ -55,7 +57,9 @@ if (d.clone === true) {
 if (d.update !== null) {
     if (d.update === undefined) {
         d.update = [`${relUrl}/update`, urlParams];
-    } else if (!Array.isArray(d.update) && typeof d.update === 'object') {
+    } else if (typeof d.update === 'string') {
+        d.create = [d.update, urlParams];
+    } else if (!Array.isArray(d.update)) {
         d.update = [`${relUrl}/update`, Object.assign(urlParams, d.update)];
     }
     d.update = _url(d.update);
@@ -126,7 +130,7 @@ if (d.filter && !d.filter.url) {
                     </button>
                     <% } %>
                     <% if (d.remove) { %>
-                    <button data-id="remove" class="btn btn-default" type="button" title="Remove">
+                    <button data-id="remove" class="btn btn-white" type="button" title="Remove">
                         <span class="glyphicon glyphicon-trash text-danger"></span>
                     </button>
                     <% } %>
@@ -149,12 +153,12 @@ if (d.filter && !d.filter.url) {
                     </button>
                     <% } %>
                     <% if (typeof tools !== 'undefined') { %>
-                    <%- include(_view.get('_part/universal-render'), {data: tools}) %>
+                    <%- include(_view.get('_part/misc/universal-render'), {data: tools}) %>
                     <% } %>
                 </div>
             </div>
             <div class="box-body">
-                <div class="ant-attr-list data-grid" data-params="<%= JSON.stringify(d) %>">
+                <div class="data-grid" data-params="<%= JSON.stringify(d) %>">
                     <% if (d.filter) { %>
                     <div class="list-filter">
                         <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>

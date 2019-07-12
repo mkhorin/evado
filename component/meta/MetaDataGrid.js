@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('../misc/DataGrid');
@@ -25,7 +28,7 @@ module.exports = class MetaDataGrid extends Base {
         await this.resolveFilter();
         this._result.totalSize = await this.query.count();
         await this.setModels();
-        await this.metaData.security.resolveListDeniedAttrs(this._models, this.metaData.view);
+        await this.metaData.security.resolveListForbiddenAttrs(this._models, this.metaData.view);
         this._result.items = await this.filterByColumns(this._models);
         return this._result;
     }
@@ -100,8 +103,8 @@ module.exports = class MetaDataGrid extends Base {
             return [];
         }
         this._attrTemplateMap = this.getAttrTemplateMap(models[0].view);
-        this._readDeniedAttrs = this.metaData.security.getDeniedAttrs(Rbac.READ);
-        return PromiseHelper.map(models, this.renderModel.bind(this));
+        this._readForbiddenAttrs = this.metaData.security.getForbiddenAttrs(Rbac.READ);
+        return PromiseHelper.map(models, this.renderModel, this);
     }
 
     getAttrTemplateMap (view) {
@@ -128,7 +131,7 @@ module.exports = class MetaDataGrid extends Base {
 
     async renderCell (attr, model, result) {
         let name = attr.name;
-        if (this.isReadDeniedAttr(name, model)) {
+        if (this.isReadForbiddenAttr(name, model)) {
             return result[name] = this.metaData.security.noAccessMessage;
         }
         if (!this._attrTemplateMap[name]) {
@@ -138,9 +141,9 @@ module.exports = class MetaDataGrid extends Base {
         result[name] = `<!--handler: ${name}-->${content}`;
     }
 
-    isReadDeniedAttr (name, model) {
-        return this._readDeniedAttrs && this._readDeniedAttrs.includes(name)
-            || model.readDeniedAttrs && model.readDeniedAttrs.includes(name);
+    isReadForbiddenAttr (name, model) {
+        return this._readForbiddenAttrs && this._readForbiddenAttrs.includes(name)
+            || model.readForbiddenAttrs && model.readForbiddenAttrs.includes(name);
     }
 
     renderAttr (name, attr, model) {

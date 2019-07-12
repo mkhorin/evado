@@ -1,10 +1,10 @@
 <!-- _part/attr/selection -->
-
-<% let params = {
+<%
+let params = {
     select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
     sets: typeof sets === 'undefined' ? '' : JSON.stringify(sets)
-}; %>
-
+};
+%>
 <%- include('_params', {params}) %>
 
 <div class="form-attr form-group<%- params.required %> <%- params.css %>"

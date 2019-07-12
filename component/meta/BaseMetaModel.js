@@ -11,20 +11,24 @@ module.exports = class BaseMetaModel extends Base {
         return this.hub.module;
     }
 
-    getPath (...args) {
-        return this.hub.getMetaPath(...args);
+    getPath () {
+        return this.hub.getMetaPath(...arguments);
     }
 
     getDb () {
         return this.hub.getDb();
     }
 
-    splitByModulePrefix (...args) {
-        return this.hub.splitByModulePrefix(...args);
+    splitByModulePrefix () {
+        return this.hub.splitByModulePrefix(...arguments);
     }
 
     async load () {
         this.data = await this.source.load();
+    }
+
+    async afterLoad () {
+        // after load all meta models
     }
 
     createSource (data) {
@@ -43,8 +47,8 @@ module.exports = class BaseMetaModel extends Base {
         CommonHelper.log(type, message, data, this.constructor.name, this.hub);
     }
 
-    logError (...args) {
-        this.log('error', ...args);
+    logError () {
+        this.log('error', ...arguments);
     }
 };
 

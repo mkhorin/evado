@@ -1,52 +1,64 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
-if ($.fn.select2) {
+if ($.fn.select2) {    
     $.extend($.fn.select2.defaults.defaults, {
-        'width': '100%',
-        'allowClear': true,
-        'placeholder': '---',
-        'minimumResultsForSearch': 8
+        width: '100%',
+        allowClear: true,
+        placeholder: '---',
+        minimumResultsForSearch: 8
+    });
+    // prevent open dropdown to clear
+    $(document.body).on('select2:unselecting', '.select2-hidden-accessible', event => {
+        $(event.target).data('unselecting', true);
+    }).on('select2:opening', '.select2-hidden-accessible', event => {
+        if ($(event.target).data('unselecting')) {
+            $(event.target).removeData('unselecting');
+            event.preventDefault();
+        }
     });
 }
 
 if ($.fn.datepicker) {
     $.extend($.fn.datepicker.defaults, {
-        'autoclose': true,
-        'format': 'yyyy-mm-dd',
-        'clearBtn': true,
-        'todayHighlight': true
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        clearBtn: true,
+        todayHighlight: true
     });
 }
 
 if ($.fn.datetimepicker) {
     $.fn.datetimepicker.defaultOptions = {
-        'sideBySide': true,
-        'showClear': true,
-        'showClose': true,
-        'ignoreReadonly': false,
-        'useCurrent': false,
-        'toolbarPlacement': 'bottom',
-        // 'widgetParent': 'body',
-        // 'debug': true
+        sideBySide: true,
+        showClear: true,
+        showClose: true,
+        ignoreReadonly: false,
+        useCurrent: false,
+        toolbarPlacement: 'bottom',
+        // widgetParent: 'body',
+        // debug: true
     };
 }
 
 if ($.fn.dataTable) {
     $.extend($.fn.dataTable.defaults, {
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "language": {
-            "paginate": {
-                "first": "<<",
-                "previous": "<",
-                "next": ">",
-                "last": ">>"
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        autoWidth: false,
+        language: {
+            paginate: {
+                first: "<<",
+                previous: "<",
+                next: ">",
+                last: ">>"
             },
-            "lengthMenu": "Show _MENU_"
+            lengthMenu: "Show _MENU_"
         }
     });
     // send errors to console instead alert

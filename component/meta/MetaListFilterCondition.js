@@ -1,21 +1,22 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('../misc/ListFilterCondition');
 
-module.exports = class ListFilterCondition extends Base {
+module.exports = class MetaListFilterCondition extends Base {
 
-    parse (data) {
-        let attr = this.view.getAttr(data.attr);
-        if (this.view.searchAttrs.includes(attr)) {
-            return super.parse(data);
+    parse ({attr}) {
+        if (this.view.searchAttrs.includes(this.view.getAttr(attr))) {
+            return super.parse(...arguments);
         }
-        throw new BadRequest(this.wrapClassMessage(`Invalid search attribute: ${data.attr}.${this.view.id}`));
+        throw new BadRequest(this.wrapClassMessage(`Invalid search attribute: ${attr}.${this.view.id}`));
     }
 
-    parseRelation (data) {
-        let attr = data.attr;
+    parseRelation ({attr, operation}) {
         let rel = this.getRelation(attr);
-        let value = this.formatByValueType(data);
+        let value = this.formatByValueType(...arguments);
         if (!value) {
             return null;
         }
@@ -24,16 +25,15 @@ module.exports = class ListFilterCondition extends Base {
             value = this.getRelationValue(rel, query);
             attr = rel.linkAttrName;
         }
-        return this.formatSelectorCondition(data.operation, attr, value);
+        return this.formatSelectorCondition(attr, operation, value);
     }
 
-    async parseNested (data) {
-        let attr = data.attr, value;
+    async parseNested ({attr, value}) {
         let rel = this.getRelation(attr);
         let query = rel.refClass.find();
         let condition = await (new this.constructor({
             view: rel.attr.getRefView('searchView', 'list'),
-            items: data.value,
+            items: value,
             query
         })).resolve();
         query.and(condition);
@@ -48,10 +48,10 @@ module.exports = class ListFilterCondition extends Base {
 
     getRelation (name) {
         let attr = this.view.getAttr(name);
-        if (!attr.getRel()) {
-            throw new BadRequest(this.wrapClassMessage(`Invalid relation: ${attr.id}`));
+        if (attr.getRel()) {
+            return attr.getRel();
         }
-        return attr.getRel();
+        throw new BadRequest(this.wrapClassMessage(`Invalid relation: ${attr.id}`));
     }
 
     async getRelationValue (rel, query) {

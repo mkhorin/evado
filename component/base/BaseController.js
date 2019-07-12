@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Controller');
@@ -28,17 +31,16 @@ module.exports = class BaseController extends Base {
         return SelectHelper.getMapItems(this.translateMessageMap(data));
     }
 
-    gelMapSelectItems (map) {
+    getMapSelectItems (map) {
         return SelectHelper.getMapItems(this.translateMessageMap(map));
     }
 
     // MODEL
 
-    async getModel (params) {
-        params = {
-            id: this.getQueryParam('id'),
-            ...params
-        };
+    async getModel (params = {}) {
+        if (!params.id) {
+            params.id = this.getQueryParam('id') || this.getPostParam('id');
+        }
         params.ModelClass = params.ModelClass || this.getModelClass();
         let model = this.spawn(params.ModelClass);
         params.id = model.getDb().normalizeId(params.id);
@@ -63,7 +65,7 @@ module.exports = class BaseController extends Base {
         return this.getModel(params);
     }
 
-    // ERRORS
+    // ERROR
 
     handleError (...models) {
         if (this.hasAnyModelError(...models)) {
@@ -75,7 +77,7 @@ module.exports = class BaseController extends Base {
         let result = {};
         for (let model of models) {
             if (model) {
-                result[model.constructor.name] = this.translateMessageMap(model.getFirstErrors());
+                result[model.constructor.name] = this.translateMessageMap(model.getFirstErrorMap());
             }
         }
         this.send(result, 400);
@@ -92,36 +94,24 @@ module.exports = class BaseController extends Base {
     // LIST
 
     sendDataGridList (query, params) {
-        return (new DataGrid({
-            controller: this,
-            query,
-            params
-        })).sendList();
+        return (new DataGrid({controller: this, query, params})).sendList();
+    }
+
+    sendTreeDataGridList (query, params) {
+        return (new TreeDataGrid({controller: this, query, params})).sendList();
     }
 
     async sendSelectList (query, params) {
-        let result = await (new Select2({
-            request: this.getPostParams(),
-            query,            
-            params
-        })).getList();
+        params = {
+            searchAttrs: ['name', 'label'],
+            ...params
+        };
+        let request = this.getPostParams();
+        let result = await (new Select2({request, query, params})).getList();
         this.sendJson(result);
     }
 
-    async executeHandlers (query, handlers, models) {
-        if (!handlers || typeof handlers !== 'object') {
-            return false;
-        }
-        for (let key of Object.keys(handlers)) {
-            let options = handlers[key];
-            let handler = options && query.model.getHandler(options.name);
-            if (handler && Array.isArray(models)) {
-                for (let model of models) {
-                    await handler.call(model, key, options, this);
-                }
-            }
-        }
-    }
+    // META
 
     parseMetaParams (data) {
         let result = {meta: this.module.getMeta()};
@@ -139,8 +129,10 @@ module.exports = class BaseController extends Base {
 };
 module.exports.init();
 
+const StringHelper = require('areto/helper/StringHelper');
 const BadRequest = require('areto/error/BadRequestHttpException');
 const NotFound = require('areto/error/NotFoundHttpException');
 const SelectHelper = require('../helper/SelectHelper');
 const DataGrid = require('../misc/DataGrid');
+const TreeDataGrid = require('../misc/TreeDataGrid');
 const Select2 = require('../misc/Select2');

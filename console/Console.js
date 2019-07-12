@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Base');
@@ -6,64 +9,73 @@ module.exports = class Console extends Base {
 
     constructor (config) {
         super({
-            'AssetConsole': require('./AssetConsole'),
-            'AuthConsole': require('./AuthConsole'),
-            'DataConsole': require('./DataConsole'),
-            'DataImportConsole': require('./DataImportConsole'),
-            'DataExportConsole': require('./DataExportConsole'),
+            AssetConsole: require('./AssetConsole'),
+            AuthConsole: require('./AuthConsole'),
+            DataConsole: require('./DataConsole'),
+            DataImportConsole: require('./DataImportConsole'),
+            DataExportConsole: require('./DataExportConsole'),
             ...config
         });
         this.app = ClassHelper.spawn(this.Application);
+    }
+
+    async install () {
+        await this.execute(async ()=> {
+            await this.createHandler('install', this.AssetConsole)();
+            await this.createHandler('deploy', this.AssetConsole)();
+            await this.createHandler('createUsers', this.AuthConsole)();
+            await this.createHandler('createRbac', this.AuthConsole)();
+        });
     }
 
     async start () {
         await this.execute(async ()=> await this.app.start());
     }
 
-    // ASSETS
+    // ASSET
 
     async installAssets () {
-        await this.finalExecute(this.createHandler('install', this.AssetConsole));
+        await this.execute(this.createHandler('install', this.AssetConsole));
     }
 
     async deployAssets () {
-        await this.finalExecute(this.createHandler('deploy', this.AssetConsole));
+        await this.execute(this.createHandler('deploy', this.AssetConsole));
     }
 
     // AUTH
 
     async createUsers () {
-        await this.finalExecute(this.createHandler('createUsers', this.AuthConsole));
+        await this.execute(this.createHandler('createUsers', this.AuthConsole));
     }
 
     async createRbac () {
-        await this.finalExecute(this.createHandler('createRbac', this.AuthConsole));
+        await this.execute(this.createHandler('createRbac', this.AuthConsole));
     }
 
     async signUp (params) {
-        await this.finalExecute(this.createHandler('signUp', this.AuthConsole, params));
+        await this.execute(this.createHandler('signUp', this.AuthConsole, params));
     }
 
     async changePassword (params) {
-        await this.finalExecute(this.createHandler('changePassword', this.AuthConsole, params));
+        await this.execute(this.createHandler('changePassword', this.AuthConsole, params));
     }
 
     async assignRole (params) {
-        await this.finalExecute(this.createHandler('assignRole', this.AuthConsole, params));
+        await this.execute(this.createHandler('assignRole', this.AuthConsole, params));
     }
 
     // DATA
 
     async dropData (params) {
-        await this.finalExecute(this.createHandler('drop', this.DataConsole, params));
+        await this.execute(this.createHandler('drop', this.DataConsole, params));
     }
 
     async importData (params) {
-        await this.finalExecute(this.createHandler('execute', this.DataImportConsole, params));
+        await this.execute(this.createHandler('execute', this.DataImportConsole, params));
     }
 
     async exportData (params) {
-        await this.finalExecute(this.createHandler('execute', this.DataExportConsole, params));
+        await this.execute(this.createHandler('execute', this.DataExportConsole, params));
     }
 
     // HANDLER
@@ -77,35 +89,29 @@ module.exports = class Console extends Base {
         return instance[method].bind(instance);
     }
 
-    async finalExecute (handler) {
-        await this.execute(handler);
-        process.exit();
-    }
-
     async execute (handler) {
         try {
             await this.app.init();
             await handler();
             await this.logTotal();
         } catch (err) {
-            this.app.log('error', err);
-            process.exit();
+            this.log('error', err);
         }
     }
 
     // LOG
 
+    log () {
+        this.app.log(...arguments);
+    }
+
     async logTotal () {
-        await PromiseHelper.delay(100); // after previous console output
+        await PromiseHelper.setTimeout(200); // skip previous console output
         let logger = this.app.get('logger');
         let total = logger.getTotal(['error', 'warn']).map(item => `${item.type}: ${item.counter}`);
         if (total.length) {
             this.log('warn', `Log total: ${total.join(', ')}`);
         }
-    }
-
-    log (...args) {
-        this.app.log(...args);
     }
 };
 

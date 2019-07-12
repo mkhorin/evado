@@ -6,47 +6,49 @@ let params = {
     valueKey: typeof valueKey === 'undefined' ? 'value' : valueKey,
     textKey: typeof textKey === 'undefined' ? 'text' : textKey,
     select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
-    url: typeof url === 'undefined' ? '' : url
+    update: typeof update === 'undefined' ? '' : update,
+    masters: typeof masters === 'undefined' ? '' : JSON.stringify(masters)
 };
-if (items === 'labels') {
-    items = _controller.getLabelSelectItems(attr, model);
-}
 %>
 <%- include('_params', {params}) %>
 <%
 let content = params.hasEmpty ? `<option value="">${params.emptyText}</option>` : '';
-for (let item of items) {
-    if (item.separator) {
-        let text = item[params.textKey] === undefined ? '------' : item[params.textKey];
-        content += `<option disabled>${text}</option>`;
-    } else {
-        let selected = item[params.valueKey] == params.value ? 'selected' : '';
-        content += `<option ${selected} value="${item[params.valueKey]}">${item[params.textKey]}</option>`;
+if (typeof items !== 'undefined' && items) {
+    if (items === 'labels') {
+        items = _controller.getLabelSelectItems(attr, model);
     }
+    for (let item of items) {
+        if (item.separator) {
+            let text = item[params.textKey] === undefined ? '------' : item[params.textKey];
+            content += `<option disabled>${text}</option>`;
+        } else {
+            let selected = item[params.valueKey] == params.value ? 'selected' : '';
+            content += `<option ${selected} value="${item[params.valueKey]}">${item[params.textKey]}</option>`;
+        }
+    }
+} else if (params.value !== '') {
+    content += `<option selected value="${params.value}">${params.displayValue}</option>`;
 }
+content = `<select name="${params.name}" ${params.disabled} class="form-control form-value">${content}</select>`;
 %>
 <div class="form-attr form-group<%- params.required %> <%- params.css %>"
      data-type="select"
-     data-url="<%- params.url %>"
      data-select2="<%= params.select2 %>"
+     data-masters="<%= params.masters %>"
      data-attraction='<%= params.attraction %>'>
     <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
-        <% if (params.url) { %>
+        <% if (params.update) { %>
         <div class="input-group">
-            <select name="<%- params.name %>" <%- params.disabled %> class="form-control form-value">
-                <%- content %>
-            </select>
+            <%- content %>
             <div class="input-group-btn">
-                <button data-action="url" class="btn btn-default" type="button">
+                <button data-action="update" class="btn btn-default" type="button" data-url="<%- params.update %>">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
             </div>
         </div>
         <% } else { %>
-        <select name="<%- params.name %>" <%- params.disabled %> class="form-control form-value">
-            <%- content %>
-        </select>
+        <%- content %>
         <% } %>
         <div class="hint-block"><%- params.hint %></div>
         <div class="error-block"></div>

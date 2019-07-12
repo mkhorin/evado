@@ -5,7 +5,7 @@
 <%
 let d = {
     relName: attr,
-    order: {[model.PK]: - 1},
+    order: {[model.PK]: -1},
     key: model.PK,
     remove: false,
     unlink: true,
@@ -101,7 +101,7 @@ let related = model.rel(attr);
                     </button>
                     <% } %>
                     <% if (d.remove) { %>
-                    <button data-id="remove" class="remove btn btn-default" type="button" title="Delete">
+                    <button data-id="remove" class="btn btn-white" type="button" title="Delete">
                         <span class="glyphicon glyphicon-trash text-danger"></span>
                     </button>
                     <% } %>
@@ -111,7 +111,7 @@ let related = model.rel(attr);
                     </button>
                     <% } %>
                     <% if (typeof tools !== 'undefined') { %>
-                    <%- include(_view.get('_part/universal-render'), {data: tools}) %>
+                    <%- include(_view.get('_part/misc/universal-render'), {data: tools}) %>
                     <% } %>
                 </div>
                 <select id="<%- params.id %>" class="form-control" <% if (d.multiple) { %>multiple<% } %>

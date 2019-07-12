@@ -37,15 +37,18 @@ for (let model of models) {
     }
     data.data.push(map);
 }
+if (data.jamClass === undefined) {
+    data.jamClass = 'SortList';
+}
 %>
-<div class="box box-grid ant-modal-scroll-container" data-title="<%- blocks.title %>">
+<div class="jmodal-scroll-container box-grid box" data-title="<%- blocks.title %>">
     <div class="box-header with-border scroll-header">
         <div class="list-controls clearfix">
 
             <button data-id="saveClose" class="btn btn-primary" type="button" title="Save and close">
                 <span class="glyphicon glyphicon-saved"></span>
             </button>
-            <button data-id="cancel" class="btn btn-warning mr10" type="button" title="Cancel">
+            <button data-id="cancel" class="btn btn-white mr20" type="button" title="Cancel">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
 
@@ -74,15 +77,15 @@ for (let model of models) {
             </button>
 
             <% if (typeof tools !== 'undefined') { %>
-            <%- include(_view.get('_part/universal-render'), {
-                data: tools
-            }) %>
+            <%- include(_view.get('_part/misc/universal-render'), {data: tools}) %>
             <% } %>
         </div>
     </div>
 
-    <div class="box-body scroll-body">
-        <div class="ant-list data-grid" data-params="<%= JSON.stringify(data) %>">
+    <div class="scroll-body box-body">
+        <div class="data-grid"
+             data-jam-class="<%- data.jamClass %>"
+             data-params="<%= JSON.stringify(data) %>">
 
             <div class="table-responsive">
                 <table class="data-grid-table table table-bordered table-striped table-condensed">
@@ -105,7 +108,3 @@ for (let model of models) {
     </div>
     <div class="list-loader overlay"><i class="fa fa-spinner fa-spin"></i></div>
 </div>
-
-<script>
-    Ant.modal.onLoad(Ant.SortList.init.bind(Ant.SortList));
-</script>

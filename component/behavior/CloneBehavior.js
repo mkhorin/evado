@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin (maksimovichu@gmail.com)
+ */
 'use strict';
 
 const Base = require('areto/base/Behavior');
@@ -12,26 +15,32 @@ module.exports = class CloneBehavior extends Base {
         this.setHandler(ActiveRecord.EVENT_AFTER_INSERT, this.afterInsert);
     }
 
-    setSample (sample) {
-        this.sample = sample;
-        this.owner.setAttrs(sample, [this.owner.PK, ...this.excludedAttrs]);
+    getOriginal () {
+        return this.original;
+    }
+
+    setOriginal (original) {
+        this.original = original;
+        this.owner.setAttrs(original, [this.owner.PK, ...this.excludedAttrs]);
     }
 
     async afterInsert () {
-        if (!this.sample || !Array.isArray(this.relations) || !this.relations.length) {
-            return;
-        }
-        await this.sample.findRelations(this.relations);
-        for (let name of this.relations) {
-            let related = this.sample.rel(name);
-            this.log('trace', `Clone '${name}' relation from ${this.sample.constructor.name}`);
-            if (Array.isArray(related)) {
-                for (let model of related) {
-                    await model.cloneFor(this.owner);
-                }    
-            } else if (related) {
-                await related.clone(this.owner);
+        if (this.original && Array.isArray(this.relations) && this.relations.length) {
+            await this.original.findRelations(this.relations);
+            for (let name of this.relations) {
+                await this.cloneRelation(name);
             }
+        }
+    }
+
+    async cloneRelation (name) {
+        let related = this.original.rel(name);
+        this.log('trace', `Clone relation: ${name} from ${this.original.constructor.name}`);
+        if (!Array.isArray(related)) {
+            return related.clone(this.owner);
+        }
+        for (let model of related) {
+            await model.cloneFor(this.owner);
         }
     }
 };

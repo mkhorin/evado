@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Base');
@@ -14,9 +17,9 @@ module.exports = class Select2 extends Base {
         super({
             // query: [new Query]
             // request: [select2 request]
-            params: config.params || {},
             ...config
         });
+        this.params = this.params || {};
     }
 
     async getList () {
@@ -84,5 +87,5 @@ module.exports = class Select2 extends Base {
 };
 module.exports.init();
 
-const EscapeHelper = require('areto/helper/CommonHelper');
+const EscapeHelper = require('areto/helper/EscapeHelper');
 const BadRequest = require('areto/error/BadRequestHttpException');

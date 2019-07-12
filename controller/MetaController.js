@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('../component/base/BaseController');
@@ -30,7 +33,7 @@ module.exports = class MetaController extends Base {
 
     async actionUpdateClassIndexes () {
         let name = this.getQueryParam('class');
-        let model = this.meta.getModel('doc').getClass(name);
+        let model = this.meta.getModel('document').getClass(name);
         if (!model) {
             throw new NotFound('Not found class');
         }
@@ -38,42 +41,36 @@ module.exports = class MetaController extends Base {
         this.send('Class indexes have been updated');
     }
 
-    // LIST META
-
     actionListClassSelect () {
-        let metaModel = this.meta.getModel('doc');
+        let metaModel = this.meta.getModel('document');
         this.sendJson(MetaSelectHelper.getLabelItems(metaModel.classes));
     }
 
     actionListViewSelect () {
-        let cls = this.getClassFromQuery();
+        let cls = this.getClassFromRequest();
         this.sendJson(MetaSelectHelper.getLabelItems(cls.views));
     }
 
     actionListAttrSelect () {
-        let cls = this.getClassFromQuery();
-        let view = cls.getView(this.getQueryParam('view')) || cls;        
+        let cls = this.getClassFromRequest();
+        let view = cls.getView(this.getPostParam('view')) || cls;
         this.sendJson(MetaSelectHelper.getLabelItems(view.attrs));
     }
 
-    async actionListObjectSelect () {
-        let cls = this.getClassFromQuery();
-        let view = cls.getView(this.getQueryParam('view')) || cls;
-        let models = await view.find().all();
-        this.sendJson(models.map(item => ({
-            value: item.getId(),
-            text: item.getId()
-        })));
+    actionListObjectSelect () {
+        let cls = this.getClassFromRequest();
+        let view = cls.getView(this.getPostParam('view')) || cls;
+        return this.sendSelectList(view.find());
     }
 
     actionListNavSectionSelect () {
-        let metaModel = this.meta.getModel('nav');
+        let metaModel = this.meta.getModel('navigation');
         this.sendJson(MetaSelectHelper.getLabelItems(metaModel.sections.values()));
     }
 
     actionListNavItemSelect () {
-        let metaModel = this.meta.getModel('nav');
-        let section = metaModel.getSection(this.getQueryParam('navSection'));
+        let metaModel = this.meta.getModel('navigation');
+        let section = metaModel.getSection(this.getPostParam('navSection'));
         if (!section) {
             throw new NotFound('Not found nav section');
         }
@@ -81,32 +78,24 @@ module.exports = class MetaController extends Base {
     }
 
     actionListStateSelect () {
-        let cls = this.getClassFromQuery();
+        let cls = this.getClassFromRequest();
         this.sendJson(MetaSelectHelper.getLabelItems(cls.states));
     }
 
     actionListTransitionSelect () {
-        let cls = this.getClassFromQuery();
+        let cls = this.getClassFromRequest();
         this.sendJson(MetaSelectHelper.getLabelItems(cls.transitions));
     }
     
     // METHODS
 
-    getClassFromQuery () {
-        let metaModel = this.meta.getModel('doc');
-        let cls = metaModel.getClass(this.getQueryParam('class'));
+    getClassFromRequest () {
+        let metaModel = this.meta.getModel('document');
+        let cls = metaModel.getClass(this.getPostParam('class'));
         if (!cls) {
             throw new NotFound('Not found class');
         }
         return cls;
-    }
-
-    getMetaModelFromQuery () {
-        let model = this.meta.getModel(this.getQueryParam('meta'));
-        if (!model) {
-            throw new NotFound('Not found meta model');
-        }
-        return model;
     }
 };
 module.exports.init(module);

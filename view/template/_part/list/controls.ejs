@@ -1,0 +1,58 @@
+<!-- _part/list/controls -->
+
+<div class="list-controls clearfix">
+
+    <button data-id="selectAll" class="btn btn-white mr10" type="button" title="Select all">
+        <span class="glyphicon glyphicon-list"></span>
+    </button>
+
+    <% if (data.view) { %>
+    <button data-id="view" class="btn btn-default" type="button" title="View">
+        <span class="glyphicon glyphicon-eye-open"></span>
+    </button>
+    <% } %>
+
+    <% if (data.create) { %>
+    <button data-id="create" class="btn btn-success btn-light" type="button" title="Create">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <% } %>
+
+    <% if (data.update) { %>
+    <button data-id="update" class="btn btn-warning btn-light" type="button" title="Update">
+        <span class="glyphicon glyphicon-pencil"></span>
+    </button>
+    <% } %>
+
+    <% if (data.remove) { %>
+    <button data-id="remove" class="btn btn-white" type="button" title="Delete">
+        <span class="glyphicon glyphicon-trash text-danger"></span>
+    </button>
+    <% } %>
+
+    <button data-id="reload" class="btn btn-default ml10 mr10" type="button" title="Reload">
+        <span class="fa fa-sync-alt"></span>
+    </button>
+
+    <% if (data.index) { %>
+    <button data-id="index" class="btn btn-white btn-light" type="button" title="Indexing">
+        <span class="glyphicon glyphicon-align-left"></span>
+    </button>
+    <% } %>
+
+    <% if (data.createMultiple) { %>
+    <button data-id="createMultiple" class="btn btn-success btn-light ml10" type="button" title="Create multiple">
+        <span class="glyphicon glyphicon-th"></span>
+    </button>
+    <% } %>
+
+    <% if (data.clone) { %>
+    <button data-id="clone" class="btn btn-success btn-light" type="button" title="Clone">
+        <span class="fa fa-copy"></span>
+    </button>
+    <% } %>
+
+    <% if (typeof tools !== 'undefined') { %>
+    <%- include(_view.get('_part/misc/universal-render'), {data: tools}) %>
+    <% } %>
+</div>

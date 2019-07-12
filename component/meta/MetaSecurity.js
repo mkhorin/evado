@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/base/Base');
@@ -9,16 +12,8 @@ module.exports = class MetaSecurity extends Base {
         this.rbac = this.controller.module.get('rbac');
     }
 
-    isReadOnly (model) {
-        return !this.access.canUpdate() || model.isTransiting();
-    }
-
-    isReadOnlyAttr (attr, model) {
-        return model.readOnly || attr.isReadOnly() || !this.attrAccess.canWrite(attr.name);
-    }
-
-    getDeniedAttrs (action) {
-        return this.attrAccess.deniedAttrs[action];
+    getForbiddenAttrs (action) {
+        return this.attrAccess.forbiddenAttrMap[action];
     }
 
     getAccess (data, params) {
@@ -130,7 +125,7 @@ module.exports = class MetaSecurity extends Base {
         }
     }
 
-    async resolveListDeniedAttrs (models, view) {
+    async resolveListForbiddenAttrs (models, view) {
         await this.resolveAttrs({
             targetType: Rbac.TARGET_VIEW,
             target: view,
@@ -141,12 +136,12 @@ module.exports = class MetaSecurity extends Base {
         }
         for (let model of models) {
             let data = await this.attrAccess.resolveObjectTarget(model);
-            model.readDeniedAttrs = data && data[Rbac.READ];
+            model.readForbiddenAttrs = data && data[Rbac.READ];
         }
     }
 
-    filterDeniedAttrs (action, model) {
-        let attrs = this.attrAccess.deniedAttrs[action];
+    filterForbiddenAttrs (action, model) {
+        let attrs = this.attrAccess.forbiddenAttrMap[action];
         if (Array.isArray(attrs)) {
             for (let attr of attrs) {
                 model.unset(attr);

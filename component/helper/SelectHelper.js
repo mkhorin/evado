@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const DEFAULT_VALUE_KEY = '_id';
@@ -34,7 +37,7 @@ module.exports = class SelectHelper {
     }
 
     static async queryItems (query, params) {
-        return this.getItems(await query.asRaw().all(), params);
+        return this.getItems(await query.raw().all(), params);
     }
 
     // MODEL
@@ -44,7 +47,7 @@ module.exports = class SelectHelper {
     }
 
     static getModelItems (models, params) {
-        models = models ? models.map(model => model._attrs) : [];
+        models = models ? models.map(model => model.getAttrMap()) : [];
         return this.getItems(models, params);
     }
 

@@ -38,12 +38,21 @@
         </section>
 
         <section class="content">
-            <%- include(_view.get('_part/flash-alert')) %>
+            <%- include(_view.get('_part/misc/flash-alert')) %>
             <%- body -%>
         </section>
     </div>
 </div>
 
+<%- include(_view.get('_part/misc/confirmation')) %>
+
 <div id="global-loader" class="global-loader loader">
     <span class="fa fa-spinner fa-spin spinner"></span>
 </div>
+
+<template id="notice-template">
+    <div class="hidden">
+        <button type="button" class="close">×</button>
+        <p class="message"></p>
+    </div>
+</template>

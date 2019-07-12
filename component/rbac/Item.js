@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('areto/rbac/Item');
@@ -125,7 +128,7 @@ module.exports = class Item extends Base {
     }
 
     validateMetaClass () {
-        this.validation.class = this.getMeta().getModel('doc').getClass(this.data.class);
+        this.validation.class = this.getMeta().getModel('document').getClass(this.data.class);
         if (this.validation.class) {
             return true;
         }
@@ -166,7 +169,7 @@ module.exports = class Item extends Base {
     }
 
     validateMetaNavSection () {
-        this.validation.navSection = this.getMeta().getModel('nav').getClass(this.data.navSection);
+        this.validation.navSection = this.getMeta().getModel('navigation').getClass(this.data.navSection);
         if (this.validation.navSection) {
             return true;
         }

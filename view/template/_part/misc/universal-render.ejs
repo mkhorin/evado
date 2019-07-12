@@ -1,0 +1,12 @@
+<!-- _part/misc/universal-render -->
+<%
+if (Array.isArray(data)) {
+    for (let item of data) {
+%>
+<%- include('universal-render', {data: item})%>
+
+<% }} else if (typeof data === 'string') { %>
+    <%- data %>
+<% } else if (data && data.template) { %>
+    <%- include(data.template, data) %>
+<% } %>

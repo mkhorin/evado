@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin (maksimovichu@gmail.com)
+ */
 'use strict';
 
 const Base = require('areto/base/Base');
@@ -24,7 +27,7 @@ module.exports = class ListFilterCondition extends Base {
     }
 
     async resolve () {
-        this.normalizeItems();
+        this.items = this.normalizeItems(this.items);
         for (let item of this.items) {
             item.condition = await this.parse(item);
         }
@@ -41,25 +44,23 @@ module.exports = class ListFilterCondition extends Base {
         return or.length > 2 ? or : and.length > 1 ? and : null;
     }
 
-    normalizeItems () {
-        if (!Array.isArray(this.items)) {
+    normalizeItems (items) {
+        if (!Array.isArray(items)) {
             throw new BadRequest(this.wrapClassMessage('Invalid items'));
         }
-        let items = [];
-        for (let item of this.items) {
-            if (item) {
-                items.push({
-                    type: item.type,
-                    attr: item.attr,
-                    and: item.and === 'true',
-                    operation: item.op,
-                    value: item.val,
-                    valueType: item.valType,
-                    relation: item.rel === 'true' ? item.attr : item.rel
-                });
-            }
-        }
-        this.items = items;
+        return items.filter(item => item).map(this.normalizeItem, this);
+    }
+
+    normalizeItem (data) {
+        return {
+            type: data.type,
+            attr: data.attr,
+            and: data.and,
+            operation: data.op,
+            value: data.val,
+            valueType: data.valType,
+            relation: data.rel
+        };
     }
 
     parse (data) {
@@ -95,88 +96,105 @@ module.exports = class ListFilterCondition extends Base {
         return ['=', data.attr, data.value === 'true'];
     }
 
-    parseDate (data) {
-        let date = DateHelper.getValid(data.value);
+    parseDate ({attr, operation, value}) {
+        if (value === '') {
+            return operation === '!=' ? ['NOT EQUAL', attr, null] : {[attr]: null};
+        }
+        let date = DateHelper.getValid(value);
         if (!date) {
             return null;
         }
-        if (!this.DATE_OPERATIONS.includes(data.operation)) {
-            this.throwInvalidOperation(data.operation);
+        if (!this.DATE_OPERATIONS.includes(operation)) {
+            this.throwInvalidOperation(operation);
         }
-        return [data.operation, data.attr, date];
+        return [operation, attr, date];
     }
 
-    parseId (data) {
-        let value = this.query.getDb().normalizeId(data.value);
-        switch (data.operation) {
-            case 'equal': return {[data.attr]: data.value};
-            case 'not equal': return ['!=', data.attr, data.value];
+    parseId ({attr, operation, value}) {
+        if (value === '') {
+            return operation === 'not equal' ? ['NOT EQUAL', attr, null] : {[attr]: null};
         }
-        this.throwInvalidOperation(data.operation);
+        value = this.query.getDb().normalizeId(value);
+        switch (operation) {
+            case 'equal': return {[attr]: value};
+            case 'not equal': return ['!=', attr, value];
+        }
+        this.throwInvalidOperation(operation);
     }
 
-    parseNumber (data) {
-        let value = parseFloat(data.value);
-        if (!isFinite(value)) {
-            this.throwInvalidValue(data.value);
+    parseNumber ({attr, operation, value}) {
+        if (value === '') {
+            return operation === '!=' ? ['NOT EQUAL', attr, null] : {[attr]: null};
         }
-        if (!this.NUMBER_OPERATIONS.includes(data.operation)) {
-            this.throwInvalidOperation(data.operation);
+        if (!isFinite(parseFloat(value))) {
+            this.throwInvalidValue(value);
         }
-        return [data.operation, data.attr, value];
+        if (!this.NUMBER_OPERATIONS.includes(operation)) {
+            this.throwInvalidOperation(operation);
+        }
+        return [operation, attr, parseFloat(value)];
     }
 
-    parseString (data) {
-        let value = data.value;
-        if (typeof value !== 'string' || !value.length) {
-            return null;
+    parseString ({attr, operation, value}) {
+        if (typeof value !== 'string') {
+            this.throwInvalidValue(value);
+        }
+        if (value === '') {
+            return ['OR', {[attr]: ''}, {[attr]: null}]
         }
         value = EscapeHelper.escapeRegExp(value);
-        switch (data.operation) {
+        switch (operation) {
             case 'equal': value = `^${value}$`; break;
             case 'begins': value = `^${value}`; break;
             case 'ends': value = `${value}$`; break;
             case 'contains': break;
-            default: this.throwInvalidOperation(data.operation);
+            default: this.throwInvalidOperation(operation);
         }
-        return ['LIKE', data.attr, new RegExp(value, 'i')];
+        return ['LIKE', attr, new RegExp(value, 'i')];
     }
 
-    parseSelector (data) {
-        let value = this.formatByValueType(data);
-        return value && this.formatSelectorCondition(data.operation, data.attr, value);
+    parseSelector ({attr, operation, value}) {
+        if (value === '') {
+            return operation === 'not equal' ? ['NOT EQUAL', attr, null] : {[attr]: null};
+        }
+        value = this.formatByValueType(...arguments);
+        return value ? this.formatSelectorCondition(attr, operation, value) : null;
     }
-
 
     parseNested (data) {
         let model = this.query.model;
-        let query = this.getRelationQuery(data.relation || data.attr);
         // TODO
     }
 
-    parseRelation (data) {
-        let query = this.getRelationQuery(data.relation);
-        // TODO
-    }
-
-    getRelationQuery (name) {
-        let query = this.query.model.getRelation(name);
-        if (!query) {
-            throw new BadRequest(this.wrapClassMessage(`Not found relation: ${name}`));
+    async parseRelation ({attr, operation, value, relation}) {
+        let query = this.getRelationQuery(attr, this.query.model);
+        let related = await query.model.findById(value).one();
+        if (!related) {
+            throw new BadRequest(this.wrapClassMessage(`Not found related model: ${value}`));
         }
-        return query;
+        let values = await this.getRelationQuery(relation, related).ids();
+        return values.length
+            ? this.formatSelectorCondition(this.query.model.PK, operation, values)
+            : null;
     }
 
-    formatByValueType (data) {
-        let value = data.value;
-        switch (data.valueType) {
+    getRelationQuery (name, model) {
+        let query = model.getRelation(name);
+        if (query) {
+            return query;
+        }
+        throw new BadRequest(this.wrapClassMessage(`Not found relation: ${name}`));
+    }
+
+    formatByValueType ({value, valueType}) {
+        switch (valueType) {
             case 'id': return this.query.getDb().normalizeId(value);
             case 'integer': return parseInt(value);
         }
         return value;
     }
 
-    formatSelectorCondition (operation, attr, value) {
+    formatSelectorCondition (attr, operation, value) {
         if (operation === 'equal') {
             return {[attr]: value};
         }

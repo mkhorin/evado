@@ -1,3 +1,6 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 'use strict';
 
 const Base = require('../component/base/BaseController');
@@ -21,9 +24,12 @@ module.exports = class AuthController extends Base {
                         actions: ['change-password'],
                         roles: ['@']
                     },{
+                        actions: ['sign-up'],
+                        match: action => action.controller.canSignUp() ? undefined /* to continue rules */ : false
+                    },{
                         actions: ['sign-in', 'sign-up'],
                         roles: ['?'],
-                        deny: (action, user)=> action.render('signed', {model: user.model})
+                        deny: action => action.render('signed', {model: action.controller.user.model})
                     }]
                 }
             },
@@ -77,11 +83,17 @@ module.exports = class AuthController extends Base {
         this.reload();
     }
 
+    canSignUp () {
+        return this.module.getParam('allowSignUp');
+    }
+
     blockByRateLimit (model) {
         return this.isGet()
             ? this.setHttpStatus(403).render('blocked', {model})
             : this.reload();
     }
+
+
 };
 module.exports.init(module);
 
