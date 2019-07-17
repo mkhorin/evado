@@ -11,7 +11,8 @@ if (params.value) {
 <div class="<%- params.required %> <%- params.css %> form-attr form-group"
      data-type="json"
      data-attraction='<%= params.attraction %>'>
-    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"
+           title="<%= params.extHint %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <div class="input-group">
             <input id="<%- params.id %>" name="<%- params.name %>" type="text"

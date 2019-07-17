@@ -11,10 +11,9 @@ class Jam {
             let name = element.dataset.jamClass;
             if (name) {
                 let Class = this.getClass(name);
-                if (!Class || !(Class.prototype instanceof Jam.Element)) {
-                    throw new Error(`${name} does not extend Jam.Element`);
-                }
-                this[name].createInstance($(element));
+                Class && Class.prototype instanceof Jam.Element
+                    ? this[name].createInstance($(element))
+                    : console.error(`${name} does not extend Jam.Element`);
             }
         }
     }
@@ -31,16 +30,8 @@ class Jam {
         return item ? this.getClass.call(item, name.substring(pos + 1)) : null;
     }
 
-    static toggleGlobalLoading (state) {
+    static toggleGlobalLoader (state) {
         $(document.body).toggleClass('loading', state);
-    }
-
-    static postAction ($btn, params) {
-        if (!Jam.Helper.confirm($btn.data('confirm'))) {
-            return $.Deferred().reject();
-        }
-        Jam.toggleGlobalLoading(true);
-        return $.post($btn.data('url'), params).always(()=> Jam.toggleGlobalLoading(false));
     }
 
     static matcherSelectLabelAndValue (term, text, option) {
@@ -48,6 +39,18 @@ class Jam {
         return text.toLowerCase().indexOf(term) !== -1 || option.val().toLowerCase().indexOf(term) !== -1;
     }
 }
+
+Jam.Behavior = class {
+
+    constructor (owner, params) {
+        this.owner = owner;
+        this.params = Object.assign(this.getDefaultParams(), params);
+    }
+
+    getDefaultParams () {
+        return {};
+    }
+};
 
 Jam.Element = class {
 
@@ -60,23 +63,12 @@ Jam.Element = class {
     }
 
     constructor ($element) {
+        this.$element = $element;
         this.setInstance($element);
     }
 
     setInstance ($element) {
         return $element.data(`instanceOf${this.constructor.name}`, this);
-    }
-};
-
-Jam.Behavior = class {
-
-    constructor (owner, params) {
-        this.owner = owner;
-        this.params = Object.assign(this.getDefaultParams(), params);
-    }
-
-    getDefaultParams () {
-        return {};
     }
 };
 
@@ -245,9 +237,10 @@ Jam.Confirmation = class {
         this.$confirm.click(this.onAction.bind(this, true));
         this.$cancel.click(this.onAction.bind(this, false));
         this.$container.click(this.onContainer.bind(this));
+        $(document.body).keyup(this.onKeyUp.bind(this));
     }
 
-    remove (message, data) {
+    showRemove (message, data) {
         return this.show(message || 'Delete this object permanently?', {
             confirmText: 'Delete',
             cssClass: 'danger',
@@ -282,6 +275,12 @@ Jam.Confirmation = class {
 
     onContainer (event) {
         if (event.target === event.currentTarget) {
+            this.onAction(false);
+        }
+    }
+
+    onKeyUp (event) {
+        if (event.keyCode === 27) {
             this.onAction(false);
         }
     }
@@ -399,5 +398,73 @@ Jam.Cache = class {
 
     clear () {
         this._data = {};
+    }
+};
+
+Jam.LoadableContent = class extends Jam.Element {
+
+    constructor ($container) {
+        super($container);
+        this.$container = $container;
+        this.$toggle = $container.find('[data-loadable-toggle]');
+        this.$toggle.click(this.onToggle.bind(this));
+    }
+
+    isLoading () {
+        return this.$container.hasClass('loading');
+    }
+
+    onToggle (event) {
+        if (!this.isLoading()) {
+            this.load();
+        }
+    }
+
+    onAlways () {
+        this.$container.addClass('loaded');
+    }
+
+    onDone (data) {
+        this.setContent(data);
+    }
+
+    onFail () {
+        this.setContent('');
+    }
+
+    load () {
+        this.abort();
+        this.$container.removeClass('loaded').addClass('loading');
+        this.xhr = $[this.getMethod()](this.getUrl(), this.getRequestData())
+            .always(this.onAlways.bind(this))
+            .done(this.onDone.bind(this))
+            .fail(this.onFail.bind(this));
+    }
+
+    abort () {
+        if (this.xhr) {
+            this.xhr.abort();
+        }
+        this.$container.removeClass('loading');
+    }
+
+    getMethod () {
+        return this.$container.data('method') || 'get';
+    }
+
+    getUrl () {
+        return this.$container.data('url');
+    }
+
+    getRequestData (key, defaults) {
+        return {
+            url: location.pathname,
+            params: location.search,
+            ...this.$container.data('params')
+        };
+    }
+
+    setContent (data) {
+        this.$container.find('.loadable-content').html(data);
     }
 };

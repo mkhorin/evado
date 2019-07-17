@@ -18,13 +18,17 @@ Jam.I18n.default = {
 
     'Default value': 'Значение по умолчанию',
     'Delete': 'Удалить',
+    'Delete absolutely all metadata?': 'Удалить абсолютно все мета-данные?',
     'Delete this object permanently?': 'Удалить этот объект навсегда?',
     'Description': 'Описание',
     'Drop or select file here': 'Бросьте или выберит файл здесь',
 
     'Edit': 'Редактировать',
+    'Export': 'Экспортировать',
 
     'Group': 'Группа',
+
+    'Import': 'Импортировать',
 
     'Label': 'Ярлык',
     'Link': 'Добавить',

@@ -10,7 +10,6 @@
     "admin-lte": "^2.4.12",
     "async": "^2.6.2",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
-    "font-awesome": "~4.7.0",
     "ionicons": "~4.2.1",
     "store-js": "^2.0.4"
   }

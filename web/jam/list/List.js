@@ -301,7 +301,7 @@ Jam.List = class extends Jam.Element {
     remove () {
         let $rows = this.getSelectedRows();
         if ($rows) {
-            Jam.confirmation.remove().then(this.removeObjects.bind(this, $rows));
+            Jam.confirmation.showRemove().then(this.removeObjects.bind(this, $rows));
         }
     }
 

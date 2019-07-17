@@ -48,8 +48,8 @@ module.exports = class Rbac extends Base {
                     object: 'Object',
                     transition: 'Transition',
                     attr: 'Attribute',
-                    navSection: 'Nav section',
-                    navItem: 'Nav item'
+                    navSection: 'Navigation section',
+                    navItem: 'Navigation item'
                 }
             }
         };

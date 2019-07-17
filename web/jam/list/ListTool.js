@@ -66,7 +66,7 @@ Jam.ListTool.Button = class extends Jam.ListTool {
     postAction (event) {
         this.getNotice().hide();
         this.$item.attr('disabled', true);
-        Jam.postAction(this.$item).done(data => {
+        Jam.UserAction.post(this.$item).done(data => {
             this.getNotice().success(data);
         }).fail(xhr => {
             xhr && this.getNotice().danger(`${xhr.statusText} ${xhr.responseText}`);

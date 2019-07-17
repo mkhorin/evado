@@ -46,6 +46,7 @@ module.exports = class MetaInspector extends Base {
                 metaData.push(this.rbac.metaMap[role]);
             }
         }
+        this.access = {};
         if (!metaData.length) {
             return this;
         }
@@ -56,7 +57,6 @@ module.exports = class MetaInspector extends Base {
             case Rbac.TARGET_CLASS: this.addClassTargets(); break;
             case Rbac.TARGET_OBJECT: this.addObjectTargets(); break;
         }
-        this.access = {};
         for (let data of metaData) {
             for (let action of this.actions) {
                 if (this.access[action] !== true) {
@@ -75,6 +75,9 @@ module.exports = class MetaInspector extends Base {
             this._targets.push([this.checkViewTarget, this.targetView]);
         }
         this._targets.push([this.checkNavSectionTarget, this.target.section]);
+        for (let parent of this.target.getParents()) {
+            this._targets.push([this.checkNavItemTarget, parent]);
+        }
         this._targets.push([this.checkNavItemTarget, this.target]);
     }
 

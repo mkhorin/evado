@@ -1,7 +1,7 @@
 {
   "name": "evado",
   "version": "0.1.0",
-  "description": "Base metadata app built on Areto Framework",
+  "description": "Abstract Metadata App built on Areto Framework",
   "author": {
     "name": "Maxim Khorin",
     "email": "maksimovichu@gmail.com"

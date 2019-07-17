@@ -9,6 +9,7 @@ module.exports = class DataConsole extends Base {
 
     constructor (config) {
         super(config);
+        this.params = this.params || {};
         this.dir = this.app.getPath('data', this.params.dir || 'default');
         this.includes = this.params.includes ? this.wrapArray(this.params.includes) : null;
         this.excludes = this.params.excludes ? this.wrapArray(this.params.excludes) : null;

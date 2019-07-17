@@ -127,6 +127,13 @@ Jam.AttrList = class extends Jam.List {
         this.reload();
     }
 
+    remove () {
+        let $rows = this.getSelectedRows();
+        if ($rows) {
+            this.removeObjects($rows);
+        }
+    }
+
     removeObjects ($rows) {
         this.changes.removeObjects(this.getObjectIds($rows));
         this.serializeValue();

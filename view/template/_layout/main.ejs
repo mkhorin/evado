@@ -7,11 +7,11 @@
     <base href="<%- _baseUrl %>">
     <title><%- blocks.title %> - <%- _module.getTitle() %></title>
 
-    <%- include(_view.get('_part/asset/style/default')) %>
+    <%- include(_view.get('_part/asset/style/default'), {skin: 'black'}) %>
 
     <link rel="stylesheet" href="css/local.css">
 </head>
-<body class="hold-transition skin-black-light sidebar-mini">
+<body class="hold-transition skin-black sidebar-mini">
     <!-- _layout/main -->
 
     <%- body -%>
@@ -20,6 +20,8 @@
 
     <%- include(_view.get('_part/asset/script/jam')) %>
     <%- include(_view.get('_part/asset/script/default')) %>
+
+    <script src="js/init.js"></script>
 
 </body>
 </html>

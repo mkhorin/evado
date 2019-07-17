@@ -17,5 +17,8 @@ module.exports = {
     params: {
     },
     metaModels: {
+        'navigation': {
+            enableServiceNavigation: true
+        }
     },
 };

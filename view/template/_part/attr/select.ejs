@@ -36,7 +36,8 @@ content = `<select name="${params.name}" ${params.disabled} class="form-control 
      data-select2="<%= params.select2 %>"
      data-masters="<%= params.masters %>"
      data-attraction='<%= params.attraction %>'>
-    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <label for="<%- params.id %>" title="<%= params.extHint %>"
+           class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <% if (params.update) { %>
         <div class="input-group">

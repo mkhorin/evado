@@ -246,9 +246,6 @@ a:focus, button:focus {
 .navbar-tools {
     margin: 11px 0 0 10px;
 }
-.navbar-tools .btn {
-    margin-right: 3px;
-}
 .notice-list > li .fa {
     margin-right: 10px;
 }
@@ -349,14 +346,20 @@ body.loading {
     background: rgba(0, 0, 0, 0.1);
     opacity: 1.0;
 }
-.skin-black-light .main-header .icon-btn {
-    color: #444;
-}
 .main-header .nav > li > a {
     padding: 15px;
 }
+.main-header .logo {
+    font-size: 18px;
+}
+.main-header .logo > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .main-footer {
-    background: transparent;
+    background: #ecf0f5;
 }
 .json-editor-text {
     font-family: Consolas, monospace;
@@ -367,6 +370,9 @@ body.loading {
 .btn {
     padding: 3px 6px;
     min-width: 28px;
+}
+.text-btn {
+    padding: 3px 8px;
 }
 .btn-white {
     background-color: #fff;
@@ -460,6 +466,9 @@ body.loading {
 .btn.loading .loader {
     display: inline-block !important;
 }
+.btn .caret {
+    margin-left: 3px;
+}
 
 /* MENU */
 
@@ -527,7 +536,7 @@ body.loading {
     content: "";
     display: block;
     height: 1px;
-    background: #eee;
+    background: #666;
 }
 
 /* MODEL */
@@ -686,6 +695,7 @@ textarea.form-control {
 .form-horizontal .checkbox,
 .form-horizontal .radio {
     padding-top: 5px;
+    padding-bottom: 5px;
 }
 .form-set {
     margin: 0 0 0 0;
@@ -925,7 +935,7 @@ textarea.form-control {
 }
 
 .table {
-    margin:0 0 8px !important;
+    margin:0 0 7px !important;
 }
 .table tbody {
     position: relative;
@@ -1769,13 +1779,13 @@ body.jmodal-root-active .jmodal-area {
     left: calc(50% - 160px);
     width: 320px;
     background: #fff;
-    border: 1px solid var(--color-light-primary);
+    border: 1px solid var(--color-light-warning);
     border-top-width: 4px;
 }
 .confirmation > .box > .box-head {
     padding: 15px 20px;
     font-size: 16px;
-    color: var(--color-dark-primary);
+    color: var(--color-dark-warning);
 }
 .confirmation > .box > .box-body {
     padding: 0 20px 20px;
@@ -1786,13 +1796,14 @@ body.jmodal-root-active .jmodal-area {
     border-top: 1px solid #eee;
 }
 .confirmation .btn-confirm {
+    margin-right: 10px;
     color: #fff;
-    background-color: var(--color-light-primary);
-    border-color: var(--color-dark-primary);
+    background-color: var(--color-light-warning);
+    border-color: var(--color-dark-warning);
 }
 .confirmation .btn-confirm:hover,
 .confirmation .btn-confirm:active {
-    background-color: var(--color-dark-primary)
+    background-color: var(--color-dark-warning)
 }
 
 .confirmation-warning > .box {

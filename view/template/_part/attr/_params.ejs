@@ -3,6 +3,7 @@
     params.name = typeof name === 'undefined' ? model.getFormAttrName(attr) : name;
     params.label = typeof label === 'undefined' ? model.getAttrLabel(attr) : label;
     params.hint = typeof hint === 'undefined' ? model.getAttrHint(attr) : hint;
+    params.extHint = typeof extHint === 'undefined' ? '' : extHint;
     params.placeholder = typeof placeholder === 'undefined' ? '' : placeholder;
     params.type = typeof type === 'undefined' ? '' : type;
     params.disabled = typeof disabled === 'undefined' ? '' : disabled;

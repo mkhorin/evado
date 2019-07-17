@@ -6,7 +6,6 @@ let data = {
     key: model.PK,
     className: model.NAME,
     timestamp: _controller.timestamp,
-    view: _url('view'),
     remove: _url('remove')
 };
 if (typeof params !== 'undefined') {
@@ -20,13 +19,10 @@ if (typeof params !== 'undefined') {
     <div class="box-header with-border scroll-header">
         <div class="model-controls">
             <button data-id="saveClose" class="btn btn-primary" type="button" title="Save and close">
-                <span class="glyphicon glyphicon-saved"></span>
+                <span class="glyphicon glyphicon-off"></span>
             </button>
-            <button data-id="save" class="btn btn-info" type="button" title="Save">
+            <button data-id="save" class="btn btn-info mr20" type="button" title="Save">
                 <span class="glyphicon glyphicon-save"></span>
-            </button>
-            <button data-id="cancel" class="btn btn-white mr20" type="button" title="Cancel" autofocus>
-                <span class="glyphicon glyphicon-remove"></span>
             </button>
 
             <% if (data.id) { %>

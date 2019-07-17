@@ -10,7 +10,7 @@ module.exports = class BaseMenu extends Base {
     async run () {
         let nav = this.module.getMetaModel('navigation');
         let section = nav.getSection('main', this.module.NAME);
-        let activeItem = this.controller.metaData && this.controller.metaData.node;        
+        let activeItem = this.controller.metaData && this.controller.metaData.node;
         let openedItems = activeItem ? activeItem.getParents() : [];
         let items = openedItems.slice(0).concat(section.children);
         let forbiddenAccess = await this.getAccess({section, items}) || {};

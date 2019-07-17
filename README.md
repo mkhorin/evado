@@ -1,3 +1,3 @@
 # Evado
 
-## Base Metadata App built on Areto Framework
+## Abstract Metadata App built on Areto Framework

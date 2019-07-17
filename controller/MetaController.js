@@ -7,38 +7,9 @@ const Base = require('../component/base/BaseController');
 
 module.exports = class MetaController extends Base {
 
-    static getConstants () {
-        return {
-            METHODS: {
-                'reload': 'post',
-                'update-indexes': 'post'
-            }
-        };
-    }
-
     constructor (config) {
         super(config);
         this.meta = this.module.getMeta();
-    }
-
-    async actionReload () {
-        await this.meta.reload();
-        this.send('Metadata has been reloaded');
-    }
-
-    async actionUpdateIndexes () {
-        await this.meta.process(async ()=> await this.meta.updateIndexes());
-        return this.send('Indexes have been updated');
-    }
-
-    async actionUpdateClassIndexes () {
-        let name = this.getQueryParam('class');
-        let model = this.meta.getModel('document').getClass(name);
-        if (!model) {
-            throw new NotFound('Not found class');
-        }
-        await this.meta.process(async ()=> await model.updateIndexes());
-        this.send('Class indexes have been updated');
     }
 
     actionListClassSelect () {
@@ -74,7 +45,8 @@ module.exports = class MetaController extends Base {
         if (!section) {
             throw new NotFound('Not found nav section');
         }
-        this.sendJson(MetaSelectHelper.getLabelItems(section.items.values()));
+        let items = section.items.values().filter(item => !item.system);
+        this.sendJson(MetaSelectHelper.getLabelItems(items));
     }
 
     actionListStateSelect () {

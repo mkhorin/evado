@@ -48,11 +48,11 @@ Jam.ModelError = class {
                 this.processOne(className, attrName, data[className][attrName], errors);
             }
         }
-        let $errorAttrs = this.$form.find('.has-error');
+        const $errorAttrs = this.$form.find('.has-error');
         $errorAttrs.parents('.form-base-group').addClass('has-group-error');
-        for (let $pane of this.$form.find('.tab-pane.has-group-error')) {
-            $pane.closest('.form-tabs')
-                .find(`> .nav-tabs [data-id="${$pane.data('id')}"]`)
+        for (let pane of this.$form.find('.tab-pane.has-group-error')) {
+            $(pane).closest('.form-tabs')
+                .find(`> .nav-tabs [data-id="${pane.dataset.id}"]`)
                 .addClass('has-group-error');
         }
         return $errorAttrs;

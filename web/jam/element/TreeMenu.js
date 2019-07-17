@@ -18,7 +18,7 @@ Jam.TreeMenu = class extends Jam.Element {
 
     setCurrentActive () {
         let $active = this.$menu.find('.menu-item-btn').filter(function () {
-            return this.href === location.href;
+            return location.href.indexOf(this.href) === 0;
         });
         $active.first().parent().addClass('active').parents('.treeview').addClass('active');
     }
@@ -35,15 +35,15 @@ Jam.LoadableTreeMenu = class extends Jam.TreeMenu {
 
     init () {
         super.init();
-        this.$menu.on('click', '.treeview > a', this.onClickItemLink.bind(this));
+        this.$menu.on('click', '.treeview > a', this.onItemLink.bind(this));
+    }
+
+    onItemLink (event) {
+        this.loadItem($(event.currentTarget).parent());
     }
 
     setCurrentActive () {
         return false;
-    }
-
-    onClickItemLink (event) {
-        this.loadItem($(event.currentTarget).parent());
     }
 
     loadItem ($item) {

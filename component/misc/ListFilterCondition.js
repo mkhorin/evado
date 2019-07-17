@@ -167,6 +167,12 @@ module.exports = class ListFilterCondition extends Base {
     }
 
     async parseRelation ({attr, operation, value, relation}) {
+        if (!value) {
+            value = this.query.model.getIdsWithEmptyRelation(attr);
+            return Array.isArray(value)
+                ? this.formatSelectorCondition(this.query.model.PK, operation, value)
+                : null;
+        }
         let query = this.getRelationQuery(attr, this.query.model);
         let related = await query.model.findById(value).one();
         if (!related) {

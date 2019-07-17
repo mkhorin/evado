@@ -29,9 +29,9 @@ if (d.list !== null) {
     d.list = _url(d.list);
 }
 let relUrl = typeof relRoute === 'undefined' ? rel.model.getControllerClass().NAME : relRoute;
-if (d.view !== null) {
+/* if (d.view !== null) {
     d.view = _url(d.view === undefined ? `${relUrl}/view` : d.view);
-}
+}//*/
 if (d.viewTitle !== null) {
     d.viewTitle = _url(d.viewTitle === undefined ? `${relUrl}/view-title` : d.viewTitle);
 }
@@ -83,11 +83,6 @@ let related = model.rel(attr);
                     <% if (d.unlink) { %>
                     <button data-id="unlink" class="btn btn-default mr10" type="button" title="Unlink">
                         <span class="fa fa-unlink text-danger"></span>
-                    </button>
-                    <% } %>
-                    <% if (d.view) { %>
-                    <button data-id="view" class="btn btn-default" type="button" title="View">
-                        <span class="glyphicon glyphicon-eye-open"></span>
                     </button>
                     <% } %>
                     <% if (d.create) { %>

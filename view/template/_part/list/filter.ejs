@@ -1,9 +1,6 @@
 <!-- _part/list/filter -->
 <%
-const params = {
-    ...filter
-};
-for (let column of params.columns) {
+for (let column of data.columns) {
     if (column.label === undefined) {
         column.label = model.getAttrLabel(column.name);
     }
@@ -12,7 +9,7 @@ for (let column of params.columns) {
     } 
 }
 %>
-<div class="list-filter" data-params="<%= JSON.stringify(params) %>">
+<div class="list-filter" data-params="<%= JSON.stringify(data) %>">
 
     <div class="filter-content"></div>
 

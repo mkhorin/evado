@@ -7,11 +7,11 @@ Jam.ModelAttr.ValueMap = class extends Jam.ModelAttr {
 
     init () {
         this.$list = this.$attr.find('.value-map-items');
-        this.$list.on('click', '.control-add', this.addItem.bind(this));
-        this.$list.on('click', '.control-down', this.downItem.bind(this));
-        this.$list.on('click', '.control-up', this.upItem.bind(this));
-        this.$list.on('click', '.control-remove', this.removeItem.bind(this));
-        this.$list.on('keyup', '.param', this.update.bind(this));
+        this.$list.on('click', '[data-id="add"]', this.onAddItem.bind(this));
+        this.$list.on('click', '[data-id="down"]', this.onDownItem.bind(this));
+        this.$list.on('click', '[data-id="up"]', this.onUpItem.bind(this));
+        this.$list.on('click', '[data-id="remove"]', this.onRemoveItem.bind(this));
+        this.$list.on('keyup', '.param', this.onUpdate.bind(this));
         this.createItems(Jam.Helper.parseJson(this.$value.val()) || []);
     }
 
@@ -63,42 +63,42 @@ Jam.ModelAttr.ValueMap = class extends Jam.ModelAttr {
 
     // EVENTS
 
-    addItem (event) {
+    onAddItem (event) {
         let $item = this.getItem(event.target);
         let $new = $item.clone();
         $new.find('input').val('');
         $item.after($new);
     }
 
-    upItem (event) {
+    onUpItem (event) {
         let $item = this.getItem(event.target);
         let $prev = $item.prev();
         if ($prev.length) {
             $prev.before($item);
-            this.update();
+            this.onUpdate();
         }
     }
 
-    downItem (event) {
+    onDownItem (event) {
         let $item = this.getItem(event.target);
         let $next = $item.next();
         if ($next.length) {
             $next.after($item);
-            this.update();
+            this.onUpdate();
         }
     }
 
-    removeItem (event) {
+    onRemoveItem (event) {
         let $items = this.getItems();
         if ($items.length > 1) {
             this.getItem(event.target).remove();
         } else {
             this.setItemData($items.eq(0));
         }
-        this.update();
+        this.onUpdate();
     }
 
-    update () {
+    onUpdate () {
         this.$value.val(this.stringify()).change();
     }
 };

@@ -147,10 +147,10 @@ Jam.Model = class extends Jam.Element {
     }
 
     remove () {
-        Jam.confirmation.remove().then(this.removeHandler.bind(this));
+        Jam.confirmation.showRemove().then(this.removeHandler.bind(this));
     }
 
-    removeHandler (confirmed) {
+    removeHandler () {
         this.$loader.show();
         $.post(this.params.remove, {id: this.id}).done(()=> {
             this.saved = true;
@@ -175,7 +175,7 @@ Jam.Model = class extends Jam.Element {
         this.$loader.show();
         this.notice.hide();
         let $btn = $(event.currentTarget);
-        Jam.postAction($btn).done(data => {
+        Jam.UserAction.post($btn).done(data => {
             this.notice.success(data);
         }).fail(xhr => {
             xhr && this.notice.danger(xhr.responseText || xhr.statusText);

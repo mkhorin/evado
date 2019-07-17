@@ -9,16 +9,15 @@ module.exports = class FileController extends Base {
 
     static getConstants () {
         return {
-           /* BEHAVIORS: {
+           BEHAVIORS: {
                 'access': {
                     Class: require('areto/filter/AccessControl'),
                     rules: [{
-                        actions: ['upload'],
-                        roles: ['@']
+                        actions: ['upload', 'remove'],
+                        permissions: ['upload']
                     }]
                 }
             },
-            */
             METHODS: {
                 'upload': 'post',
                 'remove': 'post'

@@ -9,6 +9,7 @@ module.exports = class Console extends Base {
 
     constructor (config) {
         super({
+            params: {},
             AssetConsole: require('./AssetConsole'),
             AuthConsole: require('./AuthConsole'),
             DataConsole: require('./DataConsole'),
@@ -19,84 +20,88 @@ module.exports = class Console extends Base {
         this.app = ClassHelper.spawn(this.Application);
     }
 
-    async install () {
-        await this.execute(async ()=> {
-            await this.createHandler('install', this.AssetConsole)();
-            await this.createHandler('deploy', this.AssetConsole)();
-            await this.createHandler('createUsers', this.AuthConsole)();
-            await this.createHandler('createRbac', this.AuthConsole)();
-        });
-    }
-
-    async start () {
-        await this.execute(async ()=> await this.app.start());
+    start () {
+        return this.execute(async ()=> await this.app.start());
     }
 
     // ASSET
 
-    async installAssets () {
-        await this.execute(this.createHandler('install', this.AssetConsole));
+    installAssets () {
+        return this.execute('install', this.AssetConsole);
     }
 
-    async deployAssets () {
-        await this.execute(this.createHandler('deploy', this.AssetConsole));
+    deployAssets () {
+        return this.execute('deploy', this.AssetConsole);
     }
 
     // AUTH
 
-    async createUsers () {
-        await this.execute(this.createHandler('createUsers', this.AuthConsole));
+    createUsers () {
+        return this.execute('createUsers', this.AuthConsole);
     }
 
-    async createRbac () {
-        await this.execute(this.createHandler('createRbac', this.AuthConsole));
+    createRbac () {
+        return this.execute('createRbac', this.AuthConsole);
     }
 
-    async signUp (params) {
-        await this.execute(this.createHandler('signUp', this.AuthConsole, params));
+    signUp (params) {
+        return this.execute('signUp', this.AuthConsole, params);
     }
 
-    async changePassword (params) {
-        await this.execute(this.createHandler('changePassword', this.AuthConsole, params));
+    changePassword (params) {
+        return this.execute('changePassword', this.AuthConsole, params);
     }
 
-    async assignRole (params) {
-        await this.execute(this.createHandler('assignRole', this.AuthConsole, params));
+    assignRole (params) {
+        return this.execute('assignRole', this.AuthConsole, params);
+    }
+
+    // META
+
+    dropMeta (params) {
+        return this.execute('drop', this.MetaConsole, params);
+    }
+
+    importMeta (params) {
+        return this.execute('import', this.MetaConsole, params);
     }
 
     // DATA
 
-    async dropData (params) {
-        await this.execute(this.createHandler('drop', this.DataConsole, params));
+    dropData (params) {
+        return this.execute('drop', this.DataConsole, params);
     }
 
-    async importData (params) {
-        await this.execute(this.createHandler('execute', this.DataImportConsole, params));
+    importData (params) {
+        return this.execute('execute', this.DataImportConsole, params);
     }
 
-    async exportData (params) {
-        await this.execute(this.createHandler('execute', this.DataExportConsole, params));
+    exportData (params) {
+        return this.execute('execute', this.DataExportConsole, params);
     }
 
-    // HANDLER
-
-    createHandler (method, config, params) {
-        let instance = ClassHelper.spawn(config, {
-            console: this,
-            app: this.app,
-            params
-        });
-        return instance[method].bind(instance);
-    }
+    // EXECUTE
 
     async execute (handler) {
         try {
+            if (typeof handler === 'string') {
+                handler = this.createHandler(...arguments);
+            }
             await this.app.init();
             await handler();
             await this.logTotal();
         } catch (err) {
             this.log('error', err);
         }
+    }
+
+    createHandler (method, config, params) {
+        const instance = ClassHelper.spawn(config, {
+            console: this,
+            app: this.app,
+            params
+        });
+        return instance[method].bind(instance);
     }
 
     // LOG

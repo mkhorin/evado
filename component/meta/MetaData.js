@@ -22,4 +22,8 @@ module.exports = class MetaData {
     isReadOnlyAttr (attr, model) {
         return model.readOnly || attr.isReadOnly() || !this.security.attrAccess.canWrite(attr.name);
     }
+
+    getMasterQueryParam () {
+        return this.master.model ? `${this.master.attr.name}.${this.master.model.getClassMetaId()}` : '';
+    }
 };

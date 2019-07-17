@@ -7,7 +7,8 @@
      data-type="<%- params.type %>"
      data-attraction='<%= params.attraction %>'
      data-handler="<%= JSON.stringify(typeof handler !== 'undefined' ? handler : null) %>">
-    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <label for="<%- params.id %>" title="<%= params.extHint %>"
+           class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <input id="<%- params.id %>"
                name="<%- params.name %>"
