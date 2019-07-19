@@ -79,8 +79,8 @@ Jam.AttrList = class extends Jam.List {
         }
     }
 
-    onClickControl (event) {
-        if (super.onClickControl(event) === false) {
+    onControl (event) {
+        if (super.onControl(event) === false) {
             switch (event.currentTarget.dataset.id) {
                 case 'link': return this.link();
                 case 'unlink': return this.unlink();

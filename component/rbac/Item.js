@@ -120,7 +120,7 @@ module.exports = class Item extends Base {
             case rbac.TARGET_TRANSITION: this.validateMetaTransition(); break;
             case rbac.TARGET_ATTR: this.validateMetaAttr(); break;
             case rbac.TARGET_NAV_SECTION: this.validateMetaNavSection(); break;
-            case rbac.TARGET_NAV_ITEM: this.validateMetaNavItem(); break;
+            case rbac.TARGET_NAV_NODE: this.validateMetaNavNode(); break;
         }
         if (this.validationError) {
             throw new Error(this.getMetaDataError(this.validationError));
@@ -173,12 +173,12 @@ module.exports = class Item extends Base {
         if (this.validation.navSection) {
             return true;
         }
-        this.validationError = 'Invalid meta item navSection';
+        this.validationError = 'Invalid meta item navigation section';
     }
 
-    validateMetaNavItem () {
-        if (this.validateMetaNavSection() && !this.validation.navSection.getItem(this.data.navItem)) {
-            this.validationError = 'Invalid meta item navItem';
+    validateMetaNavNode () {
+        if (this.validateMetaNavSection() && !this.validation.navSection.getNode(this.data.navNode)) {
+            this.validationError = 'Invalid meta item navigation node';
         }
     }
 

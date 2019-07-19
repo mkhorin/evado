@@ -7,13 +7,23 @@ const Base = require('areto/db/ActiveRecord');
 
 module.exports = class BaseActiveRecord extends Base {
 
+    getTitle () {
+        return this.get('label') || this.get('name') || this.getId();
+    }
+
+    getFullTitle () {
+        let label = this.get('label');
+        let name = this.get('name') || this.getId();
+        return label ? `${label} (${name})` : name ;
+    }
+
     findForSelect (condition) {
         return this.find(condition).select({name: 1, label: 1}).order({name: 1});
     }
 
     getIdsWithEmptyRelation (name) {
-        if (typeof name === 'string' && name) {
-            let method = this['getIdsWithEmptyRelation' + StringHelper.toFirstUpperCase(name)];
+        if (name && typeof name === 'string') {
+            let method = this['getIdsWithEmptyRelation'+ StringHelper.toFirstUpperCase(name)];
             return this[method] ? this[method]() : undefined;
         }
     }

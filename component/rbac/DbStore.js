@@ -90,8 +90,8 @@ module.exports = class DbStore extends Base {
                 return `${item.attr}.${item.object}.${item.state}.${view}`;
             case this.rbac.TARGET_NAV_SECTION:
                 return `${item.navSection}`;
-            case this.rbac.TARGET_NAV_ITEM:
-                return `${item.navItem}.${item.navSection}`;
+            case this.rbac.TARGET_NAV_NODE:
+                return `${item.navNode}.${item.navSection}`;
         }
     }
 

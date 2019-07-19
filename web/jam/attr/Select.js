@@ -26,6 +26,10 @@ Jam.ModelAttr.Select = class extends Jam.ModelAttr {
         this.activated = true;
     }
 
+    setValue (value) {
+        this.$value.val(value).trigger('change.select2');
+    }
+
     onClickUpdate () {
         if (this.hasValue()) {
            Jam.Modal.load(this.childModal, $(event.currentTarget).data('url'), {id: this.getValue()});

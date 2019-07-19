@@ -39,13 +39,13 @@ module.exports = class MetaController extends Base {
         this.sendJson(MetaSelectHelper.getLabelItems(metaModel.sections.values()));
     }
 
-    actionListNavItemSelect () {
+    actionListNavNodeSelect () {
         let metaModel = this.meta.getModel('navigation');
         let section = metaModel.getSection(this.getPostParam('navSection'));
         if (!section) {
-            throw new NotFound('Not found nav section');
+            throw new NotFound('Not found navigation section');
         }
-        let items = section.items.values().filter(item => !item.system);
+        let items = section.nodes.filter(item => !item.system);
         this.sendJson(MetaSelectHelper.getLabelItems(items));
     }
 

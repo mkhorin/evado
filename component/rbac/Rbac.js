@@ -26,7 +26,7 @@ module.exports = class Rbac extends Base {
             TARGET_TRANSITION: 'transition',
             TARGET_ATTR: 'attr',
             TARGET_NAV_SECTION: 'navSection',
-            TARGET_NAV_ITEM: 'navItem',
+            TARGET_NAV_NODE: 'navNode',
 
             VALUE_LABELS: {
                 'types': {
@@ -49,7 +49,7 @@ module.exports = class Rbac extends Base {
                     transition: 'Transition',
                     attr: 'Attribute',
                     navSection: 'Navigation section',
-                    navItem: 'Navigation item'
+                    navNode: 'Navigation node'
                 }
             }
         };
@@ -68,7 +68,7 @@ module.exports = class Rbac extends Base {
             || type === this.TARGET_TRANSITION
             || type === this.TARGET_ATTR
             || type === this.TARGET_NAV_SECTION
-            || type === this.TARGET_NAV_ITEM;
+            || type === this.TARGET_NAV_NODE;
     }
 
     static splitMetaItemsByType (items) {
@@ -307,7 +307,7 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaNavMap () {
-        let targets = [this.TARGET_NAV_SECTION, this.TARGET_NAV_ITEM];
+        let targets = [this.TARGET_NAV_SECTION, this.TARGET_NAV_NODE];
         let items = this.metaItems.filter(item => {
             return item.type === this.DENY && item.actions[0] === this.READ && targets.includes(item.targetType);
         });

@@ -6,15 +6,18 @@
 Jam.UserAction = class extends Jam.Element {
 
     static post ($element, params) {
-        let message = $element.data('confirm');
-        let method = $element.data('confirmMethod') || 'show';
-        let confirm = message
-            ? Jam.confirmation[method](message, $element.data('confirmParams'))
-            : $.Deferred().resolve();
-        return confirm.then(() => {
+        return this.confirm($element).then(() => {
             Jam.toggleGlobalLoader(true);
             return $.post($element.data('url'), params).always(()=> Jam.toggleGlobalLoader(false));
         });
+    }
+
+    static confirm ($element) {
+        let message = $element.data('confirm');
+        let method = $element.data('confirmMethod') || 'show';
+        return message
+            ? Jam.confirmation[method](message, $element.data('confirmParams'))
+            : $.Deferred().resolve();
     }
 
     constructor ($element) {
@@ -59,11 +62,10 @@ Jam.UserAction = class extends Jam.Element {
 
     toggleLoader (state) {
         if (this.getParam('globalLoader')) {
-            Jam.toggleGlobalLoader(state);
-        } else {
-            this.$element.toggleClass('loading', state);
-            this.toggleActive(state);
+            return Jam.toggleGlobalLoader(state);
         }
+        this.$element.toggleClass('loading', state);
+        this.toggleActive(state);
     }
 };
 
@@ -71,9 +73,11 @@ Jam.ModalUserAction = class extends Jam.UserAction {
 
     execute () {
         Jam.ContentNotice.clear();
-        const modal = Jam.modal.create();
-        modal.load(this.getParam('url'), this.getParam('params'));
-        modal.one('afterClose', (event, data)=> this.onDone(data.result));
+        this.constructor.confirm(this.$element).then(()=> {
+            const modal = Jam.modal.create();
+            modal.load(this.getParam('url'), this.getParam('params'));
+            modal.one('afterClose', (event, data)=> this.onDone(data.result));
+        });
     }
 
     onDone (data) {

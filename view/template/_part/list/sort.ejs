@@ -3,9 +3,6 @@
 if (!data.id) {
     data.id = data.list;
 }
-if (data.view !== null) {
-    data.view = relController.createUrl(data.view === undefined ? 'view' : data.view);
-}
 if (data.update !== null) {
     data.update = relController.createUrl(data.update === undefined ? 'update' : data.update);
 }
@@ -58,11 +55,6 @@ if (data.jamClass === undefined) {
                 </button>
             </div>
 
-            <% if (data.view) { %>
-            <button data-id="view" class="btn btn-default" type="button" title="View">
-                <span class="glyphicon glyphicon-eye-open"></span>
-            </button>
-            <% } %>
             <% if (data.update) { %>
             <button data-id="update" class="btn btn-warning btn-light" type="button" title="Update">
                 <span class="glyphicon glyphicon-pencil"></span>

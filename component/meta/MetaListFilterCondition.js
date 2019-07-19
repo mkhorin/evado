@@ -48,8 +48,8 @@ module.exports = class MetaListFilterCondition extends Base {
 
     getRelation (name) {
         let attr = this.view.getAttr(name);
-        if (attr.getRel()) {
-            return attr.getRel();
+        if (attr.rel) {
+            return attr.rel;
         }
         throw new BadRequest(this.wrapClassMessage(`Invalid relation: ${attr.id}`));
     }

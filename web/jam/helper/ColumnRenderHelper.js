@@ -16,7 +16,6 @@ Jam.ColumnRenderHelper = class {
             case 'escaped': method = this.asEscaped; break;
             case 'json': method = this.asJson; break;
             case 'link': method = this.asLink; break;
-            case 'list': method = this.asList; break;
             case 'select': method = this.asSelect; break;
             case 'thumb': method = this.asThumb; break;
         }
@@ -39,83 +38,86 @@ Jam.ColumnRenderHelper = class {
         return data;
     }
 
-    static render (method, value, column) {
-        return value === undefined || value === null
-            ? this.asNotSet(value)
-            : method.call(this, value, column);
+    static render (method, data, column) {
+        return data === undefined || data === null
+            ? this.asNotSet(data)
+            : method.call(this, data, column);
     }
 
-    static asNotSet (value) {
-        return `<span class="not-set">${value}</span>`;
-    }
-
-    static asDefault (value, column) {
-        if (!Array.isArray(value)) {
-            return value;
+    static join (data, column, handler) {
+        if (!Array.isArray(data)) {
+            return handler(data, column);
         }
-        return value.join(column.hasOwnProperty('separator') ? column.separator : '<br>');
-    }
-
-    static asBoolean (value) {
-        return Jam.I18n.translate(Number(value) === 0 ? 'No' : 'Yes');
-    }
-
-    static asDate (value) {
-        return value ? (new Date(value)).toLocaleDateString() : '';
-    }
-
-    static asDatetime (value) {
-        return value ? (new Date(value)).toLocaleString() : '';
-    }
-
-    static asTimestamp (value) {
-        return value ? moment(value).format('L LTS') : '';
-    }
-
-    static asEscaped (value) {
-        return Jam.Helper.escapeHtml(value);
-    }
-
-    static asJson (value) {
-        return value ? JSON.stringify(value) : '';
-    }
-
-    static asLink (value, column) {
-        let {url, key, params} = column.format;
-        if (key) {
-            params[key] = value;
-            url = `${url}?${$.param(params)}`;
+        let separator = '<br>';
+        if (column.format && column.format.hasOwnProperty('separator')) {
+            separator = column.format.separator;
+        } else if (column.hasOwnProperty('separator')) {
+            separator = column.separator;
         }
-        return `<a href="${url}" class="modal-link">${value}</a>`;
+        return data.map(data => handler(data, column)).join(separator);
     }
 
-    static asList (value, column) {
-        if (!Array.isArray(value)) {
-            return '';
-        }
-        if (typeof column.format === 'string') {
-            return value.join('<br>');
-        }
-        let result = [];
-        for (let item of value) {
-            if (!column.format.url) {
-                result.push(item.title);
-                continue;
+    static asNotSet (data) {
+        return `<span class="not-set">${data}</span>`;
+    }
+
+    static asDefault () {
+        return this.join(...arguments, data => data);
+    }
+
+    static asBoolean () {
+        return this.join(...arguments, data => {
+            return Jam.I18n.translate(Number(data) === 0 ? 'No' : 'Yes');
+        });
+    }
+
+    static asDate () {
+        return this.join(...arguments, data => {
+            return data ? (new Date(data)).toLocaleDateString() : '';
+        });
+    }
+
+    static asDatetime () {
+        return this.join(...arguments, data => {
+            return dava ? (new Date(data)).toLocaleString() : '';
+        });
+    }
+
+    static asTimestamp () {
+        return this.join(...arguments, data => {
+            return data ? moment(data).format('L LTS') : '';
+        });
+    }
+
+    static asEscaped () {
+        return this.join(...arguments, data => Jam.Helper.escapeHtml(data));
+    }
+
+    static asJson (data) {
+        return data ? JSON.stringify(data) : '';
+    }
+
+    static asLink () {
+        return this.join(...arguments, (data, {format}) => {
+            let url = data.url || format.url || '';
+            let text = data.hasOwnProperty('text') ? data.text : data;
+            if (!url) {
+                return text;
             }
-            let url = column.format.url;
-            if (item.params) {
-                url += '?'+ $.param(item.params);
-            }
-            result.push(`<a href="${url}" class="modal-link">${item.title}</a>`);
-        }
-        return result.join(column.format.separator || '<br>');
+            let params = data.id || data.params ? {id: data.id, ...data.params} : {id: text};
+            params = $.param({...format.params, ...params});
+            url += (url.indexOf('?') === -1 ? '?' : '&') + params;
+            return `<a href="${url}" class="modal-link">${text}</a>`;
+        });
     }
 
-    static asSelect (value, column) {
-        return column.format.itemIndex[value].label;
+    static asSelect (data, {format}) {
+        return format.itemIndex[data].label;
     }
 
-    static asThumb (value) {
-        return value ? `<img src="${value}" class="thumbnail">` : '';
+    static asThumb () {
+        return this.join(...arguments, data => {
+            return data ? `<img src="${data}" class="thumbnail">` : '';
+        });
     }
 };

@@ -27,11 +27,6 @@ if (typeof params !== 'undefined') {
 
             <% if (data.id) { %>
                 <button data-id="copyId" class="btn btn-white" type="button" title="Copy ID">ID</button>
-                <% if (data.view) { %>
-                <button data-id="view" class="btn btn-default" type="button" title="View">
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                </button>
-                <% } %>
                 <% if (data.clone) { %>
                 <button data-id="clone" class="btn btn-success btn-light" type="button" title="Clone">
                     <span class="fa fa-copy"></span>

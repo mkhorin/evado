@@ -29,6 +29,8 @@ module.exports = class MetaDataGrid extends Base {
         this._result.totalSize = await this.query.count();
         await this.setModels();
         await this.metaData.security.resolveListForbiddenAttrs(this._models, this.metaData.view);
+        this._extraData = this.controller.extraMeta.getData(this.metaData.view);
+        this._columnMap = this._extraData.columnMap;
         this._result.items = await this.filterByColumns(this._models);
         return this._result;
     }
@@ -116,7 +118,7 @@ module.exports = class MetaDataGrid extends Base {
     }
 
     async renderModel (model) {
-        let result = {
+        const result = {
             //[model.class.CLASS_ATTR]: model.get(model.class.CLASS_ATTR)
         };
         await PromiseHelper.setImmediate();
@@ -132,13 +134,13 @@ module.exports = class MetaDataGrid extends Base {
     async renderCell (attr, model, result) {
         let name = attr.name;
         if (this.isReadForbiddenAttr(name, model)) {
-            return result[name] = this.metaData.security.noAccessMessage;
+            result[name] = this.metaData.security.noAccessMessage;
+        } else if (this._attrTemplateMap[name]) {
+            let content = await this.view.render(this._attrTemplateMap[name], {attr, model});
+            result[name] = `<!--handler: ${name}-->${content}`;
+        } else {
+            result[name] = name === this.ROW_KEY ? model.getId() : this.renderAttr(attr, model);
         }
-        if (!this._attrTemplateMap[name]) {
-            return result[name] = this.renderAttr(name, attr, model);
-        }
-        let content = await this.view.render(this._attrTemplateMap[name], {attr, model});
-        result[name] = `<!--handler: ${name}-->${content}`;
     }
 
     isReadForbiddenAttr (name, model) {
@@ -146,26 +148,39 @@ module.exports = class MetaDataGrid extends Base {
             || model.readForbiddenAttrs && model.readForbiddenAttrs.includes(name);
     }
 
-    renderAttr (name, attr, model) {
-        if (name === this.ROW_KEY) {
-            return model.getId();
+    renderAttr (attr, model) {
+        let value = model.semantic.get(attr.name);
+        if (attr.rel) {
+            return this.renderRelationAttr(value, attr, model);
         }
-        let value = model.semantic.get(name);
         if (value instanceof Date) {
             return this.renderDateAttr(value, attr);
         }
         if (value && attr.isFile()) {
             return this.renderFileAttr(value, attr, model);
         }
-        if (Array.isArray(value)) {
-            return value.join('<br>');
-        }
-        /*
-        if (value instanceof Model) {  // value.getTitle === function
-            return value.getTitle();
-        }
-        */
         return this.controller.format(value, attr.getFormat());
+    }
+
+    renderRelationAttr (data, attr, model) {
+        let related = model.related.get(attr);
+        if (!related || this._columnMap[attr.name].format.name !== 'link') {
+            return data;
+        }
+        if (!Array.isArray(data)) {
+            return {
+                id: related.getId(),
+                text: data
+            };
+        }
+        let result = [];
+        for (let i = 0; i < data.length; ++i) {
+            result.push({
+                id: related[i].getId(),
+                text: data[i]
+            });
+        }
+        return result;
     }
 
     renderDateAttr (value, attr) {

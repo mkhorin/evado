@@ -24,7 +24,7 @@ module.exports = class MetaObjectFilter extends Base {
             }
         }
         if (this.all) {
-            this.log('warn', 'Access is denied to all objects');
+            this.log('warn', 'Access denied to all objects');
         }
         if (objectClass && ids.length) {
             ObjectHelper.push(objectClass.getIdCondition(ids), 'condition', this);

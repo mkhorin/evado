@@ -30,7 +30,7 @@ module.exports = class MetaSecurity extends Base {
 
     resolveOnIndex (metaData) {
         return this.resolve({
-            targetType: Rbac.TARGET_NAV_ITEM,
+            targetType: Rbac.TARGET_NAV_NODE,
             target: metaData.node,
             targetClass: metaData.class,
             targetView: metaData.view,
@@ -113,7 +113,7 @@ module.exports = class MetaSecurity extends Base {
         this.attrAccess = await this.rbac.getAttrAccess(this.controller.user.assignments, data, params);
     }
 
-    async resolveRel (view) {
+    async resolveRelations (view) {
         let data = {
             targetType: Rbac.TARGET_CLASS,
             actions: [Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]

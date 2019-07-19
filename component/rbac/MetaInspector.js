@@ -52,7 +52,7 @@ module.exports = class MetaInspector extends Base {
         }
         this._targets = [[this.checkAllTarget]];
         switch (this.targetType) {
-            case Rbac.TARGET_NAV_ITEM: this.addNavItemTargets(); break;
+            case Rbac.TARGET_NAV_NODE: this.addNavNodeTargets(); break;
             case Rbac.TARGET_VIEW: this.addViewTargets(); break;
             case Rbac.TARGET_CLASS: this.addClassTargets(); break;
             case Rbac.TARGET_OBJECT: this.addObjectTargets(); break;
@@ -67,7 +67,7 @@ module.exports = class MetaInspector extends Base {
         return this;
     }
 
-    addNavItemTargets () {
+    addNavNodeTargets () {
         if (this.targetClass) {
             this._targets.push([this.checkClassTarget, this.targetClass]);
         }
@@ -76,9 +76,9 @@ module.exports = class MetaInspector extends Base {
         }
         this._targets.push([this.checkNavSectionTarget, this.target.section]);
         for (let parent of this.target.getParents()) {
-            this._targets.push([this.checkNavItemTarget, parent]);
+            this._targets.push([this.checkNavNodeTarget, parent]);
         }
-        this._targets.push([this.checkNavItemTarget, this.target]);
+        this._targets.push([this.checkNavNodeTarget, this.target]);
     }
 
     addViewTargets () {
@@ -131,8 +131,8 @@ module.exports = class MetaInspector extends Base {
         return data && data[section.id] ? this.checkItems(data[section.id]) : false;
     }
 
-    checkNavItemTarget (item, data) {
-        data = data[Rbac.TARGET_NAV_ITEM];
+    checkNavNodeTarget (item, data) {
+        data = data[Rbac.TARGET_NAV_NODE];
         return data && data[item.id] ? this.checkItems(data[item.id]) : false;
     }
 

@@ -184,7 +184,7 @@ a:focus, button:focus {
 }
 .not-set,
 .no-access {
-    color: #baa;
+    color: #cbb;
     font-style: italic;
     font-size: 13px;
 }
@@ -1701,6 +1701,18 @@ body.jmodal-root-active .jmodal-area {
 
 /* SELECT2 */
 
+select[readonly].select2-hidden-accessible + .select2-container {
+    pointer-events: none;
+    touch-action: none;
+}
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection {
+    background: #eee;
+    box-shadow: none;
+}
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection__arrow,
+select[readonly].select2-hidden-accessible + .select2-container .select2-selection__clear {
+    display: none;
+}
 .select2-container--open {
     z-index: 2001;
 }
@@ -1740,9 +1752,6 @@ body.jmodal-root-active .jmodal-area {
 .select2-container--default .select2-selection--multiple {
     border-color: #d2d6de;
     border-radius: 0;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__clear {
-    margin-top: 7px;
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     background-color: #fff;

@@ -61,6 +61,10 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
         }
     }
 
+    setValue (value) {
+        this.$value.val(value).trigger('change.select2');
+    }
+
     createSelect2 () {
         this.$select.select2({
             ajax: {

@@ -29,7 +29,7 @@ Jam.List = class extends Jam.Element {
     }
 
     init () {
-        this.$controls.on('click', '[data-id]', this.onClickControl.bind(this));
+        this.$controls.on('click', '[data-id]', this.onControl.bind(this));
         this.getControl('selectAll').toggle(this.params.multiple);
         this.$controls.find('.list-tool').each((index, element)=> Jam.ListTool.create($(element), this));
         this.setDataGridParams();
@@ -79,7 +79,7 @@ Jam.List = class extends Jam.Element {
         });
     }
 
-    onClickControl (event) {
+    onControl (event) {
         this.beforeControl(event);
         switch (event.currentTarget.dataset.id) {
             case 'view': return this.view();
@@ -162,6 +162,9 @@ Jam.List = class extends Jam.Element {
     // SELECTION
 
     onClickRow (event) {
+        if ($(event.target).closest('a').length) {
+            return true;
+        }  
         if (!this.params.multiple || !event.ctrlKey) {
             this.deselectExceptOneRow(event.currentTarget);
         }
@@ -169,6 +172,9 @@ Jam.List = class extends Jam.Element {
     }
 
     onDoubleClickRow (event) {
+        if ($(event.target).closest('a').length) {
+            return true;
+        }
         this.deselectExceptOneRow(event.currentTarget);
         this.toggleRowSelect($(event.currentTarget), true);
         event.ctrlKey
