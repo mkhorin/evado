@@ -11,7 +11,7 @@ if (params.value) {
 <div class="<%- params.required %> <%- params.css %> form-attr form-group"
      data-type="json"
      data-attraction='<%= params.attraction %>'>
-    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"
+    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>" data-t=""
            title="<%= params.extHint %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <div class="input-group">
@@ -32,7 +32,7 @@ if (params.value) {
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title l10n">JSON editor</h4>
+                    <h4 class="modal-title" data-t="">JSON editor</h4>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger light" style="display: none"></div>

@@ -56,14 +56,14 @@ module.exports = class IndexingController extends Base {
     }
 
     getModel (cb) {
-        let ModelClass;
+        let ModelClass = this.getQueryParam('id');
         try {
-            ModelClass = this.module.require(this.getQueryParam('id'));
+            ModelClass = this.module.require(ModelClass) || require(ModelClass);
         } catch (err) {
-            throw new BadRequest('Class not found');
+            throw new BadRequest(`File not found: ${ModelClass}`);
         }
         if (!(ModelClass.prototype instanceof ActiveRecord)) {
-            throw new BadRequest('Target is not ActiveRecord');
+            throw new BadRequest('Class not extends ActiveRecord');
         }
         return this.spawn(ModelClass);
     }

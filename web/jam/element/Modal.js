@@ -34,6 +34,7 @@ Jam.Modal = class extends Jam.Element {
         this.handlers = [];
         this.stackToggle = new Jam.Modal.StackToggle(this);
         $('.modal-root-back').click(this.onBackFromRoot.bind(this));
+        $(document.body).on('click', '.modal-link', this.onModalLink.bind(this));
         $(window).resize(this.onResize.bind(this));
     }
 
@@ -115,6 +116,11 @@ Jam.Modal = class extends Jam.Element {
     onBackFromRoot () {
         $(document.body).removeClass('jmodal-root-active');
         this.setActive(this.getLastStacked());
+    }
+
+    onModalLink (event) {
+        event.preventDefault();
+        Jam.modal.create().load(event.target.href || $(event.target).data('url'));
     }
 
     openFromUrl (url) {

@@ -1,6 +1,6 @@
 <!-- _part/nav/user -->
 <%
-    let user = _controller.user ? _controller.user.model : null;
+let user = _controller.user ? _controller.user.model : null;
 %>
 <li class="dropdown user user-menu">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -12,22 +12,25 @@
         <% if (user) { %>
         <li class="user-body">
             <% if (user.assignments) { %>
-            <p class="mb0">Role: <b><%- user.assignments.join(' ') %></b></p>
+            <p class="mb0">
+                <span data-t="">Role</span>:
+                <b><%- user.assignments.join(' ') %></b>
+            </p>
             <% } %>
         </li>
         <li class="user-footer">
             <form action="auth/sign-out" method="post">
                 <div class="pull-left">
-                    <a href="user/profile" class="btn btn-default btn-flat">Profile</a>
+                    <a href="user/profile" class="btn btn-default btn-flat" data-t="">Profile</a>
                 </div>
                 <div class="pull-right">
-                    <button type="submit" class="btn btn-default btn-flat">Sign out</button>
+                    <button type="submit" class="btn btn-warning btn-flat" data-t="">Sign out</button>
                 </div>
             </form>
         </li>
         <% } else { %>
         <li class="user-footer">
-            <a href="auth/sign-in" class="btn btn-default btn-flat">Sign in</a>
+            <a href="auth/sign-in" class="btn btn-default btn-flat" data-t="">Sign in</a>
         </li>
         <% } %>
     </ul>

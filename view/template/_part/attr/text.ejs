@@ -6,7 +6,7 @@
 
 <div class="form-attr form-group<%- params.required %> <%- params.css %>"
      data-attraction='<%= params.attraction %>'>
-    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>" data-t=""><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <textarea id="<%- params.id %>" name="<%- params.name %>"
                   class="form-control form-value"

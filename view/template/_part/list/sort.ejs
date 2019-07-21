@@ -25,8 +25,8 @@ data.multiple = true;
 data.url = _controller.getOriginalUrl();
 data.order = {[orderAttr]: 1};
 data.pageSize = 0;
-
 data.data = [];
+
 for (let model of models) {
     let map = {};
     for (let column of data.columns) {
@@ -34,8 +34,8 @@ for (let model of models) {
     }
     data.data.push(map);
 }
-if (data.jamClass === undefined) {
-    data.jamClass = 'SortList';
+if (data.jam === undefined) {
+    data.jam = 'SortList';
 }
 %>
 <div class="jmodal-scroll-container box-grid box" data-title="<%- blocks.title %>">
@@ -72,10 +72,7 @@ if (data.jamClass === undefined) {
     </div>
 
     <div class="scroll-body box-body">
-        <div class="data-grid"
-             data-jam-class="<%- data.jamClass %>"
-             data-params="<%= JSON.stringify(data) %>">
-
+        <div class="data-grid" data-jam="<%- data.jam %>" data-params="<%= JSON.stringify(data) %>">
             <div class="table-responsive">
                 <table class="data-grid-table table table-bordered table-striped table-condensed">
                     <thead></thead>

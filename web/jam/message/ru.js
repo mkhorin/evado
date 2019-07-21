@@ -5,16 +5,22 @@
 
 Jam.I18n.default = {
 
+    'Active': 'Активен',
     'Add': 'Добавить',
     'Add condition': 'Добавить условие',
     'Apply': 'Применить',
+
+    'Back to modal form': 'Вернуться к модальной форме',
+    'Banned': 'Блокирован',
 
     'Can not restore ambiguous values': 'Не могу восстановить неоднозначные значения',
     'Cancel': 'Отменить',
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
     'Close without saving?': 'Закрыть без сохранения?',
+    'Confirmation': 'Подтверждение',
     'Create': 'Создать',
+    'Created at': 'Создано',
 
     'Default value': 'Значение по умолчанию',
     'Delete': 'Удалить',
@@ -24,6 +30,7 @@ Jam.I18n.default = {
     'Drop or select file here': 'Бросьте или выберит файл здесь',
 
     'Edit': 'Редактировать',
+    'Email': 'Email',
     'Export': 'Экспортировать',
 
     'Group': 'Группа',
@@ -39,13 +46,17 @@ Jam.I18n.default = {
     'Order': 'Порядок',
     'Order number': 'Порядковый номер',
 
+    'Password': 'Пароль',
     'Preparing to upload...': 'Подготовка к выгрузке...',
+    'Profile': 'Профиль',
 
     'Reload': 'Обновить',
     'Reload form': 'Перезагрузить форму',
     'Remove': 'Удалить',
     'Reset filter': 'Сбросить фильтр',
     'Restore selected values?': 'Востановить выбранные значения?',
+    'Role': 'Роль',
+    'Roles': 'Роли',
 
     'Save': 'Сохранить',
     'Save and close': 'Сохранить и закрыть',
@@ -57,7 +68,10 @@ Jam.I18n.default = {
     'Select items to action': 'Выберите объекты для действия',
     'Select one item to action': 'Выберите один объект для действия',
     'Select values to restore': 'Выберите значения для восстановления',
+    'Sign in': 'Войти',
+    'Sign out': 'Выйти',
     'Sort': 'Сортировать',
+    'Status': 'Статус',
 
     'Text': 'Текст',
     'Too many files': 'Слишком много файлов',
@@ -65,7 +79,8 @@ Jam.I18n.default = {
 
     'Unlink': 'Убрать',
     'Unlink selected items?': 'Убрать выбранные объекты?',
-    'Update': 'Редактировать',
+    'Update': 'Изменить',
+    'Updated at': 'Изменено',
 
     'Value': 'Значение',
     'View': 'Просмотр',
@@ -81,5 +96,5 @@ Jam.I18n.default = {
     'equal': 'равно',
 
     'nested': 'вложенный',
-    'not equal': 'не равно',
+    'not equal': 'не равно'
 };

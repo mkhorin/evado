@@ -55,11 +55,12 @@ module.exports = class BaseController extends Base {
     }
 
     getModelByClassName (params) {
-        if (params.className) {
+        const file = params.className;
+        if (file) {
             try {
-                params.ModelClass = this.module.require(params.className);
+                params.ModelClass = this.module.require(file) || require(file);
             } catch (err) {
-                throw new NotFound(`Not found model class: ${params.className}`);
+                throw new NotFound(`Not found model class: ${file}`);
             }
         }
         return this.getModel(params);

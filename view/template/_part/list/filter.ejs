@@ -66,8 +66,8 @@ for (let column of data.columns) {
         <div data-id="id">
             <div class="col-sm-2">
                 <select class="condition-operation form-control">
-                    <option value="equal" class="l10n">equal</option>
-                    <option value="not equal" class="l10n">not equal</option>
+                    <option value="equal" data-t="">equal</option>
+                    <option value="not equal" data-t="">not equal</option>
                 </select>
             </div>
             <div class="col-sm-5">
@@ -95,9 +95,9 @@ for (let column of data.columns) {
         <div data-id="selector">
             <div class="col-sm-2">
                 <select class="condition-operation form-control">
-                    <option value="equal" class="l10n">equal</option>
-                    <option value="not equal" class="l10n">not equal</option>
-                    <option value="nested" class="l10n">nested</option>
+                    <option value="equal" data-t="">equal</option>
+                    <option value="not equal" data-t="">not equal</option>
+                    <option value="nested" data-t="">nested</option>
                 </select>
             </div>
             <div class="col-sm-5">
@@ -115,15 +115,14 @@ for (let column of data.columns) {
         <div data-id="string">
             <div class="col-sm-2">
                 <select class="condition-operation form-control">
-                    <option value="contains" class="l10n">contains</option>
-                    <option value="equal" class="l10n">equal</option>
-                    <option value="begins" class="l10n">begins</option>
-                    <option value="ends" class="l10n">ends</option>
+                    <option value="contains" data-t="">contains</option>
+                    <option value="equal" data-t="">equal</option>
+                    <option value="begins" data-t="">begins</option>
+                    <option value="ends" data-t="">ends</option>
                 </select>
             </div>
             <div class="col-sm-5">
-                <input class="condition-value form-control default-focus" type="text"
-                       placeholder="Input value...">
+                <input class="condition-value form-control default-focus" type="text" placeholder="Input value...">
             </div>
         </div>
     </div>
@@ -133,7 +132,7 @@ for (let column of data.columns) {
             <button class="add-condition btn btn-success btn-light" type="button" title="Add condition">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
-            <button class="apply-filter btn btn-primary mr10 l10n" type="button">Apply</button>
+            <button class="apply-filter btn btn-primary mr10" data-t="" type="button">Apply</button>
             <button class="reset-filter btn btn-default btn-light" type="button" title="Reset filter">
                 <span class="fa fa-times text-danger"></span>
             </button>

@@ -29,9 +29,6 @@ if (d.list !== null) {
     d.list = _url(d.list);
 }
 let relUrl = typeof relRoute === 'undefined' ? rel.model.getControllerClass().NAME : relRoute;
-/* if (d.view !== null) {
-    d.view = _url(d.view === undefined ? `${relUrl}/view` : d.view);
-}//*/
 if (d.viewTitle !== null) {
     d.viewTitle = _url(d.viewTitle === undefined ? `${relUrl}/view-title` : d.viewTitle);
 }
@@ -74,45 +71,40 @@ if (d.modalSort) {
 let related = model.rel(attr);
 %>
 <div class="form-attr form-group<%- params.required %> <%- params.css %>" data-type="relationSelect">
-    <label for="<%- params.id %>" class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>" data-t=""><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <div class="box relation-select-box">
             <input name="<%- params.name %>" type="hidden" class="form-value" value="">
             <div class="box-body">
                 <div class="list-controls">
                     <% if (d.unlink) { %>
-                    <button data-id="unlink" class="btn btn-default mr10" type="button" title="Unlink">
+                    <button data-id="unlink" data-index="10" title="Unlink" class="btn btn-default mr10" type="button">
                         <span class="fa fa-unlink text-danger"></span>
                     </button>
-                    <% } %>
-                    <% if (d.create) { %>
-                    <button data-id="create" class="btn btn-success btn-light" type="button" title="Create">
+                    <% } if (d.create) { %>
+                    <button data-id="create" data-index="20" title="Create" class="btn btn-success btn-light" type="button">
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
-                    <% } %>
-                    <% if (d.update) { %>
-                    <button data-id="update" class="btn btn-warning btn-light" type="button" title="Update">
+                    <% } if (d.update) { %>
+                    <button data-id="update" data-index="30" title="Update" class="btn btn-warning btn-light" type="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </button>
-                    <% } %>
-                    <% if (d.remove) { %>
-                    <button data-id="remove" class="btn btn-white" type="button" title="Delete">
+                    <% } if (d.remove) { %>
+                    <button data-id="remove" data-index="40" title="Delete" class="btn btn-white" type="button">
                         <span class="glyphicon glyphicon-trash text-danger"></span>
                     </button>
-                    <% } %>
-                    <% if (d.modalSort) { %>
-                    <button data-id="sort" class="btn btn-white" type="button" title="Sort">
+                    <% } if (d.modalSort) { %>
+                    <button data-id="sort" data-index="50" title="Sort" class="btn btn-white" type="button">
                         <span class="glyphicon glyphicon-sort"></span>
                     </button>
-                    <% } %>
-                    <% if (typeof tools !== 'undefined') { %>
+                    <% } if (typeof tools !== 'undefined') { %>
                     <%- include(_view.get('_part/misc/universal-render'), {data: tools}) %>
                     <% } %>
                 </div>
                 <select id="<%- params.id %>" class="form-control" <% if (d.multiple) { %>multiple<% } %>
                         data-params="<%= JSON.stringify(d) %>">
-                    <% if (Array.isArray(related)) { %>
-                    <% for (let item of related) { %>
+                    <% if (Array.isArray(related)) {
+                       for (let item of related) { %>
                     <option value="<%- item.getId() %>" selected><%= item.getTitle() %></option>
                     <% }} else if (related) { %>
                     <option value="<%- related.getId() %>" selected><%= related.getTitle() %></option>

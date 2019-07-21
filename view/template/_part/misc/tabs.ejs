@@ -1,15 +1,15 @@
 <!-- _part/misc/tabs -->
 <%
 let params = {
-    jamClass: typeof jamClass === 'undefined' ? 'Tabs' : jamClass,
+    jam: typeof jam === 'undefined' ? 'Tabs' : jam,
     cssClass: typeof cssClass === 'undefined' ? '' : cssClass
 };
 %>
-<div class="<%- params.cssClass %> tabs" data-jam-class="<%- params.jamClass %>">
+<div class="<%- params.cssClass %> tabs" data-jam="<%- params.jam %>">
     <ul class="nav nav-tabs" role="tablist">
     <% for (let item of items) { %>
     <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
-        <a href="#" class="l10n"><%- item.label || item.id %></a>
+        <a href="#" data-t=""><%- item.label || item.id %></a>
     </li>
     <% } %>
     </ul>

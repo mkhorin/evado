@@ -218,8 +218,7 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
     }
 
     sort (reset) {
-        this.loadModal(this.params.modalSort, null, (event, data)=> {
-        });
+        this.loadModal(this.params.modalSort, null, (event, data)=> {});
     }
 
     removeSelect2Value (id) {
@@ -249,16 +248,18 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
     }
 
     selectValue (id) {
-        return $.get(this.params.viewTitle, {id}).done(data => {
-            let $item = this.$select.children(`[value="${id}"]`);
-            if ($item.length) {
-                $item.html(data);
-                this.$select.select2('destroy');
-                this.createSelect2();
-            } else {
-                this.$select.append(new Option(data, id, true, true)).change();
-            }
-        });
+        return $.get(this.params.viewTitle, {id}).done((this).parseSelectedValue.bind(this));
+    }
+
+    parseSelectedValue (data) {
+        let $item = this.$select.children(`[value="${id}"]`);
+        if ($item.length) {
+            $item.html(data);
+            this.$select.select2('destroy');
+            this.createSelect2();
+        } else {
+            this.$select.append(new Option(data, id, true, true)).change();
+        }
     }
 
     sortByIdList (ids) {

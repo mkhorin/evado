@@ -14,10 +14,11 @@ module.exports = class UserFilterFactory extends Base {
     }
 
     init () {
+        const file = this.config.Class;
         try {
-            this.UserFilter = this.rbac.module.app.require(this.config.Class);
+            this.UserFilter = this.rbac.module.app.require(file) || require(file);
         } catch (err) {
-            this.rbac.log('error', `Invalid user filter: ${this.config.Class}`);
+            this.rbac.log('error', `Not found user filter: ${file}`);
         }
     }
 

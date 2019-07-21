@@ -6,5 +6,10 @@
 Jam.scheduler = new Jam.Scheduler;
 Jam.resource = new Jam.Resource;
 Jam.confirmation = new Jam.Confirmation;
+
+Jam.I18n.translateContainer(document.body);
 Jam.createElements($(document.body));
-Jam.modal.openFromUrl(location.search);
+
+if (Jam.modal) {
+    Jam.modal.openFromUrl(location.search);
+}

@@ -6,9 +6,9 @@
 class Jam {
 
     static createElements ($container) {
-        let $elements = $($container.find('[data-jam-class]').get().reverse());
+        let $elements = $($container.find('[data-jam]').get().reverse());
         for (let element of $elements) {
-            let name = element.dataset.jamClass;
+            let name = element.dataset.jam;
             if (name) {
                 let Class = this.getClass(name);
                 Class && Class.prototype instanceof Jam.Element
@@ -59,7 +59,7 @@ Jam.Element = class {
     }
 
     static getInstance ($element) {
-        return $element.data(`instanceOf${this.name}`);
+        return $element.data(`jamOf${this.name}`);
     }
 
     constructor ($element) {
@@ -68,7 +68,7 @@ Jam.Element = class {
     }
 
     setInstance ($element) {
-        return $element.data(`instanceOf${this.constructor.name}`, this);
+        return $element.data(`jamOf${this.constructor.name}`, this);
     }
 };
 
@@ -103,40 +103,58 @@ Jam.Event = class {
 
 Jam.I18n = class {
 
-    static translate (msg, category) {
+    static translate (message, category) {
         let map = this.getCategoryMap(category);
-        return map && map.hasOwnProperty(msg) ? map[msg] : msg;
+        return map && map.hasOwnProperty(message) ? map[message] : message;
     }
 
-    static translateContainer (container, category) {
-        let map = this.getCategoryMap(category);
-        let $container = $(container);
-        for (let element of $container.find('.l10n')) {
-            this.translateElement(element, map)
-        }
-        let attrs = ['title', 'placeholder'];
-        for (let attr of attrs) {
-            for (let element of $container.find(`[${attr}]`)) {
-                this.translateAttribute(attr, element, map);
-            }
+    static translateContainer (container) {
+        const $container = $(container);
+        this.translateElements($container);
+        this.translateAttributes($container);
+    }
+
+    static translateElements ($container) {
+        for (let element of $container.find('[data-t]')) {
+            this.translateElement(element)
         }
     }
 
-    static translateElement (element, map) {
+    static translateElement (element) {
+        let map = this.getCategoryMap(element.dataset.t);
         if (map && map.hasOwnProperty(element.innerHTML)) {
           element.innerHTML = map[element.innerHTML];
         }
     }
 
-    static translateAttribute (name, element, map) {
+    static translateAttributes ($container) {
+        for (let name of this.getAttributes($container)) {
+            let category = 't' + Jam.StringHelper.toFirstUpperCase(name);
+            for (let element of $container.find(`[${name}]`)) {
+                this.translateAttribute(name, category, element);
+            }
+        }
+    }
+
+    static getAttributes ($container) {
+        let names = $container.data('tAttributes');
+        names = typeof names !== 'string' ? names : names ? names.split(',') : [];
+        if (!this._attributes) {
+            this._attributes = names || ['title', 'placeholder'];
+        }
+        return names || this._attributes;
+    }
+
+    static translateAttribute (name, category, element) {
         let value = element.getAttribute(name);
+        let map = this.getCategoryMap(element.dataset[category]);
         if (map && map.hasOwnProperty(value)) {
             element.setAttribute(name, map[value]);
         }
     }
 
     static getCategoryMap (category) {
-        return this.hasOwnProperty(category) ? this[category] : this.default;
+        return category ? (this.hasOwnProperty(category) && this[category]) : this.default;
     }
 };
 
@@ -466,5 +484,31 @@ Jam.LoadableContent = class extends Jam.Element {
 
     setContent (data) {
         this.$container.find('.loadable-content').html(data);
+    }
+};
+
+Jam.IndexSorting = class extends Jam.Element {
+
+    constructor ($container) {
+        super($container);
+        this.sort();
+    }
+
+    sort () {
+        this.$element.children().sort((a, b)=> a.dataset.index - b.dataset.index).appendTo(this.$element);
+    }
+};
+
+Jam.Captcha = class extends Jam.Element {
+
+    constructor ($container) {
+        super($container);
+        this.$element.find('.captcha-refresh').click(this.onRefresh.bind(this));
+    }
+
+    onRefresh (event) {
+        event.preventDefault();
+        let $img = this.$element.find('.captcha-image');
+        $img.attr('src', $img.attr('src').replace(/\?_=([0-9]+)/, ()=> '?_='+ Date.now()));
     }
 };

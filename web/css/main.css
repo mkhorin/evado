@@ -663,6 +663,9 @@ body.loading {
 .register-box-body .has-success .form-control-feedback {
     color: var(--color-dark-success);
 }
+.captcha {
+    margin-bottom: 10px;
+}
 .captcha, .captcha-refresh {
     vertical-align: middle;
 }

@@ -1,12 +1,12 @@
 module.exports = {
 
-    'Access is blocked': 'Доступ заблокирован',
-    'Access is blocked for': 'Доступ заблокирован для',
+    'Access blocked': 'Доступ заблокирован',
+    'Access blocked for': 'Доступ заблокирован для',
 
     'Change': 'Изменить',
     'Change password': 'Изменить пароль',
 
-    'Go to main': 'Перейти на главную',
+    'Back to main': 'Перейти на главную',
     'Go to sign in': 'Вход в систему',
 
     'Invalid authentication': 'Неверная аутентификация',

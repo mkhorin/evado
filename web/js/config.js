@@ -42,25 +42,3 @@ if ($.fn.datetimepicker) {
         // debug: true
     };
 }
-
-if ($.fn.dataTable) {
-    $.extend($.fn.dataTable.defaults, {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: true,
-        autoWidth: false,
-        language: {
-            paginate: {
-                first: "<<",
-                previous: "<",
-                next: ">",
-                last: ">>"
-            },
-            lengthMenu: "Show _MENU_"
-        }
-    });
-    // send errors to console instead alert
-    $.fn.dataTable.ext.errMode = 'none';
-}

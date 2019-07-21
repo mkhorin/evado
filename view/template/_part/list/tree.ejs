@@ -58,8 +58,8 @@ if (data.multiple === undefined) {
 if (data.filter && !data.filter.url) {
     data.filter.url = _url('filter');
 }
-if (data.jamClass === undefined) {
-    data.jamClass = 'MainTreeList';
+if (data.jam === undefined) {
+    data.jam = 'MainTreeList';
 }
 %>
 <div class="jmodal-scroll-container box-grid box" data-title="<%= blocks.title %>">
@@ -73,9 +73,7 @@ if (data.jamClass === undefined) {
     </div>
 
     <div class="scroll-body box-body">
-        <div class="tree-data-grid data-grid"
-             data-jam-class="<%- data.jamClass %>"
-             data-params="<%= JSON.stringify(data) %>">
+        <div class="tree-data-grid data-grid" data-jam="<%- data.jam %>" data-params="<%= JSON.stringify(data) %>">
             <% if (data.filter) { %>
                 <div class="list-filter">
                     <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>

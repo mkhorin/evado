@@ -8,7 +8,7 @@ let params = {
     <ul class="nav nav-tabs" role="tablist">
     <% for (let item of items) { %>
     <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
-        <a href="#" class="l10n"><%- item.label || item.id %></a>
+        <a href="#" data-t=""><%- item.label || item.id %></a>
     </li>
     <% } %>
     </ul>
@@ -20,9 +20,9 @@ let params = {
             <div class="form-base-group-body">
             <% if (typeof item.content === 'string') { %>
                 <%- include(item.content) %>
-            <% } else if (Array.isArray(item.content)) { %>
-                <% for (let data of item.content) { %>
-                <% if (data.template) { %>
+            <% } else if (Array.isArray(item.content)) {
+                 for (let data of item.content) {
+                   if (data.template) { %>
                 <%- include(data.template, data) %>
                 <% } else { %>
                 <%- data %>

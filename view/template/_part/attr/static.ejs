@@ -8,7 +8,7 @@ if (params.displayValue && typeof url !== 'undefined') {
 }
 %>
 <div class="form-attr form-group">
-    <label class="control-label l10n <%- params.labelCss %>"><%- params.label %></label>
+    <label class="control-label <%- params.labelCss %>" data-t=""><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <input name="<%- params.name %>" type="hidden"
                value="<%= params.value %>" class="form-value">

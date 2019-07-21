@@ -9,8 +9,7 @@
 
     <%- include(_view.get('_part/asset/style/default')) %>
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/local.css">
+    <link rel="stylesheet" href="css/module.css">
 </head>
 <body class="login-page">
     <!-- _layout/auth -->
@@ -22,7 +21,9 @@
             <%- body -%>
         </div>
     </div>
-    <script src="vendor/jquery/dist/jquery.min.js"></script>
-    <script src="js/dom.js"></script>
+    <%- include(_view.get('_part/asset/script/jam')) %>
+    <%- include(_view.get('_part/asset/script/default')) %>
+
+    <script src="js/init.js"></script>
 </body>
 </html>
