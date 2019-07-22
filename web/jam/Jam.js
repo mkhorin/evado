@@ -5,9 +5,9 @@
 
 class Jam {
 
-    static createElements ($container) {
-        let $elements = $($container.find('[data-jam]').get().reverse());
-        for (let element of $elements) {
+    static createElements (container) {
+        let elements = $(container).find('[data-jam]').get().reverse();
+        for (let element of elements) {
             let name = element.dataset.jam;
             if (name) {
                 let Class = this.getClass(name);
@@ -101,143 +101,6 @@ Jam.Event = class {
     }
 };
 
-Jam.I18n = class {
-
-    static translate (message, category) {
-        let map = this.getCategoryMap(category);
-        return map && map.hasOwnProperty(message) ? map[message] : message;
-    }
-
-    static translateContainer (container) {
-        const $container = $(container);
-        this.translateElements($container);
-        this.translateAttributes($container);
-    }
-
-    static translateElements ($container) {
-        for (let element of $container.find('[data-t]')) {
-            this.translateElement(element)
-        }
-    }
-
-    static translateElement (element) {
-        let map = this.getCategoryMap(element.dataset.t);
-        if (map && map.hasOwnProperty(element.innerHTML)) {
-          element.innerHTML = map[element.innerHTML];
-        }
-    }
-
-    static translateAttributes ($container) {
-        for (let name of this.getAttributes($container)) {
-            let category = 't' + Jam.StringHelper.toFirstUpperCase(name);
-            for (let element of $container.find(`[${name}]`)) {
-                this.translateAttribute(name, category, element);
-            }
-        }
-    }
-
-    static getAttributes ($container) {
-        let names = $container.data('tAttributes');
-        names = typeof names !== 'string' ? names : names ? names.split(',') : [];
-        if (!this._attributes) {
-            this._attributes = names || ['title', 'placeholder'];
-        }
-        return names || this._attributes;
-    }
-
-    static translateAttribute (name, category, element) {
-        let value = element.getAttribute(name);
-        let map = this.getCategoryMap(element.dataset[category]);
-        if (map && map.hasOwnProperty(value)) {
-            element.setAttribute(name, map[value]);
-        }
-    }
-
-    static getCategoryMap (category) {
-        return category ? (this.hasOwnProperty(category) && this[category]) : this.default;
-    }
-};
-
-Jam.Notice = class {
-
-    constructor (params) {
-        this.params = {
-            cssClasses: 'default-notice light',
-            scrollSpeed: 'fast',
-            template: '#notice-template',
-            ...params
-        };
-        this.init();
-    }
-
-    init () {
-        this.$notice = $($(this.params.template).html());
-        let container = this.params.container;
-        if (typeof container === 'function') {
-            container(this.$notice);
-        } else if (container) {
-            container.prepend(this.$notice);
-        }
-        this.$notice.find('.close').click(this.hide.bind(this));
-    }
-
-    success (message) {
-        this.show('success', message);
-    }
-
-    info (message) {
-        this.show('info', message);
-    }
-
-    warning (message) {
-        this.show('warning', message);
-    }
-
-    danger (message) {
-        this.show('danger', message);
-    }
-
-    show (type, message) {
-        if (typeof message === 'string') {
-            this.build(type, Jam.I18n.translate(message));
-            this.$notice.removeClass('hidden');
-            this.scrollTo();
-        }
-        return this;
-    }
-
-    build (type, message) {
-        this.$notice.removeClass().addClass(`${this.params.cssClasses} notice notice-${type}`);
-        this.$notice.find('.message').html(message);
-    }
-
-    scrollTo () {
-        if (this.params.$scrollTo) {
-            this.params.$scrollTo.animate({scrollTop: 0}, this.params.scrollSpeed);
-        }
-    }
-
-    hide () {
-        this.$notice.addClass('hidden');
-        return this;
-    }
-};
-
-Jam.ContentNotice = class extends Jam.Notice {
-
-    static clear (container) {
-        (container || $('#content')).find('.content-notice').remove();
-    }
-
-    constructor (params) {
-        super({
-            cssClasses: 'content-notice light',
-            container: $('#content'),
-            ...params
-        });
-    }
-};
-
 Jam.Confirmation = class {
 
     constructor (params) {
@@ -279,9 +142,9 @@ Jam.Confirmation = class {
 
     build (data) {
         this.$container.removeClass().addClass(`confirmation-${data.cssClass} confirmation`);
-        this.$container.find('.box-head').html(Jam.I18n.translate(data.headText));
-        this.$container.find('.box-body').html(Jam.I18n.translate(data.message));
-        this.$confirm.html(Jam.I18n.translate(data.confirmText));
+        this.$container.find('.box-head').html(Jam.i18n.translate(data.headText));
+        this.$container.find('.box-body').html(Jam.i18n.translate(data.message));
+        this.$confirm.html(Jam.i18n.translate(data.confirmText));
     }
 
     onAction (status) {

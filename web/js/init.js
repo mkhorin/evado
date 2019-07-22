@@ -3,12 +3,13 @@
  */
 'use strict';
 
-Jam.scheduler = new Jam.Scheduler;
-Jam.resource = new Jam.Resource;
 Jam.confirmation = new Jam.Confirmation;
+Jam.i18n = new Jam.I18n;
+Jam.resource = new Jam.Resource;
+Jam.scheduler = new Jam.Scheduler;
 
-Jam.I18n.translateContainer(document.body);
-Jam.createElements($(document.body));
+Jam.i18n.translateContainer(document.body);
+Jam.createElements(document.body);
 
 if (Jam.modal) {
     Jam.modal.openFromUrl(location.search);

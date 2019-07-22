@@ -6,7 +6,7 @@
 Jam.Helper = class {
 
     static confirm (message) {
-        return !message || confirm(Jam.I18n.translate(message));
+        return !message || confirm(Jam.i18n.translate(message));
     }
 
     static parseJson (data) {

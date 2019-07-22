@@ -47,6 +47,4 @@ Jam.Util = class {
         //$.post(this.params.url, {id: this.params.id});
 
     }
-
-
 };

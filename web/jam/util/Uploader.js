@@ -294,8 +294,8 @@ Jam.Uploader.File = class {
          this.uploader.processNext();
          return; //*/
 
-        // пытаемся загрузить файл как изображение, и по результату начинаем валидацию
-        // загрузка изображения происходит по событиям, а не последовательно
+        // try to load file as image, then validate it
+        // image loading occurs by event, not sequentially
         this.image = new Image;
         this.image.onload = event => {
             this.startValidate();
@@ -354,7 +354,7 @@ Jam.Uploader.File = class {
         for (let i = 0; i < files.length; ++i) { // 'of' not work
             let file = files[i];
             if (!file.removed) {
-                // проверять на совпадение только с предыдущими файлами
+                // match with previous files only
                 if (file === this) {
                     return false;
                 }
@@ -389,14 +389,9 @@ Jam.Uploader.File = class {
         this.xhr = new XMLHttpRequest;
         this.xhr.open('POST', this.uploader.options.upload);
         if (this.xhr.upload) {
-            this.xhr.upload.addEventListener('progress', event => {
-                this.progressUploading(event);
-            }, false);
+            this.xhr.upload.addEventListener('progress', event => this.progressUploading(event), false);
         }
-        this.xhr.onreadystatechange = event => {
-            this.changeReadyState(event);
-        };
-        // создать данные формы для выгрузки на сервер
+        this.xhr.onreadystatechange = event => this.changeReadyState(event);
         let data = new FormData;
         data.append(this.uploader.options.attrName, this.file.name);
         data.append(this.uploader.options.attrName, this.file);
@@ -406,7 +401,7 @@ Jam.Uploader.File = class {
     }
 
     progressUploading (event) {
-        // can be FALSE if server never sent Content-Length header in the response
+        // can be FALSE if server never sent Content-Length header to response
         if (event.lengthComputable) {
             this.percent = Math.round(event.loaded * 100 / event.total);
             this.trigger('progress');

@@ -3,11 +3,11 @@
  */
 'use strict';
 
-Jam.ModelAttr.Selection = class extends Jam.ModelAttr {
+Jam.ModelAttr.Enum = class extends Jam.ModelAttr {
 
     init () {
         super.init();
-        this.sets = Jam.ModelAttr.Selection.Set.createSets(this.$attr.data('sets'), this);
+        this.sets = Jam.ModelAttr.EnumSet.createSets(this.$attr.data('sets'), this);
         this.select2 = this.$attr.data('select2');
         this.$select = this.$attr.find('select');
         this.$select.change(this.changeValue.bind(this));
@@ -47,7 +47,7 @@ Jam.ModelAttr.Selection = class extends Jam.ModelAttr {
     }
 
     updateItems () {
-        let items = Jam.ModelAttr.Selection.Set.filterItems(this.sets);
+        let items = Jam.ModelAttr.EnumSet.filterItems(this.sets);
         this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
         return this.items === items;
     }
@@ -61,11 +61,11 @@ Jam.ModelAttr.Selection = class extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttr.RadioSelection = class extends Jam.ModelAttr {
+Jam.ModelAttr.RadioEnum = class extends Jam.ModelAttr {
 
     init () {
         super.init();
-        this.sets = Jam.ModelAttr.Selection.Set.createSets(this.$attr.data('sets'), this);
+        this.sets = Jam.ModelAttr.EnumSet.createSets(this.$attr.data('sets'), this);
         this.$list = this.$attr.find('.radio-items');
         this.$list.on('change', '[type="radio"]', this.changeValue.bind(this));
         this.model.event.on('change', this.onUpdate.bind(this));
@@ -109,7 +109,7 @@ Jam.ModelAttr.RadioSelection = class extends Jam.ModelAttr {
     }
 
     updateItems () {
-        let items = Jam.ModelAttr.Selection.Set.filterItems(this.sets);
+        let items = Jam.ModelAttr.EnumSet.filterItems(this.sets);
         this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
         return this.items === items;
     }
@@ -121,13 +121,13 @@ Jam.ModelAttr.RadioSelection = class extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttr.Selection.Set = class {
+Jam.ModelAttr.EnumSet = class {
 
-    static createSets (data, selection) {
+    static createSets (data, owner) {
         let sets = [];
         if (Array.isArray(data)) {
             for (let item of data) {
-                sets.push(new this(item, selection));
+                sets.push(new this(item, owner));
             }
         }
         return sets;

@@ -18,6 +18,7 @@ Jam.I18n.default = {
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
     'Close without saving?': 'Закрыть без сохранения?',
+    'Confirm': 'Подтвердить',
     'Confirmation': 'Подтверждение',
     'Create': 'Создать',
     'Created at': 'Создано',

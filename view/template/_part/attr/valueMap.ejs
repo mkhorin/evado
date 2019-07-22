@@ -4,7 +4,7 @@
 <%- include('_params', {params}) %>
 
 <div class="value-map form-attr form-group<%- params.required %>" data-type="valueMap">
-    <label class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <label class="control-label <%- params.labelCss %>" data-t=""><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <input name="<%- params.name %>" type="hidden" class="form-value"
                value="<%= params.value ? JSON.stringify(params.value) : '' %>">
@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="value-map-item-controls btn-group">
-                    <button data-id="add" type="button" class="btn btn-success btn-light" title="Add">
+                    <button data-id="add" type="button" class="btn btn-white btn-light" title="Add">
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
                     <button data-id="down" type="button" class="btn btn-warning btn-light" title="Down">
@@ -31,7 +31,7 @@
                     <button data-id="up" type="button" class="btn btn-warning btn-light" title="Up">
                         <span class="glyphicon glyphicon-menu-up"></span>
                     </button>
-                    <button data-id="remove" type="button" class="btn btn-white" title="Remove">
+                    <button data-id="remove" type="button" class="btn btn-default" title="Remove">
                         <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>

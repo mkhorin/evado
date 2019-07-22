@@ -17,13 +17,13 @@ Jam.ModelAttr = class {
             'checkbox': Jam.ModelAttr.Checkbox,
             'checkboxList': Jam.ModelAttr.CheckboxList,
             'date': Jam.ModelAttr.Date,
+            'enum': Jam.ModelAttr.Enum,
             'json': Jam.ModelAttr.Json,
             'radioList': Jam.ModelAttr.RadioList,
-            'radioSelection': Jam.ModelAttr.RadioSelection,
+            'radioEnum': Jam.ModelAttr.RadioEnum,
             'relation': Jam.ModelAttr.Relation,
             'relationSelect': Jam.ModelAttr.RelationSelect,
             'select': Jam.ModelAttr.Select,
-            'selection': Jam.ModelAttr.Selection,
             'valueMap': Jam.ModelAttr.ValueMap,
             'file': Jam.ModelAttr.File
         };

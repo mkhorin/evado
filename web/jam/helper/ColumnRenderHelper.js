@@ -67,7 +67,7 @@ Jam.ColumnRenderHelper = class {
 
     static asBoolean () {
         return this.join(...arguments, data => {
-            return Jam.I18n.translate(Number(data) === 0 ? 'No' : 'Yes');
+            return Jam.i18n.translate(Number(data) === 0 ? 'No' : 'Yes');
         });
     }
 

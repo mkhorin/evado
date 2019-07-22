@@ -7,7 +7,8 @@ let params = {
     textKey: typeof textKey === 'undefined' ? 'text' : textKey,
     select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
     update: typeof update === 'undefined' ? '' : update,
-    masters: typeof masters === 'undefined' ? '' : JSON.stringify(masters)
+    masters: typeof masters === 'undefined' ? '' : JSON.stringify(masters),
+    itemTranslate: typeof itemTranslate === 'undefined' ? '' : itemTranslate
 };
 %>
 <%- include('_params', {params}) %>
@@ -23,7 +24,7 @@ if (typeof items !== 'undefined' && items) {
             content += `<option disabled>${text}</option>`;
         } else {
             let selected = item[params.valueKey] == params.value ? 'selected' : '';
-            content += `<option ${selected} value="${item[params.valueKey]}">${item[params.textKey]}</option>`;
+            content += `<option ${selected} value="${item[params.valueKey]}" data-t="${params.itemTranslate}">${item[params.textKey]}</option>`;
         }
     }
 } else if (params.value !== '') {
@@ -36,7 +37,7 @@ content = `<select name="${params.name}" ${params.disabled} class="form-control 
      data-select2="<%= params.select2 %>"
      data-masters="<%= params.masters %>"
      data-attraction='<%= params.attraction %>'>
-    <label for="<%- params.id %>" title="<%= params.extHint %>" data-t=""
+    <label for="<%- params.id %>" data-t="" title="<%= params.extHint %>"
            class="control-label <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <% if (params.update) { %>

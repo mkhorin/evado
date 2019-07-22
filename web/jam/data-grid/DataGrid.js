@@ -43,7 +43,7 @@ Jam.DataGrid = class {
     }
 
     translate () {
-        return Jam.I18n.translate(...arguments);
+        return Jam.i18n.translate(...arguments);
     }
 
     setParams (params) {

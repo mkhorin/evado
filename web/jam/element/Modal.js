@@ -205,10 +205,10 @@ Jam.Modal.Item = class {
         this.initData = initData;
         this.$body.html(Jam.resource.resolve(data));
         let $container = this.$body.children().first();
-        Jam.I18n.translateContainer($container);
-        this.title = Jam.I18n.translate($container.data('title')) || '';
+        Jam.i18n.translateContainer($container);
+        this.title = Jam.i18n.translate($container.data('title')) || '';
         this.tabTitle = $container.data('tabTitle');
-        this.tabTitle = this.tabTitle ? Jam.I18n.translate(this.tabTitle) : this.title;
+        this.tabTitle = this.tabTitle ? Jam.i18n.translate(this.tabTitle) : this.title;
         this.tabTitle = Jam.Helper.clearHtml(this.tabTitle);
         let url = Jam.UrlHelper.getNewPageUrl($container.data('url') || this.getLoadUrl());
         this.$title.html(`<a href="${url}" title="${this.tabTitle}" target="_blank">${this.title}</a>`);
@@ -220,7 +220,7 @@ Jam.Modal.Item = class {
 
     processFail (xhr) {
         this.$body.html(`<div class="jmodal-error"><pre>${xhr.responseText}</pre></div>`);
-        this.title = Jam.I18n.translate(`${xhr.status} ${xhr.statusText}` || 'Error');
+        this.title = Jam.i18n.translate(`${xhr.status} ${xhr.statusText}` || 'Error');
         this.tabTitle = this.title;
         let url = Jam.UrlHelper.getNewPageUrl(this.getLoadUrl());
         this.$title.html(`<a href="${url}" target="_blank"><span class="text-danger">${this.title}</span></a>`);

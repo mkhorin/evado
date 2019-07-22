@@ -74,7 +74,7 @@ Jam.ModelAttr.File = class extends Jam.ModelAttr {
     onUploadedFile (event, data) {
         data.info = Jam.Helper.parseJson(data.info) || {};
         data.$item.removeClass('pending processing').addClass('done');
-        let message = Jam.I18n.translate(data.info.message || 'Upload completed');
+        let message = Jam.i18n.translate(data.info.message || 'Upload completed');
         data.$item.find(this.fileMessageSelector).html(message);
         let value = this.uploader.options.maxFiles > 1
             ? Jam.Helper.addCommaValue(data.info.id, this.$value.val())

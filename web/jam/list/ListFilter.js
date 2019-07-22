@@ -45,7 +45,7 @@ Jam.ListFilter = class {
 
     build (content) {
         let $content = $(content).filter('.list-filter');
-        Jam.I18n.translateContainer($content);
+        Jam.i18n.translateContainer($content);
         this.params = Object.assign(this.params, $content.data('params'));
         this.$container.html($content.html());
         this.$groupSample = this.$container.children('.filter-group');
