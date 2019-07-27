@@ -5,13 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <base href="<%- _baseUrl %>">
-    <title><%- blocks.title %> - <%- _module.getTitle() %></title>
+    <title><%- _module.getTitle() %></title>
 
-    <%- include(_view.get('_part/asset/style/default'), {skin: 'black'}) %>
+    <%- include(_view.get('_part/asset/style/defaults'), {skin: 'black'}) %>
 
     <link rel="stylesheet" href="css/module.css">
 </head>
-<body class="hold-transition skin-black sidebar-mini">
+<body class="hold-transition skin-black sidebar-mini" data-title="<%= blocks.title %>">
     <!-- _layout/main -->
 
     <%- body -%>
@@ -19,7 +19,8 @@
     <%- include(_view.get('_part/misc/modal')) %>
 
     <%- include(_view.get('_part/asset/script/jam')) %>
-    <%- include(_view.get('_part/asset/script/default')) %>
+    <%- include(_view.get('_part/asset/script/messages')) %>
+    <%- include(_view.get('_part/asset/script/defaults')) %>
 
     <script src="js/init.js"></script>
 

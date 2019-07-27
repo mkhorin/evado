@@ -32,7 +32,7 @@ module.exports = class DataImportConsole extends Base {
         if (!Array.isArray(data)) {
             return this.log('error', `Invalid data: ${file}`);
         }
-        MongoHelper.replaceJsonToMongoData(data);
+        MongoHelper.normalizeImportData(data);
         if (this.params.clear) {
             await this.app.getDb().truncate(table);
         }

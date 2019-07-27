@@ -11,27 +11,35 @@ module.exports = class ModelHelper {
         if (!Array.isArray(rules)) {
             return false;
         }
-        let formatter = controller.module.get('formatter'), format;
-        for (let rule of rules) {
-            switch (rule[1]) {
+        let formatter = controller.module.get('formatter');
+        let format = null;
+        for (let [attrs, type, params] of rules) {
+            switch (type) {
                 case 'relation': format = this.formatRelationRule; break;
                 default: format = this.formatDefaultRule;
             }
-            for (let name of rule[0]) {
+            for (let attr of attrs) {
                 for (let model of models) {
-                    format(model, name, rule, formatter);
+                    format(model, attr, formatter, type, params);
                 }
             }
         }
     }
 
-    static formatRelationRule (model, name, rule, formatter) {
-        let rel = model.rel(name);
-        rel = rel ? rel.getTitle() : null;
-        model.setViewAttr(name, formatter.asRaw(rel));
+    static formatRelationRule (model, attr, formatter, type, params = {}) {
+        let related = model.rel(attr);
+        if (!related) {
+            return model.setViewAttr(attr, model.get(attr));
+        }
+        if (!params.url) {
+            return model.setViewAttr(attr, related.getTitle());
+        }
+        model.setViewAttr(attr, formatter.asModalLink(params.url + related.getId(), {
+            text: related.getTitle()
+        }));
     }
 
-    static formatDefaultRule (model, name, rule, formatter) {
-        model.setViewAttr(name, formatter.format(model.get(name), rule[1], rule[2]));
+    static formatDefaultRule (model, attr, formatter, type, params) {
+        model.setViewAttr(attr, formatter.format(model.get(attr), type, params));
     }
 };

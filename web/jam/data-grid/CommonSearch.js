@@ -31,7 +31,7 @@ Jam.DataGridCommonSearch = class {
     }
 
     onToggleAdvancedSearch () {
-        this.grid.event.trigger('toggleAdvancedSearch');
+        this.grid.events.trigger('toggleAdvancedSearch');
     }
 
     onKeyUpInput (event) {

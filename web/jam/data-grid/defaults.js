@@ -28,7 +28,7 @@ Jam.DataGrid.defaults = {
     hideColumnGroups: false,
     page: 0,
     pageSize: 10,
-    pageSizes: [10, 20, 30, 40, 50],
+    pageSizes: [10, 20, 30],
     keepPageSize: true,
     maxPageToggles: 9,
     order: null,

@@ -7,18 +7,16 @@ let params = {
 %>
 <%- include('_params', {params}) %>
 
-<div class="form-attr form-group<%- params.required %> <%- params.css %>"
-     data-type="enum"
-     data-value="<%= params.value %>"
-     data-sets="<%= params.sets %>"
-     data-select2="<%= params.select2 %>"
-     data-attraction='<%= params.attraction %>'>
-    <label class="control-label <%- params.labelCss %>" title="<%= params.extHint %>" data-t=""><%- params.label %></label>
+<div class="form-attr form-group<%- params.required %> <%- params.css %>" data-type="enum"
+     data-value="<%= params.value %>" data-sets="<%= params.sets %>"
+     data-select2="<%= params.select2 %>" data-attraction='<%= params.attraction %>'>
+    <label class="control-label <%- params.labelCss %>" title="<%= params.extHint %>"
+           data-t="<%- params.translate %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <select id="<%- params.id %>" name="<%- params.name %>" <%- params.disabled %>
                 class="form-control form-value">
         </select>
-        <div class="hint-block"><%- params.hint %></div>
+        <div class="hint-block" data-t="<%- params.translate %>"><%- params.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

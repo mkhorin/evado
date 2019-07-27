@@ -30,10 +30,10 @@ Jam.DataGridColumnManager = class {
         return $(`<div class="data-grid-column-manager-menu">${items}</div>`);
     }
 
-    createItem (data) {
-        let label = this.grid.translate(data.label || data.name);
-        let checked = data.hidden ? '' : 'checked';
-        return `<label class="item-label" title="${data.name}"><input type="checkbox" ${checked} value="${data.name}">${label}</label>`;
+    createItem ({label, name, hidden}) {
+        label = this.grid.translate(label || name);
+        let checked = hidden ? '' : 'checked';
+        return `<label class="item-label" title="${name}"><input type="checkbox" ${checked} value="${name}">${label}</label>`;
     }
 
     isMenuActive () {
@@ -88,9 +88,7 @@ Jam.DataGridColumnManager = class {
     load () {
         let items = store.get(this.getStoreKey());
         if (this.checkStoreData(items)) {
-            items.forEach((item, index)=> {
-                this.params.columns[index].hidden = item.hidden;
-            });
+            items.forEach((item, index)=> this.params.columns[index].hidden = item.hidden);
         }
     }
 

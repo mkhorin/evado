@@ -32,10 +32,7 @@ module.exports = class User extends Base {
                 ['email', 'email'],
                 ['password', 'required', {on: 'create'}],
                 ['password', 'string'],
-                [['name', 'email'], 'unique', {
-                    skipOnAnyError: true,
-                    ignoreCase: true
-                }]
+                [['name', 'email'], 'unique', {skipOnAnyError: true, ignoreCase: true}]
             ],
             ATTR_VALUE_LABELS: {
                 'status': {
@@ -49,6 +46,18 @@ module.exports = class User extends Base {
         };
     }
 
+    isActive () {
+        return this.get('status') === STATUS_ACTIVE;
+    }
+
+    isBanned () {
+        return this.get('status') === STATUS_BANNED;
+    }
+
+    getTitle () {
+        return this.get('name');
+    }
+
     findIdentity (id) {
         return this.findById(id).and({status: STATUS_ACTIVE});
     }
@@ -59,18 +68,6 @@ module.exports = class User extends Base {
 
     findSame (name, email) {
         return this.find().andFilter({name}).orFilter({email});
-    }
-
-    getTitle () {
-        return this.get('name');
-    }
-    
-    isActive () {
-        return this.get('status') === STATUS_ACTIVE;
-    }
-
-    isBanned () {
-        return this.get('status') === STATUS_BANNED;
     }
 
     async getAssignments () {

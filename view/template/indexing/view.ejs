@@ -5,10 +5,15 @@ let drop = _url(['drop', {id}]);
 %>
 <% layout(_view.get('_layout/modal/model-view')) -%>
 
-<% block('title', `Index table: ${model.TABLE}`) -%>
+<% block('title', 'Indexing') -%>
+
+<h1 class="form-header">
+    <span data-t="">Indexed table:</span>
+    <b><%- model.TABLE %></b>
+</h1>
 
 <fieldset class="overlay-wrapper">
-    <legend>Active indexes</legend>
+    <legend data-t="">Active indexes</legend>
     <div class="list-group-container overlay-wrapper">
         <div class="overlay"><i class="fa fa-spinner fa-spin"></i></div>
         <div class="list-group-controls mb20" data-rebuild="<%- rebuild %>" data-drop="<%- drop %>">
@@ -18,8 +23,8 @@ let drop = _url(['drop', {id}]);
             <button type="button" class="rebuild btn btn-warning btn-light" title="Rebuild">
                 <span class="glyphicon glyphicon-retweet"></span>
             </button>
-            <button type="button" class="drop btn btn-danger btn-light" title="Drop">
-                <span class="glyphicon glyphicon-remove"></span>
+            <button type="button" class="drop btn btn-white" title="Remove">
+                <span class="glyphicon glyphicon-trash text-danger"></span>
             </button>
         </div>
         <div class="list-group list-indexes active-indexes" data-indexes="<%= JSON.stringify(indexes) %>"></div>
@@ -27,7 +32,7 @@ let drop = _url(['drop', {id}]);
 </fieldset>
 
 <fieldset>
-    <legend>Model indexes</legend>
+    <legend data-t="">Index definitions</legend>
     <% if (model.INDEXES) { %>
     <div class="list-group-container overlay-wrapper">
         <div class="overlay"><i class="fa fa-spinner fa-spin"></i></div>
@@ -37,15 +42,16 @@ let drop = _url(['drop', {id}]);
             </button>
         </div>
         <div class="list-group list-indexes model-indexes">
-            <% for (let index of model.INDEXES) { %>
-            <% index = JSON.stringify(index) %>
+            <% for (let index of model.INDEXES) {
+               index = JSON.stringify(index) %>
             <button type="button" class="list-group-item" data-params="<%= index %>"><%- index %></button>
             <% } %>
         </div>
     </div>
     <% } else { %>
-    <div class="alert alert-warning">
-        <p>Index define not found in the <%- model.constructor.name %> class</p>
+    <div class="alert alert-danger">
+        <span data-t="">Index definitions not found in class:</span>
+        <b><%- model.constructor.name %></b>
     </div>
     <% } %>
 </fieldset>
@@ -55,7 +61,7 @@ let drop = _url(['drop', {id}]);
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Create index</h4>
+                <h4 class="modal-title" data-t="">Create index</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" data-create="<%- create %>">
@@ -76,29 +82,38 @@ let drop = _url(['drop', {id}]);
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <div class="checkbox">
-                                <label><input id="create-index-unique" type="checkbox"> Unique</label>
+                                <label>
+                                    <input id="create-index-unique" type="checkbox">
+                                    Unique
+                                </label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <div class="checkbox">
-                                <label><input id="create-index-dropdup" type="checkbox" disabled> Drop duplicates</label>
+                                <label>
+                                    <input id="create-index-dropdup" type="checkbox" disabled>
+                                    <span data-t="">Drop duplicates</span>
+                                </label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <div class="checkbox">
-                                <label><input id="create-index-background" type="checkbox"> Background</label>
+                                <label>
+                                    <input id="create-index-background" type="checkbox">
+                                    Background
+                                </label>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="create-index-save" type="button" class="btn btn-primary">Save</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="create-index-save" type="button" class="btn btn-primary" data-t="">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-t="">Close</button>
             </div>
         </div>
     </div>

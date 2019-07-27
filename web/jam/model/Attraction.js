@@ -8,7 +8,7 @@ Jam.ModelAttraction = class {
     constructor (model) {
         this.model = model;
         this.elements = [];
-        this.event = new Jam.Event(this.constructor.name);
+        this.events = new Jam.Events('ModelAttraction');
         this.init();
     }
 
@@ -20,7 +20,7 @@ Jam.ModelAttraction = class {
                 this.elements.push(new Jam.ModelAttraction.Element($item, data, this));
             }
         }
-        this.model.event.on('change', this.update.bind(this));
+        this.model.events.on('change', this.update.bind(this));
         this.update();
     }
 
@@ -28,7 +28,7 @@ Jam.ModelAttraction = class {
         for (let element of this.elements) {
             element.update();
         }
-        this.event.trigger('update');
+        this.events.trigger('update');
     }
 };
 

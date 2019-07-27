@@ -22,14 +22,16 @@ module.exports = class File extends Base {
                 'hash'
             ],
             RULES: [
-                ['file', 'required'],
-                ['name', 'required', {on: 'update'}],
+                [['name', 'file'], 'required'],
                 ['name', 'string'],
                 ['file', 'validateFile']
             ],
             BEHAVIORS: {
                 'timestamp': {Class: require('areto/behavior/TimestampBehavior')},
                 'userStamp': {Class: require('areto/behavior/UserStampBehavior')}
+            },
+            ATTR_LABELS: {
+                'mime': 'MIME type'
             }
         };
     }

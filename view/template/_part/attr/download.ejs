@@ -11,17 +11,17 @@ let preview = model.isImage()
 <%- include('_params', {params}) %>
 
 <div class="form-attr form-group">
-    <label class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <label class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <% if (preview) { %>
         <p class="form-control-static">
             <a href="<%- params.fileUrl %>" target="_blank">
-                <img src="<%- preview%>" alt="<%- params.value %>">
+                <img src="<%- preview %>" alt="<%= model.getTitle() %>">
             </a>
         </p>
         <% } else { %>
         <p class="form-control-static">
-            <a href="<%- params.fileUrl %>" target="_blank"><%- params.value %></a>
+            <a href="<%- params.fileUrl %>" target="_blank"><%- model.getTitle() %></a>
         </p>
         <% } %>
     </div>

@@ -34,7 +34,7 @@ module.exports = class DataImportConsole extends Base {
             return this.log('info', `Table excluded: ${table}`);
         }
         let data = await this.app.getDb().find(table, {});
-        MongoHelper.replaceMongoDataToJson(data);
+        MongoHelper.normalizeExportData(data);
         data = JSON.stringify(data, null, parseInt(this.params.space));
         await fs.promises.writeFile(path.join(this.dir, `${table}.json`), data);
         this.log('info', `Exported: ${table}`);

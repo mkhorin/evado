@@ -83,7 +83,7 @@ module.exports = class SignInForm extends Base {
             if (this.hasError()) {
                 return this.rateLimitModel.increment();
             }
-            if (this.isCaptchaRequired()) { // captcha has been validated
+            if (this.isCaptchaRequired()) { // captcha validated
                 return this.rateLimitModel.reset();
             }
         }

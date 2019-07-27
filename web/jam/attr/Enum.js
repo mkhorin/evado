@@ -11,7 +11,7 @@ Jam.ModelAttr.Enum = class extends Jam.ModelAttr {
         this.select2 = this.$attr.data('select2');
         this.$select = this.$attr.find('select');
         this.$select.change(this.changeValue.bind(this));
-        this.model.event.on('change', this.onUpdate.bind(this));
+        this.model.events.on('change', this.onUpdate.bind(this));
         setTimeout(this.onUpdate.bind(this), 0);
     }
 
@@ -68,7 +68,7 @@ Jam.ModelAttr.RadioEnum = class extends Jam.ModelAttr {
         this.sets = Jam.ModelAttr.EnumSet.createSets(this.$attr.data('sets'), this);
         this.$list = this.$attr.find('.radio-items');
         this.$list.on('change', '[type="radio"]', this.changeValue.bind(this));
-        this.model.event.on('change', this.onUpdate.bind(this));
+        this.model.events.on('change', this.onUpdate.bind(this));
         setTimeout(this.onUpdate.bind(this), 0);
     }
 

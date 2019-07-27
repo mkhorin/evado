@@ -18,7 +18,7 @@ Jam.ListFilter = class {
 
     init () {
         this.params = Object.assign(this.params, this.$container.data('params'));
-        this.event = new Jam.Event(this.constructor.name);
+        this.events = new Jam.Events('ListFilter');
     }
 
     isExists () {
@@ -44,7 +44,7 @@ Jam.ListFilter = class {
     }
 
     build (content) {
-        let $content = $(content).filter('.list-filter');
+        const $content = $(content).filter('.list-filter');
         Jam.i18n.translateContainer($content);
         this.params = Object.assign(this.params, $content.data('params'));
         this.$container.html($content.html());
@@ -60,7 +60,7 @@ Jam.ListFilter = class {
         this.$controls.find('.apply-filter').click(this.apply.bind(this));
         this.$controls.find('.reset-filter').click(this.reset.bind(this));
         this.addCondition();
-        this.event.trigger('afterBuild');
+        this.events.trigger('afterBuild');
     }
 
     getAttrParams (name) {
@@ -102,7 +102,7 @@ Jam.ListFilter = class {
     triggerActive () {
         let hasData = !!this.serialize();
         this.$container.toggleClass('active', hasData);
-        this.event.trigger('toggleActive', hasData);
+        this.events.trigger('toggleActive', hasData);
     }
 };
 
@@ -113,7 +113,7 @@ Jam.ListFilter.Group = class {
     constructor (filter, columns) {
         this.filter = filter;
         this.columns = columns;
-        this.event = new Jam.Event(this.constructor.name);
+        this.events = new Jam.Events('ListFilter.Group');
         this.$container = filter.$groupSample.clone().removeClass('hidden');
         this.conditions = [];
     }
@@ -169,8 +169,13 @@ Jam.ListFilter.Condition = class {
 
     static createAttrItems (columns) {
         let result = '<option></option>';
-        for (let column of columns) {
-            result += `<option value="${column.name}">${column.label || column.name}</option>`;
+        for (let {name, label, translate} of columns) {
+            if (label === undefined) {
+                label = name;
+            } else if (translate !== false) {
+                label = Jam.i18n.translate(label, translate);
+            }
+            result += `<option value="${name}">${label}</option>`;
         }
         return result;
     }
@@ -178,7 +183,7 @@ Jam.ListFilter.Condition = class {
     constructor (group) {
         this.group = group;
         this.filter = group.filter;
-        this.event = new Jam.Event(this.constructor.name);
+        this.events = new Jam.Events('ListFilter.Condition');
         this.logical = 'and';
         this.$container = this.filter.$conditionSample.clone().removeClass('hidden');
         this.$container.data('condition', this);

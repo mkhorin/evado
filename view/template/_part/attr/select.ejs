@@ -37,7 +37,7 @@ content = `<select name="${params.name}" ${params.disabled} class="form-control 
      data-select2="<%= params.select2 %>"
      data-masters="<%= params.masters %>"
      data-attraction='<%= params.attraction %>'>
-    <label for="<%- params.id %>" data-t="" title="<%= params.extHint %>"
+    <label for="<%- params.id %>" data-t="<%- params.translate %>" title="<%= params.extHint %>"
            class="control-label <%- params.labelCss %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <% if (params.update) { %>
@@ -52,7 +52,7 @@ content = `<select name="${params.name}" ${params.disabled} class="form-control 
         <% } else { %>
         <%- content %>
         <% } %>
-        <div class="hint-block"><%- params.hint %></div>
+        <div class="hint-block" data-t="<%- params.translate %>"><%- params.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

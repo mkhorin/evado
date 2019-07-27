@@ -6,9 +6,9 @@
 <div class="form-attr form-group<%- params.required %> <%- params.css %>"
      data-type="<%- params.type %>"
      data-attraction='<%= params.attraction %>'
-     data-handler="<%= JSON.stringify(typeof handler !== 'undefined' ? handler : null) %>">
+     data-handler="<%= params.handler %>">
     <label for="<%- params.id %>" title="<%= params.extHint %>"
-           class="control-label <%- params.labelCss %>" data-t=""><%- params.label %></label>
+           class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <input id="<%- params.id %>"
                name="<%- params.name %>"
@@ -16,7 +16,7 @@
                placeholder="<%- params.placeholder %>"
                value="<%= params.value %>"
                class="form-control form-value"/>
-        <div class="hint-block" data-t=""><%- params.hint %></div>
+        <div class="hint-block" data-t="<%- params.translate %>"><%- params.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

@@ -18,7 +18,7 @@ Jam.DataGrid = class {
         Object.assign(this, params.overridenMethods);
         this.params = params;
         this.order = {...params.order};
-        this.event = new Jam.Event(this.constructor.name);
+        this.events = new Jam.Events('DataGrid');
         this.locale = params.locale;
         this.$container = $(container);
         this.provider = params.ajax
@@ -109,7 +109,7 @@ Jam.DataGrid = class {
             this.setPage(0);
         }
         this.toggleLoader(true);
-        this.event.trigger('beforeLoad', this);
+        this.events.trigger('beforeLoad', this);
         this.provider.load(params);
     }
 
@@ -118,7 +118,7 @@ Jam.DataGrid = class {
         this.itemMap = Jam.ArrayHelper.index(this.params.key, items);
         this.itemTotalSize = totalSize;
         this.itemMaxSize = maxSize;
-        this.event.trigger('afterLoad', this);
+        this.events.trigger('afterLoad', this);
         this.toggleLoader(false);
         this.drawPage();
     }
@@ -126,7 +126,7 @@ Jam.DataGrid = class {
     fail (data) {
         this.toggleLoader(false);
         this.lastError = data;
-        this.event.trigger('afterFail', this);
+        this.events.trigger('afterFail', this);
     }
 
     toggleLoader (state) {
@@ -142,7 +142,7 @@ Jam.DataGrid = class {
         this.pagination.draw();
         this.$info.html(this.getInfo());
         this.renderer.drawBody(this.items);
-        this.event.trigger('afterDrawPage', this);
+        this.events.trigger('afterDrawPage', this);
     }
 
     getInfo () {
@@ -233,7 +233,7 @@ Jam.TreeDataGrid = class extends Jam.DataGrid {
     drawNode (node) {
         node.getNested().remove();
         this.renderer.drawNode(node.$row, this.items);
-        this.event.trigger('afterDrawNode', node);
+        this.events.trigger('afterDrawNode', node);
     }
 };
 

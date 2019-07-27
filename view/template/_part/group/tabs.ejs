@@ -1,14 +1,15 @@
 <!-- _part/group/tabs -->
 <%
 let params = {
-    attraction: typeof attraction === 'undefined' ? '' : JSON.stringify(attraction)
+    attraction: typeof attraction === 'undefined' ? '' : JSON.stringify(attraction),
+    translate: typeof translate === 'undefined' ? '' : translate
 };
 %>
 <div class="tabs form-tabs" data-attraction="<%= params.attraction %>">
     <ul class="nav nav-tabs" role="tablist">
     <% for (let item of items) { %>
     <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
-        <a href="#" data-t=""><%- item.label || item.id %></a>
+        <a href="#" data-t="<%- params.translate %>"><%- item.label || item.id %></a>
     </li>
     <% } %>
     </ul>

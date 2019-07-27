@@ -70,8 +70,8 @@ Jam.Notice = class {
 
 Jam.ContentNotice = class extends Jam.Notice {
 
-    static clear (container) {
-        (container || $('#content')).find('.content-notice').remove();
+    static clear ($container = $('#content')) {
+        $container.find('.content-notice').remove();
     }
 
     constructor (params) {

@@ -47,7 +47,7 @@ Jam.DataGridAjaxProvider = class {
     }
 
     trigger (name, data) {
-        this.grid.event.trigger(name, {grid: this.grid, ...data});
+        this.grid.events.trigger(name, {grid: this.grid, ...data});
     }
 
     getRequestParams () {

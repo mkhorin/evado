@@ -19,7 +19,7 @@ Jam.List = class extends Jam.Element {
         this.childModal = Jam.modal.create();
         this.$controls.prepend(this.$modal.find('.before-list-controls'));
         this.$controls.append(this.$modal.find('.after-list-controls'));
-        this.event = new Jam.Event(this.constructor.name);
+        this.events = new Jam.Events('List');
         this.notice = this.createNotice();
         this.params = {
             multiple: true,
@@ -47,24 +47,24 @@ Jam.List = class extends Jam.Element {
     }
 
     initDataGrid () {
-        this.grid.event.on('beforeLoad', this.beforeLoad.bind(this));
-        this.grid.event.on('beforeXhr', this.beforeXhr.bind(this));
-        this.grid.event.on('afterLoad', this.afterLoad.bind(this));
-        this.grid.event.on('afterFail', this.afterLoad.bind(this));
-        this.grid.event.on('afterDrawPage', this.afterDrawPage.bind(this));
+        this.grid.events.on('beforeLoad', this.beforeLoad.bind(this));
+        this.grid.events.on('beforeXhr', this.beforeXhr.bind(this));
+        this.grid.events.on('afterLoad', this.afterLoad.bind(this));
+        this.grid.events.on('afterFail', this.afterLoad.bind(this));
+        this.grid.events.on('afterDrawPage', this.afterDrawPage.bind(this));
     }
 
     createFilter () {
         this.filter = new Jam.ListFilter(this, this.params.filter);
-        this.grid.event.on('toggleAdvancedSearch', this.filter.toggle.bind(this.filter, null));
+        this.grid.events.on('toggleAdvancedSearch', this.filter.toggle.bind(this.filter, null));
         if (this.filter.isExists()) {
             this.$grid.addClass('has-advanced-search');
-            this.filter.event.on('afterBuild', this.onBuildFilter.bind(this));
+            this.filter.events.on('afterBuild', this.onBuildFilter.bind(this));
         }
     }
 
     onBuildFilter () {
-        this.filter.event.on('toggleActive', (event, data)=>{
+        this.filter.events.on('toggleActive', (event, data)=>{
             this.$grid.toggleClass('active-advanced-search', data);
         });
         this.$thead = this.grid.renderer.$thead;
@@ -112,8 +112,8 @@ Jam.List = class extends Jam.Element {
     }
 
     prepareColumnData (data) {
-        data.render = Jam.ColumnRenderHelper.get(data.format);
-        data.format = Jam.ColumnRenderHelper.prepareFormat(data.format);
+        data.render = Jam.ColumnRenderer.getRenderMethod(data.format);
+        data.format = Jam.ColumnRenderer.prepareFormat(data.format);
     }
 
     createNotice () {
@@ -236,7 +236,7 @@ Jam.List = class extends Jam.Element {
         let ids = this.serializeObjectIds($rows);
         this.post(this.params.remove, {ids}).done(()=> {
             ids = ids.split(',');
-            this.event.trigger('afterRemove', {ids});
+            this.events.trigger('afterRemove', {ids});
             this.reload();
         });
     }

@@ -14,6 +14,8 @@
     params.css = typeof css === 'undefined' ? '' : css;
     params.labelCss = typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss;
     params.valueCss = typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss;
+    params.translate = typeof translate === 'undefined' ? '' : translate;
+    params.handler = typeof handler === 'undefined' ? '' : JSON.stringify(handler);
 
     params.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
     if (params.sourceValue === undefined && typeof defaultValue !== 'undefined') {

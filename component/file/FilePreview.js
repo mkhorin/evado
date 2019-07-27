@@ -64,23 +64,16 @@ module.exports = class FilePreview extends Base {
         }
         let file = this.getSizePath(key, filename);
         let stat = await FileHelper.getStat(file);
-        if (!stat) {
-            await this.processSizes({[key]: size}, filename, source);
+        if (stat || await this.processSize(key, filename, source)) {
+            return file;
         }
-        return file;
     }
 
-    processAllSizes (filename, source) {
-        return this.processSizes(this.sizes, filename, source);
-    }
-
-    async processSizes (sizes, filename, source) {
-        try {
-            for (let key of Object.keys(sizes)) {
-                await this.processSize(key, filename, source);
+    async processAllSizes (filename, source) {
+        for (let key of Object.keys(this.sizes)) {
+            if (!await this.processSize(key, filename, source)) {
+                return false;
             }
-        } catch (err) {
-            this.module.logError(this.wrapClassMessage('Creation failed'), err);
         }
     }
 
@@ -88,9 +81,14 @@ module.exports = class FilePreview extends Base {
         let image = sharp(source);
         let size = this.getSize(key);
         let file = this.getSizePath(key, filename);
-        image = await size.process(image);
-        await FileHelper.createDir(path.dirname(file));
-        return image.toFile(file);
+        try {
+            image = await size.process(image);
+            await FileHelper.createDir(path.dirname(file));
+            await image.toFile(file);
+            return true;
+        } catch (err) {
+            this.module.logError(this.wrapClassMessage(`Creation failed: ${file}:`), err);
+        }
     }
 
     async remove (filename) {

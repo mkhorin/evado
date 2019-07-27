@@ -17,16 +17,12 @@ Jam.Model = class extends Jam.Element {
         this.$controls = this.$header.children('.model-controls');
         this.$content = this.$container.children('.box-body');
         this.$loader = this.$container.children('.model-loader');
-        this.event = new Jam.Event(this.constructor.name);
+        this.events = new Jam.Events('Model');
         this.tools = new Jam.ModelTools(this);
-        this.notice = new Jam.Notice({
-            container: this.$content,
-            $scrollTo: this.$content
-        });
+        this.notice = this.createNotice();
         this.params = $form.data('params') || {};
         this.saved = false;
         this.id = this.params.id;
-        this.isNew = !this.id;
         this.childModal = Jam.modal.create();
         this.modal = this.$container.closest('.jmodal').data('modal');
 
@@ -53,13 +49,20 @@ Jam.Model = class extends Jam.Element {
         this.createAttrs();
         this.attraction = new Jam.ModelAttraction(this);
         if (this.params.hideEmptyGroups) {
-            this.attraction.event.on('update', this.grouper.toggleEmpty.bind(this.grouper));
+            this.attraction.events.on('update', this.grouper.toggleEmpty.bind(this.grouper));
             this.grouper.toggleEmpty();
         }
         this.setInitValue();
         this.error = new Jam.ModelError(this);
         this.utilManager = new Jam.UtilManager(this.$controls, this);
         this.trackChanges();
+    }
+
+    createNotice () {
+        return new Jam.Notice({
+            container: this.$content,
+            $scrollTo: this.$content
+        });
     }
 
     createAttrs () {
@@ -70,6 +73,10 @@ Jam.Model = class extends Jam.Element {
         for (let attr of this.attrs) {
             attr.init();
         }
+    }
+
+    isNew () {
+        return !this.id;
     }
 
     getControl (id) {
@@ -84,22 +91,20 @@ Jam.Model = class extends Jam.Element {
         return Jam.ModelAttr.get(this.getValueFieldByName(name, className));
     }
 
-    getValueFieldByName (name, className) {
-        return this.$form.find(`[name="${this.formatAttrName(name, className)}"]`);
+    getAttrByElement (element) {
+        return $(element).closest('.form-attr');
     }
 
-    getAttrByInner (element) {
-        return $(element).closest('.form-attr');
+    getValueFieldByName (name, className) {
+        return this.$form.find(`[name="${this.formatAttrName(name, className)}"]`);
     }
 
     getValueFieldByAttr ($attr) {
         return $attr.find('.form-value');
     }
 
-    formatAttrName (name, className) {
-        return name.indexOf('[') === -1
-            ? `${className || this.params.className}[${name}]`
-            : name;
+    formatAttrName (name, className = this.params.className) {
+        return name.indexOf('[') === -1 ? `${className}[${name}]` : name;
     }
 
     beforeClose (event) {
@@ -198,7 +203,7 @@ Jam.Model = class extends Jam.Element {
     forceSave (reopen) {
         this.$loader.show();
         this.notice.hide();
-        this.event.trigger('beforeSave');
+        this.events.trigger('beforeSave');
         $.post(this.params.url, this.$form.serialize()).done(data => {
             this.saved = true;
             this.reopen = reopen;
@@ -216,7 +221,7 @@ Jam.Model = class extends Jam.Element {
 
     validate () {
         let data = {valid: true};
-        this.event.trigger('beforeValidate', data);
+        this.events.trigger('beforeValidate', data);
         return data.valid;
     }
 
@@ -232,7 +237,7 @@ Jam.Model = class extends Jam.Element {
 
     trackChanges () {
         this.$form.find('[name]').on('change keyup', event => {
-            this.event.trigger('change');
+            this.events.trigger('change');
         });
     }
 

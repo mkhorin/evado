@@ -3,23 +3,27 @@
  */
 'use strict';
 
-Jam.ColumnRenderHelper = class {
+Jam.ColumnRenderer = class {
 
-    static get (format) {
-        let method = this.asDefault;
-        format = typeof format === 'string' ? format : format ? format.name : null;
-        switch (format) {
-            case 'boolean': method = this.asBoolean; break;
-            case 'date': method =  this.asDate; break;
-            case 'datetime': method = this.asDatetime; break;
-            case 'timestamp': method = this.asTimestamp; break;
-            case 'escaped': method = this.asEscaped; break;
-            case 'json': method = this.asJson; break;
-            case 'link': method = this.asLink; break;
-            case 'select': method = this.asSelect; break;
-            case 'thumb': method = this.asThumb; break;
-        }
+    static getRenderMethod (format) {
+        let name = typeof format === 'string' ? format : format ? format.name : null;
+        let method = this.getFormatMethod(name)
         return this.render.bind(this, method);
+    }
+
+    static getFormatMethod (name) {
+        switch (name) {
+            case 'boolean': return this.asBoolean;
+            case 'date': return this.asDate;
+            case 'datetime': return this.asDatetime;
+            case 'timestamp': return this.asTimestamp;
+            case 'escaped': return this.asEscaped;
+            case 'json': return this.asJson;
+            case 'link': return this.asLink;
+            case 'select': return this.asSelect;
+            case 'thumb': return this.asThumb;
+        }
+        return this.asDefault;
     }
 
     static prepareFormat (data) {
@@ -66,35 +70,27 @@ Jam.ColumnRenderHelper = class {
     }
 
     static asBoolean () {
-        return this.join(...arguments, data => {
-            return Jam.i18n.translate(Number(data) === 0 ? 'No' : 'Yes');
-        });
+        return this.join(...arguments, Jam.FormatHelper.asBooleab);
     }
 
     static asDate () {
-        return this.join(...arguments, data => {
-            return data ? (new Date(data)).toLocaleDateString() : '';
-        });
+        return this.join(...arguments, Jam.FormatHelper.asDate);
     }
 
     static asDatetime () {
-        return this.join(...arguments, data => {
-            return dava ? (new Date(data)).toLocaleString() : '';
-        });
+        return this.join(...arguments, Jam.FormatHelper.asDatetime);
     }
 
     static asTimestamp () {
-        return this.join(...arguments, data => {
-            return data ? moment(data).format('L LTS') : '';
-        });
+        return this.join(...arguments, Jam.FormatHelper.asTimestamp);
     }
 
     static asEscaped () {
-        return this.join(...arguments, data => Jam.Helper.escapeHtml(data));
+        return this.join(...arguments, Jam.Helper.escapeHtml);
     }
 
     static asJson (data) {
-        return data ? JSON.stringify(data) : '';
+        return data ? JSON.stringify(data, null, 1) : '';
     }
 
     static asLink () {
@@ -104,7 +100,9 @@ Jam.ColumnRenderHelper = class {
             if (!url) {
                 return text;
             }
-            let params = data.id || data.params ? {id: data.id, ...data.params} : {id: text};
+            let params = data.id || data.params 
+                ? {id: data.id, ...data.params} 
+                : {id: text};
             params = $.param({...format.params, ...params});
             url += (url.indexOf('?') === -1 ? '?' : '&') + params;
             return `<a href="${url}" class="modal-link">${text}</a>`;
@@ -116,8 +114,6 @@ Jam.ColumnRenderHelper = class {
     }
 
     static asThumb () {
-        return this.join(...arguments, data => {
-            return data ? `<img src="${data}" class="thumbnail">` : '';
-        });
+        return this.join(...arguments, Jam.FormatHelper.asThumb);
     }
 };

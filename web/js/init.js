@@ -8,8 +8,8 @@ Jam.i18n = new Jam.I18n;
 Jam.resource = new Jam.Resource;
 Jam.scheduler = new Jam.Scheduler;
 
-Jam.i18n.translateContainer(document.body);
-Jam.createElements(document.body);
+Jam.i18n.translateDocument();
+Jam.createElements();
 
 if (Jam.modal) {
     Jam.modal.openFromUrl(location.search);

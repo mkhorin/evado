@@ -5,7 +5,7 @@
 
 class Jam {
 
-    static createElements (container) {
+    static createElements (container = document.body) {
         let elements = $(container).find('[data-jam]').get().reverse();
         for (let element of elements) {
             let name = element.dataset.jam;
@@ -72,7 +72,7 @@ Jam.Element = class {
     }
 };
 
-Jam.Event = class {
+Jam.Events = class {
 
     constructor (prefix, params) {
         this.prefix = prefix;

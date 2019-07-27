@@ -76,7 +76,6 @@ module.exports = {
         'meta': {
             Class: require('../component/meta/MetaHub'),
             UserModel: require('../model/User'),
-            DataHistoryModel: require('../model/DataHistory'),
             rbacTablePrefix: 'sys_rbac_',
             inspectionEnabled: true
         },
@@ -94,9 +93,15 @@ module.exports = {
         'allowSignUp': true
     },
     metaModels: {
-        'document': {Class: require('evado-meta-document/base/DocMetaModel')},
-        'navigation': {Class: require('evado-meta-navigation/base/NavMetaModel')},
-        'report': {Class: require('evado-meta-report/base/ReportMetaModel')}
+        'document': {
+            Class: require('evado-meta-document/base/DocMetaModel')
+        },
+        'navigation': {
+            Class: require('evado-meta-navigation/base/NavMetaModel')
+        },
+        'report': {
+            Class: require('evado-meta-report/base/ReportMetaModel')
+        }
     },
     assets: require('./default-assets'),
     classes: require('./default-classes'),

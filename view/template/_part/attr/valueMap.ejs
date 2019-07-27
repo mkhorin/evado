@@ -4,7 +4,7 @@
 <%- include('_params', {params}) %>
 
 <div class="value-map form-attr form-group<%- params.required %>" data-type="valueMap">
-    <label class="control-label <%- params.labelCss %>" data-t=""><%- params.label %></label>
+    <label class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <input name="<%- params.name %>" type="hidden" class="form-value"
                value="<%= params.value ? JSON.stringify(params.value) : '' %>">

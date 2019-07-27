@@ -4,7 +4,7 @@
 <%- include('_params', {params}) %>
 
 <div class="form-attr form-group<%- params.required %>" data-type="file">
-    <label class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <label class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <input type="hidden" name="<%- params.name %>" class="form-value" value="<%= params.value %>">
         <div class="uploader show-dropzone" data-options="<%= JSON.stringify(options)%>">

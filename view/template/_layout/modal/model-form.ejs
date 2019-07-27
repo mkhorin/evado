@@ -40,6 +40,10 @@ if (typeof params !== 'undefined') {
             <%- include(_view.get('_part/tool/model-history')) %>
             <%- include(_view.get('_part/misc/universal-render'), {data: _data.get('customControls')}) %>
 
+            <% if (_data.get('help')) { %>
+            <span class="model-help fa fa-question-circle" title="<%= _data.get('help') %>"></span>
+            <% } %>
+
             <div class="pull-right">
                 <% if (data.id && data.remove) { %>
                 <button data-id="remove" class="btn btn-white" type="button" title="Delete">

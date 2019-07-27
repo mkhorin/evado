@@ -10,12 +10,24 @@ Jam.I18n = class {
     }
 
     translate (message, category) {
-        let result = this.getMessage(category, message);
+        const result = this.getMessage(category, message);
         return result === undefined ? message : result;
     }
 
-    translateContainer (container) {
-        const $container = $(container);
+    translateDocument () {
+        this.translateDocumentTitle();
+        this.translateContainer($(document.body));
+    }
+
+    translateDocumentTitle () {
+        const title = document.head.querySelector('title');
+        if (title.dataset.text) {
+            const text = this.translate(title.dataset.text, title.dataset.t);
+            title.innerHTML = `${text} - ${title.innerHTML}`;
+        }
+    }
+
+    translateContainer ($container) {
         this.translateElements($container);
         this.translateAttributes($container);
     }
@@ -27,7 +39,7 @@ Jam.I18n = class {
     }
 
     translateElement (element) {
-        let message = this.getMessage(element.dataset.t, element.innerHTML);
+        const message = this.getMessage(element.dataset.t, element.innerHTML);
         if (message !== undefined) {
             element.innerHTML = message;
         }
@@ -52,14 +64,15 @@ Jam.I18n = class {
     }
 
     translateAttribute (name, category, element) {
-        let message = this.getMessage(element.dataset[category], element.getAttribute(name));
+        category = element.dataset[category] || element.dataset.t;
+        let message = this.getMessage(category, element.getAttribute(name));
         if (message !== undefined) {
             element.setAttribute(name, message);
         }
     }
 
     getMessage (category, message) {
-        let map = category ? this._data[category] : this._data.default;
+        const map = category ? this._data[category] : this._data.defaults;
         if (map && map.hasOwnProperty(message)) {
             return map[message];
         }

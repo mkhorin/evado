@@ -8,7 +8,7 @@ Jam.ModelCondition = class {
     constructor (data, model) {
         this.data = data;
         this.model = model;
-        this.fieldCache = {};
+        this._fieldCache = {};
     }
 
     isValid () {
@@ -20,10 +20,10 @@ Jam.ModelCondition = class {
     }
 
     getValue (name) {
-        if (!Object.prototype.hasOwnProperty.call(this.fieldCache, name)) {
-            this.fieldCache[name] = this.model.getValueFieldByName(name);
+        if (!Object.prototype.hasOwnProperty.call(this._fieldCache, name)) {
+            this._fieldCache[name] = this.model.getValueFieldByName(name);
         }
-        return this.fieldCache[name].val();
+        return this._fieldCache[name].val();
     }
 
     validate (data) {

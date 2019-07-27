@@ -7,12 +7,21 @@ const Base = require('../component/base/BaseController');
 
 module.exports = class IndexingController extends Base {
 
-    static getConstants() {
+    static getConstants () {
         return {
+            BEHAVIORS: {
+                'access': {
+                    Class: require('areto/filter/AccessControl'),
+                    rules: [{
+                        actions: ['create', 'drop', 'rebuild'],
+                        permissions: ['indexing']
+                    }]
+                }
+            },
             METHODS: {
-                'create': ['POST'],
-                'drop': ['POST'],
-                'rebuild': ['POST']
+                'create': 'post',
+                'drop': 'post',
+                'rebuild': 'post'
             }
         };
     }
@@ -55,17 +64,17 @@ module.exports = class IndexingController extends Base {
         this.sendStatus(200);
     }
 
-    getModel (cb) {
-        let ModelClass = this.getQueryParam('id');
+    getModel () {
+        let Class = this.getQueryParam('id');
         try {
-            ModelClass = this.module.require(ModelClass) || require(ModelClass);
+            Class = this.module.require(Class) || require(Class);
         } catch (err) {
-            throw new BadRequest(`File not found: ${ModelClass}`);
+            throw new BadRequest(`File not found: ${Class}`);
         }
-        if (!(ModelClass.prototype instanceof ActiveRecord)) {
+        if (!(Class.prototype instanceof ActiveRecord)) {
             throw new BadRequest('Class not extends ActiveRecord');
         }
-        return this.spawn(ModelClass);
+        return this.spawn(Class);
     }
 
     getValidParams () {

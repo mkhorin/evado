@@ -79,7 +79,7 @@ module.exports = class AuthController extends Base {
         if (!await model.changePassword()) {
             return this.render('change-password', {model});
         }
-        this.setFlash('passwordChanged', this.translate('Your password has been changed'));
+        this.setFlash('passwordChanged', this.translate('Your password changed'));
         this.reload();
     }
 

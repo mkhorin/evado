@@ -204,7 +204,7 @@ Jam.Modal.Item = class {
     processDone (data, initData) {
         this.initData = initData;
         this.$body.html(Jam.resource.resolve(data));
-        let $container = this.$body.children().first();
+        const $container = this.$body.children().first();
         Jam.i18n.translateContainer($container);
         this.title = Jam.i18n.translate($container.data('title')) || '';
         this.tabTitle = $container.data('tabTitle');
@@ -274,7 +274,7 @@ Jam.Modal.Item = class {
         if (this.modal.isActiveLast(this.$modal)) {
             return true;
         }
-        alert('Go to the last of the modal stack');
+        alert('Go to last modal tab');
         return false;
     }
 

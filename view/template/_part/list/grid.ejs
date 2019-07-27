@@ -58,6 +58,9 @@ if (data.multiple === undefined) {
 if (data.filter && !data.filter.url) {
     data.filter.url = _url('filter');
 }
+if (data.showTop === undefined) {
+    data.showTop = true;
+}
 if (data.jam === undefined) {
     data.jam = 'MainList';
 }
@@ -78,7 +81,7 @@ if (data.jam === undefined) {
                 <div class="list-filter">
                     <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
                 </div>
-            <% } %>
+            <% } if (data.showTop) { %>
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="data-grid-common-search">
@@ -98,6 +101,7 @@ if (data.jam === undefined) {
                     </div>
                 </div>
             </div>
+            <% } %>
             <div class="table-responsive">
                 <table class="data-grid-table table table-bordered table-striped table-condensed">
                     <thead></thead>

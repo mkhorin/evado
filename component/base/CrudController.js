@@ -73,8 +73,8 @@ module.exports = class CrudController extends Base {
         };
         let model = params.model || this.createModel();
         model.scenario = params.scenario;
-        await model.setDefaultValues();
         if (this.isGet()) {
+            await model.setDefaultValues();
             let viewLayout = this.getViewLayout();
             return this.render(params.template, {model, viewLayout, ...params.templateData});
         }

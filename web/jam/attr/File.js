@@ -5,6 +5,11 @@
 
 Jam.ModelAttr.File = class extends Jam.ModelAttr {
 
+    constructor () {
+        super(...arguments);
+        this.events = new Jam.Events('ModelAttr.File');
+    }
+
     init () {
         this.$uploader = this.$attr.find('.uploader');
         this.fileMessageSelector = '.uploader-message';
@@ -51,8 +56,8 @@ Jam.ModelAttr.File = class extends Jam.ModelAttr {
     }
 
     onAppendedFile (event, data) {
-        data.$item.find('.uploader-filename')
-            .text(`${data.file.name} (${Jam.FormatHelper.asBytes(data.file.size)})`);
+        data.$item.find('.uploader-filename').text(`${data.file.name} (${Jam.FormatHelper.asBytes(data.file.size)})`);
+        this.events.trigger('appended', data);
     }
 
     onValidatedFile (event, data) {

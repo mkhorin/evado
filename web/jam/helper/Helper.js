@@ -11,7 +11,7 @@ Jam.Helper = class {
 
     static parseJson (data) {
         try {
-            return JSON.parse(data);
+            return data && typeof data === 'string' ? JSON.parse(data) : data;
         } catch (err) {}
     }
 
@@ -225,6 +225,29 @@ Jam.ArrayHelper = class {
     }
 };
 
+Jam.ClassHelper = class {
+
+    static normalizeHandlerSpawn (handler, container, BaseClass) {
+        if (!handler) {
+            return null;
+        }
+        let spawn = Jam.Helper.parseJson(handler) || {};
+        if (typeof spawn === 'string') {
+            spawn = {Class: spawn};
+        }
+        if (typeof spawn.Class === 'string') {
+            spawn.Class = container ? container[spawn.Class] : Jam[spawn.Class];
+        }
+        if (typeof spawn.Class !== 'function') {
+            return console.error(`Invalid handler class: ${handler}`);
+        }
+        if (BaseClass && !(spawn.Class.prototype instanceof BaseClass)) {
+            return console.error(`Handler does not extend base class: ${handler}`);
+        }
+        return spawn;
+    }
+};
+
 Jam.DateHelper = class {
 
     static stringify (date, absolute) {
@@ -250,6 +273,10 @@ Jam.DateHelper = class {
 
 Jam.FormatHelper = class {
 
+    static asBoolean (data) {
+        return Jam.i18n.translate(Number(data) === 0 ? 'No' : 'Yes');
+    }
+    
     static asBytes (size) {
         let unit;
         if (size < 1024) {
@@ -266,6 +293,22 @@ Jam.FormatHelper = class {
         }
         size = Math.round(size * 100) / 100;
         return `${size} ${unit}`;
+    }
+
+    static asDate (data) {
+        return dava ? (new Date(data)).toLocaleDateString() : '';
+    }
+    
+    static asDatetime (data) {
+        return dava ? (new Date(data)).toLocaleString() : '';
+    }
+
+    static asTimestamp (data) {
+        return data ? moment(data).format('L LTS') : '';
+    }
+
+    static asThumb (data) {
+        return data ? `<img src="${data}" class="thumbnail" alt="">` : ''
     }
 };
 

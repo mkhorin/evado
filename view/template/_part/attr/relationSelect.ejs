@@ -71,7 +71,8 @@ if (d.modalSort) {
 let related = model.rel(attr);
 %>
 <div class="form-attr form-group<%- params.required %> <%- params.css %>" data-type="relationSelect">
-    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>" data-t=""><%- params.label %></label>
+    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"
+           data-t="<%- params.translate %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <div class="box relation-select-box">
             <input name="<%- params.name %>" type="hidden" class="form-value" value="">

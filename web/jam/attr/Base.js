@@ -6,10 +6,19 @@
 Jam.ModelAttr = class {
 
     static create ($attr, model) {
-        let type = $attr.data('type');
-        let map = this.getClassMap();
-        let Class = map.hasOwnProperty(type) ? map[type] : this;
-        return new Class($attr, model);
+        const config = this.getSpawnByHandler($attr.data('handler')) || this.getSpawnByType($attr.data('type'));
+        return config
+            ? new config.Class($attr, model, config)
+            : new this($attr, model);
+    }
+
+    static getSpawnByHandler (handler) {
+        return Jam.ClassHelper.normalizeHandlerSpawn(handler, this, this);
+    }
+
+    static getSpawnByType (type) {
+        const map = this.getClassMap();
+        return map.hasOwnProperty(type) ? {Class: map[type]} : null;
     }
 
     static getClassMap () {
@@ -47,18 +56,7 @@ Jam.ModelAttr = class {
     }
 
     init () {
-        this.initHandler();
         this.activate();
-    }
-
-    initHandler () {
-        let data = this.$attr.data('handler');
-        if (data && data.type) {
-            let name = `handler${data.type}`;
-            if (typeof this[name] === 'function') {
-                this[name].call(this, data);
-            }
-        }
     }
 
     inProgress () {
@@ -110,12 +108,6 @@ Jam.ModelAttr = class {
 
     findByData (key, value) {
         return this.$attr.find(value === undefined ? `[data-${key}="${value}"]` : `[data-${key}]`);
-    }
-
-    handlerStoreLastValueToBrowser () {
-        let name = this.$value.attr('name');
-        this.$value.val(store.get(name));
-        this.model.modal.on('beforeClose', this.onBeforeCloseModal.bind(this));
     }
 
     onBeforeCloseModal (event) {

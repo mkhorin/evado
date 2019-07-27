@@ -31,8 +31,8 @@ Jam.AttrList = class extends Jam.List {
 
         this.$container.mouseenter(this.showMouseEnter.bind(this));
         this.$container.mouseleave(this.hideMouseEnter.bind(this));
-        this.grid.event.one('afterLoad', this.afterInit);
-        this.grid.event.one('afterFail', this.afterInit);
+        this.grid.events.one('afterLoad', this.afterInit);
+        this.grid.events.one('afterFail', this.afterInit);
     }
 
     createNotice () {

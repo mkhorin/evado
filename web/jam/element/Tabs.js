@@ -8,7 +8,7 @@ Jam.Tabs = class extends Jam.Element {
     constructor ($container) {
         super($container);
         this.$container = $container;
-        this.event = new Jam.Event(this.constructor.name);
+        this.events = new Jam.Events('Tabs');
         this.init();
     }
 
@@ -62,7 +62,7 @@ Jam.Tabs = class extends Jam.Element {
             this.unsetActive();
             this.getNav(id).addClass('active');
             Jam.createElements(this.getPane(id).addClass('active'));
-            this.event.trigger('change', {id});
+            this.events.trigger('change', {id});
         }
     }
 
@@ -80,7 +80,7 @@ Jam.Tabs = class extends Jam.Element {
         event.preventDefault();
         let id = this.getNavByElement(event.currentTarget).data('id');
         let data = {id, close: true};
-        this.event.trigger('close', data);
+        this.events.trigger('close', data);
         if (data.close) {
             this.removeTab(id);
             this.setActiveFirst();
@@ -105,12 +105,12 @@ Jam.Tabs = class extends Jam.Element {
         let content = data.content;
         this.getNavs().parent()[method](`<li class="nav-tab ${close}" data-id="${id}"><a href="#" title="${hint}">${text}</a><div class="tab-close">×</div></li>`);
         this.getPanes().parent()[method](`<div class="tab-pane" data-id="${id}">${content}</div>`);
-        this.event.trigger('create', {id});
+        this.events.trigger('create', {id});
     }
     
     removeTab (id) {
         this.getNav(id).remove();
         this.getPane(id).remove();
-        this.event.trigger('remove', {id});
+        this.events.trigger('remove', {id});
     }
 };

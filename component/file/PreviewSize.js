@@ -51,10 +51,9 @@ module.exports = class PreviewSize extends Base {
             image.flatten({background: this.flatten});
         }
         image[this.output](this.outputParams);
-        if (this.composite) {
-            return sharp(await image.toBuffer()).composite(this.composite);
-        }
-        return image;
+        return this.composite
+            ? sharp(await image.toBuffer()).composite(this.composite)
+            : image;
     }
 
     keepAspectRatio (width, height, sourceWidth, sourceHeight) {

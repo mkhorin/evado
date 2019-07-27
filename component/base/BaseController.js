@@ -130,7 +130,6 @@ module.exports = class BaseController extends Base {
 };
 module.exports.init();
 
-const StringHelper = require('areto/helper/StringHelper');
 const BadRequest = require('areto/error/BadRequestHttpException');
 const NotFound = require('areto/error/NotFoundHttpException');
 const SelectHelper = require('../helper/SelectHelper');

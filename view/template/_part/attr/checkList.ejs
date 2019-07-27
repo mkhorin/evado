@@ -4,14 +4,14 @@
 <%- include('_params', {params}) %>
 
 <div class="form-attr <%- params.css %> <%- params.required %> form-group" data-type="checkboxList">
-    <label class="control-label <%- params.labelCss %>"><%- params.label %></label>
+    <label class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
     <div class="<%- params.valueCss %>">
         <input name="<%- params.name %>" value="<%- params.value %>" type="hidden" class="form-value">
         <div>
             <% for (let item of items) { %>
             <label class="checkbox checkbox-inline">
                 <input value="<%- item.value %>" type="checkbox">
-                <span data-t=""><%- item.text %></span>
+                <span data-t="<%- params.translate %>"><%- item.text %></span>
             </label>
             <% } %>
         </div>

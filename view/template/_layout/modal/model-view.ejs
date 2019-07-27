@@ -21,11 +21,17 @@ if (typeof params !== 'undefined') {
             <button data-id="reload" class="reload btn btn-default" type="button" title="Reload">
                 <span class="fa fa-sync-alt"></span>
             </button>
-
             <%- include('../../_part/tool/model-history') %>
+
+            <% if (_data.get('help')) { %>
+            <span class="model-help fa fa-question-circle" title="<%= _data.get('help') %>"></span>
+            <% } %>
         </div>
     </div>
     <div class="scroll-body box-body">
+
+        <div class="box-notice"></div>
+
         <div class="model-view model form-horizontal form"
              data-jam="Model"
              data-params="<%= JSON.stringify(data) %>">
