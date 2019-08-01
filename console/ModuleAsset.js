@@ -8,7 +8,7 @@ const Base = require('areto/base/Base');
 module.exports = class ModuleAsset extends Base {
 
     async install () {
-        let dir = this.module.getConfig('assets.source');
+        const dir = this.module.getConfig('assets.source');
         if (typeof dir !== 'string') {
             return false;
         }
@@ -33,11 +33,11 @@ module.exports = class ModuleAsset extends Base {
     }
 
     async deploy () {
-        let params = this.module.getConfig('assets');
+        const params = this.module.getConfig('assets');
         if (!params) {
             return false;
         }
-        let vendorTarget = this.module.getPath(params.target);
+        const vendorTarget = this.module.getPath(params.target);
 
         this.log('info', `Web vendor folder: ${vendorTarget}`);
         await FileHelper.createDir(vendorTarget);

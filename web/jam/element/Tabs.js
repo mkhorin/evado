@@ -9,7 +9,6 @@ Jam.Tabs = class extends Jam.Element {
         super($container);
         this.$container = $container;
         this.events = new Jam.Events('Tabs');
-        this.init();
     }
 
     init () {

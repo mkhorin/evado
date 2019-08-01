@@ -8,8 +8,8 @@ const Base = require('areto/base/Action');
 module.exports = class ErrorAction extends Base {
 
     execute () {
-        let controller = this.controller;
-        let err = controller.err;
+        const controller = this.controller;
+        const err = controller.err;
         if (!err) {
             return this.render(404);
         }

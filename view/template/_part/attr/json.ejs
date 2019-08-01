@@ -1,29 +1,29 @@
 <!-- _part/attr/json -->
 
-<% let params = {}; %>
-<%- include('_params', {params}) %>
+<% const p = {}; %>
+<%- include('_params', {p}) %>
 <%
-if (params.value) {
-    params.value = JSON.stringify(params.value, null, params.jsonSpace);
-    params.value = params.value.replace(/,/g, ', ').replace(/":/g, '": ');
+if (p.value) {
+    p.value = JSON.stringify(p.value, null, p.jsonSpace);
+    p.value = p.value.replace(/,/g, ', ').replace(/":/g, '": ');
 }
 %>
-<div class="<%- params.required %> <%- params.css %> form-attr form-group"
+<div class="<%- p.required %> <%- p.css %> form-attr form-group"
      data-type="json"
-     data-attraction='<%= params.attraction %>'>
-    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"
-           title="<%= params.extHint %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
+     data-attraction='<%= p.attraction %>'>
+    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+           data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
         <div class="input-group">
-            <input id="<%- params.id %>" name="<%- params.name %>" type="text"
-                   value="<%= params.value %>" class="form-control form-value">
+            <input id="<%- p.id %>" name="<%- p.name %>" type="text"
+                   value="<%= p.value %>" class="form-control form-value">
             <span class="input-group-btn">
                 <button class="edit btn btn-default" type="button" title="Editor">
                     <i class="glyphicon glyphicon-pencil"></i>
                 </button>
             </span>
         </div>
-        <div class="hint-block"><%- params.hint %></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
     </div>
 

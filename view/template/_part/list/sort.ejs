@@ -6,12 +6,22 @@ if (!data.id) {
 if (data.update !== null) {
     data.update = relController.createUrl(data.update === undefined ? 'update' : data.update);
 }
+data.key = relModel.PK;
+data.multiple = true;
+data.url = _controller.getOriginalUrl();
+data.order = {[orderAttr]: 1};
+data.pageSize = 0;
+
+let hasKeyColumn = false;
 for (let column of data.columns) {
     if (column.label === undefined) {
         column.label = relModel.getAttrLabel(column.name);
     }
+    if (column.name === data.key) {
+        hasKeyColumn = true;
+    }
 }
-if (!data.customIdAttr) {
+if (!hasKeyColumn) {
     data.columns.unshift({
         name: relModel.PK,
         type: 'id',
@@ -20,13 +30,7 @@ if (!data.customIdAttr) {
         sortable: true
     });
 }
-data.key = relModel.PK;
-data.multiple = true;
-data.url = _controller.getOriginalUrl();
-data.order = {[orderAttr]: 1};
-data.pageSize = 0;
 data.data = [];
-
 for (let model of models) {
     let map = {};
     for (let column of data.columns) {
@@ -38,7 +42,7 @@ if (data.jam === undefined) {
     data.jam = 'SortList';
 }
 %>
-<div class="jmodal-scroll-container box-grid box" data-title="<%- blocks.title %>">
+<div class="jmodal-scroll-container box-grid box" data-title="<%= blocks.title %>">
     <div class="box-header with-border scroll-header">
         <div class="list-controls clearfix">
 

@@ -11,7 +11,7 @@ module.exports = class SelectHelper {
     // MAP
 
     static getMapItems (map) {
-        let items = [];
+        const items = [];
         if (map) {
             for (let value of Object.keys(map)) {
                 items.push({text: map[value], value});
@@ -68,7 +68,7 @@ module.exports = class SelectHelper {
         if (!params.getItemText) {
             params.getItemText = this.getItemText;
         }
-        let items = [];
+        const items = [];
         if (Array.isArray(docs)) {
             for (let doc of docs) {
                 items.push({

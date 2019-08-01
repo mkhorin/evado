@@ -15,6 +15,10 @@ Jam.Helper = class {
         } catch (err) {}
     }
 
+    static getTemplate (id, $container) {
+        return $container.find('template').filter(`[data-id="${id}"]`).html();
+    }
+
     static resolveTemplate (text, data = {}) {
         return text.replace(/{{(\w+)}}/gm, (match, key)=> data.hasOwnProperty(key) ? data[key] : '');
     }

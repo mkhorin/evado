@@ -1,13 +1,13 @@
 <!-- _part/misc/flash-alert -->
 <%
 if (typeof _controller.req.flash === 'function') {
-    let flashes = _controller.req.flash();
+    const flashes = _controller.req.flash();
     for (let key of Object.keys(flashes)) {
         let flash = flashes[key];
 %>
     <div class="alert alert-<%- key %>">
         <% for (let message of flash) { %>
-            <p><%= message %></p>
+            <p><%- message %></p>
         <% } %>
     </div>
 <% }} %>

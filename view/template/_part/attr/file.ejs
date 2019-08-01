@@ -1,12 +1,13 @@
 <!-- _part/attr/file -->
 
-<% let params = {}; %>
-<%- include('_params', {params}) %>
+<% const p = {}; %>
+<%- include('_params', {p}) %>
 
-<div class="form-attr form-group<%- params.required %>" data-type="file">
-    <label class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
-        <input type="hidden" name="<%- params.name %>" class="form-value" value="<%= params.value %>">
+<div class="form-attr form-group<%- p.required %>" data-type="file">
+    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+           data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
+        <input type="hidden" name="<%- p.name %>" class="form-value" value="<%= p.value %>">
         <div class="uploader show-dropzone" data-options="<%= JSON.stringify(options)%>">
             <div class="uploader-input">
                 <input type="file" class="uploader-input-file">
@@ -34,6 +35,7 @@
                 </div>
             </div>
         </div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <p class="error-block"></p>
     </div>
 </div>

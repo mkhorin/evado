@@ -1,17 +1,19 @@
 <!-- _part/attr/text -->
+<% 
+const p = {
+    rows: typeof rows === 'undefined' ? 2 : rows
+}; 
+%>
+<%- include('_params', {p}) %>
 
-<% let params = {}; %>
-<%- include('_params', {params}) %>
-<% params.rows = typeof rows === 'undefined' ? 2 : rows; %>
-
-<div class="form-attr form-group<%- params.required %> <%- params.css %>"
-     data-attraction='<%= params.attraction %>'>
-    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"
-           data-t="<%- params.translate %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
-        <textarea id="<%- params.id %>" name="<%- params.name %>"
-                  class="form-control form-value"
-                  rows="<%- params.rows %>"><%= params.value %></textarea>
+<div class="form-attr form-group<%- p.required %> <%- p.css %>"
+     data-attraction='<%= p.attraction %>'>
+    <label for="<%- p.id %>" class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+           data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
+        <textarea id="<%- p.id %>" name="<%- p.name %>" class="form-control form-value"
+                  rows="<%- p.rows %>"><%= p.value %></textarea>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

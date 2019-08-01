@@ -6,15 +6,22 @@
 class Jam {
 
     static createElements (container = document.body) {
-        let elements = $(container).find('[data-jam]').get().reverse();
+        const instances = [];
+        const elements = $(container).find('[data-jam]').get().reverse();
         for (let element of elements) {
-            let name = element.dataset.jam;
-            if (name) {
-                let Class = this.getClass(name);
-                Class && Class.prototype instanceof Jam.Element
-                    ? this[name].createInstance($(element))
-                    : console.error(`${name} does not extend Jam.Element`);
+            const name = element.dataset.jam;
+            if (!name) {
+                continue;
             }
+            const Class = this.getClass(name);
+            if (Class && Class.prototype instanceof Jam.Element) {
+                instances.push(this[name].createInstance($(element)));
+            } else {
+                console.error(`Invalid Jam.Element: ${name}`);
+            }
+        }
+        for (let instance of instances) {
+            instance.init();
         }
     }
 
@@ -22,11 +29,11 @@ class Jam {
         if (typeof name !== 'string') {
             return null;
         }
-        let pos = name.indexOf('.');
+        const pos = name.indexOf('.');
         if (pos === -1) {
             return this[name];
         }
-        let item = this[name.substring(0, pos)];
+        const item = this[name.substring(0, pos)];
         return item ? this.getClass.call(item, name.substring(pos + 1)) : null;
     }
 
@@ -65,6 +72,9 @@ Jam.Element = class {
     constructor ($element) {
         this.$element = $element;
         this.setInstance($element);
+    }
+
+    init () {
     }
 
     setInstance ($element) {
@@ -352,8 +362,7 @@ Jam.LoadableContent = class extends Jam.Element {
 
 Jam.IndexSorting = class extends Jam.Element {
 
-    constructor ($container) {
-        super($container);
+    init () {
         this.sort();
     }
 
@@ -364,8 +373,7 @@ Jam.IndexSorting = class extends Jam.Element {
 
 Jam.Captcha = class extends Jam.Element {
 
-    constructor ($container) {
-        super($container);
+    init () {
         this.$element.find('.captcha-refresh').click(this.onRefresh.bind(this));
     }
 

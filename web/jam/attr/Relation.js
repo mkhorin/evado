@@ -13,11 +13,8 @@ Jam.ModelAttr.Relation = class extends Jam.ModelAttr {
         Jam.scheduler.add(new Jam.Task(this.createList.bind(this)));
     }
 
-    createList (callback) {
-        return new Jam.AttrList(this.$attr.find('.data-grid'), {
-            attr: this,
-            afterInit: callback
-        });
+    createList (afterInit) {
+        (new Jam.AttrList(this.$attr.find('.data-grid'), {attr: this, afterInit})).init();
     }
 };
 

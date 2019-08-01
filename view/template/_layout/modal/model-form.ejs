@@ -1,6 +1,6 @@
 <!-- _layout/modal/model-form -->
 <%
-let data = {
+const p = {
     url: _controller.getOriginalUrl(),
     id: model.getId() || '',
     key: model.PK,
@@ -9,7 +9,7 @@ let data = {
     remove: _url('remove')
 };
 if (typeof params !== 'undefined') {
-    Object.assign(data, params);
+    Object.assign(p, params);
 }
 %>
 <div class="jmodal-scroll-container box-info box"
@@ -25,9 +25,9 @@ if (typeof params !== 'undefined') {
                 <span class="glyphicon glyphicon-save"></span>
             </button>
 
-            <% if (data.id) { %>
+            <% if (p.id) { %>
                 <button data-id="copyId" class="btn btn-white" type="button" title="Copy ID">ID</button>
-                <% if (data.clone) { %>
+                <% if (p.clone) { %>
                 <button data-id="clone" class="btn btn-success btn-light" type="button" title="Clone">
                     <span class="fa fa-copy"></span>
                 </button>
@@ -45,7 +45,7 @@ if (typeof params !== 'undefined') {
             <% } %>
 
             <div class="pull-right">
-                <% if (data.id && data.remove) { %>
+                <% if (p.id && p.remove) { %>
                 <button data-id="remove" class="btn btn-white" type="button" title="Delete">
                     <span class="glyphicon glyphicon-trash text-danger"></span>
                 </button>
@@ -56,7 +56,7 @@ if (typeof params !== 'undefined') {
     <div class="scroll-body box-body">
         <form class="model form-horizontal form" autocomplete="off" enctype="multipart/form-data"
               data-jam="Model"
-              data-params="<%= JSON.stringify(data) %>">
+              data-params="<%= JSON.stringify(p) %>">
             <%- body -%>
         </form>
     </div>

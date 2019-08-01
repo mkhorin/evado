@@ -29,9 +29,9 @@ module.exports = class MetaListFilterCondition extends Base {
     }
 
     async parseNested ({attr, value}) {
-        let rel = this.getRelation(attr);
-        let query = rel.refClass.find();
-        let condition = await (new this.constructor({
+        const rel = this.getRelation(attr);
+        const query = rel.refClass.find();
+        const condition = await (new this.constructor({
             view: rel.attr.getRefView('searchView', 'list'),
             items: value,
             query
@@ -47,7 +47,7 @@ module.exports = class MetaListFilterCondition extends Base {
     }
 
     getRelation (name) {
-        let attr = this.view.getAttr(name);
+        const attr = this.view.getAttr(name);
         if (attr.rel) {
             return attr.rel;
         }
@@ -55,8 +55,8 @@ module.exports = class MetaListFilterCondition extends Base {
     }
 
     async getRelationValue (rel, query) {
-        let values = await query.column(rel.refAttrName);
-        let result = [];
+        const values = await query.column(rel.refAttrName);
+        const result = [];
         for (let value of values) {
             if (value !== null) {
                 result.push(value);

@@ -1,22 +1,18 @@
 <!-- _part/attr/string -->
 
-<% let params = {}; %>
-<%- include('_params', {params}) %>
+<% const p = {}; %>
+<%- include('_params', {p}) %>
 
-<div class="form-attr form-group<%- params.required %> <%- params.css %>"
-     data-type="<%- params.type %>"
-     data-attraction='<%= params.attraction %>'
-     data-handler="<%= params.handler %>">
-    <label for="<%- params.id %>" title="<%= params.extHint %>"
-           class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
-        <input id="<%- params.id %>"
-               name="<%- params.name %>"
-               type="text"
-               placeholder="<%- params.placeholder %>"
-               value="<%= params.value %>"
-               class="form-control form-value"/>
-        <div class="hint-block" data-t="<%- params.translate %>"><%- params.hint %></div>
+<div class="form-attr form-group<%- p.required %> <%- p.css %>"
+     data-type="<%- p.type %>"
+     data-attraction='<%= p.attraction %>'
+     data-handler="<%= p.handler %>">
+    <label for="<%- p.id %>" title="<%= p.extHint %>"
+           class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
+        <input id="<%- p.id %>" name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
+               value="<%= p.value %>" class="form-control form-value"/>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

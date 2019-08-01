@@ -66,11 +66,11 @@ module.exports = class MetaDataGrid extends Base {
     }
 
     setCommonSearch () {
-        let value = this.request.search;
+        const value = this.request.search;
         if (typeof value !== 'string' || !value.length) {
             return false;
         }
-        let conditions = [];
+        const conditions = [];
         for (let attr of this.metaData.view.commonSearchAttrs) {
             let condition = attr.getSearchCondition(value);
             if (condition) {
@@ -110,7 +110,7 @@ module.exports = class MetaDataGrid extends Base {
     }
 
     getAttrTemplateMap (view) {
-        let map = {};
+        const map = {};
         for (let attr of view.attrs) {
             map[attr.name] = this.view.getMetaItemTemplate(attr);
         }
@@ -132,7 +132,7 @@ module.exports = class MetaDataGrid extends Base {
     }
 
     async renderCell (attr, model, result) {
-        let name = attr.name;
+        const name = attr.name;
         if (this.isReadForbiddenAttr(name, model)) {
             result[name] = this.metaData.security.noAccessMessage;
         } else if (this._attrTemplateMap[name]) {
@@ -149,7 +149,7 @@ module.exports = class MetaDataGrid extends Base {
     }
 
     renderAttr (attr, model) {
-        let value = model.semantic.get(attr.name);
+        const value = model.semantic.get(attr.name);
         if (attr.rel) {
             return this.renderRelationAttr(value, attr, model);
         }
@@ -163,7 +163,7 @@ module.exports = class MetaDataGrid extends Base {
     }
 
     renderRelationAttr (data, attr, model) {
-        let related = model.related.get(attr);
+        const related = model.related.get(attr);
         if (!related || this._columnMap[attr.name].format.name !== 'link') {
             return data;
         }
@@ -173,7 +173,7 @@ module.exports = class MetaDataGrid extends Base {
                 text: data
             };
         }
-        let result = [];
+        const result = [];
         for (let i = 0; i < data.length; ++i) {
             result.push({
                 id: related[i].getId(),
@@ -191,12 +191,12 @@ module.exports = class MetaDataGrid extends Base {
     }
 
     renderFileAttr (value, attr, model) {
-        let data = this.getFileAttrData(attr, model);
-        let name = data.Behavior.getName(model);
+        const data = this.getFileAttrData(attr, model);
+        const text = data.Behavior.getName(model);
         if (data.preview && data.Behavior.isImage(model)) {
             return this.controller.format(data.preview + model.getId(), 'preview', {
                 download: data.download + model.getId(),
-                text: name
+                text
             });
         }
         return this.controller.format(data.download + model.getId(), 'download', {text});
@@ -204,7 +204,7 @@ module.exports = class MetaDataGrid extends Base {
 
     getFileAttrData (attr, model) {
         if (!this._fileAttrData) {
-            let Behavior = model.class.FileBehaviorConfig.Class;
+            const Behavior = model.class.FileBehaviorConfig.Class;
             this._fileAttrData = Behavior.getViewData(attr, model.view, this.controller.module.NAME);
             this._fileAttrData.Behavior = Behavior;
         }

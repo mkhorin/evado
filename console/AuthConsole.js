@@ -9,7 +9,7 @@ module.exports = class AuthConsole extends Base {
 
     async createUsers () {
         this.log('info', 'Create users...');
-        let items = this.app.getConfig('users') || [];
+        const items = this.app.getConfig('users') || [];
         for (let data of items) {
             await this.createUser(data);
         }
@@ -17,7 +17,7 @@ module.exports = class AuthConsole extends Base {
     }
 
     async createUser (data) {
-        let model = this.createUserModel({scenario: 'create'});
+        const model = this.createUserModel({scenario: 'create'});
         model.setSafeAttrs(data);
         if (!await model.save()) {
             return this.log('error', model.getFirstErrorMap());
@@ -49,7 +49,7 @@ module.exports = class AuthConsole extends Base {
     }
 
     async changePassword () {
-        let user = await this.findUserByParams().one();
+        const user = await this.findUserByParams().one();
         if (!user) {
             return this.log('error', `User not found`);
         }
@@ -60,16 +60,16 @@ module.exports = class AuthConsole extends Base {
     }
 
     async assignRole () {
-        let user = await this.findUserByParams().one();
+        const user = await this.findUserByParams().one();
         if (!user) {
             return this.log('error', `User not found`);
         }
-        let store = this.app.get('rbac').store;
-        let item = await store.findItemByName(this.params.role).one();
+        const store = this.app.get('rbac').store;
+        const item = await store.findItemByName(this.params.role).one();
         if (!item) {
             return this.log('error', 'Role not found');
         }
-        let assignment = await store.findAssignment().and({
+        const assignment = await store.findAssignment().and({
             item: item._id,
             user: user.getId()
         }).one();

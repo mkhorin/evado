@@ -19,7 +19,7 @@ Jam.DataGridColumnManager = class {
     }
 
     createMenu () {
-        let $body = this.$container.closest('.scroll-body');
+        const $body = this.$container.closest('.scroll-body');
         this.$menu = this.renderMenu();
         this.$menu.appendTo($body.length ? $body : document.body);
         this.$menu.on('change', 'input', this.onChangeItem.bind(this));
@@ -65,7 +65,7 @@ Jam.DataGridColumnManager = class {
     }
 
     showMenu () {
-        let offset = this.$toggle.offset();
+        const offset = this.$toggle.offset();
         this.$menu.show().offset({
             left: offset.left + this.$toggle.outerWidth() - this.$menu.outerWidth(),
             top: offset.top + this.$toggle.outerHeight() + 1
@@ -74,8 +74,8 @@ Jam.DataGridColumnManager = class {
     }
 
     changeItem ($item) {
-        let $checkbox = $item.find('input');
-        let checked = !$checkbox.is(':checked');
+        const $checkbox = $item.find('input');
+        const checked = !$checkbox.is(':checked');
         $checkbox.prop('checked', checked);
     }
 
@@ -86,7 +86,7 @@ Jam.DataGridColumnManager = class {
     }
 
     load () {
-        let items = store.get(this.getStoreKey());
+        const items = store.get(this.getStoreKey());
         if (this.checkStoreData(items)) {
             items.forEach((item, index)=> this.params.columns[index].hidden = item.hidden);
         }

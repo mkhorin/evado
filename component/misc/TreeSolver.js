@@ -22,7 +22,7 @@ module.exports = class TreeSolver extends Base {
     async getParentQuery (query) {
         let descendants = [];
         let id = this.model.getId();
-        if (id ) {
+        if (id) {
             descendants = await this.getDescendantIds([id]);
             descendants.push(id);
         }
@@ -41,7 +41,7 @@ module.exports = class TreeSolver extends Base {
     }
 */
     async getDescendantIds (parentIds) {
-        let children = await this.model.find({
+        const children = await this.model.find({
             [this.parentAttr]: parentIds
         }).column(this.model.PK);        
         if (children.length === 0) {
@@ -55,18 +55,18 @@ module.exports = class TreeSolver extends Base {
 
     async getAncestors (child) {  // order from root to parent
         child = child || this.model;
-        let parent = child.get(this.parentAttr);
+        const parent = child.get(this.parentAttr);
         if (!parent) {
             return [];
         }
-        let item = await child.findById(parent).with(this.with).one();
+        const item = await child.findById(parent).with(this.with).one();
         if (!item) {
             return [];
         }
         if (this.model.getId().equals(item.getId())) {
             throw new Error(this.constructor.getCircularError(this.model));
         }        
-        let ancestors = await this.getAncestors(item);
+        const ancestors = await this.getAncestors(item);
         ancestors.push(item);
         return ancestors;
     }

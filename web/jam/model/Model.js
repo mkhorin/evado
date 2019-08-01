@@ -25,7 +25,9 @@ Jam.Model = class extends Jam.Element {
         this.id = this.params.id;
         this.childModal = Jam.modal.create();
         this.modal = this.$container.closest('.jmodal').data('modal');
+    }
 
+    init () {        
         this.getControl('saveClose').click(this.save.bind(this, false));
         this.getControl('save').click(this.save.bind(this, true));
         this.getControl('cancel').click(this.cancel.bind(this));
@@ -39,10 +41,7 @@ Jam.Model = class extends Jam.Element {
 
         this.$history = this.getControl('history');
         this.$history.click(this.showHistory.bind(this));
-        this.init();
-    }
 
-    init () {
         this.beforeCloseMethod = this.beforeClose.bind(this);
         this.modal.onClose(this.beforeCloseMethod);
         this.grouper = new Jam.ModelGrouper(this);
@@ -52,10 +51,10 @@ Jam.Model = class extends Jam.Element {
             this.attraction.events.on('update', this.grouper.toggleEmpty.bind(this.grouper));
             this.grouper.toggleEmpty();
         }
-        this.setInitValue();
+        this.changeTracker = new Jam.ModelChangeTracker(this);
         this.error = new Jam.ModelError(this);
         this.utilManager = new Jam.UtilManager(this.$controls, this);
-        this.trackChanges();
+        this.changeTracker.start();
     }
 
     createNotice () {
@@ -108,7 +107,7 @@ Jam.Model = class extends Jam.Element {
     }
 
     beforeClose (event) {
-        if (this.isChanged() && !Jam.Helper.confirm('Close without saving?')) {
+        if (this.changeTracker.isChanged() && !Jam.Helper.confirm('Close without saving?')) {
             return event.stopPropagation();
         }
         let message = this.inProgress();
@@ -133,7 +132,7 @@ Jam.Model = class extends Jam.Element {
     // ACTIONS
 
     cancel () {
-        this.setInitValue();
+        this.changeTracker.reset();
         this.modal.close();
     }
 
@@ -159,7 +158,7 @@ Jam.Model = class extends Jam.Element {
         this.$loader.show();
         $.post(this.params.remove, {id: this.id}).done(()=> {
             this.saved = true;
-            this.setInitValue();
+            this.changeTracker.reset();
             this.modal.close();
         }).fail(xhr => {
             this.notice.danger(xhr.responseText || xhr.statusText);
@@ -208,7 +207,7 @@ Jam.Model = class extends Jam.Element {
             this.saved = true;
             this.reopen = reopen;
             this.id = data;
-            this.setInitValue();
+            this.changeTracker.reset();
             this.modal.close();
         }).fail(xhr => {
             this.error.parse(xhr.responseJSON || xhr.responseText);
@@ -223,22 +222,6 @@ Jam.Model = class extends Jam.Element {
         let data = {valid: true};
         this.events.trigger('beforeValidate', data);
         return data.valid;
-    }
-
-    // TRACK CHANGES
-
-    isChanged () {
-        return this._initValue !== this.$form.serialize();
-    }
-
-    setInitValue () {
-        this._initValue = this.$form.serialize();
-    }
-
-    trackChanges () {
-        this.$form.find('[name]').on('change keyup', event => {
-            this.events.trigger('change');
-        });
     }
 
     // ATTR UPDATE
@@ -260,5 +243,28 @@ Jam.Model = class extends Jam.Element {
 
     showHistory () {
         this.childModal.load(this.$history.data('url'));
+    }
+};
+
+Jam.ModelChangeTracker = class {
+
+    constructor (form) {
+        this.form = form;
+        this.$form = form.$form;
+    }
+
+    isChanged () {
+        return this._data !== this.$form.serialize();
+    }
+
+    reset () {
+        this._data = this.$form.serialize();
+    }
+
+    start () {
+        this.reset();
+        this.$form.find('[name]').on('change keyup', event => {
+            this.form.events.trigger('change');
+        });
     }
 };

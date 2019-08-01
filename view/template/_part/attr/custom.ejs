@@ -1,21 +1,23 @@
 <!-- _part/attr/custom -->
 <%
-let params = {
-    css: typeof css === 'undefined' ? '' : css,
-    labelCss: typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss,
-    valueCss: typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss,
-    contentCss: typeof contentCss === 'undefined' ? 'form-control-static' : contentCss,
-    label: typeof label === 'undefined' ? '' : label,
-    hint: typeof hint === 'undefined' ? '' : hint
+const p = {
+    contentCss: typeof contentCss === 'undefined' ? 'form-control-static' : contentCss
 };
 %>
-<div class="form-group <%- params.css %>">
-    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
-        <div class="<%- params.contentCss %>">
+<%- include('_params', {p: p}) %>
+
+<div class="form-group <%- p.css %>" data-attraction='<%= p.attraction %>'>
+    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+           data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
+        <div class="<%- p.contentCss %>">
+            <% if (content.template) { %>
+            <%- include(content.template, content) %>
+            <% } else { %>
             <%- content %>
+            <% } %>
         </div>
-        <div class="hint-block"><%- params.hint %></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

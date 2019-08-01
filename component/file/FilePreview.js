@@ -58,12 +58,12 @@ module.exports = class FilePreview extends Base {
         if (!key || key === 'default') {
             key = this.defaultSizeKey;
         }
-        let size = this.getSize(key);
+        const size = this.getSize(key);
         if (!size) {
             return null;
         }
-        let file = this.getSizePath(key, filename);
-        let stat = await FileHelper.getStat(file);
+        const file = this.getSizePath(key, filename);
+        const stat = await FileHelper.getStat(file);
         if (stat || await this.processSize(key, filename, source)) {
             return file;
         }
@@ -98,7 +98,6 @@ module.exports = class FilePreview extends Base {
     }
 };
 
-const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 const FileHelper = require('areto/helper/FileHelper');

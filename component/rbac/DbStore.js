@@ -41,7 +41,7 @@ module.exports = class DbStore extends Base {
     }
 
     prepare (data) {
-        let result = super.prepare(data);
+        const result = super.prepare(data);
         this.prepareMetaItems(data);
         result.metaItems = data.metaItems;
         result.userFilters = data.userFilters;

@@ -19,6 +19,7 @@ module.exports = class DataGrid extends Base {
             // controller:
             // query: [Query]
             // filter: {}
+            // formatRules: [[attrName, type, {params}], ...]
             request: config.controller.getPostParams(),
             ...config
         });
@@ -59,7 +60,7 @@ module.exports = class DataGrid extends Base {
     async setModels () {
         let links = this.request.changes && this.request.changes.links;
         if (Array.isArray(links) && links.length) {
-            let key = this.query.model.PK;
+            const key = this.query.model.PK;
             this._models = await this.query.and(['NOT ID', key, links]).all();
             links = await this.query.model.find(['ID', key, links]).with(this.query).offset(0).all();
             this._models = links.concat(this._models);
@@ -83,7 +84,7 @@ module.exports = class DataGrid extends Base {
     }
 
     setOrder () {
-        let order = this.request.order;
+        const order = this.request.order;
         if (!order) {
             return false;
         }
@@ -101,11 +102,13 @@ module.exports = class DataGrid extends Base {
         if (typeof value !== 'string' || !value.length || !Array.isArray(columns)) {
             return false;
         }
-        let conditions = [];
+        const conditions = [];
         for (let column of this.request.columns) {
             if (column.searchable === true) {
                 let condition = this.getConditionByType(column.type, column.name, value);
-                condition && conditions.push(condition);
+                if (condition) {
+                    conditions.push(condition);
+                }
             }
         }
         this.query.andJoinByOr(conditions);
@@ -116,7 +119,7 @@ module.exports = class DataGrid extends Base {
     }
 
     renderModel (model) {
-        let data = {[this.ROW_KEY]: model.getId()};
+        const data = {[this.ROW_KEY]: model.getId()};
         for (let column of this.request.columns) {
             data[column.name] = model.getViewAttr(column.name);
         }

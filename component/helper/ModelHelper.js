@@ -5,36 +5,44 @@
 
 module.exports = class ModelHelper {
 
-    // rules: [[['createdAt', 'updatedAt'], 'timestamp']],
+    // rules: [[['createdAt', 'updatedAt'], 'timestamp']]
+    // rules: [['user', 'relation', {url: 'user/update?id='}]]
 
     static formatByRules (rules, models, controller) {
         if (!Array.isArray(rules)) {
             return false;
         }
-        let formatter = controller.module.get('formatter');
-        let format = null;
+        const formatter = controller.module.get('formatter');
+        const formatMap = this.getFormatMap();
         for (let [attrs, type, params] of rules) {
-            switch (type) {
-                case 'relation': format = this.formatRelationRule; break;
-                default: format = this.formatDefaultRule;
-            }
-            for (let attr of attrs) {
-                for (let model of models) {
-                    format(model, attr, formatter, type, params);
+            let format = formatMap[type] || this.formatDefaultRule;
+            for (let model of models) {
+                if (Array.isArray(attrs)) {
+                    for (let attr of attrs) {
+                        format(model, attr, formatter, type, params);
+                    }
+                } else {
+                    format(model, attrs, formatter, type, params);
                 }
             }
         }
     }
 
-    static formatRelationRule (model, attr, formatter, type, params = {}) {
-        let related = model.rel(attr);
+    static getFormatMap () {
+        return {
+            relation: this.formatRelationRule
+        };
+    }
+
+    static formatRelationRule (model, attr, formatter, type, {url} = {}) {
+        const related = model.rel(attr);
         if (!related) {
             return model.setViewAttr(attr, model.get(attr));
         }
-        if (!params.url) {
+        if (!url) {
             return model.setViewAttr(attr, related.getTitle());
         }
-        model.setViewAttr(attr, formatter.asModalLink(params.url + related.getId(), {
+        model.setViewAttr(attr, formatter.asModalLink(url + related.getId(), {
             text: related.getTitle()
         }));
     }

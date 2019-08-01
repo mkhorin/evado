@@ -35,12 +35,16 @@ if (data.clone === true) {
 if (data.order === undefined) {
     data.order = {[model.PK]: -1};
 }
+let hasKeyColumn = false;
 for (let column of data.columns) {
     if (column.label === undefined) {
         column.label = model.getAttrLabel(column.name);
     }
+    if (column.name === data.key) {
+        hasKeyColumn = true;
+    }
 }
-if (!data.customIdAttr) {
+if (!hasKeyColumn) {
     data.columns.unshift({
         name: model.PK,
         type: 'id',
@@ -48,9 +52,6 @@ if (!data.customIdAttr) {
         searchable: true,
         sortable: true
     });
-}
-if (data.index === undefined || data.index) {
-    data.index = `indexing/view?id=${model.module.app.getRelativePath(model.CLASS_FILE)}`;
 }
 if (data.multiple === undefined) {
     data.multiple = true;

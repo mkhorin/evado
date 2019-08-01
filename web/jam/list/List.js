@@ -25,7 +25,6 @@ Jam.List = class extends Jam.Element {
             multiple: true,
             ...this.$grid.data('params')
         };
-        this.init();
     }
 
     init () {
@@ -154,7 +153,7 @@ Jam.List = class extends Jam.Element {
     }
 
     prepareRow () {
-        if (this[this.params.prepareRow] instanceof Function) {
+        if (typeof this[this.params.prepareRow] === 'function') {
             this[this.params.prepareRow](...arguments);
         }
     }

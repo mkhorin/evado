@@ -1,9 +1,9 @@
 <!-- _part/attr/relationSelect -->
 
-<% let params = {}; %>
-<%- include('_params', {params}) %>
+<% const p = {}; %>
+<%- include('_params', {p}) %>
 <%
-let d = {
+const d = {
     relName: attr,
     order: {[model.PK]: -1},
     key: model.PK,
@@ -70,12 +70,12 @@ if (d.modalSort) {
 }
 let related = model.rel(attr);
 %>
-<div class="form-attr form-group<%- params.required %> <%- params.css %>" data-type="relationSelect">
-    <label for="<%- params.id %>" class="control-label <%- params.labelCss %>"
-           data-t="<%- params.translate %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
+<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-type="relationSelect">
+    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+           data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
         <div class="box relation-select-box">
-            <input name="<%- params.name %>" type="hidden" class="form-value" value="">
+            <input name="<%- p.name %>" type="hidden" class="form-value" value="">
             <div class="box-body">
                 <div class="list-controls">
                     <% if (d.unlink) { %>
@@ -102,7 +102,7 @@ let related = model.rel(attr);
                     <%- include(_view.get('_part/misc/universal-render'), {data: tools}) %>
                     <% } %>
                 </div>
-                <select id="<%- params.id %>" class="form-control" <% if (d.multiple) { %>multiple<% } %>
+                <select id="<%- p.id %>" class="form-control" <% if (d.multiple) { %>multiple<% } %>
                         data-params="<%= JSON.stringify(d) %>">
                     <% if (Array.isArray(related)) {
                        for (let item of related) { %>
@@ -113,6 +113,7 @@ let related = model.rel(attr);
                 </select>
             </div>
         </div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

@@ -1,6 +1,6 @@
 <!-- _part/attr/select -->
 <%
-let params = {
+const p = {
     hasEmpty: typeof hasEmpty === 'undefined' ? true : hasEmpty,
     emptyText: typeof emptyText === 'undefined' ? '' : emptyText,
     valueKey: typeof valueKey === 'undefined' ? 'value' : valueKey,
@@ -11,40 +11,40 @@ let params = {
     itemTranslate: typeof itemTranslate === 'undefined' ? '' : itemTranslate
 };
 %>
-<%- include('_params', {params}) %>
+<%- include('_params', {p}) %>
 <%
-let content = params.hasEmpty ? `<option value="">${params.emptyText}</option>` : '';
+let content = p.hasEmpty ? `<option value="">${p.emptyText}</option>` : '';
 if (typeof items !== 'undefined' && items) {
     if (items === 'labels') {
         items = _controller.getLabelSelectItems(attr, model);
     }
     for (let item of items) {
         if (item.separator) {
-            let text = item[params.textKey] === undefined ? '------' : item[params.textKey];
+            let text = item[p.textKey] === undefined ? '------' : item[p.textKey];
             content += `<option disabled>${text}</option>`;
         } else {
-            let selected = item[params.valueKey] == params.value ? 'selected' : '';
-            content += `<option ${selected} value="${item[params.valueKey]}" data-t="${params.itemTranslate}">${item[params.textKey]}</option>`;
+            let selected = item[p.valueKey] == p.value ? 'selected' : '';
+            content += `<option ${selected} value="${item[p.valueKey]}" data-t="${p.itemTranslate}">${item[p.textKey]}</option>`;
         }
     }
-} else if (params.value !== '') {
-    content += `<option selected value="${params.value}">${params.displayValue}</option>`;
+} else if (p.value !== '') {
+    content += `<option selected value="${p.value}">${p.displayValue}</option>`;
 }
-content = `<select name="${params.name}" ${params.disabled} class="form-control form-value">${content}</select>`;
+content = `<select name="${p.name}" ${p.disabled} class="form-control form-value">${content}</select>`;
 %>
-<div class="form-attr form-group<%- params.required %> <%- params.css %>"
+<div class="form-attr form-group<%- p.required %> <%- p.css %>"
      data-type="select"
-     data-select2="<%= params.select2 %>"
-     data-masters="<%= params.masters %>"
-     data-attraction='<%= params.attraction %>'>
-    <label for="<%- params.id %>" data-t="<%- params.translate %>" title="<%= params.extHint %>"
-           class="control-label <%- params.labelCss %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
-        <% if (params.update) { %>
+     data-select2="<%= p.select2 %>"
+     data-masters="<%= p.masters %>"
+     data-attraction='<%= p.attraction %>'>
+    <label for="<%- p.id %>" data-t="<%- p.translate %>" title="<%= p.extHint %>"
+           class="control-label <%- p.labelCss %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
+        <% if (p.update) { %>
         <div class="input-group">
             <%- content %>
             <div class="input-group-btn">
-                <button data-action="update" class="btn btn-default" type="button" data-url="<%- params.update %>">
+                <button data-action="update" class="btn btn-default" type="button" data-url="<%- p.update %>">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
             </div>
@@ -52,7 +52,7 @@ content = `<select name="${params.name}" ${params.disabled} class="form-control 
         <% } else { %>
         <%- content %>
         <% } %>
-        <div class="hint-block" data-t="<%- params.translate %>"><%- params.hint %></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

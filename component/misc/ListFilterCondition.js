@@ -100,7 +100,7 @@ module.exports = class ListFilterCondition extends Base {
         if (value === '') {
             return operation === '!=' ? ['NOT EQUAL', attr, null] : {[attr]: null};
         }
-        let date = DateHelper.getValid(value);
+        const date = DateHelper.getValid(value);
         if (!date) {
             return null;
         }
@@ -173,23 +173,23 @@ module.exports = class ListFilterCondition extends Base {
                 ? this.formatSelectorCondition(this.query.model.PK, operation, value)
                 : null;
         }
-        let query = this.getRelationQuery(attr, this.query.model);
-        let related = await query.model.findById(value).one();
+        const query = this.getRelationQuery(attr, this.query.model);
+        const related = await query.model.findById(value).one();
         if (!related) {
             throw new BadRequest(this.wrapClassMessage(`Not found related model: ${value}`));
         }
-        let values = await this.getRelationQuery(relation, related).ids();
+        const values = await this.getRelationQuery(relation, related).ids();
         return values.length
             ? this.formatSelectorCondition(this.query.model.PK, operation, values)
             : null;
     }
 
     getRelationQuery (name, model) {
-        let query = model.getRelation(name);
-        if (query) {
-            return query;
+        const query = model.getRelation(name);
+        if (!query) {
+            throw new BadRequest(this.wrapClassMessage(`Not found relation: ${name}`));    
         }
-        throw new BadRequest(this.wrapClassMessage(`Not found relation: ${name}`));
+        return query;        
     }
 
     formatByValueType ({value, valueType}) {

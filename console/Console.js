@@ -15,6 +15,7 @@ module.exports = class Console extends Base {
             DataConsole: require('./DataConsole'),
             DataImportConsole: require('./DataImportConsole'),
             DataExportConsole: require('./DataExportConsole'),
+            IndexConsole: require('./IndexConsole'),
             ...config
         });
         this.app = ClassHelper.spawn(this.Application);
@@ -80,6 +81,12 @@ module.exports = class Console extends Base {
         return this.execute('execute', this.DataExportConsole, params);
     }
 
+    // INDEX
+
+    createIndexes (params) {
+        return this.execute('create', this.IndexConsole, params);
+    }
+
     // EXECUTE
 
     async execute (handler) {
@@ -112,8 +119,8 @@ module.exports = class Console extends Base {
 
     async logTotal () {
         await PromiseHelper.setTimeout(200); // skip previous console output
-        let logger = this.app.get('logger');
-        let total = logger.getTotal(['error', 'warn']).map(item => `${item.type}: ${item.counter}`);
+        const logger = this.app.get('logger');
+        const total = logger.getTotal(['error', 'warn']).map(item => `${item.type}: ${item.counter}`);
         if (total.length) {
             this.log('warn', `Log total: ${total.join(', ')}`);
         }

@@ -37,10 +37,10 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     async getAttrMap () {
-        let map = {};
-        let states = this.getStates();
-        let origin = this.owner.rel(this.originAttr);
-        let namePrefix = `${this.owner.constructor.name}[${this.stateAttr}]`;
+        const map = {};
+        const states = this.getStates();
+        const origin = this.owner.rel(this.originAttr);
+        const namePrefix = `${this.owner.constructor.name}[${this.stateAttr}]`;
         for (let name of this.attrs) {
             map[name] = {
                 attr: this.attrPrefix + name,
@@ -54,7 +54,7 @@ module.exports = class OverriddenValueBehavior extends Base {
 
     async beforeSave () {
         this.owner.set(this.stateAttr, this.filterStates(this.getStates()));
-        let origin = await this.owner.findRelation(this.originAttr);
+        const origin = await this.owner.findRelation(this.originAttr);
         return this.setStateOriginValues(origin);
     }
 
@@ -66,7 +66,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     async setStateOriginValues (origin) {
-        let states = this.getStates();
+        const states = this.getStates();
         for (let name of Object.keys(states)) {
             if (!states[name]) {
                 this.owner.set(name, await this.getOriginValue(name, origin));
@@ -81,8 +81,8 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     getUpdatedAttrNames () {
-        let states = this.getStates();
-        let names = [];
+        const states = this.getStates();
+        const names = [];
         for (let name of this.attrs) {
             if (states[name]) {
                 names.push(name);
@@ -92,8 +92,8 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     getInheritedAttrNames () {
-        let states = this.getStates();
-        let names = [];
+        const states = this.getStates();
+        const names = [];
         for (let name of this.attrs) {
             if (!states[name]) {
                 names.push(name);
@@ -103,7 +103,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     async setInheritedValues (origin) {
-        let states = this.getStates();
+        const states = this.getStates();
         for (let name of this.attrs) {
             if (!states[name]) {
                 this.owner.set(name, await this.getOriginValue(name, origin));
@@ -112,7 +112,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     setStatesByData (data) {
-        let states = {};
+        const states = {};
         for (let name of this.attrs) {
             states[name] = data.hasOwnProperty(name);
         }

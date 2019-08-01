@@ -1,19 +1,19 @@
 <!-- _part/group/columns -->
 <%
-let params = {
+const p = {
     css: typeof css === 'undefined' ? '' : css,
     columnCss: typeof columnCss === 'undefined' ? 'col-sm-6' : columnCss,
     labelCss: typeof labelCss === 'undefined' ? 'col-sm-4' : labelCss,
     valueCss: typeof valueCss === 'undefined' ? 'col-sm-8' : valueCss
 };
 %>
-<div class="row <%- params.css %>">
+<div class="row <%- p.css %>">
     <% for (let item of items) {
         item.params = item.params || {};
-        item.params.labelCss = item.params.labelCss === undefined ? params.labelCss : item.params.labelCss;
-        item.params.valueCss = item.params.valueCss === undefined ? params.valueCss : item.params.valueCss;
+        item.params.labelCss = item.params.labelCss === undefined ? p.labelCss : item.params.labelCss;
+        item.params.valueCss = item.params.valueCss === undefined ? p.valueCss : item.params.valueCss;
     %>
-    <div class="col <%- item.css === undefined ? params.columnCss : item.css %>">
+    <div class="col <%- item.css === undefined ? p.columnCss : item.css %>">
         <% if (Array.isArray(item.items)) {
             for (let child of item.items) {
                 if (child.template) {

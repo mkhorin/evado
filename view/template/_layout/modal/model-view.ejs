@@ -1,9 +1,8 @@
 <!-- _layout/modal/model-view -->
 <%
-let data = {
+const data = {
     id: model.getId(),
-    key: model.PK,
-    update: _url('update')
+    key: model.PK
 };
 if (typeof params !== 'undefined') {
     Object.assign(data, params);
@@ -13,15 +12,15 @@ if (typeof params !== 'undefined') {
 
     <div class="box-header with-border scroll-header">
         <div class="model-controls">
-            <% if (data.update) { %>
-            <button class="update btn btn-warning btn-light" type="button" title="Update">
-                <span class="glyphicon glyphicon-pencil"></span>
-            </button>
-            <% } %>
+
+            <button data-id="copyId" class="btn btn-white" type="button" title="Copy ID">ID</button>
+
             <button data-id="reload" class="reload btn btn-default" type="button" title="Reload">
                 <span class="fa fa-sync-alt"></span>
             </button>
-            <%- include('../../_part/tool/model-history') %>
+
+            <%- include(_view.get('_part/tool/model-history')) %>
+            <%- include(_view.get('_part/misc/universal-render'), {data: _data.get('customControls')}) %>
 
             <% if (_data.get('help')) { %>
             <span class="model-help fa fa-question-circle" title="<%= _data.get('help') %>"></span>

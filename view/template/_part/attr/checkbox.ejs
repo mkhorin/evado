@@ -1,18 +1,18 @@
 <!-- _part/attr/checkbox -->
 
-<% let params = {}; %>
-<%- include('_params', {params}) %>
+<% const p = {}; %>
+<%- include('_params', {p}) %>
 
-<div class="form-attr form-group <%- params.css %>" data-type="checkbox"
-     data-attraction='<%= params.attraction %>'>
-    <div class="<%- params.labelCss %>"></div>
-    <div class="<%- params.valueCss %>">
+<div class="form-attr form-group <%- p.css %>" data-type="checkbox"
+     data-attraction='<%= p.attraction %>'>
+    <div class="<%- p.labelCss %>"></div>
+    <div class="<%- p.valueCss %>">
         <div class="checkbox checkbox-init">
-            <label data-t="<%- params.translate %>" title="<%= params.hint %>">
-                <input name="<%- params.name %>"
-                       type="hidden" class="form-value" value="<%- params.value ? 'on' : ''%>">
-                <input<%- params.value ? ' checked' : '' %> type="checkbox">
-                <span data-t="<%- params.translate %>"><%- params.label %></span>
+            <label data-t="<%- p.translate %>" title="<%= p.hint %>">
+                <input name="<%- p.name %>"
+                       type="hidden" class="form-value" value="<%- p.value ? 'on' : ''%>">
+                <input<%- p.value ? ' checked' : '' %> type="checkbox">
+                <span data-t="<%- p.translate %>"><%- p.label %></span>
             </label>
         </div>
         <div class="error-block"></div>

@@ -8,7 +8,7 @@ const Base = require('areto/base/Action');
 module.exports = class WidgetAction extends Base {
 
     async execute () {
-        let widget = this.controller.createView().createWidget(this.getQueryParam('id'));
+        const widget = this.controller.createView().createWidget(this.getQueryParam('id'));
         if (!widget) {
             throw new NotFound;
         }

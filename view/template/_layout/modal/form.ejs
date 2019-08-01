@@ -1,32 +1,34 @@
 <!-- _layout/modal/form -->
 <%
-let data = {
+const p = {
+    jam: 'Model',
     url: _controller.getOriginalUrl(),
     className: model.NAME,
-    timestamp: _controller.timestamp
+    timestamp: _controller.timestamp,
+    save: _data.get('save', true)
 };
 if (typeof params !== 'undefined') {
-    Object.assign(data, params);
+    Object.assign(p, params);
 }
 %>
-<div class="jmodal-scroll-container box-info box" data-title="<%= blocks.title %>">
+<div class="jmodal-scroll-container box-info box" data-title="<%- blocks.title %>">
     <div class="box-header with-border scroll-header">
         <div class="model-controls">
+            <% if (p.save) { %>
             <button data-id="saveClose" class="btn btn-primary mr20" type="button" title="Save and close">
                 <span class="glyphicon glyphicon-off"></span>
             </button>
-
-            <button data-id="reload" class="reload btn btn-default" type="button" title="Reload">
+            <% } %>
+            <button data-id="reload" class="reload btn btn-default mr15" type="button" title="Reload">
                 <span class="fa fa-sync-alt"></span>
             </button>
-
             <%- include(_view.get('_part/misc/universal-render'), {data: _data.get('customControls')}) %>
         </div>
     </div>
     <div class="scroll-body box-body">
         <form class="model form-horizontal form" autocomplete="off" enctype="multipart/form-data"
-              data-jam="Model"
-              data-params="<%= JSON.stringify(data) %>">
+              data-jam="<%- p.jam %>"
+              data-params="<%= JSON.stringify(p) %>">
             <%- body -%>
         </form>
     </div>

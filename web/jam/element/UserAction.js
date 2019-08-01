@@ -20,11 +20,6 @@ Jam.UserAction = class extends Jam.Element {
             : $.Deferred().resolve();
     }
 
-    constructor ($element) {
-        super($element);
-        this.init();
-    }
-
     init () {
         this.$element.click(this.onClick.bind(this));
     }

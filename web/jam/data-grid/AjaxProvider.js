@@ -12,7 +12,7 @@ Jam.DataGridAjaxProvider = class {
 
     load () {
         this.abort();
-        let request = this.getRequestParams();
+        const request = this.getRequestParams();
         this.trigger('beforeXhr', {request});
         if (request.dataType === 'json') {
             request.data = JSON.stringify(request.data);
@@ -61,7 +61,7 @@ Jam.DataGridAjaxProvider = class {
     }
 
     getRequestData (data) {
-        let length = this.grid.pagination.pageSize;
+        const length = this.grid.pagination.pageSize;
         return {
             length,
             columns: this.params.columns,
@@ -81,7 +81,7 @@ Jam.TreeDataGridAjaxProvider = class extends Jam.DataGridAjaxProvider {
     }
 
     getRequestData () {
-        let data = super.getRequestData();
+        const data = super.getRequestData();
         if (this.node) {
             Object.assign(data, {
                 length: 0,

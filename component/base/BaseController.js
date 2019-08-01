@@ -16,7 +16,7 @@ module.exports = class BaseController extends Base {
     }
 
     getRefUrl () {
-        let ref = this.isGet()
+        const ref = this.isGet()
             ? this.getHttpHeader('referrer')
             : this.getPostParam('referrer');
         return ref ? ref : '';
@@ -41,8 +41,8 @@ module.exports = class BaseController extends Base {
         if (!params.id) {
             params.id = this.getQueryParam('id') || this.getPostParam('id');
         }
-        params.ModelClass = params.ModelClass || this.getModelClass();
-        let model = this.spawn(params.ModelClass);
+        params.Class = params.Class || this.getModelClass();
+        let model = this.spawn(params.Class);
         params.id = model.getDb().normalizeId(params.id);
         if (!params.id) {
             throw new BadRequest('Invalid ID');
@@ -58,7 +58,7 @@ module.exports = class BaseController extends Base {
         const file = params.className;
         if (file) {
             try {
-                params.ModelClass = this.module.require(file) || require(file);
+                params.Class = this.module.require(file) || require(file);
             } catch (err) {
                 throw new NotFound(`Not found model class: ${file}`);
             }
@@ -75,7 +75,7 @@ module.exports = class BaseController extends Base {
     }
 
     handleModelError (...models) {
-        let result = {};
+        const result = {};
         for (let model of models) {
             if (model) {
                 result[model.constructor.name] = this.translateMessageMap(model.getFirstErrorMap());
@@ -107,15 +107,15 @@ module.exports = class BaseController extends Base {
             searchAttrs: ['name', 'label'],
             ...params
         };
-        let request = this.getPostParams();
-        let result = await (new Select2({request, query, params})).getList();
+        const request = this.getPostParams();
+        const result = await (new Select2({request, query, params})).getList();
         this.sendJson(result);
     }
 
     // META
 
     parseMetaParams (data) {
-        let result = {meta: this.module.getMeta()};
+        const result = {meta: this.module.getMeta()};
         data = typeof data === 'string' ? data : '';
         let [id, attrName, viewName, className] = data.split('.');
         result.class = result.meta.getClass(className);

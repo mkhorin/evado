@@ -1,48 +1,48 @@
 <%
-    params.id = typeof id === 'undefined' ? model.getFormAttrId(attr, _controller.timestamp) : id;
-    params.name = typeof name === 'undefined' ? model.getFormAttrName(attr) : name;
-    params.label = typeof label === 'undefined' ? model.getAttrLabel(attr) : label;
-    params.hint = typeof hint === 'undefined' ? model.getAttrHint(attr) : hint;
-    params.extHint = typeof extHint === 'undefined' ? '' : extHint;
-    params.placeholder = typeof placeholder === 'undefined' ? '' : placeholder;
-    params.type = typeof type === 'undefined' ? '' : type;
-    params.disabled = typeof disabled === 'undefined' ? '' : disabled;
-    params.required = typeof required === 'undefined' ? model.isAttrRequired(attr) : required;
-    params.required = params.required ? ' required' : '';
-    params.format = typeof format === 'undefined' ? '' : format;
-    params.attraction = typeof attraction === 'undefined' ? '' : JSON.stringify(attraction);
-    params.css = typeof css === 'undefined' ? '' : css;
-    params.labelCss = typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss;
-    params.valueCss = typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss;
-    params.translate = typeof translate === 'undefined' ? '' : translate;
-    params.handler = typeof handler === 'undefined' ? '' : JSON.stringify(handler);
+    p.id = typeof id === 'undefined' ? model.getFormAttrId(attr, _controller.timestamp) : id;
+    p.name = typeof name === 'undefined' ? model.getFormAttrName(attr) : name;
+    p.label = typeof label === 'undefined' ? model.getAttrLabel(attr) : label;
+    p.hint = typeof hint === 'undefined' ? model.getAttrHint(attr) : hint;
+    p.extHint = typeof extHint === 'undefined' ? '' : extHint;
+    p.placeholder = typeof placeholder === 'undefined' ? '' : placeholder;
+    p.type = typeof type === 'undefined' ? '' : type;
+    p.disabled = typeof disabled === 'undefined' ? '' : disabled;
+    p.required = typeof required === 'undefined' ? model.isAttrRequired(attr) : required;
+    p.required = p.required ? ' required' : '';
+    p.format = typeof format === 'undefined' ? '' : format;
+    p.attraction = typeof attraction === 'undefined' ? '' : JSON.stringify(attraction);
+    p.css = typeof css === 'undefined' ? '' : css;
+    p.labelCss = typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss;
+    p.valueCss = typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss;
+    p.translate = typeof translate === 'undefined' ? '' : translate;
+    p.handler = typeof handler === 'undefined' ? '' : JSON.stringify(handler);
 
-    params.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
-    if (params.sourceValue === undefined && typeof defaultValue !== 'undefined') {
-        params.sourceValue = defaultValue;
+    p.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
+    if (p.sourceValue === undefined && typeof defaultValue !== 'undefined') {
+        p.sourceValue = defaultValue;
     }
-    params.value = params.sourceValue;
-    if (params.value instanceof Date) {
-        params.value = params.value.toISOString();
+    p.value = p.sourceValue;
+    if (p.value instanceof Date) {
+        p.value = p.value.toISOString();
     }
-    if (_view.MongoHelper.isObjectId(params.value)) {
-        params.value = params.value.toString();
+    if (_view.MongoHelper.isObjectId(p.value)) {
+        p.value = p.value.toString();
     }
-    params.displayValue = typeof displayValue === 'undefined' ? params.value : displayValue;
+    p.displayValue = typeof displayValue === 'undefined' ? p.value : displayValue;
 
-    if (params.format) {
-        switch (params.format) {
+    if (p.format) {
+        switch (p.format) {
             case 'label':
-                params.displayValue = model.getAttrValueLabel(attr) || params.displayValue;
+                p.displayValue = model.getAttrValueLabel(attr) || p.displayValue;
                 break;
             default:
-                params.displayValue = _format(params.displayValue, params.format);
+                p.displayValue = _format(p.displayValue, p.format);
         }
     }
-    if (params.value === undefined || params.value === null) {
-        params.value = '';
+    if (p.value === undefined || p.value === null) {
+        p.value = '';
     }
-    if (params.displayValue === undefined || params.displayValue === null) {
-        params.displayValue = _format(null);
+    if (p.displayValue === undefined || p.displayValue === null) {
+        p.displayValue = _format(null);
     }
 %>

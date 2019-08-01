@@ -1,9 +1,9 @@
 <!-- _part/attr/relation -->
 
-<% let params = {}; %>
-<%- include('_params', {params}) %>
+<% const p = {}; %>
+<%- include('_params', {p}) %>
 <%
-let d = {
+const d = {
     showTop: false,
     key: model.PK,
     relName: attr,
@@ -79,12 +79,16 @@ if (d.modalSort) {
         d.modalSort = _url(d.modalSort);
     }
 }
-for (let col of d.columns) {
-    if (col.label === undefined) {
-        col.label = rel.model.getAttrLabel(col.name);
+let hasKeyColumn = false;
+for (let column of d.columns) {
+    if (column.label === undefined) {
+        column.label = rel.model.getAttrLabel(column.name);
+    }
+    if (column.name === d.key) {
+        hasKeyColumn = true;
     }
 }
-if (!d.customIdAttr) {
+if (!hasKeyColumn) {
     d.columns.unshift({
         name: model.PK,
         type: 'id',
@@ -97,11 +101,12 @@ if (d.filter && !d.filter.url) {
     d.filter.url = _url(`${relUrl}/filter`);
 }
 %>
-<div class="form-attr form-group<%- params.required %> <%- params.css %>" data-type="relation">
-    <label class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
+<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-type="relation">
+    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint%>"
+           data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
         <div class="box box-grid box-grid-field">
-            <input name="<%- params.name %>" type="hidden" class="form-value" value="">
+            <input name="<%- p.name %>" type="hidden" class="form-value" value="">
             <div class="box-header">
                 <div class="list-controls" data-jam="IndexSorting">
                     <% if (d.link) { %>
@@ -197,6 +202,7 @@ if (d.filter && !d.filter.url) {
             </div>
             <div class="list-loader overlay"><i class="fa fa-spinner fa-spin"></i></div>
         </div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

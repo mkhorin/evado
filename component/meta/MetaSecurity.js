@@ -114,7 +114,7 @@ module.exports = class MetaSecurity extends Base {
     }
 
     async resolveRelations (view) {
-        let data = {
+        const data = {
             targetType: Rbac.TARGET_CLASS,
             actions: [Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]
         };
@@ -141,7 +141,7 @@ module.exports = class MetaSecurity extends Base {
     }
 
     filterForbiddenAttrs (action, model) {
-        let attrs = this.attrAccess.forbiddenAttrMap[action];
+        const attrs = this.attrAccess.forbiddenAttrMap[action];
         if (Array.isArray(attrs)) {
             for (let attr of attrs) {
                 model.unset(attr);

@@ -46,7 +46,7 @@ module.exports = class CrudController extends Base {
             ...params.templateData   
         });
     }
-
+/*
     async actionView (params) {
         params = {
             template: 'view',
@@ -58,9 +58,9 @@ module.exports = class CrudController extends Base {
             ...params.templateData
         });
     }
-
+*/
     async actionViewTitle (params) {
-        let model = await this.getModel(params);
+        const model = await this.getModel(params);
         this.sendJson(model.getTitle());
     }
 
@@ -71,7 +71,7 @@ module.exports = class CrudController extends Base {
             afterCreate: this.afterCreate,
             ...params
         };
-        let model = params.model || this.createModel();
+        const model = params.model || this.createModel();
         model.scenario = params.scenario;
         if (this.isGet()) {
             await model.setDefaultValues();
@@ -88,7 +88,7 @@ module.exports = class CrudController extends Base {
             template: 'update',
             ...params
         };
-        let model = await this.getModel(params);
+        const model = await this.getModel(params);
         model.scenario = params.scenario;
         model.user = this.user;
         if (params.getParamsByModel) {
@@ -122,7 +122,7 @@ module.exports = class CrudController extends Base {
             scenario: 'clone',
             ...params
         };
-        let sample = await this.getModelByClassName({
+        const sample = await this.getModelByClassName({
             className: this.getQueryParam('sampleClass')
         });
         params.model.getBehavior('clone').setOriginal(sample);
@@ -145,19 +145,19 @@ module.exports = class CrudController extends Base {
     // REMOVE
 
     async actionRemove () {
-        let model = await this.getModel();
+        const model = await this.getModel();
         await model.remove();
         this.sendText(model.getId());
     }
 
     async actionRemoveList () {
-        let ids = this.getPostParam('ids');
+        const ids = this.getPostParam('ids');
         if (!ids) {
             throw new BadRequest;
         }
-        let ModelClass = this.getModelClass();
-        let models = await this.spawn(ModelClass).findById(ids.split(',')).all();
-        await ModelClass.removeBatch(models);
+        const Class = this.getModelClass();
+        const models = await this.spawn(Class).findById(ids.split(',')).all();
+        await Class.removeBatch(models);
         this.sendStatus(200);
     }
 
@@ -187,11 +187,10 @@ module.exports = class CrudController extends Base {
         };
         let rel = null;
         if (params.pid) {
-            let model = await this.getModel({id: params.pid});
+            const model = await this.getModel({id: params.pid});
             rel = model.getRelation(params.rel).with(params.with);
-        } else { // new model
-            let model = this.createModel();
-            rel = model.getRelation(params.rel).model.find(['FALSE']);
+        } else { // new model            
+            rel = this.createModel().getRelation(params.rel).model.find(['FALSE']);
         }
         if (!rel) {
             throw new NotFound;
@@ -205,8 +204,8 @@ module.exports = class CrudController extends Base {
             rel: this.getQueryParam('rel'),
             ...params
         };
-        let model = this.createModel();
-        let rel = model.getRelation(params.rel).with(params.with);
+        const model = this.createModel();
+        const rel = model.getRelation(params.rel).with(params.with);
         if (rel) {
             return this.sendSelectList(rel.model.find(), params);
         }

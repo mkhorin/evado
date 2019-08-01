@@ -34,7 +34,7 @@ module.exports = class LoginByEmail extends Base {
 
     async getIdentity () {
         this._identity = null;
-        let model = await this.spawn(User).findByEmail(this.email).one();
+        const model = await this.spawn(User).findByEmail(this.email).one();
         if (!model || !model.validatePassword(this.password)) {
             this.module.log('warn', this.failedMessage, {
                 email: this.email,

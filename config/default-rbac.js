@@ -2,10 +2,7 @@
 
 module.exports = {
 
-    permissions: {
-        'indexing': {
-            label: 'Indexing'
-        },
+    permissions: {       
         'upload': {
             label: 'Upload files'
         }

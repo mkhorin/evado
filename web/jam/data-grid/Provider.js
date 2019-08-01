@@ -13,7 +13,7 @@ Jam.DataGridProvider = class {
 
     initColumns () {
         for (let column of this.params.columns) {
-            column.formatFilterValue = column.format instanceof Function
+            column.formatFilterValue = typeof column.format === 'function'
                 ? column.format
                 : this.formatFilterValue.bind(this)
         }
@@ -33,11 +33,11 @@ Jam.DataGridProvider = class {
     // FILTER DATA
 
     useCommonSearch (data) {
-        let value = this.grid.commonSearch.getValue();
+        const value = this.grid.commonSearch.getValue();
         if (value === null) {
             return data;
         }
-        let keys = [];
+        const keys = [];
         for (let column of this.params.columns) {
             if (column.searchable) {
                 keys.push(this.createColumnFilterValues(column, data));
@@ -67,7 +67,7 @@ Jam.DataGridProvider = class {
         }
         this._sortItems = [];
         for (let name of Object.keys(order)) {
-            let column = this.grid.getColumn(name);
+            const column = this.grid.getColumn(name);
             if (column && column.sortable) {
                 let key = this.createColumnFilterValues(column, data);
                 this._sortItems.push([key, order[name]]);
@@ -98,7 +98,7 @@ Jam.DataGridProvider = class {
     // FORMAT
 
     createColumnFilterValues (column, data) {
-        let key = '_jamDataGridFilter_'+ column.name;
+        const key = '_jamDataGridFilter_'+ column.name;
         if (data.length && !data[0].hasOwnProperty(key)) {
             for (let doc of data) {
                 doc[key] = column.formatFilterValue(doc[column.name], column, doc)

@@ -1,5 +1,5 @@
 <%
-let params = {
+const p = {
     id: typeof id === 'undefined' ? model.getFormAttrId(attr) : id,
     name: typeof name === 'undefined' ?  model.getFormAttrName(attr) : name,
     value: typeof value === 'undefined' ?  !!model.get(attr) : value,
@@ -9,9 +9,8 @@ let params = {
 <div class="form-attr form-group">
     <div class="checkbox">
         <label>
-            <input name="<%- params.name %>" type="checkbox"
-                   class="checkbox-control" <%- params.value ? 'checked' : '' %>>
-            <%- _t(params.label) %>
+            <input name="<%- p.name %>" type="checkbox" <%- p.value ? 'checked' : '' %> class="checkbox-control">
+            <%- _t(p.label) %>
         </label>
     </div>
 </div>

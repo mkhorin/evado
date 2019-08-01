@@ -70,7 +70,7 @@ Jam.ColumnRenderer = class {
     }
 
     static asBoolean () {
-        return this.join(...arguments, Jam.FormatHelper.asBooleab);
+        return this.join(...arguments, Jam.FormatHelper.asBoolean);
     }
 
     static asDate () {

@@ -22,22 +22,48 @@ module.exports = class PreviewSize extends Base {
             output: 'jpeg',
             outputParams: {quality: 70},
             flatten: '#ffffff', // merge alpha transparency channel
-            // composite: [{}],
+            // composite: [{
+            //  input: 'asset/watermark/large.png',
+            //  gravity: 'southeast'
+            // }],
             ...config
         });
     }
 
     async init () {
-        this.resolveCompositeInput();
+        await this.resolveComposite();
     }
 
-    resolveCompositeInput () {
-        if (Array.isArray(this.composite)) {
+    async resolveComposite () {
+        if (!this.composite) {
+            return null;
+        }
+        this._minCompositeWidth = this.width;
+        this._minCompositeHeight = this.height;
+        try {
             for (let data of this.composite) {
-                if (typeof data.input === 'string') {
-                    data.input = this.module.getPath(data.input);
-                }
+                await this.resolveCompositeInput(data);
             }
+        } catch (err) {
+            this.module.logError(this.wrapClassMessage(`Composite failed:`), err);
+            this.composite = null;
+        }
+    }
+
+    async resolveCompositeInput (item) {
+        if (typeof item.input !== 'string') {
+            return null;
+        }
+        item.input = this.module.getPath(item.input);
+        let {width, height} = await sharp(item.input).metadata();
+        if (width > this.width || height > this.height) {
+            throw new Error(`Composite size exceeds preview: ${item.input}`);
+        }
+        if (width < this._minCompositeWidth) {
+            this._minCompositeWidth = width;
+        }
+        if (height < this._minCompositeHeight) {
+            this._minCompositeHeight = height;
         }
     }
 
@@ -51,16 +77,22 @@ module.exports = class PreviewSize extends Base {
             image.flatten({background: this.flatten});
         }
         image[this.output](this.outputParams);
-        return this.composite
-            ? sharp(await image.toBuffer()).composite(this.composite)
-            : image;
+        if (!this.composite) {
+            return image;
+        }
+        const result = sharp(await image.toBuffer());
+        const {width, height} = await result.metadata();
+        if (width < this._minCompositeWidth || height < this._minCompositeHeight) {
+            return image;
+        }
+        return result.composite(this.composite);
     }
 
     keepAspectRatio (width, height, sourceWidth, sourceHeight) {
         sourceWidth = sourceWidth || 1;
         sourceHeight = sourceHeight || 1;
-        let sourceRatio = sourceWidth / sourceHeight;
-        let ratio = width / height;
+        const sourceRatio = sourceWidth / sourceHeight;
+        const ratio = width / height;
         if (sourceRatio > ratio) {
             height = width / sourceRatio;
         } else {

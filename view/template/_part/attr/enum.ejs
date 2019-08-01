@@ -1,22 +1,22 @@
 <!-- _part/attr/enum -->
 <%
-let params = {
+const p = {
     select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
     sets: typeof sets === 'undefined' ? '' : JSON.stringify(sets)
 };
 %>
-<%- include('_params', {params}) %>
+<%- include('_params', {p}) %>
 
-<div class="form-attr form-group<%- params.required %> <%- params.css %>" data-type="enum"
-     data-value="<%= params.value %>" data-sets="<%= params.sets %>"
-     data-select2="<%= params.select2 %>" data-attraction='<%= params.attraction %>'>
-    <label class="control-label <%- params.labelCss %>" title="<%= params.extHint %>"
-           data-t="<%- params.translate %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
-        <select id="<%- params.id %>" name="<%- params.name %>" <%- params.disabled %>
+<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-type="enum"
+     data-value="<%= p.value %>" data-sets="<%= p.sets %>"
+     data-select2="<%= p.select2 %>" data-attraction='<%= p.attraction %>'>
+    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+           data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
+        <select id="<%- p.id %>" name="<%- p.name %>" <%- p.disabled %>
                 class="form-control form-value">
         </select>
-        <div class="hint-block" data-t="<%- params.translate %>"><%- params.hint %></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

@@ -21,9 +21,9 @@ module.exports = class MetaTreeDataGrid extends Base {
     }
 
     async renderModel (model) {
-        let data = {[this.CLASS_KEY]: model.class.id};
+        const data = {[this.CLASS_KEY]: model.class.id};
         if (this.level) {
-            let query = this.level.refView.find(this.module);
+            const query = this.level.refView.find(this.module);
             await this.level.refAttr.rel.setQueryByModel(query, model);
             // await this.metaData.security.access.filterObjects(query);
             data[this.HAS_CHILDREN_KEY] = !!await query.order(null).id();

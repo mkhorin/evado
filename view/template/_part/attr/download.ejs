@@ -1,27 +1,28 @@
 <!-- _part/attr/download -->
 <%
-let params = {
+const p = {
     fileUrl: `file/download?id=${model.getId()}`,
     preview: typeof previewSizeKey === 'undefined' ? 'large' : previewSizeKey
 };
-let preview = model.isImage()
-    ? `file/preview?id=${model.getId()}&s=${params.preview}&t=${_controller.timestamp}`
+const preview = model.isImage()
+    ? `file/preview?id=${model.getId()}&s=${p.preview}&t=${_controller.timestamp}`
     : null;
 %>
-<%- include('_params', {params}) %>
+<%- include('_params', {p}) %>
 
 <div class="form-attr form-group">
-    <label class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
+    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+           data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
         <% if (preview) { %>
         <p class="form-control-static">
-            <a href="<%- params.fileUrl %>" target="_blank">
+            <a href="<%- p.fileUrl %>" target="_blank">
                 <img src="<%- preview %>" alt="<%= model.getTitle() %>">
             </a>
         </p>
         <% } else { %>
         <p class="form-control-static">
-            <a href="<%- params.fileUrl %>" target="_blank"><%- model.getTitle() %></a>
+            <a href="<%- p.fileUrl %>" target="_blank"><%- model.getTitle() %></a>
         </p>
         <% } %>
     </div>

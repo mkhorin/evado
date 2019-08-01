@@ -25,7 +25,7 @@ Jam.DataGridRenderer = class {
 
     initColumns () {
         for (let column of this.params.columns) {
-            if (!(column.render instanceof Function)) {
+            if (typeof column.render !== 'function') {
                 column.render = this.renderCellValue.bind(this);
             }
         }
@@ -140,7 +140,7 @@ Jam.DataGridRenderer = class {
 
     createHeadMatrix (columns) {
         this.setGroupLevels(columns);
-        let matrix = [columns];
+        const matrix = [columns];
         for (let x = 0; x < columns.length; ++x) {
             let column = columns[x];
             let group = this.grid.columnGroupMap[column.group];

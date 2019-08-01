@@ -1,32 +1,32 @@
 <!-- _part/attr/radioList -->
 <%
-let params = {};
+const p = {};
 if (items === 'labels') {
     items = _controller.getLabelSelectItems(attr, model);
 }
 %>
-<%- include('_params', {params}) %>
+<%- include('_params', {p}) %>
 
-<div class="form-attr <%- params.css %> <%- params.required %> form-group"
+<div class="form-attr <%- p.css %> <%- p.required %> form-group"
      data-type="radioList"
-     data-attraction='<%= params.attraction %>'>
-    <label class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
-        <input name="<%- params.name %>" value="<%- params.value %>" type="hidden" class="form-value">
+     data-attraction='<%= p.attraction %>'>
+    <label class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
+        <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
         <div class="radio-list">
-            <% if (!params.required && typeof emptyText !== 'undefined') { %>
+            <% if (!p.required && typeof emptyText !== 'undefined') { %>
             <label class="radio radio-inline">
                 <input type="radio" value="">
-                <span data-t="<%- params.translate %>"><%- emptyText %></span>
+                <span data-t="<%- p.translate %>"><%- emptyText %></span>
             </label>
             <% } for (let item of items) { %>
             <label class="radio radio-inline">
                 <input value="<%- item.value %>" type="radio">
-                <span data-t="<%- params.translate %>"><%- item.text %></span>
+                <span data-t="<%- p.translate %>"><%- item.text %></span>
             </label>
             <% } %>
         </div>
-        <div class="hint-block" data-t="<%- params.translate %>"><%- params.hint %></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
     </div>
 </div>

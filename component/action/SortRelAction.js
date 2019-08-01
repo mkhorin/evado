@@ -8,9 +8,9 @@ const Base = require('areto/base/Action');
 module.exports = class SortRelAction extends Base {
 
     async execute () {
-        let params = this.getQueryParams();
-        await this.setParentModel(params.pid);
-        await this.setRelation(params.rel);
+        const {pid, rel} = this.getQueryParams();
+        await this.setParentModel(pid);
+        await this.setRelation(rel);
         if (this.isGet()) {
             return this.renderOrder();
         }
@@ -50,7 +50,7 @@ module.exports = class SortRelAction extends Base {
     }
 
     async renderOrder () {
-        let data = {
+        const data = {
             'parentModel': this.parentModel,
             'relModel': this.relation.model,
             'models': await this.relation.order({[this.orderBehavior.orderAttr]: 1}).all(),

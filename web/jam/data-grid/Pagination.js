@@ -174,7 +174,7 @@ Jam.DataGridPagination = class {
     // JUMPER
 
     drawJumper () {
-        let numPages = this.getNumPages();
+        const numPages = this.getNumPages();
         if (!this.$jumper.length || numPages <= this.params.maxPageToggles) {
             return this.$jumper.addClass('hidden');
         }
@@ -197,7 +197,7 @@ Jam.DataGridPagination = class {
             if (this.params.keepPageSize) {
                 this.pageSize = this.grid.getStoreData('pageSize', this.pageSize);
             }
-            let sizes = this.params.pageSizes.map(this.renderPageSize, this).join('');
+            const sizes = this.params.pageSizes.map(this.renderPageSize, this).join('');
             this.$pageSizeSelect.html(sizes).val(this.pageSize);
             this.$pageSize.removeClass('hidden');
         }

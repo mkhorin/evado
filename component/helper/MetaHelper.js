@@ -6,13 +6,14 @@
 module.exports = class MetaHelper {
 
     static splitByPrefix (name, separator, prefixes) {
-        if (typeof name === 'string') {
-            let pos = name.indexOf(separator);
-            if (pos !== -1) {
-                let prefix = name.substring(0, pos);
-                if (prefixes.includes(prefix)) {
-                    return [prefix, name.substring(pos + 1)];
-                }
+        if (typeof name !== 'string') {
+            return;
+        }
+        const pos = name.indexOf(separator);
+        if (pos !== -1) {
+            let prefix = name.substring(0, pos);
+            if (prefixes.includes(prefix)) {
+                return [prefix, name.substring(pos + 1)];
             }
         }
     }
@@ -20,7 +21,7 @@ module.exports = class MetaHelper {
     // BUCKETS
     
     static createBuckets (models, key) {
-        let buckets = {
+        const buckets = {
             models: {},
             values: []
         };
@@ -51,7 +52,7 @@ module.exports = class MetaHelper {
 
     static rebuildBuckets (buckets, docs, newKey, oldKey) {
         buckets.values = [];
-        let newDocs = {};
+        const newDocs = {};
         for (let doc of docs) {
             let value = doc[newKey];
             if (value !== '' && value !== null && value !== undefined) {
@@ -67,7 +68,7 @@ module.exports = class MetaHelper {
     }
 
     static setRowsToDocs (rows, docs, rowKey, docKey, valueKey) {
-        let result = {};
+        const result = {};
         for (let row of rows) {
             let value = row[rowKey];
             if (Array.isArray(value)) {

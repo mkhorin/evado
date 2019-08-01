@@ -17,6 +17,7 @@ Jam.I18n.defaults = {
 
     'Can not restore ambiguous values': 'Не могу восстановить неоднозначные значения',
     'Cancel': 'Отменить',
+    'Change history': 'История изменений',
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
     'Close without saving?': 'Закрыть без сохранения?',
@@ -50,8 +51,7 @@ Jam.I18n.defaults = {
 
     'Import': 'Импортировать',
     'Index definitions': 'Определения индексов',
-    'Index definitions not found in class:': 'Определения индексов не найдено в классе',
-    'Indexed table:': 'Индексируемая таблица:',
+    'Index definitions not found in class:': 'Определения индексов не найдены в классе',
     'Indexing': 'Индексирование',
     'Input ID...': 'Введите ID...',
     'Input number...': 'Введите число...',
@@ -101,6 +101,7 @@ Jam.I18n.defaults = {
     'Sort': 'Сортировать',
     'Status': 'Статус',
 
+    'Table:': 'Таблица:',
     'Text': 'Текст',
     'Too many files': 'Слишком много файлов',
     'Type': 'Тип',

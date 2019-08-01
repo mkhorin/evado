@@ -15,7 +15,7 @@ module.exports = class DataImportConsole extends Base {
     }
 
     async exportMeta () {
-        let models = this.getMetaModels(this.params.meta);
+        const models = this.getMetaModels(this.params.meta);
         for (let model of models) {
             await model.exportData(this.exportTable.bind(this));
         }

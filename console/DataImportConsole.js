@@ -24,11 +24,11 @@ module.exports = class DataImportConsole extends Base {
     }
 
     async importFile (file) {
-        let table = FileHelper.getBasename(file);
+        const table = FileHelper.getBasename(file);
         if (this.isExcluded(table)) {
             return this.log('info', `File excluded: ${table}`);
         }
-        let data = await FileHelper.readJsonFile(file);
+        const data = await FileHelper.readJsonFile(file);
         if (!Array.isArray(data)) {
             return this.log('error', `Invalid data: ${file}`);
         }

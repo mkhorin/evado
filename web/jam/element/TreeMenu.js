@@ -7,8 +7,7 @@ Jam.TreeMenu = class extends Jam.Element {
 
     constructor ($menu) {
         super($menu);
-        this.$menu = $menu;         
-        this.init();
+        this.$menu = $menu;
     }
 
     init () {

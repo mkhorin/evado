@@ -1,11 +1,11 @@
 <!-- _part/misc/tabs -->
 <%
-let params = {
+const p = {
     jam: typeof jam === 'undefined' ? 'Tabs' : jam,
     cssClass: typeof cssClass === 'undefined' ? '' : cssClass
 };
 %>
-<div class="<%- params.cssClass %> tabs" data-jam="<%- params.jam %>">
+<div class="<%- p.cssClass %> tabs" data-jam="<%- p.jam %>">
     <ul class="nav nav-tabs" role="tablist">
     <% for (let item of items) { %>
     <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">

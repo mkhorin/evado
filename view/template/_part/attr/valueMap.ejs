@@ -1,16 +1,16 @@
 <!-- _part/attr/valueMap -->
 
-<% let params = {}; %>
-<%- include('_params', {params}) %>
+<% const p = {}; %>
+<%- include('_params', {p}) %>
 
-<div class="value-map form-attr form-group<%- params.required %>" data-type="valueMap">
-    <label class="control-label <%- params.labelCss %>" data-t="<%- params.translate %>"><%- params.label %></label>
-    <div class="<%- params.valueCss %>">
-        <input name="<%- params.name %>" type="hidden" class="form-value"
-               value="<%= params.value ? JSON.stringify(params.value) : '' %>">
-
+<div class="value-map form-attr form-group<%- p.required %>" data-type="valueMap">
+    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+           data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
+        <input name="<%- p.name %>" type="hidden" class="form-value"
+               value="<%= p.value ? JSON.stringify(p.value) : '' %>">
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
-
         <div class="value-map-items">
             <div class="value-map-item">
                 <div class="row">

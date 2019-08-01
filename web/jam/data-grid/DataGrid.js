@@ -274,7 +274,7 @@ Jam.TreeDataGridNode = class {
     }
 
     collapse () {
-        let $children = this.getChildren();
+        const $children = this.getChildren();
         for (let row of $children.filter('.opened')) {
             this.grid.getNodeByRow($(row)).toggle(false);
         }

@@ -45,7 +45,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionSignIn () {
-        let model = this.spawn(SignInForm, {user: this.user});
+        const model = this.spawn(SignInForm, {user: this.user});
         await model.resolveRateLimit();
         if (model.isBlocked()) {
             return this.blockByRateLimit(model.rateLimitModel);
@@ -60,7 +60,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionSignUp () {
-        let model = this.spawn(SignUpForm, {user: this.user});
+        const model = this.spawn(SignUpForm, {user: this.user});
         if (this.isGet()) {
             return this.render('sign-up', {model});
         }
@@ -71,7 +71,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionChangePassword () {
-        let model = this.spawn(ChangePasswordForm, {userModel: this.user.model});
+        const model = this.spawn(ChangePasswordForm, {userModel: this.user.model});
         if (this.isGet()) {
             return this.render('change-password', {model});
         }

@@ -50,6 +50,8 @@ body {
 }
 
 :root {
+    --color-selected-row: #fff0d8;
+
     --color-light-primary: #3c8dbc;
     --color-dark-primary: #367fa9;
     --color-light-info: #00c0ef;
@@ -547,9 +549,6 @@ body.loading {
 .model-view .form-group {
     margin-bottom: 5px;
 }
-.model-view .form-group:last-child {
-    margin-bottom: 0;
-}
 .model-controls .btn {
     margin: 0 3px 0 0;
 }
@@ -591,6 +590,9 @@ body.loading {
 .form-control-static {
     min-height: 30px;
     padding: 4px 0;
+}
+.form-group:last-child {
+    margin-bottom: 0;
 }
 .form-group .form-control-feedback.success,
 .form-group .form-control-feedback.error {
@@ -690,12 +692,17 @@ body.loading {
 .input-group .form-control {
     z-index: 0;
 }
+
+.form .row .col {
+    margin-bottom: 15px;
+}
 .form fieldset + fieldset {
     /*margin-top: 30px;*/
 }
 .form legend {
     font-size: 16px;
 }
+
 select.form-control {
     padding: 0 4px;
     height: 28px;
@@ -792,6 +799,9 @@ textarea.form-control {
 .form > .form-group:first-child .box-grid-field {
     margin-top: 15px;
 }
+.form > .notice {
+    margin-bottom: 20px;
+}
 
 .no-label.form-group > label {
     display: none;
@@ -815,8 +825,9 @@ textarea.form-control {
 }
 
 .form-header {
-    font-size: 20px;
+    font-size: 18px;
     margin: 0 0 25px 0;
+    color: var(--color-dark-primary);
 }
 .model .form-header {
     margin-top: -10px;
@@ -874,7 +885,7 @@ textarea.form-control {
     padding:4px 5px;
 }
 
-/* DATA TABLE */
+/* LIST */
 
 .list-controls .btn,
 .list-controls .btn-group {
@@ -973,7 +984,7 @@ textarea.form-control {
     background-color: #fff8e0;
 }
 .table tbody tr.selected .ordered {
-    background-color: #fff0d8;
+    background-color: var(--color-selected-row);
 }
 .table tbody tr.inserted:nth-child(odd) td {
     background-color: #e0ffe0 !important;
@@ -1239,6 +1250,13 @@ input[type=checkbox].condition-value {
     margin-top: 8px;
 }
 
+.list-group-item {
+    padding: 6px 10px;
+}
+.list-group-item.selected {
+    background-color: var(--color-selected-row) !important;
+}
+
 /* ORDER LIST */
 
 .order-list {
@@ -1257,9 +1275,14 @@ input[type=checkbox].condition-value {
 .modal {
     z-index: 2001;
 }
-
+.modal-title {
+    font-size: 16px;
+}
 .modal-dialog .modal-body .form-group {
     margin: 0 0 15px 0;
+}
+.modal-dialog .modal-body .form-group:last-child {
+    margin-bottom: 0;
 }
 .modal-backdrop.in {
     opacity: 0.1;
@@ -1271,11 +1294,9 @@ input[type=checkbox].condition-value {
     margin-top: 2px;
 }
 .modal-footer {
-    padding: 10px 15px;
+    padding: 15px;
     text-align: left;
 }
-
-/* MODAL */
 
 .jmodal-area {
     position: relative;

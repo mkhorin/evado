@@ -16,18 +16,18 @@ module.exports = class DataConsole extends Base {
     }
 
     async drop () {
-        let models = this.getMetaModels(this.params.meta);
+        const models = this.getMetaModels(this.params.meta);
         for (let model of models) {
             await model.dropData();
         }
     }
 
     getMetaModels (names) {
-        let meta = this.app.getMeta();
+        const meta = this.app.getMeta();
         if (!names) {
             return meta.models;
         }
-        let models = [];
+        const models = [];
         for (let name of this.wrapArray(names)) {
             let model = meta.getModel(name);
             if (!model) {

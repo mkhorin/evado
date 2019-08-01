@@ -15,7 +15,7 @@ module.exports = class MetaSelect2 extends Base {
     }
 
     setSearch (text) {
-        let conditions = [];
+        const conditions = [];
         this.resolveKeyCondition(text, conditions);
         if (Array.isArray(this.searchAttrs)) {
             let stringSearch = this.getStringSearch(text);
