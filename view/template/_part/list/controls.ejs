@@ -2,10 +2,11 @@
 
 <div class="list-controls clearfix">
 
+    <% if (data.multiple) { %>
     <button data-id="selectAll" class="btn btn-white mr10" type="button" title="Select all">
         <span class="glyphicon glyphicon-list"></span>
     </button>
-    <% if (data.create) { %>
+    <% } if (data.create) { %>
     <button data-id="create" class="btn btn-success btn-light" type="button" title="Create">
         <span class="glyphicon glyphicon-plus"></span>
     </button>

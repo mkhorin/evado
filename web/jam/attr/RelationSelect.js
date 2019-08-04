@@ -39,12 +39,12 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
         this.$select.change(this.changeSelect.bind(this));
 
         this.$controls.find('.btn').click(()=> this.notice.hide());
-        this.getControl('unlink').click(this.unlink.bind(this));
-        this.getControl('view').click(this.view.bind(this));
-        this.getControl('create').click(this.create.bind(this));
-        this.getControl('update').click(this.update.bind(this));
-        this.getControl('remove').click(this.remove.bind(this));
-        this.getControl('sort').click(this.sort.bind(this));
+        this.getControl('unlink').click(this.onUnlink.bind(this));
+        this.getControl('view').click(this.onView.bind(this));
+        this.getControl('create').click(this.onCreate.bind(this));
+        this.getControl('update').click(this.onUpdate.bind(this));
+        this.getControl('remove').click(this.onRemove.bind(this));
+        this.getControl('sort').click(this.onSort.bind(this));
     }
 
     initChanges () {
@@ -183,8 +183,8 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
         this.notice.hide();
     }
 
-    unlink () {
-        let value = this.getOneSelectedValue();
+    onUnlink () {
+        const value = this.getOneSelectedValue();
         if (value) {
             if (this.startValues.includes(value)) {
                 this.changes.unlinks.push(value);
@@ -193,22 +193,26 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
         }
     }
 
-    view () {
-        let id = this.getOneSelectedValue();
-        id && this.loadModal(this.params.view, {id});
+    onView () {
+        const id = this.getOneSelectedValue();
+        if (id) {
+            this.loadModal(this.params.view, {id});
+        }
     }
 
-    create () {
+    onCreate () {
         this.loadModal(this.params.create);
     }
 
-    update () {
-        let id = this.getOneSelectedValue();
-        id && this.loadModal(this.params.update, {id});
+    onUpdate () {
+        const id = this.getOneSelectedValue();
+        if (id) {
+            this.loadModal(this.params.update, {id});
+        }
     }
 
-    remove () {
-        let value = this.getOneSelectedValue();
+    onRemove () {
+        const value = this.getOneSelectedValue();
         if (value && Jam.Helper.confirm('Remove selected items?')) {
             if (this.startValues.includes(value)) {
                 this.changes.removes.push(value);
@@ -217,12 +221,12 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
         }
     }
 
-    sort (reset) {
+    onSort () {
         this.loadModal(this.params.modalSort, null, (event, data)=> {});
     }
 
     removeSelect2Value (id) {
-        let value = this.$select.val();
+        const value = this.$select.val();
         if (Array.isArray(value)) {
             value.splice(value.indexOf(id), 1);
             this.$select.val(value).change();
@@ -252,7 +256,7 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
     }
 
     parseSelectedValue (data) {
-        let $item = this.$select.children(`[value="${id}"]`);
+        const $item = this.$select.children(`[value="${id}"]`);
         if ($item.length) {
             $item.html(data);
             this.$select.select2('destroy');
@@ -263,7 +267,7 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
     }
 
     sortByIdList (ids) {
-        let map = Jam.ArrayHelper.flip(ids);
+        const map = Jam.ArrayHelper.flip(ids);
         this.$select.children().sort((a, b)=> map[a.value] - map[b.value]).appendTo(this.$select);
     }
 };

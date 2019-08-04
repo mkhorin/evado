@@ -37,7 +37,7 @@ Jam.ModelAttr.Enum = class extends Jam.ModelAttr {
 
     onUpdate () {
         if (this.updateItems()) {
-            let value = this.getValue();
+            const value = this.getValue();
             this.$select.html(this.build());
             this.$select.val(value);
             if (value !== this.$select.val()) {
@@ -47,7 +47,7 @@ Jam.ModelAttr.Enum = class extends Jam.ModelAttr {
     }
 
     updateItems () {
-        let items = Jam.ModelAttr.EnumSet.filterItems(this.sets);
+        const items = Jam.ModelAttr.EnumSet.filterItems(this.sets);
         this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
         return this.items === items;
     }
@@ -100,7 +100,7 @@ Jam.ModelAttr.RadioEnum = class extends Jam.ModelAttr {
 
     onUpdate () {
         if (this.updateItems()) {
-            let value = this.getValue();
+            const value = this.getValue();
             this.$list.html(this.build());
             this.getRadioItem(value).length
                 ? this.setValue(value)
@@ -109,7 +109,7 @@ Jam.ModelAttr.RadioEnum = class extends Jam.ModelAttr {
     }
 
     updateItems () {
-        let items = Jam.ModelAttr.EnumSet.filterItems(this.sets);
+        const items = Jam.ModelAttr.EnumSet.filterItems(this.sets);
         this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
         return this.items === items;
     }
@@ -124,7 +124,7 @@ Jam.ModelAttr.RadioEnum = class extends Jam.ModelAttr {
 Jam.ModelAttr.EnumSet = class {
 
     static createSets (data, owner) {
-        let sets = [];
+        const sets = [];
         if (Array.isArray(data)) {
             for (let item of data) {
                 sets.push(new this(item, owner));

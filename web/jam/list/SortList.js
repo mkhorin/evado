@@ -31,16 +31,16 @@ Jam.SortList = class extends Jam.List {
     setSourceOrderNumbers () {
         this.changed = false;
         this.sourceOrderNumbers = [];
-        let column = this.getSourceOrderColumn();
+        const column = this.getSourceOrderColumn();
         for (let row of this.findRows()) {
             this.sourceOrderNumbers.push(this.grid.getData(row.dataset.id, column));
         }
     }
 
     getChangedOrder () {
-        let column = this.getSourceOrderColumn(), data = {};
+        const column = this.getSourceOrderColumn(), data = {};
         this.findRows().each((index, row) => {
-            let value = this.grid.getData(row.dataset.id, column);
+            const value = this.grid.getData(row.dataset.id, column);
             if (value !== this.sourceOrderNumbers[index]) {
                 data[row.dataset.id] = this.sourceOrderNumbers[index];
             }
@@ -66,7 +66,7 @@ Jam.SortList = class extends Jam.List {
     }
 
     down () {
-        let $rows = this.getSelectedRows();
+        const $rows = this.getSelectedRows();
         if ($rows && this.swapRows($rows.eq(-1).next(), $rows.eq(-1))) {
             for (let i = $rows.length - 2; i >= 0; --i) {
                 this.swapRows($rows.eq(i).next(), $rows.eq(i));

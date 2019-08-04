@@ -77,8 +77,8 @@ Jam.Tabs = class extends Jam.Element {
 
     onClickTabClose (event) {
         event.preventDefault();
-        let id = this.getNavByElement(event.currentTarget).data('id');
-        let data = {id, close: true};
+        const id = this.getNavByElement(event.currentTarget).data('id');
+        const data = {id, close: true};
         this.events.trigger('close', data);
         if (data.close) {
             this.removeTab(id);
@@ -98,10 +98,10 @@ Jam.Tabs = class extends Jam.Element {
         if (this.getNav(id).length) {
             return true;
         }
-        let text = data.text || id;
-        let hint = data.hint || text;
-        let close = data.close ? 'closing' : '';
-        let content = data.content;
+        const text = data.text || id;
+        const hint = data.hint || text;
+        const close = data.close ? 'closing' : '';
+        const content = data.content;
         this.getNavs().parent()[method](`<li class="nav-tab ${close}" data-id="${id}"><a href="#" title="${hint}">${text}</a><div class="tab-close">×</div></li>`);
         this.getPanes().parent()[method](`<div class="tab-pane" data-id="${id}">${content}</div>`);
         this.events.trigger('create', {id});

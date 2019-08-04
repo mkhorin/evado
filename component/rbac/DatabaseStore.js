@@ -3,9 +3,9 @@
  */
 'use strict';
 
-const Base = require('areto/rbac/DbStore');
+const Base = require('areto/rbac/DatabaseStore');
 
-module.exports = class DbStore extends Base {
+module.exports = class DatabaseStore extends Base {
 
     static getConstants () {
         return {

@@ -20,7 +20,7 @@ Jam.ModelError = class {
     parse (data) {
         this.$form.find('.has-error').removeClass('has-error');
         this.$form.find('.has-group-error').removeClass('has-group-error');
-        let errors = {
+        const errors = {
             all: '',
             unassigned: ''
         };
@@ -30,11 +30,10 @@ Jam.ModelError = class {
         if (!data || !Object.values(data).length) {
             return this.notice.danger(data || this.model.translate('Action failed'));
         }
-        let $errorAttrs = this.process(data, errors).eq(0);
+        const $errorAttrs = this.process(data, errors).eq(0);
         if (errors.unassigned) {
             return this.notice.danger(errors.unassigned);
         }
-        let top = 0;
         if ($errorAttrs.length && $errorAttrs.is(':visible')) {
             this.modal.scrollTo($errorAttrs);
         } else {
@@ -60,7 +59,7 @@ Jam.ModelError = class {
 
     processOne (className, attrName, message, errors) {
         errors.all += `<p>${attrName}: ${message}</p>`;
-        let attr = this.model.getAttrByName(attrName, className);
+        const attr = this.model.getAttrByName(attrName, className);
         if (attr) {
             attr.$attr.addClass('has-error').find('.error-block').html(message);
         } else {

@@ -27,17 +27,17 @@ Jam.ModelGrouper = class {
     }
 
     createGroups () {
-        let groups = [];
+        const groups = [];
         this.$groups.each((index, element)=> {
-            let $element = $(element);
-            let constructor = $element.hasClass('form-set') ? Jam.ModelGroup : Jam.ModelTabGroup;
-            groups.push(new constructor(index, $element, this));
+            const $element = $(element);
+            const Class = $element.hasClass('form-set') ? Jam.ModelGroup : Jam.ModelTabGroup;
+            groups.push(new Class(index, $element, this));
         });
         return groups;
     }
 
     loadStates () {
-        let data = store.get(this.getStoreId());
+        const data = store.get(this.getStoreId());
         if (Array.isArray(data) && data.length === this.groups.length) {
             for (let i = 0; i < data.length; ++i) {
                 this.groups[i].toggleState(data[i]);
@@ -49,7 +49,7 @@ Jam.ModelGrouper = class {
     }
 
     saveStates () {
-        let data = [];
+        const data = [];
         for (let group of this.groups) {
             data.push(group.isActive());
         }
@@ -80,7 +80,7 @@ Jam.ModelGrouper = class {
     }
 
     onClickSetGroup (event) {
-        let $group = $(event.currentTarget).closest('.form-set').toggleClass('active');
+        const $group = $(event.currentTarget).closest('.form-set').toggleClass('active');
         $group.data('group').update();
         /*
         if (!$group.hasClass('collapsed')) {
@@ -91,12 +91,12 @@ Jam.ModelGrouper = class {
 
     onClickTabGroup (event) {
         event.preventDefault();
-        let $nav = $(event.currentTarget).parent();
-        let $content = $nav.closest('.tabs').children('.tab-content');
+        const $nav = $(event.currentTarget).parent();
+        const $content = $nav.closest('.tabs').children('.tab-content');
         $nav.parent().children('.active').removeClass('active');
         $content.children('.active').removeClass('active');
         $nav.addClass('active');
-        let $group = $content.children(`[data-id="${$nav.data('id')}"]`).addClass('active');
+        const $group = $content.children(`[data-id="${$nav.data('id')}"]`).addClass('active');
         // Jam.Model.get($nav.closest('.form')).onAttrParentActive($content);
         $group.data('group').update();
     }
@@ -141,7 +141,7 @@ Jam.ModelGroup = class {
     }
 
     isEmpty () {
-        let $children = this.$content.children();
+        const $children = this.$content.children();
         return $children.filter('.hidden, .empty-group').length === $children.length;
     }
 };
@@ -165,7 +165,7 @@ Jam.ModelTabGroup = class extends Jam.ModelGroup {
     }
 
     toggleEmpty () {
-        let isEmpty = this.isEmpty();
+        const isEmpty = this.isEmpty();
         this.getNav().toggleClass('empty-group', isEmpty);
         this.$group.toggleClass('empty-group', isEmpty);
         this.$tabs.toggleClass('empty-group', this.isEmptyTabs());

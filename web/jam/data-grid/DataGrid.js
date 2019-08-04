@@ -189,7 +189,7 @@ Jam.DataGrid = class {
     }
 
     getStoreData (key, defaults) {
-        let data = store.get(this.getStoreKey(key));
+        const data = store.get(this.getStoreKey(key));
         return data === undefined ? defaults : data;
     }
 

@@ -26,8 +26,8 @@ Jam.UtilManager = class {
 
     createItem ($item) {
         this.$menuContent.append($item.wrap('<li>').parent());
-        let params = $item.data('params');
-        let Class = params.class ? Jam.Util[params.class] : Jam.Util;
+        const params = $item.data('params');
+        const Class = params.class ? Jam.Util[params.class] : Jam.Util;
         return new Class($item, this, params);
     }
 };

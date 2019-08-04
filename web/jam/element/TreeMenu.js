@@ -16,14 +16,18 @@ Jam.TreeMenu = class extends Jam.Element {
     }
 
     setCurrentActive () {
-        let $active = this.$menu.find('.menu-item-btn').filter(function () {
-            return location.href.indexOf(this.href) === 0;
+        const $active = this.$menu.find('.menu-item-btn').filter(function () {
+            if (location.href.indexOf(this.href) !== 0) {
+                return false;
+            }
+            const ch = location.href.charAt(this.href.length);
+            return !ch || ch === '/' || ch === '?';
         });
         $active.first().parent().addClass('active').parents('.treeview').addClass('active');
     }
 
     onClickItem (event) {
-        let $item = $(event.currentTarget);
+        const $item = $(event.currentTarget);
         if (!$item.hasClass('menu-open')) {
             $item.children('.treeview-menu').find('.treeview-menu').slideUp();
         }

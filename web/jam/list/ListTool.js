@@ -79,7 +79,7 @@ Jam.ListTool.Button = class extends Jam.ListTool {
 Jam.ListTool.History = class extends Jam.ListTool.Button {
 
     execute ($elem) {
-        let rows = this.owner.getSelectedRows();
+        const rows = this.owner.getSelectedRows();
         if (!rows) {
             return this.getCallout().info('Select values to restore');
         }

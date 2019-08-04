@@ -52,9 +52,9 @@ Jam.DataGridRenderer = class {
     }
 
     toggleOrder ($toggle, direction) {
-        let $cell = $toggle.closest('th');
-        let name = $cell.data('name');
-        let code = this.getDirectionCode(direction);        
+        const $cell = $toggle.closest('th');
+        const name = $cell.data('name');
+        const code = this.getDirectionCode(direction);
         $cell.removeClass('asc').removeClass('desc').addClass(code);
         $toggle.attr('title', this.locale[code]);
         this.getNameCells(name).toggleClass('ordered', !!code);
@@ -97,7 +97,7 @@ Jam.DataGridRenderer = class {
     }
 
     renderBodyCell (data, column, index) {
-        let value = column.render(data[column.name], column, index, data);
+        const value = column.render(data[column.name], column, index, data);
         return this.renderBodyCellHtml(value, column, index, data);
     }
 
@@ -110,7 +110,7 @@ Jam.DataGridRenderer = class {
     }
 
     getBodyCellClass (value, column) {
-        let cssClass = this.grid.getOrderDirection(column.name) ? ' ordered' : '';
+        const cssClass = this.grid.getOrderDirection(column.name) ? ' ordered' : '';
         return column.cssClass ? `${cssClass} ${column.cssClass}` : cssClass;
     }
 
@@ -124,17 +124,16 @@ Jam.DataGridRenderer = class {
         let name = column.name;
         let cssClass = 'column';
         if (this.grid.isSortableColumn(name)) {
-            let code = this.getDirectionCode(this.grid.getOrderDirection(name));
-            cssClass += ' sortable '+ code;
+            cssClass += ' sortable '+ this.getDirectionCode(this.grid.getOrderDirection(name));
         }
-        let label = this.grid.translate(column.label || name);
+        const label = this.grid.translate(column.label || name);
         return '<th class="'+ cssClass +'" rowspan="'+ row +'" data-name="'+ name +'">'
             + '<span class="column-label search-toggle" title="'+ name +'">'+ label +'</span>'
             + '<span class="order-toggle fa" title="'+ this.locale.orderToggle +'"></span></th>';
     }
 
     renderHeadGroup (group, col, row) {
-        let label = this.grid.translate(group.label || group.name);
+        const label = this.grid.translate(group.label || group.name);
         return `<th class="group" colspan="${col}" rowspan="${row}" data-name="${group.name}">${label}</th>`;
     }
 
@@ -225,13 +224,13 @@ Jam.DataGridRenderer = class {
 Jam.TreeDataGridRenderer = class extends Jam.DataGridRenderer {
 
     drawNode ($row, items) {
-        let depth = parseInt($row.data('depth')) + 1;
+        const depth = parseInt($row.data('depth')) + 1;
         $row.after(items.map(item => this.renderBodyRow(item, depth)).join(''));
     }
 
     renderBodyRowHtml (id, content, data, depth) {
-        let cssClass = data._node_hasChildren ? 'has-children' : '';
-        let nodeClass = data._node_class || '';
+        const cssClass = data._node_hasChildren ? 'has-children' : '';
+        const nodeClass = data._node_class || '';
         return `<tr class="${cssClass}" data-depth="${depth || 0}" data-id="${id}" data-class="${nodeClass}">${content}</tr>`;
     }
 

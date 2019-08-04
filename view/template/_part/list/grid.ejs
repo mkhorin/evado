@@ -12,9 +12,6 @@ if (data.list !== null) {
 if (Array.isArray(data.select)) {
     data.select = _url(data.select);
 }
-if (data.view !== null) {
-    data.view = _url(data.view === undefined ? 'view' : data.view);
-}
 if (data.create !== null) {
     data.create = _url(data.create === undefined ? 'create' : data.create);
 }

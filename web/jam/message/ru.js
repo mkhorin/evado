@@ -17,7 +17,6 @@ Jam.I18n.defaults = {
 
     'Can not restore ambiguous values': 'Не могу восстановить неоднозначные значения',
     'Cancel': 'Отменить',
-    'Change history': 'История изменений',
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
     'Close without saving?': 'Закрыть без сохранения?',
@@ -30,6 +29,7 @@ Jam.I18n.defaults = {
     'Creator': 'Автор',
 
     'Data': 'Данные',
+    'Data history': 'История данных',
     'Default value': 'Значение по умолчанию',
     'Delete': 'Удалить',
     'Delete absolutely all metadata?': 'Удалить абсолютно все мета-данные?',
@@ -61,6 +61,8 @@ Jam.I18n.defaults = {
     'Link': 'Добавить',
 
     'Main': 'Главная',
+    'Metadata': 'Метаданные',
+    'Metadata reloaded': 'Метаданные перезагружены',
 
     'Name': 'Название',
     'No': 'Нет',

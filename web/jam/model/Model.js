@@ -7,9 +7,7 @@ Jam.Model = class extends Jam.Element {
 
     constructor ($form) {
         super($form);
-        
         $form.submit(event => event.preventDefault());
-
         this.$form = $form;
         this.$attrs = $form.find('.form-attr');
         this.$container = $form.closest('.box');
@@ -27,21 +25,8 @@ Jam.Model = class extends Jam.Element {
         this.modal = this.$container.closest('.jmodal').data('modal');
     }
 
-    init () {        
-        this.getControl('saveClose').click(this.save.bind(this, false));
-        this.getControl('save').click(this.save.bind(this, true));
-        this.getControl('cancel').click(this.cancel.bind(this));
-        this.getControl('view').click(this.view.bind(this));
-        this.getControl('update').click(this.update.bind(this));
-        this.getControl('remove').click(this.remove.bind(this));
-        this.getControl('copyId').click(this.copyId.bind(this));
-        this.getControl('reload').click(this.reload.bind(this));
-        this.getControl('postAction').click(this.postAction.bind(this));
-        this.getControl('modalAction').click(this.modalAction.bind(this));
-
-        this.$history = this.getControl('history');
-        this.$history.click(this.showHistory.bind(this));
-
+    init () {
+        this.$controls.on('click', '[data-id]', this.onControl.bind(this));
         this.beforeCloseMethod = this.beforeClose.bind(this);
         this.modal.onClose(this.beforeCloseMethod);
         this.grouper = new Jam.ModelGrouper(this);
@@ -110,7 +95,7 @@ Jam.Model = class extends Jam.Element {
         if (this.changeTracker.isChanged() && !Jam.Helper.confirm('Close without saving?')) {
             return event.stopPropagation();
         }
-        let message = this.inProgress();
+        const message = this.inProgress();
         if (message && !Jam.Helper.confirm(message)) {
             return event.stopPropagation();
         }
@@ -129,56 +114,79 @@ Jam.Model = class extends Jam.Element {
         return Jam.ObjectHelper.getValueLabel(message, this.params.messages);
     }
 
-    // ACTIONS
+    // CONTROLS
 
-    cancel () {
+    onControl (event) {
+        this.beforeControl(event);
+        this.getControlMethod(event.currentTarget.dataset.id).call(this, event);
+    }
+
+    beforeControl () {
+        this.notice.hide();
+    }
+
+    getControlMethod (id) {
+        switch (id) {
+            case 'saveClose': return this.onSaveClose;
+            case 'save': return this.onSave;
+            case 'cancel': return this.onCancel;
+            case 'view': return this.onView;
+            case 'update': return this.onUpdate;
+            case 'remove': return this.onRemove;
+            case 'reload': return this.onReload;
+            case 'sort': return this.onSort;
+            case 'copyId': return this.onCopyId;
+            case 'history': return this.onShowHistory;
+            case 'postAction': return this.onPostAction;
+            case 'modalAction': return this.onModalAction;
+        }
+    }
+
+    onSaveClose () {
+        if (this.validate()) {
+            this.forceSave();
+        }
+    }
+
+    onSave () {
+        if (this.validate()) {
+            this.forceSave(true);
+        }
+    }
+
+    onCancel () {
         this.changeTracker.reset();
         this.modal.close();
     }
 
-    save (reopen) {        
-        if (this.validate()) {
-            this.forceSave(reopen);
-        }
-    }
-
-    view () {
+    onView () {
         this.childModal.load(this.params.view, {id: this.id});
     }
 
-    update () {
+    onUpdate () {
         this.childModal.load(this.params.update, {id: this.id});
     }
 
-    remove () {
-        Jam.confirmation.showRemove().then(this.removeHandler.bind(this));
+    onRemove () {
+        Jam.confirmation.showRemove().then(this.removeModel.bind(this));
     }
 
-    removeHandler () {
-        this.$loader.show();
-        $.post(this.params.remove, {id: this.id}).done(()=> {
-            this.saved = true;
-            this.changeTracker.reset();
-            this.modal.close();
-        }).fail(xhr => {
-            this.notice.danger(xhr.responseText || xhr.statusText);
-            this.$loader.hide();
-        });
-    }
-
-    copyId (event) {
-        Jam.Helper.copyToClipboard(this.id);
-    }
-
-    reload () {
+    onReload () {
         this.modal.off('beforeClose', this.beforeCloseMethod);
         this.modal.reload();
     }
 
-    postAction (event) {
+    onCopyId () {
+        Jam.Helper.copyToClipboard(this.id);
+    }
+
+    onShowHistory () {
+        this.childModal.load(this.$history.data('url'));
+    }
+
+    onPostAction (event) {
         this.$loader.show();
-        this.notice.hide();
-        let $btn = $(event.currentTarget);
+        const $btn = $(event.currentTarget);
         Jam.UserAction.post($btn).done(data => {
             this.notice.success(data);
         }).fail(xhr => {
@@ -188,9 +196,8 @@ Jam.Model = class extends Jam.Element {
         });
     }
 
-    modalAction (event) {
-        let $btn = $(event.currentTarget);
-        this.notice.hide();
+    onModalAction (event) {
+        const $btn = $(event.currentTarget);
         this.childModal.load($btn.data('url'), $btn.data('params'));
         this.childModal.one('afterClose', (event, data)=> {
             if (data && data.saved) {
@@ -199,9 +206,18 @@ Jam.Model = class extends Jam.Element {
         });
     }
 
+    // VALIDATE
+
+    validate () {
+        const data = {valid: true};
+        this.events.trigger('beforeValidate', data);
+        return data.valid;
+    }
+
+    // METHODS
+
     forceSave (reopen) {
         this.$loader.show();
-        this.notice.hide();
         this.events.trigger('beforeSave');
         $.post(this.params.url, this.$form.serialize()).done(data => {
             this.saved = true;
@@ -216,12 +232,16 @@ Jam.Model = class extends Jam.Element {
         });
     }
 
-    // VALIDATE
-
-    validate () {
-        let data = {valid: true};
-        this.events.trigger('beforeValidate', data);
-        return data.valid;
+    removeModel () {
+        this.$loader.show();
+        $.post(this.params.remove, {id: this.id}).done(()=> {
+            this.saved = true;
+            this.changeTracker.reset();
+            this.modal.close();
+        }).fail(xhr => {
+            this.notice.danger(xhr.responseText || xhr.statusText);
+            this.$loader.hide();
+        });
     }
 
     // ATTR UPDATE
@@ -232,17 +252,13 @@ Jam.Model = class extends Jam.Element {
 
     initAttrUpdate () {
         if (this.isAttrUpdate()) {
-            let $attr = this.$form.find('.form-attr');
-            let $title = this.modal.$modal.find('.jmodal-title');
+            const $attr = this.$form.find('.form-attr');
+            const $title = this.modal.$modal.find('.jmodal-title');
             $title.html($attr.data('label'));
-            $attr.hasClass('required') && $title.addClass('required');
+            if ($attr.hasClass('required')) {
+                $title.addClass('required');
+            }
         }
-    }
-
-    // HISTORY
-
-    showHistory () {
-        this.childModal.load(this.$history.data('url'));
     }
 };
 

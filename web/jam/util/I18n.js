@@ -47,7 +47,7 @@ Jam.I18n = class {
 
     translateAttributes ($container) {
         for (let name of this.getAttributes($container)) {
-            let category = 't' + Jam.StringHelper.toFirstUpperCase(name);
+            const category = 't' + Jam.StringHelper.toFirstUpperCase(name);
             for (let element of $container.find(`[${name}]`)) {
                 this.translateAttribute(name, category, element);
             }
@@ -65,7 +65,7 @@ Jam.I18n = class {
 
     translateAttribute (name, category, element) {
         category = element.dataset[category] || element.dataset.t;
-        let message = this.getMessage(category, element.getAttribute(name));
+        const message = this.getMessage(category, element.getAttribute(name));
         if (message !== undefined) {
             element.setAttribute(name, message);
         }
@@ -77,7 +77,7 @@ Jam.I18n = class {
             return map[message];
         }
         if (category) {
-            let index = category.lastIndexOf('.');
+            const index = category.lastIndexOf('.');
             if (index !== -1) {
                 return this.getMessage(category.substring(0, index), message);
             }

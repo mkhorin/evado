@@ -12,16 +12,16 @@ Jam.ModelAttr.Json = class extends Jam.ModelAttr {
 
     activate () {
         if (this.canActivate()) {
-            this.$attr.find('.edit').click(this.edit.bind(this));
             this.$editor = this.$attr.find('.json-editor');
             this.$alert = this.$editor.find('.alert');
             this.$text = this.$editor.find('textarea');
-            this.$editor.find('.save').click(this.save.bind(this));
+            this.$attr.find('.edit').click(this.onEdit.bind(this));
+            this.$editor.find('.save').click(this.onSave.bind(this));
             this.activated = true;
         }
     }
 
-    edit () {
+    onEdit () {
         if (this.isDisabled()) {
             return false;
         }
@@ -38,7 +38,7 @@ Jam.ModelAttr.Json = class extends Jam.ModelAttr {
         this.$editor.modal();
     }
 
-    save () {
+    onSave () {
         let value = this.$text.val();
         try {
             if (value) {

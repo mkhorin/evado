@@ -45,7 +45,7 @@ module.exports = class PreviewSize extends Base {
                 await this.resolveCompositeInput(data);
             }
         } catch (err) {
-            this.module.logError(this.wrapClassMessage(`Composite failed:`), err);
+            this.log('error', `Composite failed:`, err);
             this.composite = null;
         }
     }
@@ -55,7 +55,7 @@ module.exports = class PreviewSize extends Base {
             return null;
         }
         item.input = this.module.getPath(item.input);
-        let {width, height} = await sharp(item.input).metadata();
+        const {width, height} = await sharp(item.input).metadata();
         if (width > this.width || height > this.height) {
             throw new Error(`Composite size exceeds preview: ${item.input}`);
         }
@@ -76,16 +76,17 @@ module.exports = class PreviewSize extends Base {
         if (this.flatten) {
             image.flatten({background: this.flatten});
         }
-        image[this.output](this.outputParams);
         if (!this.composite) {
+            return image[this.output](this.outputParams);
+        }
+        const {data, info} = await image.raw().toBuffer({resolveWithObject: true});
+        image = sharp(data, {raw: info}); // already resized
+        image[this.output](this.outputParams);
+        if (info.width < this._minCompositeWidth || info.height < this._minCompositeHeight) {
+            this.log('warning', 'Composite skipped: Overlay is larger than background');
             return image;
         }
-        const result = sharp(await image.toBuffer());
-        const {width, height} = await result.metadata();
-        if (width < this._minCompositeWidth || height < this._minCompositeHeight) {
-            return image;
-        }
-        return result.composite(this.composite);
+        return image.composite(this.composite);
     }
 
     keepAspectRatio (width, height, sourceWidth, sourceHeight) {
@@ -104,6 +105,10 @@ module.exports = class PreviewSize extends Base {
             width = (height * sourceWidth) / sourceHeight;
         }
         return [width, height];
+    }
+
+    log (type, message, data) {
+        this.module.log(type, this.wrapClassMessage(message), data);
     }
 };
 

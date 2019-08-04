@@ -30,7 +30,7 @@ Jam.ModelAttr.File = class extends Jam.ModelAttr {
     }
 
     initValue () {
-        let values = Jam.Helper.parseJson(this.$value.val());
+        const values = Jam.Helper.parseJson(this.$value.val());
         if (Array.isArray(values)) {
             for (let value of values) {
                 this.uploader.setSavedFile(value);
@@ -79,16 +79,16 @@ Jam.ModelAttr.File = class extends Jam.ModelAttr {
     onUploadedFile (event, data) {
         data.info = Jam.Helper.parseJson(data.info) || {};
         data.$item.removeClass('pending processing').addClass('done');
-        let message = Jam.i18n.translate(data.info.message || 'Upload completed');
+        const message = Jam.i18n.translate(data.info.message || 'Upload completed');
         data.$item.find(this.fileMessageSelector).html(message);
-        let value = this.uploader.options.maxFiles > 1
+        const value = this.uploader.options.maxFiles > 1
             ? Jam.Helper.addCommaValue(data.info.id, this.$value.val())
             : data.info.id;
         this.$value.val(value).change();
     }
 
     onErrorFile (event, data) {
-        let msg = Jam.Helper.parseJson(data.error);
+        const msg = Jam.Helper.parseJson(data.error);
         data.$item.removeClass('pending processing').addClass('failed');
         data.$item.find(this.fileMessageSelector).text((msg && msg.file) || data.error);
     }
@@ -115,7 +115,7 @@ Jam.ModelAttr.File = class extends Jam.ModelAttr {
         }
         data.$item.find('.uploader-filename').html(`${name} (${data.file.size})`);
         data.$item.find(this.fileMessageSelector).html(data.file.message);
-        let preview = this.uploader.options.preview;
+        const preview = this.uploader.options.preview;
         if (data.file.isImage && preview) {
             data.$item.addClass('thumb');
             data.$item.find('.uploader-thumb').css('background-image', `url(${preview}${data.file.id})`);

@@ -14,8 +14,8 @@ Jam.ModelAttraction = class {
 
     init () {
         for (let item of this.model.$form.find('[data-attraction]')) {
-            let $item = $(item);
-            let data = $item.data('attraction');
+            const $item = $(item);
+            const data = $item.data('attraction');
             if (data) {
                 this.elements.push(new Jam.ModelAttraction.Element($item, data, this));
             }
@@ -45,7 +45,7 @@ Jam.ModelAttraction.Element = class {
 
     init () {
         for (let id of Object.keys(this.data)) {
-            let action = this.create(id, this.data[id]);
+            const action = this.create(id, this.data[id]);
             if (action) {
                 this.actions[id] = action;
             } else {
@@ -94,8 +94,8 @@ Jam.ModelAttraction.Action = class {
 Jam.ModelAttraction.Visible = class extends Jam.ModelAttraction.Action {
 
     update () {
-        let group = this.element.$item.data('group');
-        let visible = this.isValid();
+        const group = this.element.$item.data('group');
+        const visible = this.isValid();
         group ? group.toggle(visible)
               : this.element.$item.toggleClass('hidden', !visible);
     }

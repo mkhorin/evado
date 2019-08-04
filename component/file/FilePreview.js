@@ -87,7 +87,7 @@ module.exports = class FilePreview extends Base {
             await image.toFile(file);
             return true;
         } catch (err) {
-            this.module.logError(this.wrapClassMessage(`Creation failed: ${file}:`), err);
+            this.log('error', `Creation failed: ${file}:`, err);
         }
     }
 
@@ -95,6 +95,10 @@ module.exports = class FilePreview extends Base {
         for (let key of Object.keys(this.sizes)) {
             await FileHelper.remove(this.getSizePath(key, filename));
         }
+    }
+
+    log (type, message, data) {
+        this.module.log(type, this.wrapClassMessage(message), data);
     }
 };
 

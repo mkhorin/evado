@@ -26,13 +26,13 @@ Jam.DataGridColumnManager = class {
     }
 
     renderMenu () {
-        let items = this.params.columns.map(this.createItem, this).join('');
+        const items = this.params.columns.map(this.createItem, this).join('');
         return $(`<div class="data-grid-column-manager-menu">${items}</div>`);
     }
 
     createItem ({label, name, hidden}) {
         label = this.grid.translate(label || name);
-        let checked = hidden ? '' : 'checked';
+        const checked = hidden ? '' : 'checked';
         return `<label class="item-label" title="${name}"><input type="checkbox" ${checked} value="${name}">${label}</label>`;
     }
 
@@ -42,7 +42,7 @@ Jam.DataGridColumnManager = class {
 
     onClickBody (event) {
         if (this.isMenuActive()) {
-            let $target = $(event.target);
+            const $target = $(event.target);
             if (!$target.closest(this.$toggle).length && !$target.closest(this.$menu).length) {
                 this.hideMenu();
             }
@@ -54,7 +54,7 @@ Jam.DataGridColumnManager = class {
     }
 
     onChangeItem (event) {
-        let $input = $(event.target).blur();
+        const $input = $(event.target).blur();
         this.grid.getColumn($input.val()).hidden = !$input.is(':checked');
         this.grid.drawTable();
         this.save();

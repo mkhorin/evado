@@ -174,7 +174,7 @@ module.exports = class Rbac extends Base {
 
     constructor (config) {
         super({
-            store: require('./DbStore'),
+            store: require('./DatabaseStore'),
             Item: require('./Item'),
             MetaInspector: require('./MetaInspector'),
             MetaAttrInspector: require('./MetaAttrInspector'),

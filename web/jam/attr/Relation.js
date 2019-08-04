@@ -61,10 +61,12 @@ Jam.AttrList = class extends Jam.List {
         this.attr.$value.val(value).change();
     }
 
-    create (event, params) {
-        if (!this.revertChanges()) {
-            this.loadModal(this.params.create, null, this.onAfterCloseModal.bind(this));
+    getControlMethod (id) {
+        switch (id) {
+            case 'link': return this.onLink;
+            case 'unlink': return this.onUnlink;
         }
+        return super.getControlMethod(id);
     }
 
     onAfterCloseModal (event, data) {
@@ -76,17 +78,20 @@ Jam.AttrList = class extends Jam.List {
         }
     }
 
-    onControl (event) {
-        if (super.onControl(event) === false) {
-            switch (event.currentTarget.dataset.id) {
-                case 'link': return this.link();
-                case 'unlink': return this.unlink();
-            }
-            return false;
+    onCreate (event, params) {
+        if (!this.revertChanges()) {
+            this.loadModal(this.params.create, null, this.onAfterCloseModal.bind(this));
         }
     }
 
-    link () {
+    onRemove () {
+        const $rows = this.getSelectedRows();
+        if ($rows) {
+            this.removeObjects($rows);
+        }
+    }
+
+    onLink () {
         if (!this.revertChanges()) {
             this.loadModal(this.params.link, null, (event, data)=> {
                 data && data.result && this.linkObjects(data.result);
@@ -94,7 +99,7 @@ Jam.AttrList = class extends Jam.List {
         }
     }
 
-    unlink () {
+    onUnlink () {
         let $rows = this.getSelectedRows();
         if ($rows) {
             this.unlinkObjects($rows);
@@ -122,13 +127,6 @@ Jam.AttrList = class extends Jam.List {
         this.changes.unlinkObjects(this.getObjectIds($rows));
         this.serializeValue();
         this.reload();
-    }
-
-    remove () {
-        let $rows = this.getSelectedRows();
-        if ($rows) {
-            this.removeObjects($rows);
-        }
     }
 
     removeObjects ($rows) {

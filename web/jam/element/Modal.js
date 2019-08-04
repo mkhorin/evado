@@ -6,7 +6,7 @@
 Jam.Modal = class extends Jam.Element {
 
     static getClosestBody ($element) {
-        let $body = $element.closest('.jmodal-body');
+        const $body = $element.closest('.jmodal-body');
         return $body.length ? $body : $(document.body);
     }
 
@@ -33,14 +33,17 @@ Jam.Modal = class extends Jam.Element {
         this.$sample = $container.find('.sample.jmodal');
         this.handlers = [];
         this.stackToggle = new Jam.Modal.StackToggle(this);
+    }
+
+    init () {
         $('.modal-root-back').click(this.onBackFromRoot.bind(this));
         $(document.body).on('click', '.modal-link', this.onModalLink.bind(this));
         $(window).resize(this.onResize.bind(this));
     }
 
     isActiveLast () {
-        let $active = this.$pool.children('.active');
-        let $stacked = this.$pool.children('.stacked');
+        const $active = this.$pool.children('.active');
+        const $stacked = this.$pool.children('.stacked');
         return $active.length
             ? $active.next('.stacked').length === 0
             : $stacked.length === 0;
@@ -74,16 +77,17 @@ Jam.Modal = class extends Jam.Element {
 
     createModal (item) {
         let $modal = this.$pool.children().not('.stacked').eq(0);
-        if ($modal.length === 0) {
-            $modal = this.$sample.clone().removeClass('sample');
-            this.$pool.append($modal);
-            $modal.on('click', '.jmodal-close', ()=> item.close());
-            $modal.click(event => { // click to modal overlay
-                if (!$modal.hasClass('loading') && event.target === $modal.get(0)) {
-                    item.close();
-                }
-            });
+        if ($modal.length !== 0) {
+            return $modal;
         }
+        $modal = this.$sample.clone().removeClass('sample');
+        this.$pool.append($modal);
+        $modal.on('click', '.jmodal-close', () => item.close());
+        $modal.click(event => {
+            if (!$modal.hasClass('loading') && event.target === $modal.get(0)) {
+                item.close();
+            }
+        });
         return $modal;
     }
 
@@ -103,7 +107,7 @@ Jam.Modal = class extends Jam.Element {
 
     afterClose (item) {
         item.$modal.removeClass('stacked active');
-        let $last = this.$pool.children('.stacked').last().addClass('active');
+        const $last = this.$pool.children('.stacked').last().addClass('active');
         $(document.body).toggleClass('jmodal-active', $last.length > 0);
         this.stackToggle.detach(item);
     }
@@ -124,7 +128,7 @@ Jam.Modal = class extends Jam.Element {
     }
 
     openFromUrl (url) {
-        let target = Jam.UrlHelper.getUrlParams(url).modal;
+        const target = Jam.UrlHelper.getUrlParams(url).modal;
         if (target) {
             this.create().load(decodeURIComponent(target));
         }   
@@ -134,8 +138,10 @@ Jam.Modal = class extends Jam.Element {
 Jam.Modal.Item = class {
 
     static resize (element) {
-        let item = $(element).closest('.jmodal').data('item');
-        item && item.resize();
+        const item = $(element).closest('.jmodal').data('item');
+        if (item) {
+            item.resize();
+        }
     }
 
     constructor (modal) {
@@ -207,11 +213,10 @@ Jam.Modal.Item = class {
         const $container = this.$body.children().first();
         Jam.i18n.translateContainer($container);
         this.title = Jam.i18n.translate($container.data('title')) || '';
-        this.tabTitle = $container.data('tabTitle');
+        this.tabTitle = $container.data('tab');
         this.tabTitle = this.tabTitle ? Jam.i18n.translate(this.tabTitle) : this.title;
-        this.tabTitle = Jam.Helper.clearHtml(this.tabTitle);
-        let url = Jam.UrlHelper.getNewPageUrl($container.data('url') || this.getLoadUrl());
-        this.$title.html(`<a href="${url}" title="${this.tabTitle}" target="_blank">${this.title}</a>`);
+        const url = Jam.UrlHelper.getNewPageUrl($container.data('url') || this.getLoadUrl());
+        this.$title.html(`<a href="${url}" target="_blank">${this.title}</a>`);
         Jam.DateHelper.resolveClientDate(this.$body);
         Jam.createElements($container);
         this.resize();
@@ -222,7 +227,7 @@ Jam.Modal.Item = class {
         this.$body.html(`<div class="jmodal-error"><pre>${xhr.responseText}</pre></div>`);
         this.title = Jam.i18n.translate(`${xhr.status} ${xhr.statusText}` || 'Error');
         this.tabTitle = this.title;
-        let url = Jam.UrlHelper.getNewPageUrl(this.getLoadUrl());
+        const url = Jam.UrlHelper.getNewPageUrl(this.getLoadUrl());
         this.$title.html(`<a href="${url}" target="_blank"><span class="text-danger">${this.title}</span></a>`);
         this.resize();
         this.modal.afterLoad(this);
@@ -234,7 +239,7 @@ Jam.Modal.Item = class {
 
     close (data) {
         if (this.checkLastActive()) {
-            let event = $.Event(this.getEventName('beforeClose'));
+            const event = $.Event(this.getEventName('beforeClose'));
             this.$modal.triggerHandler(event, data);
             // if not one of the handlers stops the event, then close it
             if (!event.isPropagationStopped()) {
@@ -290,19 +295,19 @@ Jam.Modal.Item = class {
     }
 
     resize () {
-        let top = this.$container.offset().top - $(window).scrollTop();
-        let maxHeight = $(window).height() - top - this.$header.outerHeight();
+        const top = this.$container.offset().top - $(window).scrollTop();
+        const maxHeight = $(window).height() - top - this.$header.outerHeight();
         this.$body.css('max-height', maxHeight);
-        let $scroll = this.$body.children('.jmodal-scroll-container');
+        const $scroll = this.$body.children('.jmodal-scroll-container');
         if ($scroll.length) {
-            let $header = $scroll.children('.scroll-header');
+            const $header = $scroll.children('.scroll-header');
             $scroll.children('.scroll-body').css('max-height', maxHeight - $header.outerHeight());
         }
     }
 
     scrollTo ($target) {
-        let $scroll = this.$body.children('.jmodal-scroll-container').children('.scroll-body');
-        let top = $target.first().offset().top - $scroll.offset().top;
+        const $scroll = this.$body.children('.jmodal-scroll-container').children('.scroll-body');
+        const top = $target.first().offset().top - $scroll.offset().top;
         $scroll.animate({scrollTop: $scroll.scrollTop() + top});
     }
 };
@@ -337,7 +342,7 @@ Jam.Modal.StackToggle = class {
             this.$pool.append($item);
         }
         $item.find('.text').html(modal.tabTitle);
-        $item.attr('title', modal.tabTitle);
+        $item.attr('title', Jam.Helper.clearHtml(modal.title));
         this.resize();
     }
 
@@ -347,23 +352,23 @@ Jam.Modal.StackToggle = class {
     }
 
     resize () {
-        let modal = this.modal.getActive();
+        const modal = this.modal.getActive();
         if (!modal) {
             return false;
         }
-        let $children = this.$pool.children();
+        const $children = this.$pool.children();
         $children.filter('.active').removeClass('active');
         $children.filter((index, element)=> $(element).data('modal') === modal).addClass('active');
         modal.$modal.prepend(this.$stack);
 
         if (this.$stack.css('position') === 'fixed') {
-            let left = modal.$container.offset().left;
+            const left = modal.$container.offset().left;
             this.$stack.offset({left});
-            let poolWidth = modal.$container.width() - this.$root.outerWidth();
+            const poolWidth = modal.$container.width() - this.$root.outerWidth();
             this.$pool.width(poolWidth);
-            let maxItemWidth = parseInt(poolWidth / $children.length);
+            const maxItemWidth = parseInt(poolWidth / $children.length);
             $children.css('max-width', maxItemWidth);
-            let reminder = poolWidth - maxItemWidth * $children.length;
+            const reminder = poolWidth - maxItemWidth * $children.length;
             $children.last().css('max-width', maxItemWidth + reminder);
         }
     }

@@ -72,12 +72,6 @@ module.exports = class MetaHub extends Base {
         }
     }
 
-    async updateIndexes () {
-        for (let model of this.models) {
-            await model.updateIndexes();
-        }
-    }
-
     // PROCESSING
 
     isBusy () {

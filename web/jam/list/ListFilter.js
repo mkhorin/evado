@@ -100,7 +100,7 @@ Jam.ListFilter = class {
     }
 
     triggerActive () {
-        let hasData = !!this.serialize();
+        const hasData = !!this.serialize();
         this.$container.toggleClass('active', hasData);
         this.events.trigger('toggleActive', hasData);
     }
@@ -127,14 +127,14 @@ Jam.ListFilter.Group = class {
     }
 
     getEmptyCondition () {
-        let condition = this.conditions[this.conditions.length - 1];
+        const condition = this.conditions[this.conditions.length - 1];
         return condition && !condition.getAttr()
             ? condition
             : this.addCondition();
     }
 
     addCondition () {
-        let condition = this.createCondition();
+        const condition = this.createCondition();
         this.conditions.push(condition);
         this.$container.append(condition.$container);
         return condition;
@@ -210,7 +210,7 @@ Jam.ListFilter.Condition = class {
 
     onChangeAttr () {
         this.removeType();
-        let params = this.group.getAttrParams(this.getAttr());
+        const params = this.group.getAttrParams(this.getAttr());
         if (params) {
             this.type = this.createType(params);
             this.type.focus();
@@ -269,8 +269,8 @@ Jam.ListFilter.Condition = class {
     }
 
     serialize () {
-        let operation = this.getOperation();
-        let value = this.getValue();
+        const operation = this.getOperation();
+        const value = this.getValue();
         if (operation && value !== undefined ) {
             return this.type.resolveRequestData({
                 and: this.logical !== 'or',
@@ -343,8 +343,7 @@ Jam.ListFilter.BooleanType = class extends Jam.ListFilter.Type {
     }
 
     changeValue () {
-        let $item = this.getValueItem();
-        this.setValue($item.is(':checked') ? 'true' : 'false');
+        this.setValue(this.getValueItem().is(':checked') ? 'true' : 'false');
     }
 };
 
@@ -390,12 +389,12 @@ Jam.ListFilter.SelectorType = class extends Jam.ListFilter.Type {
 
     createSimple () {
         Jam.ObjectHelper.assignUndefined(this.params, {hasEmpty: true});
-        let items = Jam.Helper.renderSelectOptions(this.params);
+        const items = Jam.Helper.renderSelectOptions(this.params);
         this.getValueItem().html(items).select2();
     }
 
     createAjax () {
-        let params = this.commonParams = {
+        const params = this.commonParams = {
             pageSize: 10,
             inputDelay: 500,
             minInputLength: 1,

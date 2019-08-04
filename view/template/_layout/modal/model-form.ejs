@@ -1,6 +1,7 @@
 <!-- _layout/modal/model-form -->
 <%
 const p = {
+    jam: 'Model',
     url: _controller.getOriginalUrl(),
     id: model.getId() || '',
     key: model.PK,
@@ -12,9 +13,7 @@ if (typeof params !== 'undefined') {
     Object.assign(p, params);
 }
 %>
-<div class="jmodal-scroll-container box-info box"
-     data-title="<%= blocks.title %>"
-     data-tab-title="<%= blocks.tabTitle %>">
+<div class="jmodal-scroll-container box-info box" data-title="<%= blocks.title %>" data-tab="<%= blocks.tab %>">
 
     <div class="box-header with-border scroll-header">
         <div class="model-controls">
@@ -40,8 +39,8 @@ if (typeof params !== 'undefined') {
             <%- include(_view.get('_part/tool/model-history')) %>
             <%- include(_view.get('_part/misc/universal-render'), {data: _data.get('customControls')}) %>
 
-            <% if (_data.get('help')) { %>
-            <span class="model-help fa fa-question-circle" title="<%= _data.get('help') %>"></span>
+            <% if (p.help) { %>
+            <span class="model-help fa fa-question-circle" title="<%= p.help %>"></span>
             <% } %>
 
             <div class="pull-right">
@@ -55,7 +54,7 @@ if (typeof params !== 'undefined') {
     </div>
     <div class="scroll-body box-body">
         <form class="model form-horizontal form" autocomplete="off" enctype="multipart/form-data"
-              data-jam="Model"
+              data-jam="<%- p.jam %>"
               data-params="<%= JSON.stringify(p) %>">
             <%- body -%>
         </form>

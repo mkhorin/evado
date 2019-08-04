@@ -13,8 +13,8 @@ Jam.UserAction = class extends Jam.Element {
     }
 
     static confirm ($element) {
-        let message = $element.data('confirm');
-        let method = $element.data('confirmMethod') || 'show';
+        const message = $element.data('confirm');
+        const method = $element.data('confirmMethod') || 'show';
         return message
             ? Jam.confirmation[method](message, $element.data('confirmParams'))
             : $.Deferred().resolve();

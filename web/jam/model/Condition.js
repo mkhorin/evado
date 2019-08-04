@@ -43,7 +43,7 @@ Jam.ModelCondition = class {
 
     validateHash (data) {
         for (let name of Object.keys(data)) {
-            let value = this.getValue(name);
+            const value = this.getValue(name);
             if (Array.isArray(data[name])) {
                 if (!data[name].includes(value)) {
                     return false;
@@ -93,7 +93,7 @@ Jam.ModelCondition = class {
         if (operands.length !== 3) {
             return this.logDataError(operator, operands);
         }
-        let value = this.getValue(operands[0]);
+        const value = this.getValue(operands[0]);
         return value >= operands[1] && value <= operands[2];
     }
 

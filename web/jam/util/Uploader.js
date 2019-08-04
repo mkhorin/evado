@@ -50,7 +50,10 @@ Jam.Uploader = class {
             confirmRemoveStatus: ['done', 'uploading'],
             attrName: 'file',
             upload: 'file/upload',
-            remove: 'file/remove'
+            remove: 'file/remove',
+            doneMessage: 'Upload done',
+            failedMessage: 'Upload failed'
+
         };
     }
 
@@ -81,7 +84,7 @@ Jam.Uploader = class {
 
     initDropZone () {
         this.$dropzone = this.$uploader.find(".uploader-dropzone");
-        let dropzone = this.$dropzone.get(0);
+        const dropzone = this.$dropzone.get(0);
         dropzone.ondragover = this.onDragOver.bind(this);
         dropzone.ondragleave = this.onDragLeave.bind(this);
         dropzone.ondrop = this.onDrop.bind(this);
@@ -132,7 +135,7 @@ Jam.Uploader = class {
     }
 
     setFiles (files) {
-        let counter = this.count();
+        const counter = this.count();
         counter.total += files.length;
         if (counter.total > Number(this.options.maxFiles)) {
             return this.trigger('overflow', this.options.tooMany);
@@ -160,7 +163,7 @@ Jam.Uploader = class {
     }
 
     count () {
-        let counter = {
+        const counter = {
             total: 0,
             failed: 0,
             done: 0
@@ -180,21 +183,19 @@ Jam.Uploader = class {
 
     processNext () {
         setTimeout(()=> {
-            let map = this.getFirstFilesByStatus();
-            let UFile = Jam.Uploader.File;
+            const map = this.getFirstFilesByStatus();
             if (map.hasOwnProperty('pending')) {
-                map['pending'].append();
+                map.pending.append();
             } else if (map.hasOwnProperty('appended')) {
-                map['appended'].validate();
-            } else if (map.hasOwnProperty('validated')
-                && !map.hasOwnProperty('uploading')) {
-                map['validated'].upload();
+                map.appended.validate();
+            } else if (map.hasOwnProperty('validated') && !map.hasOwnProperty('uploading')) {
+                map.validated.upload();
             }
         }, 100);
     }
 
     getFirstFilesByStatus () {
-        let map = {};
+        const map = {};
         for (let file of this.files) {
             if (!file.removed && !file.failed && !map.hasOwnProperty(file.status)) {
                 map[file.status] = file;
@@ -204,9 +205,9 @@ Jam.Uploader = class {
     }
 
     setSavedFile (data) {
-        let counter = this.count();
+        const counter = this.count();
         this.hideDropZone(counter.total + 1);
-        let file = new Jam.Uploader.File(data, this);
+        const file = new Jam.Uploader.File(data, this);
         file.setSaved();
         this.files.push(file);
     }
@@ -243,9 +244,11 @@ Jam.Uploader.File = class {
     }
 
     setError (error) {
-        this.failed = true;
-        this.error = error;
-        this.trigger('error');
+        if (error) {
+            this.failed = true;
+            this.error = error;
+            this.trigger('error');
+        }
     }
 
     abort () {
@@ -308,22 +311,22 @@ Jam.Uploader.File = class {
     }
 
     startValidate () {
-        let error = this.validateFile();
+        const error = this.validateFile();
         this.status = 'validated';
         this.trigger('validated');
-        error && this.setError(error);
+        this.setError(error);
         this.uploader.processNext();
     }
 
     validateFile () {
-        let options = this.uploader.options;
-        let file = this.file;
+        const options = this.uploader.options;
+        const file = this.file;
         if (this.isMatchFile()) {
             return options.alreadyExists;
         }
         if (options.extensions) {
-            let index = file.name.lastIndexOf('.');
-            let ext = index > - 1 ? file.name.substr(index + 1, file.name.length).toLowerCase() : '';
+            const index = file.name.lastIndexOf('.');
+            const ext = index > - 1 ? file.name.substr(index + 1, file.name.length).toLowerCase() : '';
             if (options.extensions.indexOf(ext) === -1) {
                 return options.wrongExtension.replace(/\{extensions\}/g, options.extensions.join(', '));
             }
@@ -350,12 +353,11 @@ Jam.Uploader.File = class {
     }
 
     isMatchFile () {
-        let files = this.uploader.files;
+        const files = this.uploader.files;
         for (let i = 0; i < files.length; ++i) { // 'of' not work
-            let file = files[i];
+            const file = files[i];
             if (!file.removed) {
-                // match with previous files only
-                if (file === this) {
+                if (file === this) { // match with previous files only
                     return false;
                 }
                 if (file.file.size === this.file.size && file.file.name === this.file.name) {
@@ -367,7 +369,7 @@ Jam.Uploader.File = class {
     }
 
     validateImage () {
-        let options = this.uploader.options;
+        const options = this.uploader.options;
         if (options.maxHeight && options.maxHeight < this.image.height) {
             return options.overHeight.replace(/\{limit\}/g, options.maxHeight);
         }
@@ -392,7 +394,7 @@ Jam.Uploader.File = class {
             this.xhr.upload.addEventListener('progress', event => this.progressUploading(event), false);
         }
         this.xhr.onreadystatechange = event => this.changeReadyState(event);
-        let data = new FormData;
+        const data = new FormData;
         data.append(this.uploader.options.attrName, this.file.name);
         data.append(this.uploader.options.attrName, this.file);
         this.status = 'uploading';
@@ -410,12 +412,13 @@ Jam.Uploader.File = class {
 
     changeReadyState (event) {
         if (this.xhr.readyState === 4) {
+            const message = this.xhr.response;
             if (this.xhr.status === 200) {
                 this.status = 'done';
-                this.info = this.xhr.response;
+                this.info = message || this.uploader.doneMessage;
                 this.trigger('uploaded');
             } else {
-                this.setError(this.xhr.response);
+                this.setError(message || this.uploader.failedMessage);
             }
             this.uploader.processNext();
         }

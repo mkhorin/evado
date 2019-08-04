@@ -17,7 +17,7 @@ Jam.Notice = class {
 
     init () {
         this.$notice = $($(this.params.template).html());
-        let container = this.params.container;
+        const container = this.params.container;
         if (typeof container === 'function') {
             container(this.$notice);
         } else if (container) {

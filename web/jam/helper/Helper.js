@@ -80,7 +80,7 @@ Jam.Helper = class {
             return items;
         }
         items = items.split(',');
-        let index = items.indexOf(value);
+        const index = items.indexOf(value);
         if (index !== -1) {
             items.splice(index, 1);
         }
@@ -113,7 +113,7 @@ Jam.ArrayHelper = class {
     }
 
     static flip (items) {
-        let map = {};
+        const map = {};
         if (Array.isArray(items)) {
             for (let i = 0; i < items.length; ++i) {
                 map[items[i]] = i;
@@ -127,7 +127,7 @@ Jam.ArrayHelper = class {
     }
 
     static index (key, items) {
-        let map = {};
+        const map = {};
         if (Array.isArray(items)) {
             for (let item of items) {
                 if (item) {
@@ -139,7 +139,7 @@ Jam.ArrayHelper = class {
     }
 
     static intersect (items, targets) {
-        let result = [];
+        const result = [];
         for (let item of items) {
             for (let target of targets) {
                 if (item === target) {
@@ -153,7 +153,7 @@ Jam.ArrayHelper = class {
 
     // get [ { key: value }, ... ] from object array
     static mapValueByKey (key, items, value) {
-        let maps = [];
+        const maps = [];
         for (let item of items) {
             maps.push({
                 [item[key]]: value !== undefined ? item[value] : item
@@ -204,7 +204,7 @@ Jam.ArrayHelper = class {
     }
 
     static uniqueByKey (key, items) {
-        let map = {};
+        const map = {};
         for (let item of items) {
             if (!Object.prototype.hasOwnProperty.call(map, item[key])) {
                 map[item[key]] = item;
@@ -360,7 +360,7 @@ Jam.ObjectHelper = class {
         if (Object.prototype.hasOwnProperty.call(data, key)) {
             return data[key];
         }
-        let pos = key.indexOf('.');
+        const pos = key.indexOf('.');
         if (pos > 0) {
             let destKey = key.substring(0, pos);
             if (Object.prototype.hasOwnProperty.call(data, destKey)) {
@@ -412,7 +412,7 @@ Jam.UrlHelper = class {
         let data = String(url).split('?');
         data = data[1] || data[0];
         data = data.split('&');
-        let params = {};
+        const params = {};
         for (let item of data) {
             item = item.split('=');
             if (item.length === 2) {

@@ -41,8 +41,6 @@ module.exports = class BaseMetaModel extends Base {
 
     dropData () {}
 
-    updateIndexes () {}
-
     log (type, message, data) {
         CommonHelper.log(type, message, data, this.constructor.name, this.hub);
     }

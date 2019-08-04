@@ -69,12 +69,20 @@ Jam.Element = class {
         return $element.data(`jamOf${this.name}`);
     }
 
+    static findInstance(name, $container) {
+        return this.getInstance($container.find(`[data-jam="${name}"]`));
+    }
+
     constructor ($element) {
         this.$element = $element;
         this.setInstance($element);
     }
 
     init () {
+    }
+
+    findInstance (name) {
+        return this.constructor.findInstance(name, this.$element);
     }
 
     setInstance ($element) {

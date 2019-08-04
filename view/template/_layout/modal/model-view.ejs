@@ -1,14 +1,17 @@
 <!-- _layout/modal/model-view -->
 <%
-const data = {
+const p = {
+    jam: 'Model',
     id: model.getId(),
     key: model.PK
 };
 if (typeof params !== 'undefined') {
-    Object.assign(data, params);
+    Object.assign(p, params);
 }
 %>
-<div class="jmodal-scroll-container content-box box-info box" data-title="<%= blocks.title %>">
+<div class="jmodal-scroll-container content-box box-info box"
+     data-title="<%= blocks.title %>"
+     data-tab="<%= blocks.tab %>">
 
     <div class="box-header with-border scroll-header">
         <div class="model-controls">
@@ -22,8 +25,8 @@ if (typeof params !== 'undefined') {
             <%- include(_view.get('_part/tool/model-history')) %>
             <%- include(_view.get('_part/misc/universal-render'), {data: _data.get('customControls')}) %>
 
-            <% if (_data.get('help')) { %>
-            <span class="model-help fa fa-question-circle" title="<%= _data.get('help') %>"></span>
+            <% if (p.help) { %>
+            <span class="model-help fa fa-question-circle" title="<%= p.help %>"></span>
             <% } %>
         </div>
     </div>
@@ -32,8 +35,8 @@ if (typeof params !== 'undefined') {
         <div class="box-notice"></div>
 
         <div class="model-view model form-horizontal form"
-             data-jam="Model"
-             data-params="<%= JSON.stringify(data) %>">
+             data-jam="<%- p.jam %>"
+             data-params="<%= JSON.stringify(p) %>">
             <%- body -%>
         </div>
     </div>

@@ -6,8 +6,8 @@
 Jam.ColumnRenderer = class {
 
     static getRenderMethod (format) {
-        let name = typeof format === 'string' ? format : format ? format.name : null;
-        let method = this.getFormatMethod(name)
+        const name = typeof format === 'string' ? format : format ? format.name : null;
+        const method = this.getFormatMethod(name)
         return this.render.bind(this, method);
     }
 

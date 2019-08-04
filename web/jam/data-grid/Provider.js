@@ -69,7 +69,7 @@ Jam.DataGridProvider = class {
         for (let name of Object.keys(order)) {
             const column = this.grid.getColumn(name);
             if (column && column.sortable) {
-                let key = this.createColumnFilterValues(column, data);
+                const key = this.createColumnFilterValues(column, data);
                 this._sortItems.push([key, order[name]]);
             }
         }

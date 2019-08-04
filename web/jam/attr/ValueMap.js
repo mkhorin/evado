@@ -28,8 +28,8 @@ Jam.ModelAttr.ValueMap = class extends Jam.ModelAttr {
 
     createItems (items) {
         if (Array.isArray(items)) {
-            let $items = this.getItems();
-            let $item = $items.eq(0);
+            const $items = this.getItems();
+            const $item = $items.eq(0);
             for (let i = 1; i < items.length; ++i) {
                 $item.after($item.clone());
             }

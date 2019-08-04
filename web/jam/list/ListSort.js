@@ -23,7 +23,7 @@ Jam.ListSort = class {
         if (this.columns.length === 1) {
             return this.load(this.getUrl(this.columns[0]));
         }
-        let names = this.getOrderedNames();
+        const names = this.getOrderedNames();
         if (names.length === 1 && this.columns.includes(names[0])) {
             return this.load(this.getUrl(names[0]));
         }

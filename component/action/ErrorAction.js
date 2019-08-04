@@ -7,24 +7,36 @@ const Base = require('areto/base/Action');
 
 module.exports = class ErrorAction extends Base {
 
+    constructor (config) {
+        super({
+            serverErrorMessage: 'Something went wrong. We will work on fixing that right away',
+            ...config
+        })
+    }
+
     execute () {
         const controller = this.controller;
         const err = controller.err;
         if (!err) {
             return this.render(404);
         }
-        controller.setHttpStatus(err.status);
-        if (err.isServerError() || controller.module.get('logger').isDebug()) {
+        let message = err.message;
+        if (err.isServerError()) {
+            message = this.serverErrorMessage;
             controller.log('error', err);
         }
+        if (controller.module.get('logger').isDebug()) {
+            controller.log('error', err);
+        }
+        controller.setHttpStatus(err.status);
         if (controller.isAjax()) {
-            return this.sendText(err.message, err.status);
+            return this.sendText(message);
         }
         if (err.status === 403 && controller.user.isGuest()) {
             return controller.user.loginRequired(controller);
         }
         if (controller.isPost()) {
-            return this.sendText(err.message, err.status);
+            return this.sendText(message);
         }
         switch (err.status) {
             case 400:

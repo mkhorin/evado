@@ -19,8 +19,8 @@ module.exports = {
         },
         'view': {
         },
-        'connection': {
-            schema: 'mongodb',
+        'db': {
+            Class: require('areto/db/MongoDatabase'),
             settings: {
                 'host': process.env.MONGO_HOST || 'localhost',
                 'port': process.env.MONGO_PORT || 27017,

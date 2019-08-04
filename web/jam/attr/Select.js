@@ -53,7 +53,7 @@ Jam.ModelAttr.Select = class extends Jam.ModelAttr {
     }
 
     createSelect2 () {
-        let params = {
+        const params = {
             pageSize: 10,
             minimumInputLength: 0,
             maximumInputLength: 24,
@@ -90,7 +90,7 @@ Jam.ModelAttr.Select = class extends Jam.ModelAttr {
     }
 
     getMasterData () {
-        let data = {};
+        const data = {};
         if (Array.isArray(this.masters)) {
             for (let master of this.masters) {
                 data[master.param || master.name] = master.attr.getValue();
@@ -100,8 +100,8 @@ Jam.ModelAttr.Select = class extends Jam.ModelAttr {
     }
 
     processResults (data, params) {
-        let items = data.items || data;
-        let more = ((params.page || 1) * this.select2.pageSize) < data.total;
+        const items = data.items || data;
+        const more = ((params.page || 1) * this.select2.pageSize) < data.total;
         return {
             pagination: {more},
             results: items.map(this.processResultItem, this)

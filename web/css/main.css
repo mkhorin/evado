@@ -796,9 +796,6 @@ textarea.form-control {
     margin-left: 0;
 }
 
-.form > .form-group:first-child .box-grid-field {
-    margin-top: 15px;
-}
 .form > .notice {
     margin-bottom: 20px;
 }
@@ -815,15 +812,15 @@ textarea.form-control {
 .top-label.form-group > [class^="col-"] {
     width: 100%;
 }
-
 .disabled.form-group .edit.btn {
     cursor: not-allowed;
 }
-
 .form-group .file-preview {
     margin-top: 20px;
 }
-
+.form-group .radio-list label {
+    color: #000;
+}
 .form-header {
     font-size: 18px;
     margin: 0 0 25px 0;
@@ -846,6 +843,9 @@ textarea.form-control {
 }
 .form-tabs:first-child {
     margin-top: -21px;
+}
+.form-tabs:last-child {
+    margin-bottom: 0;
 }
 .form-tabs .nav-tabs {
     margin-bottom: 20px;
@@ -1372,7 +1372,7 @@ input[type=checkbox].condition-value {
 }
 .jmodal-body > .box > .box-body {
     position: relative;
-    padding: 15px;
+    padding: 15px 15px 20px;
 }
 .jmodal-body > .box > .default-notice {
     margin: 10px 15px 0 15px;
