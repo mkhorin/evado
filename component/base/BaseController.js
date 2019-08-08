@@ -27,7 +27,7 @@ module.exports = class BaseController extends Base {
     }
 
     getLabelSelectItems (attrName, model) {
-        let data = model.constructor.getAttrValueLabels(attrName);
+        const data = model.constructor.getAttrValueLabels(attrName);
         return SelectHelper.getMapItems(this.translateMessageMap(data));
     }
 
@@ -117,7 +117,7 @@ module.exports = class BaseController extends Base {
     parseMetaParams (data) {
         const result = {meta: this.module.getMeta()};
         data = typeof data === 'string' ? data : '';
-        let [id, attrName, viewName, className] = data.split('.');
+        const [id, attrName, viewName, className] = data.split('.');
         result.class = result.meta.getClass(className);
         if (result.class) {
             result.view = result.class.getView(viewName) || result.class;

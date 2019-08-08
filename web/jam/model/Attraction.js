@@ -24,7 +24,7 @@ Jam.ModelAttraction = class {
         this.update();
     }
 
-    update (event) {
+    update () {
         for (let element of this.elements) {
             element.update();
         }

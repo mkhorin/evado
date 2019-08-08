@@ -11,7 +11,7 @@ module.exports = class AuthController extends Base {
         return {
             ACTIONS: {
                 'captcha': {
-                    Class: require('areto/captcha/CaptchaAction'),
+                    Class: require('areto/security/captcha/CaptchaAction'),
                     minLength: 3,
                     maxLength: 4,
                     fixedVerifyCode: '123'
@@ -29,7 +29,7 @@ module.exports = class AuthController extends Base {
                     },{
                         actions: ['sign-in', 'sign-up'],
                         permissions: ['?'],
-                        deny: action => action.render('signed', {model: action.controller.user.model})
+                        deny: action => action.render('signed', {model: action.controller.user.identity})
                     }]
                 }
             },
@@ -39,13 +39,8 @@ module.exports = class AuthController extends Base {
         };
     }
 
-    async actionSignOut () {
-        await this.user.logout();
-        this.goLogin();
-    }
-
     async actionSignIn () {
-        const model = this.spawn(SignInForm, {user: this.user});
+        const model = this.spawn('model/auth/SignInForm', {user: this.user});
         await model.resolveRateLimit();
         if (model.isBlocked()) {
             return this.blockByRateLimit(model.rateLimitModel);
@@ -59,8 +54,13 @@ module.exports = class AuthController extends Base {
             : this.render('sign-in', {model});
     }
 
+    async actionSignOut () {
+        await this.user.logout();
+        this.goLogin();
+    }
+
     async actionSignUp () {
-        const model = this.spawn(SignUpForm, {user: this.user});
+        const model = this.spawn('model/auth/SignUpForm', {user: this.user});
         if (this.isGet()) {
             return this.render('sign-up', {model});
         }
@@ -71,7 +71,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionChangePassword () {
-        const model = this.spawn(ChangePasswordForm, {userModel: this.user.model});
+        const model = this.spawn('model/auth/ChangePasswordForm', {userModel: this.user.model});
         if (this.isGet()) {
             return this.render('change-password', {model});
         }
@@ -92,11 +92,5 @@ module.exports = class AuthController extends Base {
             ? this.setHttpStatus(403).render('blocked', {model})
             : this.reload();
     }
-
-
 };
 module.exports.init(module);
-
-const SignInForm = require('../model/auth/SignInForm');
-const SignUpForm = require('../model/auth/SignUpForm');
-const ChangePasswordForm = require('../model/auth/ChangePasswordForm');

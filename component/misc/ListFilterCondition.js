@@ -162,7 +162,7 @@ module.exports = class ListFilterCondition extends Base {
     }
 
     parseNested (data) {
-        let model = this.query.model;
+        const model = this.query.model;
         // TODO
     }
 

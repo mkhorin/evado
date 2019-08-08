@@ -229,16 +229,32 @@ Jam.Resource = class {
 
     constructor () {
         this._map = {};
-        for (let link of $(document.head).find('link')) {
-            this.add(link.getAttribute('href'));
-        }
-        for (let script of $(document.head).find('link')) {
-            this.add(script.getAttribute('src'));
-        }
+        this.addLinks(document.head);
+        this.addLinks(document.body);
+        this.addScripts(document.head);
+        this.addScripts(document.body);
     }
 
     has (key) {
         return this._map[key] === true;
+    }
+
+    addLinks (container, remove) {
+        for (let node of container.querySelectorAll('link')) {
+            this.add(node.getAttribute('href'));
+            if (remove) {
+                node.remove();
+            }
+        }
+    }
+
+    addScripts (container, remove) {
+        for (let node of container.querySelectorAll('script')) {
+            this.add(node.getAttribute('src'));
+            if (remove) {
+                node.remove();
+            }
+        }
     }
 
     add (key) {
@@ -249,27 +265,11 @@ Jam.Resource = class {
     }
 
     resolve (data) {
-        if (typeof data !== 'string') {
-            return '';
-        }
-        data = data.replace(this.getCssPattern(), this.replace.bind(this));
-        data = data.replace(this.getJsPattern(), this.replace.bind(this));
-        return data;
-    }
-
-    getJsPattern () {
-        return new RegExp(`<script src="(.+)"></script>`, 'g');
-    }
-
-    getCssPattern () {
-        return new RegExp(`<link href="(.+)"(.*)>`, 'g');
-    }
-
-    replace (match, key) {
-        if (this.add(key)) {
-            $(document.head).append(match);
-        }
-        return '';
+        const container = document.createElement('template');
+        container.innerHTML = data;
+        this.addLinks(container.content, true);
+        this.addScripts(container.content, true);
+        return container.content;
     }
 };
 
@@ -313,7 +313,7 @@ Jam.LoadableContent = class extends Jam.Element {
         return this.$container.hasClass('loading');
     }
 
-    onToggle (event) {
+    onToggle () {
         if (!this.isLoading()) {
             this.load();
         }
@@ -355,7 +355,7 @@ Jam.LoadableContent = class extends Jam.Element {
         return this.$container.data('url');
     }
 
-    getRequestData (key, defaults) {
+    getRequestData () {
         return {
             url: location.pathname,
             params: location.search,

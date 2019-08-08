@@ -215,4 +215,4 @@ module.exports = class MetaDataGrid extends Base {
 const BadRequest = require('areto/error/BadRequestHttpException');
 const PromiseHelper = require('areto/helper/PromiseHelper');
 const ListFilterCondition = require('./MetaListFilterCondition');
-const Rbac = require('../rbac/Rbac');
+const Rbac = require('../security/rbac/Rbac');

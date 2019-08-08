@@ -130,7 +130,7 @@ Jam.List = class extends Jam.Element {
         this.$container.toggleClass('loading', state);
     }
 
-    beforeLoad (event) {
+    beforeLoad () {
         this.toggleLoader(true);
     }
 
@@ -138,7 +138,7 @@ Jam.List = class extends Jam.Element {
         data.request.data.filter = this.filter.serialize();
     }
 
-    afterLoad (event) {
+    afterLoad () {
         this.toggleLoader(false);
     }
 
@@ -284,11 +284,11 @@ Jam.List = class extends Jam.Element {
         this.notice.hide();
     }
 
-    onReload (event) {
+    onReload () {
         this.reload();
     }
 
-    onView (event) {
+    onView () {
         const $row = this.getSelectedRow();
         if ($row) {
             this.childModal.load(this.params.view, this.getObjectIdParam($row));
@@ -299,28 +299,28 @@ Jam.List = class extends Jam.Element {
         this.loadModal(this.params.create, params);
     }
 
-    onClone (event) {
+    onClone () {
         const $row = this.getSelectedRow();
         if ($row) {
             this.loadModal(this.params.clone, this.getObjectIdParam($row));
         }
     }
 
-    onUpdate (event) {
+    onUpdate () {
         const $row = this.getSelectedRow();
         if ($row)  {
             this.loadModal(this.params.update, this.getObjectIdParam($row));
         }
     }
 
-    onRemove (event) {
+    onRemove () {
         const $rows = this.getSelectedRows();
         if ($rows) {
             Jam.confirmation.showRemove().then(this.removeObjects.bind(this, $rows));
         }
     }
 
-    onSort (event) {
+    onSort () {
         this.modalSort = this.modalSort || new Jam.ListSort(this, this.params.modalSort);
         this.modalSort.execute();
     }

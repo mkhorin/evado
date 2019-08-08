@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('areto/rbac/Rule');
+const Base = require('areto/security/rbac/Rule');
 
 module.exports = class TestRule extends Base {
 

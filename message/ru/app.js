@@ -2,6 +2,7 @@ module.exports = {
 
     'Access blocked': 'Доступ заблокирован',
     'Access blocked for': 'Доступ заблокирован для',
+    'Account is blocked': 'Аккаунт заблокирован',
 
     'Change': 'Изменить',
     'Change password': 'Изменить пароль',

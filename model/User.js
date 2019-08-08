@@ -97,21 +97,17 @@ module.exports = class User extends Base {
         this.set('password', password);
     }
 
-    validatePassword (password) {
-        return SecurityHelper.validatePassword(password, this.get('passwordHash'));
-    }
-
     setPasswordHash () {
         if (this.get('password')) {
             this.set('passwordHash', SecurityHelper.hashPassword(this.get('password')));
         }
     }
 
-    // AUTH key to remember me cookies
-
-    validateAuthKey (key) {
-        return this.getAuthKey() === key;
+    checkPassword (password) {
+        return SecurityHelper.checkPassword(password, this.get('passwordHash'));
     }
+
+    // AUTH KEY (for remember me cookies)
 
     getAuthKey () {
         return this.get('authKey');
@@ -120,7 +116,11 @@ module.exports = class User extends Base {
     setAuthKey () {
         this.set('authKey', SecurityHelper.getRandomString(this.AUTH_KEY_LENGTH));
     }
+
+    checkAuthKey (key) {
+        return this.getAuthKey() === key;
+    }
 };
-module.exports.init();
+module.exports.init(module);
 
 const SecurityHelper = require('areto/helper/SecurityHelper');

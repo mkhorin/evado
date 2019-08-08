@@ -66,7 +66,7 @@ Jam.DataGridRenderer = class {
         this.$table.find('.ordered').removeClass('ordered');
     }
 
-    drawTableFrame (data) {
+    drawTableFrame () {
         this.columns = this.grid.getVisibleColumns();
         this.$thead.html(this.renderHead());
         this.$tfoot.html(this.renderFooter());

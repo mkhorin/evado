@@ -9,14 +9,14 @@ module.exports = class FilePreview extends Base {
 
     constructor (config) {
         super({
-            root: 'upload/preview',
+            basePath: 'upload/preview',
             defaultSizeKey: 'small',
             mime: 'image/png',
             extension: 'png',
             PreviewSize: require('./PreviewSize'),
             ...config
         });
-        this.root = this.resolvePath(this.root);
+        this.basePath = this.resolvePath(this.basePath);
     }
 
     async init () {
@@ -47,7 +47,7 @@ module.exports = class FilePreview extends Base {
     }
 
     getSizePath (key, filename) {
-        return path.join(this.root, key, filename);
+        return path.join(this.basePath, key, filename);
     }
 
     resolvePath (target) {
@@ -97,11 +97,12 @@ module.exports = class FilePreview extends Base {
         }
     }
 
-    log (type, message, data) {
-        this.module.log(type, this.wrapClassMessage(message), data);
+    log () {
+        CommonHelper.log(this.module, this.constructor.name, ...arguments);
     }
 };
 
 const path = require('path');
 const sharp = require('sharp');
+const CommonHelper = require('areto/helper/CommonHelper');
 const FileHelper = require('areto/helper/FileHelper');

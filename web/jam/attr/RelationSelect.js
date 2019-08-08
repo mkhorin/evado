@@ -222,7 +222,7 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
     }
 
     onSort () {
-        this.loadModal(this.params.modalSort, null, (event, data)=> {});
+        this.loadModal(this.params.modalSort, null, ()=> {});
     }
 
     removeSelect2Value (id) {

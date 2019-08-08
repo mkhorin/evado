@@ -54,7 +54,7 @@ Jam.DataGridColumnManager = class {
     }
 
     onChangeItem (event) {
-        const $input = $(event.target).blur();
+        const $input = $(event.currentTarget).blur();
         this.grid.getColumn($input.val()).hidden = !$input.is(':checked');
         this.grid.drawTable();
         this.save();

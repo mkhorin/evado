@@ -21,22 +21,22 @@ Jam.Tabs = class extends Jam.Element {
     }
 
     getActiveId () {
-        return this.getNavs().filter('.active').data('id');
+        return this.getNavItems().filter('.active').data('id');
     }
 
     getActiveNav () {
-        return this.getNavs().filter('.active');
+        return this.getNavItems().filter('.active');
     }
 
     getNav (id) {
-        return this.getNavs().filter(`[data-id=${id}]`);
+        return this.getNavItems().filter(`[data-id=${id}]`);
     }
 
     getNavByElement (element) {
         return $(element).closest('.nav-tab');
     }
 
-    getNavs () {
+    getNavItems () {
         return this.$container.children('.nav').children();
     }
 
@@ -53,7 +53,7 @@ Jam.Tabs = class extends Jam.Element {
     }
 
     setActiveFirst () {
-        this.setActive(this.getNavs().first().data('id'));
+        this.setActive(this.getNavItems().first().data('id'));
     }
 
     setActive (id) {
@@ -102,7 +102,7 @@ Jam.Tabs = class extends Jam.Element {
         const hint = data.hint || text;
         const close = data.close ? 'closing' : '';
         const content = data.content;
-        this.getNavs().parent()[method](`<li class="nav-tab ${close}" data-id="${id}"><a href="#" title="${hint}">${text}</a><div class="tab-close">×</div></li>`);
+        this.getNavItems().parent()[method](`<li class="nav-tab ${close}" data-id="${id}"><a href="#" title="${hint}">${text}</a><div class="tab-close">×</div></li>`);
         this.getPanes().parent()[method](`<div class="tab-pane" data-id="${id}">${content}</div>`);
         this.events.trigger('create', {id});
     }

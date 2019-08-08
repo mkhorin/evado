@@ -92,9 +92,10 @@ Jam.ModelAttr.RadioEnum = class extends Jam.ModelAttr {
     }
 
     changeValue (event) {
-        if (event.target.checked) {
-            this.getRadioItems().not(event.target).prop('checked', false);
-            this.$value.val($(event.target).val()).change();
+        const radio = event.currentTarget;
+        if (radio.checked) {
+            this.getRadioItems().not(radio).prop('checked', false);
+            this.$value.val(radio.value).change();
         }
     }
 

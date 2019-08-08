@@ -63,7 +63,7 @@ Jam.ListTool.Button = class extends Jam.ListTool {
         this.loadModal(this.$item.data('url'));
     }
 
-    postAction (event) {
+    postAction () {
         this.getNotice().hide();
         this.$item.attr('disabled', true);
         Jam.UserAction.post(this.$item).done(data => {

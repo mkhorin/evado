@@ -97,7 +97,7 @@ module.exports = class MetaSecurity extends Base {
         });
     }
 
-    async resolve (data, params) {
+    async resolve (data) {
         this.access = await this.getAccess(data);
         this.noAccessMessage = this.controller.format(null, 'noAccess');
         if (!this.access.can(data.actions[0])) {
@@ -151,4 +151,4 @@ module.exports = class MetaSecurity extends Base {
 };
 
 const Forbidden = require('areto/error/ForbiddenHttpException');
-const Rbac = require('../rbac/Rbac');
+const Rbac = require('../security/rbac/Rbac');

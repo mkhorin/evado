@@ -23,7 +23,7 @@ module.exports = class MetaModels extends Base {
             return this.hub.log('info', `Meta model skipped: ${id}`);
         }
         if (this.has(id)) {
-            return this.hub.logError(`Meta model already exists: ${id}`);
+            return this.hub.log('error', `Meta model already exists: ${id}`);
         }
         this.set(id, model);
     }

@@ -124,7 +124,8 @@ Jam.Modal = class extends Jam.Element {
 
     onModalLink (event) {
         event.preventDefault();
-        Jam.modal.create().load(event.target.href || $(event.target).data('url'));
+        const link = event.currentTarget;
+        Jam.modal.create().load(link.href || link.dataset.url);
     }
 
     openFromUrl (url) {
@@ -207,9 +208,9 @@ Jam.Modal.Item = class {
         this.xhr = null;
     }
 
-    processDone (data, initData) {
+    processDone (content, initData) {
         this.initData = initData;
-        this.$body.html(Jam.resource.resolve(data));
+        this.$body.empty().append(Jam.resource.resolve(content));
         const $container = this.$body.children().first();
         Jam.i18n.translateContainer($container);
         this.title = Jam.i18n.translate($container.data('title')) || '';
@@ -328,7 +329,7 @@ Jam.Modal.StackToggle = class {
         this.$pool.on('click','.jmodal-stack-toggle', event => {
             this.modal.setActive($(event.currentTarget).data('modal'));
         });
-        this.$root.click(event => this.modal.setActive(null));
+        this.$root.click(()=> this.modal.setActive(null));
     }
 
     getItem (modal) {
@@ -346,7 +347,7 @@ Jam.Modal.StackToggle = class {
         this.resize();
     }
 
-    detach (modal) {
+    detach () {
         this.$pool.children().last().remove();
         this.resize();
     }
@@ -366,7 +367,7 @@ Jam.Modal.StackToggle = class {
             this.$stack.offset({left});
             const poolWidth = modal.$container.width() - this.$root.outerWidth();
             this.$pool.width(poolWidth);
-            const maxItemWidth = parseInt(poolWidth / $children.length);
+            const maxItemWidth = Math.round(poolWidth / $children.length);
             $children.css('max-width', maxItemWidth);
             const reminder = poolWidth - maxItemWidth * $children.length;
             $children.last().css('max-width', maxItemWidth + reminder);

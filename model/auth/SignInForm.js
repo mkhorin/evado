@@ -16,7 +16,7 @@ module.exports = class SignInForm extends Base {
                 ['rememberMe', 'filter', {filter: 'boolean'}],
                 ['password', 'string', {min: 6, max:24}],
                 ['captchaCode', 'required', {on: [CAPTCHA_SCENARIO]}],
-                ['captchaCode', require('areto/captcha/CaptchaValidator'), {on: [CAPTCHA_SCENARIO]}]
+                ['captchaCode', require('areto/security/captcha/CaptchaValidator'), {on: [CAPTCHA_SCENARIO]}]
             ],
             ATTR_LABELS: {
                 rememberMe: 'Remember me',
@@ -28,7 +28,7 @@ module.exports = class SignInForm extends Base {
 
     constructor (config) {
         super({
-            // user: [new WebUser]
+            // user: [WebUser]
             rateLimit: config.module.get('rateLimit'),
             rateLimitType: 'signIn',
             rememberPeriod: 7 * 24 * 3600,
@@ -44,11 +44,6 @@ module.exports = class SignInForm extends Base {
         return this.rateLimitModel && this.rateLimitModel.isBlocked();
     }
 
-    toggleCaptchaScenario () {
-        this.scenario = this.rateLimitModel && this.rateLimitModel.isLimited()
-            ? this.CAPTCHA_SCENARIO : null;
-    }
-
     async resolveRateLimit () {
         if (this.rateLimit instanceof RateLimit) {
             this.rateLimitModel = await this.rateLimit.find(this.rateLimitType, this.user);
@@ -56,21 +51,26 @@ module.exports = class SignInForm extends Base {
         }
     }
 
-    async login (complete) {
+    async login () {
         if (!await this.validate()) {
             return false;
         }
-        let result = await this.createLoginByEmail().login();
-        if (result.error) {
-            this.addError('email', result.error);
+        const error = await this.createAuthService().login();
+        if (error) {
+            this.addError('email', error);
         }
         await this.updateRateLimit();
         this.toggleCaptchaScenario();
-        return !result.error;
+        return !error;
     }
 
-    createLoginByEmail () {
-        return this.spawn(LoginByEmail, {
+    toggleCaptchaScenario () {
+        this.scenario = this.rateLimitModel && this.rateLimitModel.isLimited()
+            ? this.CAPTCHA_SCENARIO : null;
+    }
+
+    createAuthService () {
+        return this.spawn('security/PasswordAuthService', {
             email: this.get('email'),
             password: this.get('password'),
             rememberMe: this.get('rememberMe'),
@@ -89,7 +89,6 @@ module.exports = class SignInForm extends Base {
         }
     }
 };
-module.exports.init();
+module.exports.init(module);
 
-const RateLimit = require('areto/web/rate-limit/RateLimit');
-const LoginByEmail = require('../../component/misc/LoginByEmail');
+const RateLimit = require('areto/security/rate-limit/RateLimit');

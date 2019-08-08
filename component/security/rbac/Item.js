@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('areto/rbac/Item');
+const Base = require('areto/security/rbac/Item');
 
 module.exports = class Item extends Base {
 
@@ -187,10 +187,7 @@ module.exports = class Item extends Base {
     }
 
     compareMeta (item) {
-        if (ArrayHelper.diff(item.actions, this.data.actions).length) {
-            return false;
-        }
-        return true;
+        return ArrayHelper.diff(item.actions, this.data.actions).length;
     }
 };
 

@@ -5,9 +5,9 @@
 
 module.exports = {
     Class: require('../component/file/FileStorage'),
-    root: 'upload/file',
+    basePath: 'upload/file',
     preview: {
-        root: 'upload/preview',
+        basePath: 'upload/preview',
         sizes: {
             'tiny': {
                 width: 64,

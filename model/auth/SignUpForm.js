@@ -4,7 +4,6 @@
 'use strict';
 
 const Base = require('areto/base/Model');
-const User = require('../User');
 
 module.exports = class SignUpForm extends Base {
 
@@ -17,7 +16,7 @@ module.exports = class SignUpForm extends Base {
                 ['email', 'email'],
                 ['password', 'string', {min: 6, max: 24}],
                 ['passwordRepeat', 'compare', {compareAttr: 'password'}],
-                ['captchaCode', require('areto/captcha/CaptchaValidator')]
+                ['captchaCode', require('areto/security/captcha/CaptchaValidator')]
             ],
             ATTR_LABELS: {
                 captchaCode: 'Verification code'
@@ -29,14 +28,16 @@ module.exports = class SignUpForm extends Base {
         if (!await this.validate()) {
             return false;
         }
-        let model = this.spawn(User, {scenario: 'create'});
+        const model = this.spawn('model/User', {scenario: 'create'});
         model.setAttrs(this);
-        if (await model.save()) {
-            await this.user.login(model, 0);
-            return true;
+        if (!await model.save()) {
+            return this.addError('name', model.getFirstError());
         }
-        this.addError('name', model.getFirstError());
-        return false;
+        await this.user.login({
+            identity: model,
+            duration: 0
+        });
+        return true;
     }
 };
-module.exports.init();
+module.exports.init(module);

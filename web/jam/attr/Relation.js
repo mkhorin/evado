@@ -78,7 +78,7 @@ Jam.AttrList = class extends Jam.List {
         }
     }
 
-    onCreate (event, params) {
+    onCreate () {
         if (!this.revertChanges()) {
             this.loadModal(this.params.create, null, this.onAfterCloseModal.bind(this));
         }
@@ -185,16 +185,16 @@ Jam.AttrListChanges = class {
         return this.data.removes;
     }
 
-    linkSingle (ids, olds) {
-        if (olds[0] === ids[0]) {
+    linkSingle (ids, old) {
+        if (old[0] === ids[0]) {
             return this.clear();
         }
         this.data.links = ids;
         if (this.data.removes.length) {
             this.data.unlinks = [];
-            this.data.removes = olds;
+            this.data.removes = old;
         } else {
-            this.data.unlinks = olds;
+            this.data.unlinks = old;
             this.data.removes = [];
         }
     }

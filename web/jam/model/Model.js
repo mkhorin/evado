@@ -279,7 +279,7 @@ Jam.ModelChangeTracker = class {
 
     start () {
         this.reset();
-        this.$form.find('[name]').on('change keyup', event => {
+        this.$form.find('[name]').on('change keyup', ()=> {
             this.form.events.trigger('change');
         });
     }

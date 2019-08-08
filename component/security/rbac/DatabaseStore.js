@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('areto/rbac/DatabaseStore');
+const Base = require('areto/security/rbac/DatabaseRbacStore');
 
 module.exports = class DatabaseStore extends Base {
 

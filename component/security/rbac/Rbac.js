@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('areto/rbac/Rbac');
+const Base = require('areto/security/rbac/Rbac');
 
 module.exports = class Rbac extends Base {
 
@@ -174,7 +174,7 @@ module.exports = class Rbac extends Base {
 
     constructor (config) {
         super({
-            store: require('./DatabaseStore'),
+            Store: require('./DatabaseStore'),
             Item: require('./Item'),
             MetaInspector: require('./MetaInspector'),
             MetaAttrInspector: require('./MetaAttrInspector'),

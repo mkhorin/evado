@@ -100,12 +100,12 @@ Jam.Uploader = class {
         this.$uploader.trigger(`uploader:${eventName}`, data);
     }
 
-    onDragOver (event) {
+    onDragOver () {
         //$dropZone.addClass('drag');
         return false;
     }
 
-    onDragLeave (event) {
+    onDragLeave () {
         //$dropZone.removeClass('drag');
         return false;
     }
@@ -116,7 +116,7 @@ Jam.Uploader = class {
         return false;
     }
 
-    onClickDropZone (event) {
+    onClickDropZone () {
         this.$input.click();
     }
 
@@ -257,7 +257,7 @@ Jam.Uploader.File = class {
         }
     }
 
-    remove (error) {
+    remove () {
         this.removed = true;
         if (this.$item) {
             this.$item.remove();
@@ -300,10 +300,8 @@ Jam.Uploader.File = class {
         // try to load file as image, then validate it
         // image loading occurs by event, not sequentially
         this.image = new Image;
-        this.image.onload = event => {
-            this.startValidate();
-        };
-        this.image.onerror = event => {
+        this.image.onload = ()=> this.startValidate();
+        this.image.onerror = ()=> {
             this.image = null;
             this.startValidate();
         };
@@ -328,17 +326,17 @@ Jam.Uploader.File = class {
             const index = file.name.lastIndexOf('.');
             const ext = index > - 1 ? file.name.substr(index + 1, file.name.length).toLowerCase() : '';
             if (options.extensions.indexOf(ext) === -1) {
-                return options.wrongExtension.replace(/\{extensions\}/g, options.extensions.join(', '));
+                return options.wrongExtension.replace(/{extensions}/g, options.extensions.join(', '));
             }
         }
         if (options.mimeTypes && options.mimeTypes.indexOf(file.type) === -1) {
-            return options.wrongMimeType.replace(/\{mimeTypes\}/g, options.mimeTypes.join(', '));
+            return options.wrongMimeType.replace(/{mimeTypes}/g, options.mimeTypes.join(', '));
         }
         if (options.maxSize && options.maxSize < file.size) {
-            return options.tooBig.replace(/\{limit\}/g, options.maxSize);
+            return options.tooBig.replace(/{limit}/g, options.maxSize);
         }
         if (options.minSize && options.minSize > file.size) {
-            return options.tooSmall.replace(/\{limit\}/g, options.minSize);
+            return options.tooSmall.replace(/{limit}/g, options.minSize);
         }
         if (options.imageOnly) {
             return this.image ? this.validateImage() : options.notImage;
@@ -371,16 +369,16 @@ Jam.Uploader.File = class {
     validateImage () {
         const options = this.uploader.options;
         if (options.maxHeight && options.maxHeight < this.image.height) {
-            return options.overHeight.replace(/\{limit\}/g, options.maxHeight);
+            return options.overHeight.replace(/{limit}/g, options.maxHeight);
         }
         if (options.maxWidth && options.maxWidth < this.image.width) {
-            return options.overWidth.replace(/\{limit\}/g, options.maxWidth);
+            return options.overWidth.replace(/{limit}/g, options.maxWidth);
         }
         if (options.minHeight && options.minHeight > this.image.height) {
-            return options.underHeight.replace(/\{limit\}/g, options.minHeight);
+            return options.underHeight.replace(/{limit}/g, options.minHeight);
         }
         if (options.minWidth && options.minWidth > this.image.width) {
-            return options.underWidth.replace(/\{limit\}/g, options.minWidth);
+            return options.underWidth.replace(/{limit}/g, options.minWidth);
         }
         return false;
     }
@@ -410,7 +408,7 @@ Jam.Uploader.File = class {
         }
     }
 
-    changeReadyState (event) {
+    changeReadyState () {
         if (this.xhr.readyState === 4) {
             const message = this.xhr.response;
             if (this.xhr.status === 200) {

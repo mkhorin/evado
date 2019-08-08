@@ -47,7 +47,7 @@ Jam.ModelAttr.File = class extends Jam.ModelAttr {
         this.uploader.abort();
     }
 
-    onSelectedFile (event, data) {
+    onSelectedFile () {
         this.$uploader.find('.uploader-overflow').hide();
     }
 

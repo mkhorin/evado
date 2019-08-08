@@ -31,7 +31,7 @@
     }) %>
     <% } %>
 
-    <% if (_controller.user.config.enableAutoLogin) { %>
+    <% if (_controller.user.auth.enableAutoLogin) { %>
     <%- include('./checkbox', {
         attr: 'rememberMe'
     }) %>
@@ -45,7 +45,7 @@
 </form>
 
 <% if (_controller.canSignUp()) { %>
-<div class="text-center">
+<div class="text-center mt20">
     <a href="auth/sign-up"><%- _t('Sign up new user') %></a>
 </div>
 <% } %>

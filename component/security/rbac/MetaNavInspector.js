@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('areto/rbac/Inspector');
+const Base = require('areto/security/rbac/Inspector');
 
 module.exports = class MetaNavInspector extends Base {
 

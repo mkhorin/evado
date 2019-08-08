@@ -85,7 +85,7 @@ module.exports = class File extends Base {
         if (value === this.getOldAttr(attr)) {
             return true;
         }
-        this.rawFile = await this.spawn(RawFile).findPending(value, this.user).one();
+        this.rawFile = await this.spawn('model/RawFile').findPending(value, this.user).one();
         if (!this.rawFile) {
             this.addError(attr, 'Not found raw file');
         }
@@ -136,14 +136,13 @@ module.exports = class File extends Base {
     // RELATIONS
 
     relCreator () {
-        return this.hasOne(User, User.PK, 'creator');
+        const Class = this.getClass('model/User');
+        return this.hasOne(Class, Class.PK, 'creator');
     }
 
     relEditor () {
-        return this.hasOne(User, User.PK, 'editor');
+        const Class = this.getClass('model/User');
+        return this.hasOne(Class, Class.PK, 'editor');
     }
 };
-module.exports.init();
-
-const RawFile = require('./RawFile');
-const User = require('./User');
+module.exports.init(module);

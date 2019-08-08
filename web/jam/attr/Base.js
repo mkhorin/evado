@@ -110,7 +110,7 @@ Jam.ModelAttr = class {
         return this.$attr.find(value === undefined ? `[data-${key}="${value}"]` : `[data-${key}]`);
     }
 
-    onBeforeCloseModal (event) {
+    onBeforeCloseModal () {
         if (this.model.saved) {
             store.set(name, this.$value.val());
         }
@@ -148,34 +148,34 @@ Jam.ModelAttr.CheckboxList = class extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.$itemList = this.$attr.find('[type="checkbox"]');
-        this.$itemList.change(this.onChangeCheckbox.bind(this));
+        this.$checkItems = this.$attr.find('[type="checkbox"]');
+        this.$checkItems.change(this.onChangeCheckbox.bind(this));
         this.setValue(this.$value.val());
     }
 
     enable (state) {
         this.$value.attr('readonly', !state);
-        this.$itemList.attr('readonly', !state);
+        this.$checkItems.attr('readonly', !state);
     }
 
     setValue (value) {
         this.$value.val(value);
-        this.$itemList.prop('checked', false);
+        this.$checkItems.prop('checked', false);
         value = Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : [];
         for (let val of value) {
-            this.$itemList.filter(`[value="${val}"]`).prop('checked', true);
+            this.$checkItems.filter(`[value="${val}"]`).prop('checked', true);
         }
     }
 
     extractValues () {
-        let values = [];
-        for (let item of this.$itemList.filter(':checked')) {
+        const values = [];
+        for (let item of this.$checkItems.filter(':checked')) {
             values.push($(item).val());
         }
         return values;
     }
 
-    onChangeCheckbox (event) {
+    onChangeCheckbox () {
         this.$value.val(this.extractValues()).change();
     }
 };
@@ -231,25 +231,25 @@ Jam.ModelAttr.RadioList = class extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.$itemList = this.$attr.find('[type="radio"]');
-        this.$itemList.change(this.onChangeValue.bind(this));
+        this.$radioItems = this.$attr.find('[type="radio"]');
+        this.$radioItems.change(this.onChangeValue.bind(this));
         this.setValue(this.$value.val());
     }
 
     enable (state) {
         this.$value.attr('readonly', !state);
-        this.$itemList.attr('readonly', !state);
+        this.$radioItems.attr('readonly', !state);
     }
 
-        setValue (value) {
+    setValue (value) {
         this.$value.val(value);
-        this.$itemList.prop('checked', false);
-        this.$itemList.filter(`[value="${value}"]`).prop('checked', true);
+        this.$radioItems.prop('checked', false);
+        this.$radioItems.filter(`[value="${value}"]`).prop('checked', true);
     }
 
     onChangeValue (event) {
         if (event.target.checked) {
-            this.$itemList.not(event.target).prop('checked', false);
+            this.$radioItems.not(event.target).prop('checked', false);
             this.$value.val($(event.target).val()).change();
         }
     }

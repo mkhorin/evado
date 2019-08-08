@@ -52,4 +52,4 @@ module.exports = class RateLimit extends Base {
         this.forceSave(()=>{});
     }
 };
-module.exports.init();
+module.exports.init(module);

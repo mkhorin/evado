@@ -218,7 +218,7 @@ Jam.ListFilter.Condition = class {
     }
 
     createType (params) {
-        let Type = Jam.ListFilter.Type;
+        let Type = Jam.ListFilter.StringType;
         switch (params.type) {
             case 'boolean': Type = Jam.ListFilter.BooleanType; break;
             case 'date': Type = Jam.ListFilter.DateType; break;
@@ -289,7 +289,7 @@ Jam.ListFilter.Type = class {
     constructor (params, condition) {
         this.condition = condition;
         this.filter = condition.filter;
-        this.name = params.type || 'string';
+        this.name = params.type;
         this.params = params;
         this.commonParams = this.filter.getTypeParams(this.name);
         this.init();
@@ -329,6 +329,27 @@ Jam.ListFilter.Type = class {
             type: this.name,
             valType: this.params.valueType
         });
+    }
+};
+
+// STRING
+
+Jam.ListFilter.StringType = class extends Jam.ListFilter.Type {
+
+    constructor (params) {
+        params.type = params.type || 'string';
+        super(...arguments);
+    }
+
+    init () {
+        super.init();
+        this.getValueItem().keyup(this.onKeyUp.bind(this));
+    }
+
+    onKeyUp (event) {
+        if (event.keyCode === 13 && this.getValue().length) {
+            this.filter.apply();
+        }
     }
 };
 

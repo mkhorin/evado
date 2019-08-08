@@ -20,30 +20,36 @@ module.exports = class ErrorAction extends Base {
         if (!err) {
             return this.render(404);
         }
-        let message = err.message;
-        if (err.isServerError()) {
-            message = this.serverErrorMessage;
-            controller.log('error', err);
-        }
-        if (controller.module.get('logger').isDebug()) {
-            controller.log('error', err);
-        }
-        controller.setHttpStatus(err.status);
+        controller.log('error', err);
+        const status = err.status;
+        controller.setHttpStatus(status);
+        const message = err.isServerError() ? this.serverErrorMessage : err.message;
         if (controller.isAjax()) {
             return this.sendText(message);
         }
-        if (err.status === 403 && controller.user.isGuest()) {
-            return controller.user.loginRequired(controller);
+        if (status === 403 && this.isAuthRedirect()) {
+            return true;
         }
         if (controller.isPost()) {
             return this.sendText(message);
         }
-        switch (err.status) {
+        switch (status) {
             case 400:
             case 403:
             case 404:
-                return this.render(err.status);
+                return this.render(status);
         }
-        return this.render(500);
+        this.render(500);
+    }
+
+    isAuthRedirect () {
+        if (this.controller.user.isGuest()) {
+            this.controller.user.setReturnUrl(this.controller.getOriginalUrl());
+            const url = this.controller.user.getLoginUrl();
+            if (url) {
+                this.controller.redirect(url);
+                return true;
+            }
+        }
     }
 };

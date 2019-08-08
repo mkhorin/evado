@@ -93,12 +93,13 @@ module.exports = class ModuleAsset extends Base {
         }
     }
 
-    log (type, message) {
-        this.console.log(type, `${this.module.NAME}: ${message}`);
+    log () {
+        CommonHelper.log(this.console, this.module.NAME, ...arguments);
     }
 };
 
 const path = require('path');
+const CommonHelper = require('areto/helper/CommonHelper');
 const FileHelper = require('areto/helper/FileHelper');
 const PromiseHelper = require('areto/helper/PromiseHelper');
 const SystemHelper = require('areto/helper/SystemHelper');

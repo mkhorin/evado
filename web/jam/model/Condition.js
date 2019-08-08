@@ -38,7 +38,7 @@ Jam.ModelCondition = class {
         }
         return Jam.ModelCondition.OPERATORS.hasOwnProperty(operator)
             ? this[Jam.ModelCondition.OPERATORS[operator]](operator, data)
-            : this.logError(`Not found operator: ${operator}`);
+            : this.log('error', `Not found operator: ${operator}`);
     }
 
     validateHash (data) {
@@ -152,11 +152,11 @@ Jam.ModelCondition = class {
     }
 
     logDataError (operator, operands) {
-        return this.logError(`${operator}: operands invalid: ${JSON.stringify(operands)}`);
+        return this.log('error', `${operator}: operands invalid: ${JSON.stringify(operands)}`);
     }
 
-    logError (msg) {
-        console.error(this.wrapClassMessage(msg));
+    log (type, message) {
+        console[type](this.wrapClassMessage(message));
         return false;
     }
 };

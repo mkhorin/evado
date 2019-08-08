@@ -83,7 +83,7 @@ module.exports = class PreviewSize extends Base {
         image = sharp(data, {raw: info}); // already resized
         image[this.output](this.outputParams);
         if (info.width < this._minCompositeWidth || info.height < this._minCompositeHeight) {
-            this.log('warning', 'Composite skipped: Overlay is larger than background');
+            this.log('warn', 'Composite skipped: Overlay is larger than background');
             return image;
         }
         return image.composite(this.composite);
@@ -107,9 +107,10 @@ module.exports = class PreviewSize extends Base {
         return [width, height];
     }
 
-    log (type, message, data) {
-        this.module.log(type, this.wrapClassMessage(message), data);
+    log () {
+        CommonHelper.log(this.module, this.constructor.name, ...arguments);
     }
 };
 
 const sharp = require('sharp');
+const CommonHelper = require('areto/helper/CommonHelper');

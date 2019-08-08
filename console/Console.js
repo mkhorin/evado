@@ -120,8 +120,8 @@ module.exports = class Console extends Base {
     async logTotal () {
         await PromiseHelper.setTimeout(200); // skip previous console output
         const logger = this.app.get('logger');
-        const total = logger.getTotal(['error', 'warn']).map(item => `${item.type}: ${item.counter}`);
-        if (total.length) {
+        const counters = logger.getCounters(['error', 'warn']).map(item => `${item.type}: ${item.counter}`);
+        if (counters.length) {
             this.log('warn', `Log total: ${total.join(', ')}`);
         }
     }

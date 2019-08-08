@@ -10,15 +10,12 @@ module.exports = {
 
     components: {
         'logger': {
-            level: 'info',
-            types: { // optional: separate log storage
-                'error': {
-                    store: require('areto/log/FileLogStore')
-                }
-            }
+            level: 'info'
         },
-        'view': {
+        'actionProfiler': {
+            Class: require('areto/log/actionProfiler')
         },
+        'view': {},
         'db': {
             Class: require('areto/db/MongoDatabase'),
             settings: {
@@ -55,23 +52,22 @@ module.exports = {
             attempts: 3
         },
         'rbac': {
-            Class: require('../component/rbac/Rbac')
+            Class: require('../component/security/rbac/Rbac')
         },
         'router': {
             errors: {Controller: require('../controller/DefaultController')}
         },
-        'user': {
-            Class: require('../component/user/User'),
-            WebUser: require('../component/user/WebUser'),
-            UserModel: require('../model/User'),
-            UserLog: require('../model/UserLog'),
+        'auth': {
+            Class: require('../component/security/Auth'),
             loginUrl: '/auth/sign-in',
             returnUrl: '/',
             enableAutoLogin: true,
             identityCookie: {
-                httpOnly: true,
-                path: '/'
-            }
+                'httpOnly': true,
+                'path': '/'
+            },
+            Identity: require('../model/User'),
+            UserLog: require('../model/UserLog')
         },
         'meta': {
             Class: require('../component/meta/MetaHub'),

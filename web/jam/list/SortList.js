@@ -86,13 +86,13 @@ Jam.SortList = class extends Jam.List {
         }
     }
 
-    onSaveClose (event) {
+    onSaveClose () {
         if (!this.changed) {
             return this.cancel();
         }
         this.post(this.params.url, {
             order: this.getChangedOrder()
-        }).done(data => {
+        }).done(()=> {
             this.changed = false;
             this.saved = true;
             this.modal.close();

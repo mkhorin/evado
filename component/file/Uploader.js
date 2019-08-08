@@ -9,7 +9,7 @@ module.exports = class Uploader extends Base {
 
     constructor (config) {
         super({
-            root: '/',
+            basePath: '/',
             fieldName: 'file',
             ...config
         });
@@ -44,7 +44,7 @@ module.exports = class Uploader extends Base {
     }
 
     generateDestination (dir, req, file, callback) {
-        dir = path.join(this.root, dir);
+        dir = path.join(this.basePath, dir);
         fs.mkdir(dir, {recursive: true}, err => callback(err, dir));
     }
 

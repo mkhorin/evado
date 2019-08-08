@@ -14,7 +14,7 @@ module.exports = class MetaSelectHelper extends Base {
         });
     }
 
-    static getLabelText (doc, data) {
+    static getLabelText (doc) {
         return doc.data.label ? `${doc.data.label} (${doc.name})` : doc.name;
     }
 

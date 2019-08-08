@@ -28,9 +28,8 @@ module.exports = class UserLog extends Base {
     }
 
     relUser () {
-        return this.hasOne(User, User.PK, 'user');
+        const Class = this.getClass('model/User');
+        return this.hasOne(Class, Class.PK, 'user');
     }
 };
-module.exports.init();
-
-const User = require('./User');
+module.exports.init(module);

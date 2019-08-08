@@ -46,7 +46,7 @@ module.exports = class MetaObjectFilter extends Base {
     }
 
     appendStateCondition (item) {
-        let itemClass = this.getClass(item);
+        const itemClass = this.getClass(item);
         if (!itemClass) {
             return false;
         }
@@ -58,16 +58,17 @@ module.exports = class MetaObjectFilter extends Base {
     }
 
     getClass (item) {
-        let cls = this.rbac.module.getMeta().getClass(item.class);
+        const cls = this.rbac.module.getMeta().getClass(item.class);
         if (!cls) {
             this.log('error', `Not found item class: ${item.key}`);
         }
         return cls;
     }
 
-    log (type, message, data) {
-        this.rbac.log(type, this.wrapClassMessage(message), data);
+    log () {
+        CommonHelper.log(this.rbac, this.constructor.name, ...arguments);
     }
 };
 
+const CommonHelper = require('areto/helper/CommonHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');

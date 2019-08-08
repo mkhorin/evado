@@ -9,19 +9,19 @@ module.exports = class FileStorage extends Base {
 
     constructor (config) {
         super({
-            root: 'upload/file',
+            basePath: 'upload/file',
             // maxTotalSize: 100 * 1024 * 1024,
             // maxTotalFiles: 100,
             ...config
         });
-        this.root = this.resolvePath(this.root);
+        this.basePath = this.resolvePath(this.basePath);
         this.preview = this.spawn({
             Class: require('./FilePreview'),
             ...this.preview
         });
         this.uploader = this.spawn({
             Class: require('./Uploader'),
-            root: this.root,
+            basePath: this.basePath,
             ...this.uploader
         });
     }
@@ -35,7 +35,7 @@ module.exports = class FileStorage extends Base {
     }
 
     getPath (filename) {
-        return path.join(this.root, filename);
+        return path.join(this.basePath, filename);
     }
 
     ensurePreview (key, filename) {

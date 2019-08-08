@@ -45,8 +45,8 @@ module.exports = class MetaHub extends Base {
         return MetaHelper.splitByPrefix(name, '-', this.moduleNames);
     }
 
-    log (type, message, data) {
-        CommonHelper.log(type, message, data, 'META', this.module);
+    log () {
+        CommonHelper.log(this.module, 'META', ...arguments);
     }
 
     // LOAD

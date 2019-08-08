@@ -271,7 +271,7 @@ Jam.DateHelper = class {
         }
     }
 
-    static setTimeSelectAfterDay ($picker) {
+    static setTimeSelectAfterDay () {
     }
 };
 
@@ -362,11 +362,11 @@ Jam.ObjectHelper = class {
         }
         const pos = key.indexOf('.');
         if (pos > 0) {
-            let destKey = key.substring(0, pos);
-            if (Object.prototype.hasOwnProperty.call(data, destKey)) {
+            const targetKey = key.substring(0, pos);
+            if (Object.prototype.hasOwnProperty.call(data, targetKey)) {
                 key = key.substring(pos + 1);
-                if (data[destKey]) {
-                    return this.getNestedValue(key, data[destKey], defaults);
+                if (data[targetKey]) {
+                    return this.getNestedValue(key, data[targetKey], defaults);
                 }
             }
         }
