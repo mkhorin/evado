@@ -10,7 +10,7 @@ module.exports = class AuthConsole extends Base {
     async createUsers () {
         this.log('info', 'Create users...');
         const items = this.app.getConfig('users') || [];
-        for (let data of items) {
+        for (const data of items) {
             await this.createUser(data);
         }
         this.log('info', 'Users created');

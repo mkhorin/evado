@@ -119,7 +119,7 @@ module.exports = class MetaSecurity extends Base {
             actions: [Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]
         };
         this.relAccess = {};
-        for (let attr of view.relationAttrs) {
+        for (const attr of view.relationAttrs) {
             data.target = attr.rel.refClass;
             this.relAccess[attr.name] = await this.rbac.getAccess(this.controller.user.assignments, data, null);
         }
@@ -134,8 +134,8 @@ module.exports = class MetaSecurity extends Base {
         if (!this.attrAccess.hasAnyObjectTargetData(view.class.name)) {
             return false;
         }
-        for (let model of models) {
-            let data = await this.attrAccess.resolveObjectTarget(model);
+        for (const model of models) {
+            const data = await this.attrAccess.resolveObjectTarget(model);
             model.readForbiddenAttrs = data && data[Rbac.READ];
         }
     }
@@ -143,7 +143,7 @@ module.exports = class MetaSecurity extends Base {
     filterForbiddenAttrs (action, model) {
         const attrs = this.attrAccess.forbiddenAttrMap[action];
         if (Array.isArray(attrs)) {
-            for (let attr of attrs) {
+            for (const attr of attrs) {
                 model.unset(attr);
             }
         }

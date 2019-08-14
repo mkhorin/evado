@@ -15,9 +15,9 @@ module.exports = class Util extends Base {
     }
 
     static getName () {
-        let index = this.name.lastIndexOf('Util');
+        const index = this.name.lastIndexOf('Util');
         if (index === -1) {
-            throw new Error(this.wrapClassMessage(`Invalid util class name: ${this.name}`));
+            throw new Error(this.wrapClassMessage(`Invalid utility class name: ${this.name}`));
         }
         return StringHelper.camelToId(this.name.substring(0, index));
     }
@@ -46,7 +46,7 @@ module.exports = class Util extends Base {
     }
 
     isAction (...names) {
-        for (let name of names) {
+        for (const name of names) {
             if (this.controller.action.name === name) {
                 return true;
             }
@@ -62,7 +62,7 @@ module.exports = class Util extends Base {
     }
 
     execute () {
-        this.controller.sendText('Util done');
+        this.controller.sendText('Utility completed');
     }
 
     renderControl () {

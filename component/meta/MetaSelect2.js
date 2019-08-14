@@ -18,8 +18,8 @@ module.exports = class MetaSelect2 extends Base {
         const conditions = [];
         this.resolveKeyCondition(text, conditions);
         if (Array.isArray(this.searchAttrs)) {
-            let stringSearch = this.getStringSearch(text);
-            for (let attr of this.searchAttrs) {
+            const stringSearch = this.getStringSearch(text);
+            for (const attr of this.searchAttrs) {
                 if (attr.isString()) {
                     conditions.push({[attr.name]: stringSearch});
                 }
@@ -31,8 +31,8 @@ module.exports = class MetaSelect2 extends Base {
     }
 
     resolveKeyCondition (text, conditions) {
-        let key = this.query.view.class.key;
-        let id = key.normalize(text);
+        const key = this.query.view.class.key;
+        const id = key.normalize(text);
         if (id) {
             conditions.push({[key.name]: id});
         }

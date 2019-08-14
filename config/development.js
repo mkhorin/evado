@@ -10,7 +10,7 @@ module.exports = {
         'logger': {
             level: 'trace'
         },
-        'meta': {
+        'metaHub': {
             // inspectionEnabled: false
         }
     },

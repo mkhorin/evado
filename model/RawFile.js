@@ -66,7 +66,7 @@ module.exports = class RawFile extends Base {
     }
 
     async upload (req, res) {
-        let data = await this.getStorage().upload(req, res);
+        const data = await this.getStorage().upload(req, res);
         if (!data) {
             return this.addError('file', 'Invalid upload');
         }
@@ -82,10 +82,10 @@ module.exports = class RawFile extends Base {
     }
 
     createValidators () {
-        let validators = super.createValidators();
-        let rule = this.getStorage().getValidatorRule('file'); // from storage config
+        const validators = super.createValidators();
+        const rule = this.getStorage().getValidatorRule('file'); // from storage configuration
         if (rule) {
-            let validator = this.createValidator(rule);
+            const validator = this.createValidator(rule);
             if (validator) {
                 validators.push(validator);
             }

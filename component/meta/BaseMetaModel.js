@@ -12,7 +12,7 @@ module.exports = class BaseMetaModel extends Base {
     }
 
     getPath () {
-        return this.hub.getMetaPath(...arguments);
+        return this.hub.getPath(...arguments);
     }
 
     getDb () {
@@ -32,7 +32,7 @@ module.exports = class BaseMetaModel extends Base {
     }
 
     createSource (data) {
-        this.source = this.spawn(data, {metaModel: this});
+        this.source = this.spawn(data, {meta: this});
     }
 
     afterDataImport () {}

@@ -19,7 +19,7 @@ Jam.ModelGrouper = class {
     }
 
     getActiveGroup () {
-        for (let group of this.groups) {
+        for (const group of this.groups) {
             if (group.isActive()) {
                 return group;
             }
@@ -50,7 +50,7 @@ Jam.ModelGrouper = class {
 
     saveStates () {
         const data = [];
-        for (let group of this.groups) {
+        for (const group of this.groups) {
             data.push(group.isActive());
         }
         store.set(this.getStoreId(), data);
@@ -66,7 +66,7 @@ Jam.ModelGrouper = class {
 
     toggleEmpty () { // after attraction visible
         for (let depth = this.maxDepth; depth >= 0; --depth) {
-            for (let group of this.groups) {
+            for (const group of this.groups) {
                 if (group.depth === depth) {
                     group.toggleEmpty();
                 }

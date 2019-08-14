@@ -81,13 +81,13 @@ module.exports = class File extends Base {
     }
 
     async validateFile (attr) {
-        let value = this.get(attr);
+        const value = this.get(attr);
         if (value === this.getOldAttr(attr)) {
             return true;
         }
         this.rawFile = await this.spawn('model/RawFile').findPending(value, this.user).one();
         if (!this.rawFile) {
-            this.addError(attr, 'Not found raw file');
+            this.addError(attr, 'Raw file not found');
         }
     }
 

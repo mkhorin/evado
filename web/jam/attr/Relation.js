@@ -57,7 +57,7 @@ Jam.AttrList = class extends Jam.List {
     }
 
     serializeValue () {
-        let value = this.changes.isEmpty() ? '' : JSON.stringify(this.changes.data);
+        const value = this.changes.isEmpty() ? '' : JSON.stringify(this.changes.data);
         this.attr.$value.val(value).change();
     }
 
@@ -94,20 +94,22 @@ Jam.AttrList = class extends Jam.List {
     onLink () {
         if (!this.revertChanges()) {
             this.loadModal(this.params.link, null, (event, data)=> {
-                data && data.result && this.linkObjects(data.result);
+                if (data && data.result) {
+                    this.linkObjects(data.result);
+                }
             }, {multiple: this.params.multiple});
         }
     }
 
     onUnlink () {
-        let $rows = this.getSelectedRows();
+        const $rows = this.getSelectedRows();
         if ($rows) {
             this.unlinkObjects($rows);
         }
     }
 
     linkObjects (ids) {
-        ids = typeof ids === 'string'  ? ids.split(',') : [];
+        ids = typeof ids === 'string' ? ids.split(',') : [];
         this.params.multiple
             ? this.linkMultiple(ids)
             : this.linkSingle(ids);
@@ -223,8 +225,8 @@ Jam.AttrListChanges = class {
 
     revertList (list, ids) {
         let reverted = false;
-        for (let id of ids) {
-            let index = list.indexOf(id);
+        for (const id of ids) {
+            const index = list.indexOf(id);
             if (index !== -1) {
                 list.splice(index, 1);
                 reverted = true;

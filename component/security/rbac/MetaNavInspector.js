@@ -14,8 +14,8 @@ module.exports = class MetaNavInspector extends Base {
      */
 
     static intersectData (d1, d2) {
-        let result = {};
-        for (let key of ArrayHelper.intersect(Object.keys(d1), Object.keys(d2))) {
+        const result = {};
+        for (const key of ArrayHelper.intersect(Object.keys(d1), Object.keys(d2))) {
             result[key] = d1[key].concat(d2[key]);
         }
         return result;
@@ -25,18 +25,18 @@ module.exports = class MetaNavInspector extends Base {
         if (!this.rbac.metaNavMap) {
             return {};
         }
-        let data = this.filterMetaData(this.rbac.metaNavMap);
+        const data = this.filterMetaData(this.rbac.metaNavMap);
         if (!data) {
             return {};
         }
-        let forbiddenSection = data.hasOwnProperty(this.section.id)
+        const forbiddenSection = data.hasOwnProperty(this.section.id)
             ? await this.checkItems(data[this.section.id]) // check deny
             : false;
         if (forbiddenSection) {
             return {[this.section.id]: true};
         }
-        let forbiddenAccess = {};
-        for (let item of this.items) {
+        const forbiddenAccess = {};
+        for (const item of this.items) {
             if (data[item.id]) {
                 forbiddenAccess[item.id] = await this.checkItems(data[item.id]);
             }
@@ -46,7 +46,7 @@ module.exports = class MetaNavInspector extends Base {
 
     filterMetaData (data) {
         let result;
-        for (let role of this.assignments) {
+        for (const role of this.assignments) {
             if (!Object.prototype.hasOwnProperty.call(data, role)) {
                 return null; // no role data
             }
@@ -59,7 +59,7 @@ module.exports = class MetaNavInspector extends Base {
 
     async checkItems (items) {
         if (Array.isArray(items)) {
-            for (let item of items) {
+            for (const item of items) {
                 if (!item.rule || await this.checkRule(item.rule)) {
                     return true;
                 }

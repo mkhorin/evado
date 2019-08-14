@@ -54,7 +54,7 @@ Jam.ModelAttr.Json = class extends Jam.ModelAttr {
     parseError (err) {
         let pos = Number(err.toString().split(' ').pop());
         if (!isNaN(pos)) {
-            let text = this.$text.focus().get(0);
+            const text = this.$text.focus().get(0);
             text.setSelectionRange(pos, pos);
             pos = (pos - (pos % text.cols)) / text.cols;
             text.scrollTop = pos * (text.clientHeight / text.rows);

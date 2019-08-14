@@ -54,7 +54,7 @@ Jam.ModelAttr.Enum = class extends Jam.ModelAttr {
 
     build () {
         let content = '<option value></option>';
-        for (let item of this.items) {
+        for (const item of this.items) {
             content += `<option value="${item.value}">${item.text}</option>`;
         }
         return content;
@@ -127,7 +127,7 @@ Jam.ModelAttr.EnumSet = class {
     static createSets (data, owner) {
         const sets = [];
         if (Array.isArray(data)) {
-            for (let item of data) {
+            for (const item of data) {
                 sets.push(new this(item, owner));
             }
         }
@@ -136,7 +136,7 @@ Jam.ModelAttr.EnumSet = class {
 
     static filterItems (sets) {
         let items = [];
-        for (let set of sets) {
+        for (const set of sets) {
             if (set.isActive()) {
                 items = items.concat(set.items);
             }

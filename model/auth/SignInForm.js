@@ -13,7 +13,7 @@ module.exports = class SignInForm extends Base {
             RULES: [
                 [['email', 'password'], 'required'],
                 ['email', 'email'],
-                ['rememberMe', 'filter', {filter: 'boolean'}],
+                ['rememberMe', 'checkbox'],
                 ['password', 'string', {min: 6, max:24}],
                 ['captchaCode', 'required', {on: [CAPTCHA_SCENARIO]}],
                 ['captchaCode', require('areto/security/captcha/CaptchaValidator'), {on: [CAPTCHA_SCENARIO]}]
@@ -55,7 +55,8 @@ module.exports = class SignInForm extends Base {
         if (!await this.validate()) {
             return false;
         }
-        const error = await this.createAuthService().login();
+        const auth = this.spawn('security/PasswordAuthService', {user: this.user});
+        const error = await auth.login(this.getAttrMap());
         if (error) {
             this.addError('email', error);
         }
@@ -67,15 +68,6 @@ module.exports = class SignInForm extends Base {
     toggleCaptchaScenario () {
         this.scenario = this.rateLimitModel && this.rateLimitModel.isLimited()
             ? this.CAPTCHA_SCENARIO : null;
-    }
-
-    createAuthService () {
-        return this.spawn('security/PasswordAuthService', {
-            email: this.get('email'),
-            password: this.get('password'),
-            rememberMe: this.get('rememberMe'),
-            user: this.user
-        });
     }
 
     async updateRateLimit () {

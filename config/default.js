@@ -69,13 +69,23 @@ module.exports = {
             Identity: require('../model/User'),
             UserLog: require('../model/UserLog')
         },
-        'meta': {
+        'metaHub': {
             Class: require('../component/meta/MetaHub'),
             UserModel: require('../model/User'),
             rbacTablePrefix: 'sys_rbac_',
             inspectionEnabled: true
         },
-        'fileStorage': require('./default-fileStorage')
+        'fileStorage': require('./default-fileStorage'),
+
+        'mailer': {
+            Class: require('../component/mailer/Mailer'),
+        },
+        'notifier': {
+            Class: require('../component/notifier/Notifier'),
+        },
+        'observer': {
+            Class: require('../component/observer/Observer'),
+        }
     },
     modules: {
     },
@@ -85,18 +95,17 @@ module.exports = {
             extension: 'ejs'
         },
         'static': {},
-        'metaRoot': 'meta',
         'allowSignUp': true
     },
     metaModels: {
         'document': {
-            Class: require('evado-meta-document/base/DocMetaModel')
+            Class: require('evado-meta-document/base/DocMeta')
         },
         'navigation': {
-            Class: require('evado-meta-navigation/base/NavMetaModel')
+            Class: require('evado-meta-navigation/base/NavMeta')
         },
         'report': {
-            Class: require('evado-meta-report/base/ReportMetaModel')
+            Class: require('evado-meta-report/base/ReportMeta')
         }
     },
     assets: require('./default-assets'),

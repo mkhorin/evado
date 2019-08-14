@@ -7,24 +7,35 @@ const Base = require('areto/security/rbac/Item');
 
 module.exports = class Item extends Base {
 
-    setUserFilters (map) {
-        let filters = [];
-        if (Array.isArray(this.userFilters)) {
-            for (let key of this.userFilters) {
-                if (map[key] instanceof UserFilterFactory) {
-                    filters.push(map[key]);
+    getDocMeta () {
+        return this.store.rbac.docMeta;
+    }
+
+    getNavMeta () {
+        return this.store.rbac.navMeta;
+    }
+
+    setAssignmentFilters (data) {
+        const filters = [];
+        if (Array.isArray(this.assignmentFilters)) {
+            for (const key of this.assignmentFilters) {
+                if (Object.prototype.hasOwnProperty.call(data, key)) {
+                    filters.push(data[key]);
                 }
             }
         }
-        this.userFilters = filters;
+        this.assignmentFilters = filters;
+        return filters.length > 0;
     }
 
-    async resolveUserFilters (params) {
-        if (Array.isArray(this.userFilters)) {
-            for (let filter of this.userFilters) {
-                if (await filter.resolve(params)) {
-                    return true;
-                }            
+    async resolveAssignmentFilters (userId) {
+        if (Array.isArray(this.assignmentFilters)) {
+            for (const config of this.assignmentFilters) {
+                config.item = this;
+                config.userId = userId;
+                if (await (new config.Class(config)).execute()) {
+                    return true; // can assign item to user
+                }
             }
         }
     }
@@ -32,43 +43,43 @@ module.exports = class Item extends Base {
     // CREATE
 
     async resolveRelations () {
-        let result = await super.resolveRelations();
-        await this.resolveUserFilterRelation(result);
+        const result = await super.resolveRelations();
+        await this.resolveAssignmentFilterRelation(result);
         return result;
     }
 
-    async resolveUserFilterRelation (result) {
-        let data = this.data.userFilters;
+    async resolveAssignmentFilterRelation (result) {
+        const data = this.data.assignmentFilters;
         if (!Array.isArray(data) || !data.length) {
-            return result.userFilters = [];
+            return result.assignmentFilters = [];
         }
-        result.userFilters = await this.store.findUserFilterByName(data).column(this.store.key);         
+        result.assignmentFilters = await this.store.findAssignmentFilterByName(data).column(this.store.key);
         if (ids.length !== data.length) {
-            throw new Error(`RBAC: Not found user filter for item: ${this.name}`);
+            throw new Error(`Assignment filter not found  for item: ${this.name}`);
         }
     }
 
     async createMeta () {        
         await this.validateMetaData();
-        let [roles, rule] = await this.prepareMetaData();
-        let items = await this.store.findMetaItem().and(this.getMetaCondition()).all();
-        for (let item of items) {
+        const [roles, rule] = await this.prepareMetaData();
+        const items = await this.store.findMetaItem().and(this.getMetaCondition()).all();
+        for (const item of items) {
             if (this.compareMeta(item)) {
                 return this.store.log('warn', this.getMetaDataError('Meta item already exists'));
             }
         }
         if (this.data.rule && !rule) {
-            throw new Error(this.getMetaDataError('Not found rule for meta item'));
+            throw new Error(this.getMetaDataError('Rule not found for meta item'));
         }
-        let doc = {...this.data};
+        const doc = {...this.data};
         doc.roles = roles;
         doc.rule = rule ? rule[this.store.key] : null;
         return this.store.findMetaItem().insert(doc);
     }
 
     getMetaCondition () {
-        let condition = {...this.data};
-        for (let key of Object.keys(condition)) {
+        const condition = {...this.data};
+        for (const key of Object.keys(condition)) {
             condition[key] = condition[key] || '';
         }
         ObjectHelper.deleteProps(['rule', 'actions', 'roles'], condition);
@@ -83,21 +94,17 @@ module.exports = class Item extends Base {
         if (this.data.rule) {
             rule = await this.store.findRuleByName(this.data.rule).one();
             if (!rule) {
-                throw new Error(this.getMetaDataError(`Not found meta item rule`));    
+                throw new Error(this.getMetaDataError('Meta item rule not found'));
             }
         }
-        for (let name of this.data.roles) {
-            let role = await this.store.findRoleItem().and({name}).one();
+        for (const name of this.data.roles) {
+            const role = await this.store.findRoleItem().and({name}).one();
             if (!role) {
-                throw new Error(this.getMetaDataError(`Not found '${name}' role`));
+                throw new Error(this.getMetaDataError(`Role not found: ${name}`));
             }
             roles.push(role[this.store.key]);
         }
         return [roles, rule];
-    }
-
-    getMeta () {
-        return this.store.rbac.module.getMeta();
     }
 
     // VALIDATION
@@ -128,7 +135,7 @@ module.exports = class Item extends Base {
     }
 
     validateMetaClass () {
-        this.validation.class = this.getMeta().getModel('document').getClass(this.data.class);
+        this.validation.class = this.getDocMeta().getClass(this.data.class);
         if (this.validation.class) {
             return true;
         }
@@ -169,7 +176,7 @@ module.exports = class Item extends Base {
     }
 
     validateMetaNavSection () {
-        this.validation.navSection = this.getMeta().getModel('navigation').getClass(this.data.navSection);
+        this.validation.navSection = this.getNavMeta().getSection(this.data.navSection);
         if (this.validation.navSection) {
             return true;
         }
@@ -193,4 +200,3 @@ module.exports = class Item extends Base {
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');
-const UserFilterFactory = require('./UserFilterFactory');

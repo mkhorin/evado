@@ -4,7 +4,7 @@
 'use strict';
 
 const STATUS_ACTIVE = 'active';
-const STATUS_BANNED = 'banned';
+const STATUS_BLOCKED = 'blocked';
 
 const Base = require('areto/db/ActiveRecord');
 
@@ -17,10 +17,12 @@ module.exports = class User extends Base {
                 'name', 
                 'email',
                 'status',
+                'verified',
+                'unlockAt',
                 'createdAt',
                 'updatedAt',
-                'passwordHash', 
-                'authKey'
+                'authKey',
+                'passwordHash'
             ],
             BEHAVIORS: {
                 'timestamp': require('areto/behavior/TimestampBehavior')
@@ -32,16 +34,18 @@ module.exports = class User extends Base {
                 ['email', 'email'],
                 ['password', 'required', {on: 'create'}],
                 ['password', 'string'],
+                ['verified', 'checkbox'],
+                ['unlockAt', 'date'],
                 [['name', 'email'], 'unique', {skipOnAnyError: true, ignoreCase: true}]
             ],
             ATTR_VALUE_LABELS: {
                 'status': {
                     [STATUS_ACTIVE]: 'Active',
-                    [STATUS_BANNED]: 'Banned'
+                    [STATUS_BLOCKED]: 'Blocked',
                 }
             },
             STATUS_ACTIVE,
-            STATUS_BANNED,
+            STATUS_BLOCKED,
             AUTH_KEY_LENGTH: 16
         };
     }
@@ -50,8 +54,12 @@ module.exports = class User extends Base {
         return this.get('status') === STATUS_ACTIVE;
     }
 
-    isBanned () {
-        return this.get('status') === STATUS_BANNED;
+    isBlocked () {
+        return this.get('status') === STATUS_BLOCKED;
+    }
+
+    isVerified () {
+        return this.get('verified');
     }
 
     getTitle () {
@@ -93,8 +101,8 @@ module.exports = class User extends Base {
    
     // PASSWORD
 
-    setPassword (password) {
-        this.set('password', password);
+    checkPassword (password) {
+        return SecurityHelper.checkPassword(password, this.get('passwordHash'));
     }
 
     setPasswordHash () {
@@ -103,11 +111,7 @@ module.exports = class User extends Base {
         }
     }
 
-    checkPassword (password) {
-        return SecurityHelper.checkPassword(password, this.get('passwordHash'));
-    }
-
-    // AUTH KEY (for remember me cookies)
+    // AUTH KEY
 
     getAuthKey () {
         return this.get('authKey');

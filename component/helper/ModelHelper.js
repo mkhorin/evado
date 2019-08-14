@@ -14,11 +14,11 @@ module.exports = class ModelHelper {
         }
         const formatter = controller.module.get('formatter');
         const formatMap = this.getFormatMap();
-        for (let [attrs, type, params] of rules) {
-            let format = formatMap[type] || this.formatDefaultRule;
-            for (let model of models) {
+        for (const [attrs, type, params] of rules) {
+            const format = formatMap[type] || this.formatDefaultRule;
+            for (const model of models) {
                 if (Array.isArray(attrs)) {
-                    for (let attr of attrs) {
+                    for (const attr of attrs) {
                         format(model, attr, formatter, type, params);
                     }
                 } else {

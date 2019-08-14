@@ -591,6 +591,9 @@ body.loading {
     min-height: 30px;
     padding: 4px 0;
 }
+.form-group {
+    margin-bottom: 20px;
+}
 .form-group:last-child {
     margin-bottom: 0;
 }
@@ -687,14 +690,14 @@ body.loading {
     margin-top: 0;
 }
 .form-control-feedback {
-    line-height: 30px;
+    line-height: 28px;
 }
 .input-group .form-control {
     z-index: 0;
 }
 
 .form .row .col {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 .form fieldset + fieldset {
     /*margin-top: 30px;*/
@@ -717,10 +720,10 @@ textarea.form-control {
     padding-bottom: 5px;
 }
 .form-set {
-    margin: 0 0 0 0;
+    margin: 20px 0 0 0;
 }
-.form-set:last-child {
-    margin-bottom: 0;
+.form-set:first-child {
+    margin-top: 0;
 }
 .form-set-toggle {
     font-weight: bold;
@@ -760,9 +763,6 @@ textarea.form-control {
 }
 .form-set.active > .form-set-body {
     display: block;
-}
-.form-group + .form-set {
-    margin-top: 20px;
 }
 .form-base-group.empty-group {
     display: none;
@@ -848,7 +848,7 @@ textarea.form-control {
     margin-bottom: 0;
 }
 .form-tabs .nav-tabs {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 .form-tabs .nav-tabs > li > a {
     padding: 7px 12px;

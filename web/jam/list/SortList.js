@@ -32,7 +32,7 @@ Jam.SortList = class extends Jam.List {
         this.changed = false;
         this.sourceOrderNumbers = [];
         const column = this.getSourceOrderColumn();
-        for (let row of this.findRows()) {
+        for (const row of this.findRows()) {
             this.sourceOrderNumbers.push(this.grid.getData(row.dataset.id, column));
         }
     }
@@ -56,7 +56,7 @@ Jam.SortList = class extends Jam.List {
     }
 
     up () {
-        let $rows = this.getSelectedRows();
+        const $rows = this.getSelectedRows();
         if ($rows && this.swapRows($rows.eq(0), $rows.eq(0).prev())) {
             for (let i = 1; i < $rows.length; ++i) {
                 this.swapRows($rows.eq(i), $rows.eq(i).prev());

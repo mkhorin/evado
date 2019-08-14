@@ -8,12 +8,12 @@ const Base = require('areto/view/Widget');
 module.exports = class GlobalMenu extends Base {
 
     run () {
-        let items = this.items || this.getDefaultItems();
+        const items = this.items || this.getDefaultItems();
         return this.renderTemplate('_part/nav/global-menu', {items});
     }
 
     getDefaultItems () {
-        let items = this.getModuleItems(this.module.app.modules);
+        const items = this.getModuleItems(this.module.app.modules);
         items.push(this.getSeparatorItem());
         items.push(this.getModuleItem(this.module.app));
         return items;

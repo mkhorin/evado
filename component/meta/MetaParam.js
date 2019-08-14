@@ -21,7 +21,7 @@ module.exports = class MetaParam extends Base {
         this.class = this.controller.getQueryParam(this.classParamName);
         this.class = this.meta.getClass(this.class);
         if (!this.class) {
-            throw new BadRequest(`Not found meta class`);
+            throw new BadRequest(`Meta class not found`);
         }
         this.view = this.class.getViewByModule(viewName, this.controller.module.NAME);
         this.setMasterData();

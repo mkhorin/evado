@@ -16,8 +16,8 @@ const d = {
 d.attr = attr;
 d.relName = d.relName || attr;
 
-let rel = model.getRelation(d.relName);
-let urlParams = {
+const rel = model.getRelation(d.relName);
+const urlParams = {
     rel: d.relName,
     pid: model.getId()
 };
@@ -34,7 +34,7 @@ if (d.list !== null) {
     }
     d.list = _url(d.list);
 }
-let relUrl = typeof relRoute === 'undefined' ? rel.model.getControllerClass().NAME : relRoute;
+const relUrl = typeof relRoute === 'undefined' ? rel.model.getControllerClass().NAME : relRoute;
 /*
 if (d.view !== null) {
     d.view = _url(d.view === undefined ? `${relUrl}/view` : d.view);
@@ -80,7 +80,7 @@ if (d.modalSort) {
     }
 }
 let hasKeyColumn = false;
-for (let column of d.columns) {
+for (const column of d.columns) {
     if (column.label === undefined) {
         column.label = rel.model.getAttrLabel(column.name);
     }
@@ -106,7 +106,7 @@ if (d.filter && !d.filter.url) {
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <div class="box box-grid box-grid-field">
-            <input name="<%- p.name %>" type="hidden" class="form-value" value="">
+            <input name="<%- p.name %>" type="hidden">
             <div class="box-header">
                 <div class="list-controls" data-jam="IndexSorting">
                     <% if (d.link) { %>

@@ -28,11 +28,11 @@ module.exports = class ListFilterCondition extends Base {
 
     async resolve () {
         this.items = this.normalizeItems(this.items);
-        for (let item of this.items) {
+        for (const item of this.items) {
             item.condition = await this.parse(item);
         }
         let and = ['AND'], or = ['OR', and]; // AND has priority over OR
-        for (let item of this.items) {
+        for (const item of this.items) {
             if (item.condition) {
                 if (!item.and && and.length > 1) {
                     and = ['AND'];
@@ -176,7 +176,7 @@ module.exports = class ListFilterCondition extends Base {
         const query = this.getRelationQuery(attr, this.query.model);
         const related = await query.model.findById(value).one();
         if (!related) {
-            throw new BadRequest(this.wrapClassMessage(`Not found related model: ${value}`));
+            throw new BadRequest(this.wrapClassMessage(`Related model not found: ${value}`));
         }
         const values = await this.getRelationQuery(relation, related).ids();
         return values.length
@@ -187,7 +187,7 @@ module.exports = class ListFilterCondition extends Base {
     getRelationQuery (name, model) {
         const query = model.getRelation(name);
         if (!query) {
-            throw new BadRequest(this.wrapClassMessage(`Not found relation: ${name}`));    
+            throw new BadRequest(this.wrapClassMessage(`Relation not found: ${name}`));
         }
         return query;        
     }

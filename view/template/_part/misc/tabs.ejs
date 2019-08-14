@@ -7,19 +7,19 @@ const p = {
 %>
 <div class="<%- p.cssClass %> tabs" data-jam="<%- p.jam %>">
     <ul class="nav nav-tabs" role="tablist">
-    <% for (let item of items) { %>
+    <% for (const item of items) { %>
     <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
         <a href="#" data-t=""><%- item.label || item.id %></a>
     </li>
     <% } %>
     </ul>
     <div class="tab-content">
-        <% for (let item of items) { %>
+        <% for (const item of items) { %>
         <div class="tab-pane <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
             <% if (typeof item.content === 'string') { %>
                 <%- include(item.content) %>
             <% } else if (Array.isArray(item.content)) {
-                for (let data of item.content) {
+                for (const data of item.content) {
                 if (data.template) { %>
                 <%- include(data.template, data) %>
                 <% } else { %>

@@ -14,7 +14,7 @@ module.exports = class DataImportConsole extends Base {
         } catch (err) {
             return this.log('warn', `Invalid import directory: ${this.dir}`);
         }
-        for (let file of files) {
+        for (const file of files) {
             if (FileHelper.isJsonExtension(file)) {
                 await this.importFile(path.join(this.dir, file));
             }
@@ -46,7 +46,7 @@ module.exports = class DataImportConsole extends Base {
     }
 
     async insertOneByOne (table, data) {
-        for (let doc of data) {
+        for (const doc of data) {
             await this.insert(table, doc);
         }
     }

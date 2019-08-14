@@ -1,0 +1,5 @@
+<!-- _part/attr/datetime -->
+<%
+const p = {format: 'L LTS', ...(typeof options === 'undefined' ? null : options)};
+%>
+<%- include('date', {options: p}) %>

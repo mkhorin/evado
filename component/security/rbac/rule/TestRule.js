@@ -8,7 +8,7 @@ const Base = require('areto/security/rbac/Rule');
 module.exports = class TestRule extends Base {
 
     execute () {
-        return true;
+        return true; // can item be applied
     }
 
     getObjectCondition () {

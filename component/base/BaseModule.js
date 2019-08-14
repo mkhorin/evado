@@ -11,11 +11,15 @@ module.exports = class BaseModule extends Base {
         return this.label || super.getTitle();
     }
 
-    getMeta () {
-        return this.components.get('meta');
+    getMeta (name) {
+        return this.getMetaHub().get(name);
     }
 
-    getMetaModel (name) {
-        return this.getMeta().getModel(name);
+    getMetaHub () {
+        return this.components.get('metaHub');
+    }
+
+    catch () {
+        return this.components.get('observer').catch(...arguments);
     }
 };

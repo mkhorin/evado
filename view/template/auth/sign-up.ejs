@@ -1,4 +1,4 @@
-<% let signUp = _t('Sign up'); %>
+<% const signUp = _t('Sign up'); %>
 
 <% layout(_view.get('_layout/auth')) -%>
 
@@ -24,6 +24,7 @@
     <%- include('./input', {
         attr: 'password',
         type: 'password',
+        iconClass: 'glyphicon glyphicon-lock',
         value: '',
         autocomplete: 'new-password'
     }) %>
@@ -31,6 +32,7 @@
     <%- include('./input', {
         attr: 'passwordRepeat',
         type: 'password',
+        iconClass: 'glyphicon glyphicon-lock',
         value: '',
         autocomplete: 'new-password'
     }) %>

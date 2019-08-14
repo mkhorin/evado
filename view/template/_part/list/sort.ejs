@@ -13,7 +13,7 @@ data.order = {[orderAttr]: 1};
 data.pageSize = 0;
 
 let hasKeyColumn = false;
-for (let column of data.columns) {
+for (const column of data.columns) {
     if (column.label === undefined) {
         column.label = relModel.getAttrLabel(column.name);
     }
@@ -31,9 +31,9 @@ if (!hasKeyColumn) {
     });
 }
 data.data = [];
-for (let model of models) {
-    let map = {};
-    for (let column of data.columns) {
+for (const model of models) {
+    const map = {};
+    for (const column of data.columns) {
         map[column.name] = model.getViewAttr(column.name);
     }
     data.data.push(map);

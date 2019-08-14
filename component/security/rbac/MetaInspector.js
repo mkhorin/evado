@@ -40,8 +40,8 @@ module.exports = class MetaInspector extends Base {
     }
 
     async execute () {
-        let metaData = [];
-        for (let role of this.assignments) {
+        const metaData = [];
+        for (const role of this.assignments) {
             if (Object.prototype.hasOwnProperty.call(this.rbac.metaMap, role)) {
                 metaData.push(this.rbac.metaMap[role]);
             }
@@ -57,8 +57,8 @@ module.exports = class MetaInspector extends Base {
             case Rbac.TARGET_CLASS: this.addClassTargets(); break;
             case Rbac.TARGET_OBJECT: this.addObjectTargets(); break;
         }
-        for (let data of metaData) {
-            for (let action of this.actions) {
+        for (const data of metaData) {
+            for (const action of this.actions) {
                 if (this.access[action] !== true) {
                     this.access[action] = await this.resolveActionAccess(action, data);
                 }
@@ -75,7 +75,7 @@ module.exports = class MetaInspector extends Base {
             this._targets.push([this.checkViewTarget, this.targetView]);
         }
         this._targets.push([this.checkNavSectionTarget, this.target.section]);
-        for (let parent of this.target.getParents()) {
+        for (const parent of this.target.getParents()) {
             this._targets.push([this.checkNavNodeTarget, parent]);
         }
         this._targets.push([this.checkNavNodeTarget, this.target]);
@@ -115,7 +115,7 @@ module.exports = class MetaInspector extends Base {
     }
 
     async checkTargets (data) {
-        for (let [method, item] of this._targets) {
+        for (const [method, item] of this._targets) {
             if (await method.call(this, item, data)) {
                 return true;
             }
@@ -151,7 +151,7 @@ module.exports = class MetaInspector extends Base {
         if (!data) {
             return false;
         }
-        let state = model.getState();
+        const state = model.getState();
         if (!state) {
             return false;
         }
@@ -175,12 +175,12 @@ module.exports = class MetaInspector extends Base {
         if (data[key] && await this.checkItems(data[key])) {
             return true;
         }
-        let oid = model.getId().toString();
+        const oid = model.getId().toString();
         key = `${oid}...${model.class.id}`;
         if (data[key] && await this.checkItems(data[key])) {
             return true;
         }
-        let state = model.getState();
+        const state = model.getState();
         if (model.view !== model.class) {
             key = `..${model.view.id}`;
             if (data[key] && await this.checkItems(data[key])) {
@@ -216,7 +216,7 @@ module.exports = class MetaInspector extends Base {
 
     async checkItems (items) {
         if (Array.isArray(items)) {
-            for (let item of items) {
+            for (const item of items) {
                 if (!item.rule || await this.checkRule(item.rule)) {
                     return true;
                 }
@@ -238,12 +238,12 @@ module.exports = class MetaInspector extends Base {
     }
 
     async filterObjectAssignments () {
-        for (let role of this.assignments) {
-            let data = this.rbac.metaObjectFilterMap[role];
+        for (const role of this.assignments) {
+            const data = this.rbac.metaObjectFilterMap[role];
             if (!data) {
                 return true; // no filter to role
             }
-            let filter = data[this.target.id] || (this.target.isClass() ? null : data[this.target.class.id]);
+            const filter = data[this.target.id] || (this.target.isClass() ? null : data[this.target.class.id]);
             if (!filter) {
                 return true; // no filter to role
             }
@@ -253,12 +253,10 @@ module.exports = class MetaInspector extends Base {
         }
     }
 
-    filterRoleObjects (filter) {
-        let roleConditions = Array.isArray(filter.rules)
-            ? this.getRuleFilterConditions(filter.rules)
-            : [];
-        if (filter.condition) {
-            roleConditions.push(filter.condition);
+    filterRoleObjects ({rules, condition}) {
+        const roleConditions = Array.isArray(rules) ? this.getRuleFilterConditions(rules) : [];
+        if (condition) {
+            roleConditions.push(condition);
         }
         if (!roleConditions.length) {
             return true; // no filter to role
@@ -269,22 +267,20 @@ module.exports = class MetaInspector extends Base {
     }
 
     async getRuleFilterConditions (rules) {
-        let conditions = [];
-        for (let rule of rules) {
-            if (Object.prototype.hasOwnProperty.call(this._metaObjectRuleCache, rule.name)) {
-                if (this._metaObjectRuleCache[rule.name]) {
-                    conditions.push(this._metaObjectRuleCache[rule.name]);
+        const conditions = [];
+        for (const config of rules) {
+            if (Object.prototype.hasOwnProperty.call(this._metaObjectRuleCache, config.name)) {
+                if (this._metaObjectRuleCache[config.name]) {
+                    conditions.push(this._metaObjectRuleCache[config.name]);
                 }
             } else {
-                let model = new rule.Class(rule);
-                model.params = rule.params
-                    ? {...rule.params, ...this.params}
-                    : this.params;
-                let data = await model.getObjectCondition();
+                const rule = new config.Class(config);
+                rule.params = config.params ? {...config.params, ...this.params} : this.params;
+                const data = await rule.getObjectCondition();
                 if (data) {
                     conditions.push(data);
                 }
-                this._metaObjectRuleCache[rule.name] = data;
+                this._metaObjectRuleCache[config.name] = data;
             }
         }
         return conditions;

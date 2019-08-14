@@ -9,8 +9,7 @@
     <div class="<%- p.valueCss %>">
         <div class="checkbox checkbox-init">
             <label data-t="<%- p.translate %>" title="<%= p.hint %>">
-                <input name="<%- p.name %>"
-                       type="hidden" class="form-value" value="<%- p.value ? 'on' : ''%>">
+                <input name="<%- p.name %>" type="hidden" value="<%- p.value ? 'on' : ''%>">
                 <input<%- p.value ? ' checked' : '' %> type="checkbox">
                 <span data-t="<%- p.translate %>"><%- p.label %></span>
             </label>

@@ -32,7 +32,7 @@ Jam.ModelAttr.File = class extends Jam.ModelAttr {
     initValue () {
         const values = Jam.Helper.parseJson(this.$value.val());
         if (Array.isArray(values)) {
-            for (let value of values) {
+            for (const value of values) {
                 this.uploader.setSavedFile(value);
             }
             this.$value.val(values.map(value => value.id).join());

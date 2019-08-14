@@ -15,13 +15,15 @@ module.exports = class MetaHub extends Base {
 
     constructor (config) {
         super({
+            basePath: 'meta',
             models: require('./MetaModels'),
             processing: {
                 Class: require('./SingleProcessing'),
-                busyMessage: 'Meta updating in progress'
+                busyMessage: 'Metadata updating in progress'
             },
             ...config
         });
+        this.basePath = this.module.getPath(this.basePath);
     }
 
     init () {
@@ -29,16 +31,16 @@ module.exports = class MetaHub extends Base {
         this.processing = this.spawn(this.processing, {owner: this});
     }
 
-    getMetaPath () {
-        return this.module.getMetaPath(...arguments);
+    get (name) {
+        return this.models.get(name);
     }
 
     getDb () {
         return this.module.getDb();
     }
 
-    getModel (name) {
-        return this.models.get(name);
+    getPath () {
+        return path.join(this.basePath, ...arguments);
     }
 
     splitByModulePrefix (name) {
@@ -67,7 +69,7 @@ module.exports = class MetaHub extends Base {
     }
 
     async afterDataImport () {
-        for (let model of this.models) {
+        for (const model of this.models) {
             await model.afterDataImport();
         }
     }
@@ -93,6 +95,7 @@ module.exports = class MetaHub extends Base {
 };
 module.exports.init();
 
+const path = require('path');
 const CommonHelper = require('areto/helper/CommonHelper');
 const PromiseHelper = require('areto/helper/PromiseHelper');
 const MetaHelper = require('../helper/MetaHelper');

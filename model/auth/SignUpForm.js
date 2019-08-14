@@ -16,7 +16,8 @@ module.exports = class SignUpForm extends Base {
                 ['email', 'email'],
                 ['password', 'string', {min: 6, max: 24}],
                 ['passwordRepeat', 'compare', {compareAttr: 'password'}],
-                ['captchaCode', require('areto/security/captcha/CaptchaValidator')]
+                ['captchaCode', require('areto/security/captcha/CaptchaValidator')],
+                ['passwordRepeat', 'compare', {compareAttr: 'password'}]
             ],
             ATTR_LABELS: {
                 captchaCode: 'Verification code'
@@ -28,15 +29,11 @@ module.exports = class SignUpForm extends Base {
         if (!await this.validate()) {
             return false;
         }
-        const model = this.spawn('model/User', {scenario: 'create'});
-        model.setAttrs(this);
-        if (!await model.save()) {
-            return this.addError('name', model.getFirstError());
+        const auth = this.spawn('security/PasswordAuthService', {user: this.user});
+        const errors = await auth.register(this.getAttrMap());
+        if (errors) {
+            return this.addErrors(errors);
         }
-        await this.user.login({
-            identity: model,
-            duration: 0
-        });
         return true;
     }
 };

@@ -90,7 +90,7 @@ Jam.ModelAttr = class {
     }
 
     hasValue () {
-        let value = this.getValue();
+        const value = this.getValue();
         return value !== '' && value !== null && value !== undefined;
     }
 
@@ -162,14 +162,14 @@ Jam.ModelAttr.CheckboxList = class extends Jam.ModelAttr {
         this.$value.val(value);
         this.$checkItems.prop('checked', false);
         value = Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : [];
-        for (let val of value) {
+        for (const val of value) {
             this.$checkItems.filter(`[value="${val}"]`).prop('checked', true);
         }
     }
 
     extractValues () {
         const values = [];
-        for (let item of this.$checkItems.filter(':checked')) {
+        for (const item of this.$checkItems.filter(':checked')) {
             values.push($(item).val());
         }
         return values;
@@ -196,7 +196,7 @@ Jam.ModelAttr.Date = class extends Jam.ModelAttr {
     }
 
     createPicker () {
-        let options = this.params.datepicker || {};
+        const options = this.params.datepicker || {};
         if (options.minDate) {
             options.minDate = new Date(options.minDate);
         }
@@ -224,6 +224,10 @@ Jam.ModelAttr.Date = class extends Jam.ModelAttr {
         if (!date) {
             this.picker.hide();
         }
+    }
+
+    setValue (value) {
+        value ? this.picker.date(moment(value)) : this.picker.clear();
     }
 };
 

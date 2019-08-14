@@ -24,7 +24,7 @@ Jam.DataGridRenderer = class {
     }
 
     initColumns () {
-        for (let column of this.params.columns) {
+        for (const column of this.params.columns) {
             if (typeof column.render !== 'function') {
                 column.render = this.renderCellValue.bind(this);
             }
@@ -121,7 +121,7 @@ Jam.DataGridRenderer = class {
     }
 
     renderHeadColumn (column, col, row) {
-        let name = column.name;
+        const name = column.name;
         let cssClass = 'column';
         if (this.grid.isSortableColumn(name)) {
             cssClass += ' sortable '+ this.getDirectionCode(this.grid.getOrderDirection(name));
@@ -156,7 +156,7 @@ Jam.DataGridRenderer = class {
     }
 
     setGroupLevels (columns) {
-        for (let column of columns) {
+        for (const column of columns) {
             let level = 1;
             let group = this.grid.columnGroupMap[column.group];
             while (group && typeof group === 'object') {

@@ -3,11 +3,11 @@
  */
 'use strict';
 
-const Base = require('./BaseFilter');
+const Base = require('areto/base/Base');
 
 module.exports = class TestFilter extends Base {
 
     async execute () {
-        return 0;
+        return true;  // can assign item to user
     }
 };

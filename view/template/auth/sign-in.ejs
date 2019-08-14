@@ -1,8 +1,14 @@
-<% let signIn = _t('Sign in'); %>
-
+<%
+const messages = _controller.getFlash('registered');
+const signIn = _t('Sign in');
+%>
 <% layout(_view.get('_layout/auth')) -%>
 
 <% block('title', signIn) -%>
+
+<% if (messages.length) { %>
+<div class="alert alert-success"><%- messages[0] %></div>
+<% } %>
 
 <p class="login-box-msg">
     <%- _t('Sign in to start your session') %>
@@ -20,6 +26,7 @@
     <%- include('./input', {
         attr: 'password',
         type: 'password',
+        iconClass: 'glyphicon glyphicon-lock',
         value: ''
     }) %>
 

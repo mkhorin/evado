@@ -2,11 +2,11 @@
 <%
 if (typeof _controller.req.flash === 'function') {
     const flashes = _controller.req.flash();
-    for (let key of Object.keys(flashes)) {
-        let flash = flashes[key];
+    for (const key of Object.keys(flashes)) {
+        const flash = flashes[key];
 %>
     <div class="alert alert-<%- key %>">
-        <% for (let message of flash) { %>
+        <% for (const message of flash) { %>
             <p><%- message %></p>
         <% } %>
     </div>

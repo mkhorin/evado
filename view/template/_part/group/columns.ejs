@@ -8,14 +8,14 @@ const p = {
 };
 %>
 <div class="row <%- p.css %>">
-    <% for (let item of items) {
+    <% for (const item of items) {
         item.params = item.params || {};
         item.params.labelCss = item.params.labelCss === undefined ? p.labelCss : item.params.labelCss;
         item.params.valueCss = item.params.valueCss === undefined ? p.valueCss : item.params.valueCss;
     %>
     <div class="col <%- item.css === undefined ? p.columnCss : item.css %>">
         <% if (Array.isArray(item.items)) {
-            for (let child of item.items) {
+            for (const child of item.items) {
                 if (child.template) {
                 child.params = child.params || {};
                 child.params.labelCss = child.params.labelCss === undefined ? item.params.labelCss : child.params.labelCss;

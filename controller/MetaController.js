@@ -9,63 +9,63 @@ module.exports = class MetaController extends Base {
 
     constructor (config) {
         super(config);
-        this.meta = this.module.getMeta();
+        this.meta = this.module.getMetaHub();
     }
 
     actionListClassSelect () {
-        let metaModel = this.meta.getModel('document');
-        this.sendJson(MetaSelectHelper.getLabelItems(metaModel.classes));
+        const meta = this.meta.get('document');
+        this.sendJson(MetaSelectHelper.getLabelItems(meta.classes));
     }
 
     actionListViewSelect () {
-        let cls = this.getClassFromRequest();
+        const cls = this.getClassFromRequest();
         this.sendJson(MetaSelectHelper.getLabelItems(cls.views));
     }
 
     actionListAttrSelect () {
-        let cls = this.getClassFromRequest();
-        let view = cls.getView(this.getPostParam('view')) || cls;
+        const cls = this.getClassFromRequest();
+        const view = cls.getView(this.getPostParam('view')) || cls;
         this.sendJson(MetaSelectHelper.getLabelItems(view.attrs));
     }
 
     actionListObjectSelect () {
-        let cls = this.getClassFromRequest();
-        let view = cls.getView(this.getPostParam('view')) || cls;
+        const cls = this.getClassFromRequest();
+        const view = cls.getView(this.getPostParam('view')) || cls;
         return this.sendSelectList(view.find());
     }
 
     actionListNavSectionSelect () {
-        let metaModel = this.meta.getModel('navigation');
-        this.sendJson(MetaSelectHelper.getLabelItems(metaModel.sections.values()));
+        const meta = this.meta.get('navigation');
+        this.sendJson(MetaSelectHelper.getLabelItems(meta.sections.values()));
     }
 
     actionListNavNodeSelect () {
-        let metaModel = this.meta.getModel('navigation');
-        let section = metaModel.getSection(this.getPostParam('navSection'));
+        const meta = this.meta.get('navigation');
+        const section = meta.getSection(this.getPostParam('navSection'));
         if (!section) {
-            throw new NotFound('Not found navigation section');
+            throw new NotFound('Navigation section not found');
         }
-        let items = section.nodes.filter(item => !item.system);
+        const items = section.nodes.filter(item => !item.system);
         this.sendJson(MetaSelectHelper.getLabelItems(items));
     }
 
     actionListStateSelect () {
-        let cls = this.getClassFromRequest();
+        const cls = this.getClassFromRequest();
         this.sendJson(MetaSelectHelper.getLabelItems(cls.states));
     }
 
     actionListTransitionSelect () {
-        let cls = this.getClassFromRequest();
+        const cls = this.getClassFromRequest();
         this.sendJson(MetaSelectHelper.getLabelItems(cls.transitions));
     }
     
     // METHODS
 
     getClassFromRequest () {
-        let metaModel = this.meta.getModel('document');
-        let cls = metaModel.getClass(this.getPostParam('class'));
+        const meta = this.meta.get('document');
+        const cls = meta.getClass(this.getPostParam('class'));
         if (!cls) {
-            throw new NotFound('Not found class');
+            throw new NotFound('Class not found');
         }
         return cls;
     }

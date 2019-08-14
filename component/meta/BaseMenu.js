@@ -8,12 +8,12 @@ const Base = require('areto/view/Widget');
 module.exports = class BaseMenu extends Base {
 
     async run () {
-        let nav = this.module.getMetaModel('navigation');
-        let section = nav.getSection('main', this.module.NAME);
-        let activeItem = this.controller.metaData && this.controller.metaData.node;
-        let openedItems = activeItem ? activeItem.getParents() : [];
-        let items = openedItems.slice(0).concat(section.children);
-        let forbiddenAccess = await this.getAccess({section, items}) || {};
+        const nav = this.module.getMeta('navigation');
+        const section = nav.getSection('main', this.module.NAME);
+        const activeItem = this.controller.metaData && this.controller.metaData.node;
+        const openedItems = activeItem ? activeItem.getParents() : [];
+        const items = openedItems.slice(0).concat(section.children);
+        const forbiddenAccess = await this.getAccess({section, items}) || {};
         return this.renderTemplate('_part/nav/sidebar-menu', {
             section,
             forbiddenAccess,

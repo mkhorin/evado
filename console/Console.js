@@ -122,7 +122,7 @@ module.exports = class Console extends Base {
         const logger = this.app.get('logger');
         const counters = logger.getCounters(['error', 'warn']).map(item => `${item.type}: ${item.counter}`);
         if (counters.length) {
-            this.log('warn', `Log total: ${total.join(', ')}`);
+            this.log('warn', `Log total: ${counters.join(', ')}`);
         }
     }
 };

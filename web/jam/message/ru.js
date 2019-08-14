@@ -13,7 +13,7 @@ Jam.I18n.defaults = {
     'Apply': 'Применить',
 
     'Back to modal form': 'Вернуться к модальной форме',
-    'Banned': 'Блокирован',
+    'Blocked': 'Блокирован',
 
     'Can not restore ambiguous values': 'Не могу восстановить неоднозначные значения',
     'Cancel': 'Отменить',
@@ -53,9 +53,11 @@ Jam.I18n.defaults = {
     'Index definitions': 'Определения индексов',
     'Index definitions not found in class:': 'Определения индексов не найдены в классе',
     'Indexing': 'Индексирование',
+    'Initial data': 'Исходные данные',
     'Input ID...': 'Введите ID...',
     'Input number...': 'Введите число...',
     'Input value...': 'Введите значение...',
+    'Invalid verification code': 'Неверный проверочный код',
 
     'Label': 'Ярлык',
     'Link': 'Добавить',
@@ -63,6 +65,7 @@ Jam.I18n.defaults = {
     'Main': 'Главная',
     'Metadata': 'Метаданные',
     'Metadata reloaded': 'Метаданные перезагружены',
+    'Modification date': 'Дата изменения',
 
     'Name': 'Название',
     'No': 'Нет',

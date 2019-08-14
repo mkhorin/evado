@@ -51,8 +51,8 @@ module.exports = class MetaDataGrid extends Base {
         if (!order) {
             return false;
         }
-        for (let name of Object.keys(order)) {
-            let attr = this.metaData.view.getAttr(name);
+        for (const name of Object.keys(order)) {
+            const attr = this.metaData.view.getAttr(name);
             if (attr ? !attr.isSortable() : (name !== this.metaData.class.getKey())) {
                 throw new BadRequest(`Not sortable attribute: ${name}`);
             }
@@ -71,14 +71,14 @@ module.exports = class MetaDataGrid extends Base {
             return false;
         }
         const conditions = [];
-        for (let attr of this.metaData.view.commonSearchAttrs) {
-            let condition = attr.getSearchCondition(value);
+        for (const attr of this.metaData.view.commonSearchAttrs) {
+            const condition = attr.getSearchCondition(value);
             if (condition) {
                 conditions.push(condition);
             }
         }
         if (!this.metaData.view.commonSearchAttrs.includes(this.metaData.class.getKey())) {
-            let condition = this.metaData.class.key.getCondition(value);
+            const condition = this.metaData.class.key.getCondition(value);
             if (condition) {
                 conditions.push(condition);
             }
@@ -111,7 +111,7 @@ module.exports = class MetaDataGrid extends Base {
 
     getAttrTemplateMap (view) {
         const map = {};
-        for (let attr of view.attrs) {
+        for (const attr of view.attrs) {
             map[attr.name] = this.view.getMetaItemTemplate(attr);
         }
         return map;
@@ -122,7 +122,7 @@ module.exports = class MetaDataGrid extends Base {
             //[model.class.CLASS_ATTR]: model.get(model.class.CLASS_ATTR)
         };
         await PromiseHelper.setImmediate();
-        for (let attr of model.view.attrs) {
+        for (const attr of model.view.attrs) {
             await this.renderCell(attr, model, result);
         }
         if (!model.view.hasKeyAttr()) {
@@ -136,7 +136,7 @@ module.exports = class MetaDataGrid extends Base {
         if (this.isReadForbiddenAttr(name, model)) {
             result[name] = this.metaData.security.noAccessMessage;
         } else if (this._attrTemplateMap[name]) {
-            let content = await this.view.render(this._attrTemplateMap[name], {attr, model});
+            const content = await this.view.render(this._attrTemplateMap[name], {attr, model});
             result[name] = `<!--handler: ${name}-->${content}`;
         } else {
             result[name] = name === this.ROW_KEY ? model.getId() : this.renderAttr(attr, model);
@@ -156,8 +156,13 @@ module.exports = class MetaDataGrid extends Base {
         if (value instanceof Date) {
             return this.renderDateAttr(value, attr);
         }
-        if (value && attr.isFile()) {
-            return this.renderFileAttr(value, attr, model);
+        if (value) {
+            if (attr.isRelated()) {
+                return model.related.getTitle(attr);
+            }
+            if (attr.isFile()) {
+                return this.renderFileAttr(value, attr, model);
+            }
         }
         return this.controller.format(value, attr.getFormat());
     }

@@ -98,7 +98,7 @@ Jam.Modal = class extends Jam.Element {
     afterLoad (item) {
         this.setActive(item);
         this.stackToggle.attach(item);
-        for (let handler of this.handlers) {
+        for (const handler of this.handlers) {
             handler(item);
         }
         this.handlers = [];

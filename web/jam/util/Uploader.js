@@ -121,7 +121,7 @@ Jam.Uploader = class {
     }
 
     isProcessing () {
-        for (let file of this.files) {
+        for (const file of this.files) {
             if (file.isProcessing()) {
                 return true;
             }
@@ -129,7 +129,7 @@ Jam.Uploader = class {
     }
 
     abort () {
-        for (let file of this.files) {
+        for (const file of this.files) {
             file.abort();
         }
     }
@@ -168,7 +168,7 @@ Jam.Uploader = class {
             failed: 0,
             done: 0
         };
-        for (let file of this.files) {
+        for (const file of this.files) {
             if (!file.removed) {
                 if (file.failed) {
                     ++counter.failed;
@@ -195,13 +195,13 @@ Jam.Uploader = class {
     }
 
     getFirstFilesByStatus () {
-        const map = {};
-        for (let file of this.files) {
-            if (!file.removed && !file.failed && !map.hasOwnProperty(file.status)) {
-                map[file.status] = file;
+        const result = {};
+        for (const file of this.files) {
+            if (!file.removed && !file.failed && !result.hasOwnProperty(file.status)) {
+                result[file.status] = file;
             }
         }
-        return map;
+        return result;
     }
 
     setSavedFile (data) {

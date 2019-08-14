@@ -8,7 +8,7 @@ class Jam {
     static createElements (container = document.body) {
         const instances = [];
         const elements = $(container).find('[data-jam]').get().reverse();
-        for (let element of elements) {
+        for (const element of elements) {
             const name = element.dataset.jam;
             if (!name) {
                 continue;
@@ -20,7 +20,7 @@ class Jam {
                 console.error(`Invalid Jam.Element: ${name}`);
             }
         }
-        for (let instance of instances) {
+        for (const instance of instances) {
             instance.init();
         }
     }
@@ -140,7 +140,7 @@ Jam.Confirmation = class {
     }
 
     showRemove (message, data) {
-        return this.show(message || 'Delete this object permanently?', {
+        return this.show(message || 'Delete item permanently?', {
             confirmText: 'Delete',
             cssClass: 'danger',
             ...data
@@ -240,7 +240,7 @@ Jam.Resource = class {
     }
 
     addLinks (container, remove) {
-        for (let node of container.querySelectorAll('link')) {
+        for (const node of container.querySelectorAll('link')) {
             this.add(node.getAttribute('href'));
             if (remove) {
                 node.remove();
@@ -249,7 +249,7 @@ Jam.Resource = class {
     }
 
     addScripts (container, remove) {
-        for (let node of container.querySelectorAll('script')) {
+        for (const node of container.querySelectorAll('script')) {
             this.add(node.getAttribute('src'));
             if (remove) {
                 node.remove();

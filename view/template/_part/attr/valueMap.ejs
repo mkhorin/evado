@@ -7,8 +7,7 @@
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" type="hidden" class="form-value"
-               value="<%= p.value ? JSON.stringify(p.value) : '' %>">
+        <input name="<%- p.name %>" type="hidden" value="<%= p.value ? JSON.stringify(p.value) : '' %>">
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
         <div class="value-map-items">

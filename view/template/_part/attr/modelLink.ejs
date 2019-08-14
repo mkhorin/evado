@@ -1,6 +1,6 @@
 <!-- _part/attr/modelLink -->
 <%
-let relModel = model.rel(attr);
+const relModel = model.rel(attr);
 %>
 <%- include('static', {
     displayValue: relModel ? relModel.getTitle() : undefined,

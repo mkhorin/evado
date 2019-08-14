@@ -7,43 +7,41 @@ const Base = require('areto/base/Application');
 
 module.exports = class Evado extends Base {
 
+    catch () {
+        return this.components.get('observer').catch(...arguments);
+    }
+
     // EVENTS
 
     async afterModuleInit () {
         await this.addSchedulerTasks(this);
-        await this.loadMeta();
+        await this.loadMetaData();
         await super.afterModuleInit();
     }
 
     // META
 
-    getMeta () {
-        return this.components.get('meta');
+    getMeta (name) {
+        return this.getMetaHub().get(name);
     }
 
-    getMetaPath () {
-        return this.getPath(this.getMetaDir(...arguments));
+    getMetaHub () {
+        return this.components.get('metaHub');
     }
-
-    getMetaDir () {
-        return path.join(this.getParam('metaRoot'), ...arguments);
-    }
-
-    async loadMeta () {
-        let meta = this.getMeta();
-        meta.models.add(this.getConfig('metaModels'));
-        await meta.load();
+    
+    async loadMetaData () {
+        const hub = this.getMetaHub();
+        hub.models.add(this.getConfig('metaModels'));
+        await hub.load();
     }
 
     // SCHEDULER
 
     addSchedulerTasks (module) {
         this.get('scheduler').addTasks(module.getConfig('tasks'), {module});
-        for (let child of module.modules) {
+        for (const child of module.modules) {
             this.addSchedulerTasks(child);
         }
     }
 };
 module.exports.init(module);
-
-const path = require('path');

@@ -66,7 +66,7 @@ Jam.List = class extends Jam.Element {
             this.$grid.toggleClass('active-advanced-search', data);
         });
         this.$thead = this.grid.renderer.$thead;
-        for (let cell of this.$thead.find('th')) {
+        for (const cell of this.$thead.find('th')) {
             if (this.filter.getAttrParams(cell.dataset.name)) {
                 $(cell).addClass('searchable');
             }

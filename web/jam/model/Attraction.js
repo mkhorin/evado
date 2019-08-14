@@ -13,7 +13,7 @@ Jam.ModelAttraction = class {
     }
 
     init () {
-        for (let item of this.model.$form.find('[data-attraction]')) {
+        for (const item of this.model.$form.find('[data-attraction]')) {
             const $item = $(item);
             const data = $item.data('attraction');
             if (data) {
@@ -25,7 +25,7 @@ Jam.ModelAttraction = class {
     }
 
     update () {
-        for (let element of this.elements) {
+        for (const element of this.elements) {
             element.update();
         }
         this.events.trigger('update');
@@ -44,7 +44,7 @@ Jam.ModelAttraction.Element = class {
     }
 
     init () {
-        for (let id of Object.keys(this.data)) {
+        for (const id of Object.keys(this.data)) {
             const action = this.create(id, this.data[id]);
             if (action) {
                 this.actions[id] = action;
@@ -59,12 +59,12 @@ Jam.ModelAttraction.Element = class {
             case 'visible': return new Jam.ModelAttraction.Visible(this, data);
             case 'enabled': return new Jam.ModelAttraction.Enabled(this, data);
             case 'required': return new Jam.ModelAttraction.Required(this, data);
-            case 'valued': return new Jam.ModelAttraction.Valued(this, data);
+            case 'value': return new Jam.ModelAttraction.Value(this, data);
         }
     }
 
     update () {
-        for (let id of Object.keys(this.actions)) {
+        for (const id of Object.keys(this.actions)) {
             this.actions[id].update();
         }
     }
@@ -119,11 +119,11 @@ Jam.ModelAttraction.Required = class extends Jam.ModelAttraction.Action {
     }
 };
 
-Jam.ModelAttraction.Valued = class extends Jam.ModelAttraction.Action {
+Jam.ModelAttraction.Value = class extends Jam.ModelAttraction.Action {
 
     init () {
         if (!this.element.attr) {
-            return console.error('Attraction: Valued action without model attribute');
+            return console.error('Attraction: Value action without model attribute');
         }
         this.value = this.element.attr.normalizeValue(this.data[0]);
         this.condition = new Jam.ModelCondition(this.data[1], this.element.attraction.model);

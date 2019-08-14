@@ -10,7 +10,7 @@ Jam.ModelError = class {
         this.modal = model.modal;
         this.notice = model.notice;
         this.$form = model.$form;
-        this.$form.on('change', '.form-value', this.onChangeValue.bind(this));
+        this.$form.on('change', '[name]', this.onChangeValue.bind(this));
     }
 
     onChangeValue (event) {
@@ -42,14 +42,14 @@ Jam.ModelError = class {
     }
 
     process (data, errors) {
-        for (let className of Object.keys(data)) {
-            for (let attrName of Object.keys(data[className])) {
+        for (const className of Object.keys(data)) {
+            for (const attrName of Object.keys(data[className])) {
                 this.processOne(className, attrName, data[className][attrName], errors);
             }
         }
         const $errorAttrs = this.$form.find('.has-error');
         $errorAttrs.parents('.form-base-group').addClass('has-group-error');
-        for (let pane of this.$form.find('.tab-pane.has-group-error')) {
+        for (const pane of this.$form.find('.tab-pane.has-group-error')) {
             $(pane).closest('.form-tabs')
                 .find(`> .nav-tabs [data-id="${pane.dataset.id}"]`)
                 .addClass('has-group-error');

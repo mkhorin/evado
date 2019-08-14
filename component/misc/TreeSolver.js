@@ -41,13 +41,11 @@ module.exports = class TreeSolver extends Base {
     }
 */
     async getDescendantIds (parentIds) {
-        const children = await this.model.find({
-            [this.parentAttr]: parentIds
-        }).column(this.model.PK);        
+        const children = await this.model.find({[this.parentAttr]: parentIds}).column(this.model.PK);
         if (children.length === 0) {
             return children;
         }
-        if (MongoHelper.indexOf(this.model.getId(), children) !== -1) {
+        if (CommonHelper.indexOf(this.model.getId(), children) !== -1) {
             throw new Error(this.constructor.getCircularError(this.model));
         }        
         return children.concat(await this.getDescendantIds(children));
@@ -72,4 +70,4 @@ module.exports = class TreeSolver extends Base {
     }
 };
 
-const MongoHelper = require('areto/helper/MongoHelper');
+const CommonHelper = require('areto/helper/CommonHelper');

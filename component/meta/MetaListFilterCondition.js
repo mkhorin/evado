@@ -21,7 +21,7 @@ module.exports = class MetaListFilterCondition extends Base {
             return null;
         }
         if (rel.isBackRef()) {
-            let query = rel.refClass.find().and({[rel.refClass.getKey()]: value});
+            const query = rel.refClass.find().and({[rel.refClass.getKey()]: value});
             value = this.getRelationValue(rel, query);
             attr = rel.linkAttrName;
         }
@@ -57,7 +57,7 @@ module.exports = class MetaListFilterCondition extends Base {
     async getRelationValue (rel, query) {
         const values = await query.column(rel.refAttrName);
         const result = [];
-        for (let value of values) {
+        for (const value of values) {
             if (value !== null) {
                 result.push(value);
             }

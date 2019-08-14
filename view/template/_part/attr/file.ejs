@@ -7,7 +7,7 @@
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input type="hidden" name="<%- p.name %>" class="form-value" value="<%= p.value %>">
+        <input type="hidden" name="<%- p.name %>" value="<%= p.value %>">
         <div class="uploader show-dropzone" data-options="<%= JSON.stringify(options)%>">
             <div class="uploader-input">
                 <input type="file" class="uploader-input-file">

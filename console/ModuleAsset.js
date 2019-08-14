@@ -40,10 +40,10 @@ module.exports = class ModuleAsset extends Base {
         const vendorTarget = this.module.getPath(params.target);
 
         this.log('info', `Web vendor folder: ${vendorTarget}`);
-        await FileHelper.createDir(vendorTarget);
+        await FileHelper.createDirectory(vendorTarget);
 
         this.log('info', `Clear folder...`);
-        await FileHelper.emptyDir(vendorTarget);
+        await FileHelper.emptyDirectory(vendorTarget);
 
         this.log('info', `Deploy assets...`);
         await this.deployVendors(params);
@@ -79,7 +79,7 @@ module.exports = class ModuleAsset extends Base {
             }
         }
         if (!deployed) {
-            this.log('error', `Not deployed: ${vendor}`);
+            this.log('error', `${vendor} not deployed`);
         }
     }
 

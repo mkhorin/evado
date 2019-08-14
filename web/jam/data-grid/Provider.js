@@ -12,7 +12,7 @@ Jam.DataGridProvider = class {
     }
 
     initColumns () {
-        for (let column of this.params.columns) {
+        for (const column of this.params.columns) {
             column.formatFilterValue = typeof column.format === 'function'
                 ? column.format
                 : this.formatFilterValue.bind(this)
@@ -21,12 +21,12 @@ Jam.DataGridProvider = class {
 
     load () {
         let data = this.params.data;
-        let maxSize = data.length;
+        const maxSize = data.length;
         data = this.useCommonSearch(data);
         this.orderData(data, this.grid.order);
-        let totalSize = data.length;
-        let interval = this.grid.pagination.getDataInterval(totalSize);
-        let items = data.slice(...interval);
+        const totalSize = data.length;
+        const interval = this.grid.pagination.getDataInterval(totalSize);
+        const items = data.slice(...interval);
         this.grid.afterLoad({items, totalSize, maxSize});
     }
 
@@ -38,7 +38,7 @@ Jam.DataGridProvider = class {
             return data;
         }
         const keys = [];
-        for (let column of this.params.columns) {
+        for (const column of this.params.columns) {
             if (column.searchable) {
                 keys.push(this.createColumnFilterValues(column, data));
             }
@@ -47,7 +47,7 @@ Jam.DataGridProvider = class {
     }
 
     filterItem (value, keys, doc) {
-        for (let key of keys) {
+        for (const key of keys) {
             if (typeof doc[key] === 'string') {
                 if (doc[key].includes(value)) {
                     return true;
@@ -66,7 +66,7 @@ Jam.DataGridProvider = class {
             return false;
         }
         this._sortItems = [];
-        for (let name of Object.keys(order)) {
+        for (const name of Object.keys(order)) {
             const column = this.grid.getColumn(name);
             if (column && column.sortable) {
                 const key = this.createColumnFilterValues(column, data);
@@ -79,8 +79,8 @@ Jam.DataGridProvider = class {
     }
 
     compareDocs (a, b) {
-        for (let item of this._sortItems) {
-            let result = this.compareValues(a[item[0]], b[item[0]], item[1]);
+        for (const item of this._sortItems) {
+            const result = this.compareValues(a[item[0]], b[item[0]], item[1]);
             if (result !== 0) {
                 return result;
             }
@@ -100,7 +100,7 @@ Jam.DataGridProvider = class {
     createColumnFilterValues (column, data) {
         const key = '_jamDataGridFilter_'+ column.name;
         if (data.length && !data[0].hasOwnProperty(key)) {
-            for (let doc of data) {
+            for (const doc of data) {
                 doc[key] = column.formatFilterValue(doc[column.name], column, doc)
             }
         }

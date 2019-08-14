@@ -13,7 +13,7 @@ module.exports = class MetaModels extends Base {
     }
 
     add (data) {
-        for (let id of Object.keys(data || {})) {
+        for (const id of Object.keys(data || {})) {
             this.addModel(id, this.createModel(data[id]));
         }
     }
@@ -38,14 +38,14 @@ module.exports = class MetaModels extends Base {
     }
 
     async load () {
-        for (let model of this) {
+        for (const model of this) {
             await model.load();
         }
         return this.afterLoad();
     }
 
     async afterLoad () {
-        for (let model of this) {
+        for (const model of this) {
             await model.afterLoad();
         }
     }

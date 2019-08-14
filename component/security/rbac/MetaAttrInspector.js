@@ -18,32 +18,32 @@ module.exports = class MetaAttrInspector extends Base {
      */
 
     static concatHierarchyItems (items) {
-        let map = {}, key, stateKey, viewKey, classKey;
-        for (let item of items) {
-            key = `${item.object}.${item.state}.${item.view}.${item.class}`;
+        const  map = {};
+        for (const item of items) {
+            const key = `${item.object}.${item.state}.${item.view}.${item.class}`;
             ObjectHelper.push(item, key, map);
         }
-        for (let item of items) {
+        for (const item of items) {
             if (item.view ? (!item.state && !item.object) : (item.state ? !item.object : item.object)) {
-                key = `${item.object}.${item.state}.${item.view}.${item.class}`;
-                classKey = `...${item.class}`;
+                const key = `${item.object}.${item.state}.${item.view}.${item.class}`;
+                const classKey = `...${item.class}`;
                 Rbac.concatFirstArrayItems(key, map, classKey);
             }
         }
-        for (let item of items) {
+        for (const item of items) {
             if (item.view && (item.state ? !item.object : item.object)) {
-                key = `${item.object}.${item.state}.${item.view}.${item.class}`;
-                viewKey = `..${item.view}.${item.class}`;
-                classKey = `...${item.class}`;
+                const key = `${item.object}.${item.state}.${item.view}.${item.class}`;
+                const viewKey = `..${item.view}.${item.class}`;
+                const classKey = `...${item.class}`;
                 Rbac.concatFirstArrayItems(key, map, viewKey, classKey);
             }
         }
-        for (let item of items) {
+        for (const item of items) {
             if (item.state && item.object) {
-                key = `${item.object}.${item.state}.${item.view}.${item.class}`;
-                stateKey = `.${item.state}.${item.view}.${item.class}`;
-                viewKey = `..${item.view}.${item.class}`;
-                classKey = `...${item.class}`;
+                const key = `${item.object}.${item.state}.${item.view}.${item.class}`;
+                const stateKey = `.${item.state}.${item.view}.${item.class}`;
+                const viewKey = `..${item.view}.${item.class}`;
+                const classKey = `...${item.class}`;
                 Rbac.concatFirstArrayItems(key, map, stateKey, viewKey, classKey);
             }
         }
@@ -79,7 +79,7 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     getTargetAttrItems (map) {
-        let target = this.target;
+        const target = this.target;
         switch (this.targetType) {
             case Rbac.TARGET_CLASS:
                 return map[`...${target.id}`];
@@ -90,9 +90,9 @@ module.exports = class MetaAttrInspector extends Base {
                     : map[`..${target.id}`] || map[`...${target.class.id}`];
 
             case Rbac.TARGET_OBJECT:
-                let id = target.getId().toString();
-                let classId = target.class.id;
-                let state = target.getState();
+                const id = target.getId().toString();
+                const classId = target.class.id;
+                const state = target.getState();
                 if (state) {
                     if (target.view === target.class) {
                         return map[`${id}.${state.name}..${classId}`]
@@ -120,16 +120,16 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     filterMetaAttrData (data, items) {
-        let result = [], resultValue, actionItems;
+        const result = [];
         for (let role of this.assignments) {
             if (!Object.prototype.hasOwnProperty.call(data, role)) {
                 return null; // no attr filter to role
             }
             role = data[role];
-            resultValue = {};
-            for (let action of this.actions) {
+            const resultValue = {};
+            for (const action of this.actions) {
                 if (Array.isArray(role[action])) {
-                    actionItems = ArrayHelper.intersect(role[action], items);
+                    const actionItems = ArrayHelper.intersect(role[action], items);
                     if (actionItems.length) {
                         resultValue[action] = actionItems;
                     }
@@ -143,9 +143,9 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     async resolveAttrs (items) {
-        let forbiddenAttrMap = {};
-        for (let item of items) {
-            for (let action of this.actions) {
+        const forbiddenAttrMap = {};
+        for (const item of items) {
+            for (const action of this.actions) {
                 if (forbiddenAttrMap[action] === null) {
                     continue; // all action attrs is allowed (by other role)
                 }
@@ -153,7 +153,7 @@ module.exports = class MetaAttrInspector extends Base {
                     forbiddenAttrMap[action] = null;
                     continue;
                 }
-                let attrs = [];
+                const attrs = [];
                 await this.checkAttrItems(item[action], attrs);
                 if (!attrs.length) {
                     forbiddenAttrMap[action] = null;
@@ -168,7 +168,7 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     async checkAttrItems (items, forbiddenAttrs) {
-        for (let item of items) {
+        for (const item of items) {
             if (!item.rule) {
                 forbiddenAttrs.push(item.attr);
             } else if (await this.checkRule(item.rule)) {
@@ -181,9 +181,10 @@ module.exports = class MetaAttrInspector extends Base {
     // view type and above have already been solved with execute
 
     resolveObjectTarget (model) {
-        let id = model.getId().toString();
-        let state = model.getState();
-        let map = this.rbac.targetMetaAttrMap, data;
+        const id = model.getId().toString();
+        const state = model.getState();
+        const map = this.rbac.targetMetaAttrMap;
+        let data;
         if (state) {
             if (model.view !== model.class) {
                 data = map[`${id}.${state.name}.${model.view.id}`]
@@ -202,7 +203,7 @@ module.exports = class MetaAttrInspector extends Base {
         }
         if (data) {
             let items = [];
-            for (let item of data) {
+            for (const item of data) {
                 if (!this.hasForbiddenItem(item)) {
                     items.push(item);
                 }
@@ -215,7 +216,7 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     hasForbiddenItem (item) {
-        for (let action of item.actions) {
+        for (const action of item.actions) {
             if (this.actions.includes(action) && this.can(action, item.attr)) {
                 return false;
             }
@@ -224,15 +225,15 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     hasAnyObjectTargetData (className) {
-        let map = this.rbac.objectTargetMetaAttrMap;
+        const map = this.rbac.objectTargetMetaAttrMap;
         if (!map) {
             return false;
         }
-        for (let role of this.assignments) {
+        for (const role of this.assignments) {
             if (map[role]) {
-                for (let action of this.actions) {
+                for (const action of this.actions) {
                     if (Array.isArray(map[role][action])) {
-                        for (let item of map[role][action]) {
+                        for (const item of map[role][action]) {
                             if (item.class === className) {
                                 return true;
                             }

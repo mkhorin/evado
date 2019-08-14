@@ -33,7 +33,7 @@ if (data.order === undefined) {
     data.order = {[model.PK]: -1};
 }
 let hasKeyColumn = false;
-for (let column of data.columns) {
+for (const column of data.columns) {
     if (column.label === undefined) {
         column.label = model.getAttrLabel(column.name);
     }

@@ -40,7 +40,7 @@ module.exports = class SortRelAction extends Base {
         if (!data) {
             throw new BadRequest('Invalid order data');
         }
-        for (let key of Object.keys(data)) {
+        for (const key of Object.keys(data)) {
             data[key] = parseInt(data[key]);
             if (!Number.isInteger(data[key])) {
                 throw new BadRequest('Invalid order number');
@@ -57,7 +57,8 @@ module.exports = class SortRelAction extends Base {
             'orderAttr': this.orderBehavior.orderAttr
         };
         data.relController = data.relModel.createController().assignSource(this.controller);
-        let viewModel = data.relController.createViewModel('sort', {data}), content;
+        const viewModel = data.relController.createViewModel('sort', {data});
+        let content;
         if (viewModel) {
             await viewModel.prepareModels(data.models);
             content = await data.relController.renderViewModel(viewModel, 'sort', false);

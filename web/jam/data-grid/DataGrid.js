@@ -148,7 +148,7 @@ Jam.DataGrid = class {
     getInfo () {
         let info = this.locale.info;
         if (this.items.length) {
-            let interval = this.pagination.getDataInterval(this.itemTotalSize);
+            const interval = this.pagination.getDataInterval(this.itemTotalSize);
             info = info.replace('#{START}', interval[0] + 1);
             info = info.replace('#{END}', interval[1]);
             info = info.replace('#{TOTAL}', this.itemTotalSize);
@@ -161,9 +161,9 @@ Jam.DataGrid = class {
     }
 
     onToggleOrder (event) {
-        let $toggle = $(event.currentTarget);
-        let $cell = $toggle.closest('th');
-        let name = $cell.data('name');
+        const $toggle = $(event.currentTarget);
+        const $cell = $toggle.closest('th');
+        const name = $cell.data('name');
         let direction = $cell.hasClass('asc') ? -1 : 1;
         if (event.shiftKey) {
             direction = 0;
@@ -275,7 +275,7 @@ Jam.TreeDataGridNode = class {
 
     collapse () {
         const $children = this.getChildren();
-        for (let row of $children.filter('.opened')) {
+        for (const row of $children.filter('.opened')) {
             this.grid.getNodeByRow($(row)).toggle(false);
         }
         this._detachedChildren = $children.detach();

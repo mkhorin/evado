@@ -27,7 +27,7 @@ module.exports = class SingleProcessing extends Base {
         this._busy = true;
         try {
             this.log('info', `Start processing: ${name || util.inspect(handler)}`);
-            let result = await handler();
+            const result = await handler();
             this.log('info', 'End processing');
             this._busy = false;
             return result;

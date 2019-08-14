@@ -26,7 +26,7 @@ module.exports = class FileController extends Base {
     }
 
     async actionUpload () {
-        let model = this.spawn('model/RawFile', {user: this.user});
+        const model = this.spawn('model/RawFile', {user: this.user});
         if (!await model.upload(this.req, this.res)) {
             return this.sendText(this.translate(model.getFirstError()), 400);
         }
@@ -37,8 +37,8 @@ module.exports = class FileController extends Base {
     }
 
     async actionRemove () {
-        let query = this.spawn('model/RawFile').findById(this.getPostParam('id'));
-        let model = await query.and({owner: null}).one();
+        const query = this.spawn('model/RawFile').findById(this.getPostParam('id'));
+        const model = await query.and({owner: null}).one();
         if (model) {
             await model.remove();
         }
@@ -46,14 +46,14 @@ module.exports = class FileController extends Base {
     }
 
     async actionDownload () {
-        let model = await this.getModel();
+        const model = await this.getModel();
         this.setHttpHeader(model.getFileHeaders());
         this.sendFile(model.getPath());
     }
 
     async actionPreview () {
-        let model = await this.getModel();
-        let file = await model.ensurePreview(this.getQueryParam('s'));
+        const model = await this.getModel();
+        const file = await model.ensurePreview(this.getQueryParam('s'));
         if (!file) {
             return this.sendStatus(404);
         }

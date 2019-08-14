@@ -15,9 +15,11 @@ module.exports = {
     'Name': 'Имя',
 
     'Password': 'Пароль',
+    'Password changed': 'Пароль изменен',
     'Password repeat': 'Повтор пароля',
 
     'Register a new user': 'Регистрация нового пользователя',
+    'Registration completed': 'Регистрация завершена',
     'Remember me': 'Запомнить меня',
 
     'Sign in': 'Войти',
@@ -28,5 +30,6 @@ module.exports = {
     'Sign up': 'Зарегистрировать',
     'Sign up new user': 'Зарегистрировать пользователя',
 
+    'Value must not be equal to current password': 'Значение не должно быть равно текущему паролю',
     'Verification code': 'Проверочный код',
 };

@@ -38,11 +38,11 @@ Jam.ModelCondition = class {
         }
         return Jam.ModelCondition.OPERATORS.hasOwnProperty(operator)
             ? this[Jam.ModelCondition.OPERATORS[operator]](operator, data)
-            : this.log('error', `Not found operator: ${operator}`);
+            : this.log('error', `Operator not found: ${operator}`);
     }
 
     validateHash (data) {
-        for (let name of Object.keys(data)) {
+        for (const name of Object.keys(data)) {
             const value = this.getValue(name);
             if (Array.isArray(data[name])) {
                 if (!data[name].includes(value)) {
@@ -59,7 +59,7 @@ Jam.ModelCondition = class {
         if (operands.length === 0) {
             return this.logDataError(operator, operands);
         }
-        for (let operand of operands) {
+        for (const operand of operands) {
             if (!this.validate(operand)) {
                 return false;
             }
@@ -71,7 +71,7 @@ Jam.ModelCondition = class {
         if (operands.length === 0) {
             return this.logDataError(operator, operands);
         }
-        for (let operand of operands) {
+        for (const operand of operands) {
             if (this.validate(operand)) {
                 return true;
             }

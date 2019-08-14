@@ -65,21 +65,23 @@ module.exports = class AuthController extends Base {
             return this.render('sign-up', {model});
         }
         model.captchaAction = this.createAction('captcha');
-        return await model.load(this.getPostParams()).register()
-            ? this.goLogin()
-            : this.render('sign-up', {model});
+        if (!await model.load(this.getPostParams()).register()) {
+            return this.render('sign-up', {model});
+        }
+        this.setFlash('registered', this.translate('Registration completed'));
+        this.goLogin();
     }
 
     async actionChangePassword () {
-        const model = this.spawn('model/auth/ChangePasswordForm', {userModel: this.user.model});
+        const model = this.spawn('model/auth/ChangePasswordForm', {user: this.user});
         if (this.isGet()) {
             return this.render('change-password', {model});
         }
         model.captchaAction = this.createAction('captcha');
-        if (!await model.changePassword()) {
+        if (!await model.load(this.getPostParams()).changePassword()) {
             return this.render('change-password', {model});
         }
-        this.setFlash('passwordChanged', this.translate('Your password changed'));
+        this.setFlash('passwordChanged', this.translate('Password changed'));
         this.reload();
     }
 

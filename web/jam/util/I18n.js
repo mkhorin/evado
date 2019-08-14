@@ -33,7 +33,7 @@ Jam.I18n = class {
     }
 
     translateElements ($container) {
-        for (let element of $container.find('[data-t]')) {
+        for (const element of $container.find('[data-t]')) {
             this.translateElement(element)
         }
     }
@@ -46,9 +46,9 @@ Jam.I18n = class {
     }
 
     translateAttributes ($container) {
-        for (let name of this.getAttributes($container)) {
+        for (const name of this.getAttributes($container)) {
             const category = 't' + Jam.StringHelper.toFirstUpperCase(name);
-            for (let element of $container.find(`[${name}]`)) {
+            for (const element of $container.find(`[${name}]`)) {
                 this.translateAttribute(name, category, element);
             }
         }

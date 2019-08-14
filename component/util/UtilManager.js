@@ -9,24 +9,24 @@ module.exports = class UtilManager extends Base {
 
     constructor (config) {
         super({
-            utilMap: 'utils',
+            utils: 'utils',
             url: `${config.module.NAME}/default/util`,
             ...config
         });
     }
 
     async init () {
-        this.utilMap = this.resolveUtilMap(this.utilMap);
-        this._utils = Object.values(this.utilMap);
-        ObjectHelper.addKeyAsNestedValue('id', this.utilMap);
+        this._utilMap = this.resolveUtils(this.utils);
+        this._utils = Object.values(this._utilMap);
+        ObjectHelper.addKeyAsNestedValue('id', this._utilMap);
     }
 
-    resolveUtilMap (map) {
-        return (typeof map === 'string' ? this.module.getConfig(map) : map) || {};
+    resolveUtils (data) {
+        return (typeof data === 'string' ? this.module.getConfig(data) : data) || {};
     }
 
     async hasEnabled (params) {
-        for (let util of this._utils) {
+        for (const util of this._utils) {
             if (await this.createUtil(util, params).isEnabled()) {
                 return true;
             }
@@ -46,7 +46,7 @@ module.exports = class UtilManager extends Base {
     }
 
     getUtilConfig (id) {
-        return Object.prototype.hasOwnProperty.call(this.utilMap, id) ? this.utilMap[id] : null;
+        return Object.prototype.hasOwnProperty.call(this._utilMap, id) ? this._utilMap[id] : null;
     }
 
     createUtil (config, params) {

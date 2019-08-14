@@ -75,7 +75,7 @@ module.exports = class CrudController extends Base {
         model.scenario = params.scenario;
         if (this.isGet()) {
             await model.setDefaultValues();
-            let viewLayout = this.getViewLayout();
+            const viewLayout = this.getViewLayout();
             return this.render(params.template, {model, viewLayout, ...params.templateData});
         }
         model.load(this.getPostParams());
@@ -111,7 +111,7 @@ module.exports = class CrudController extends Base {
         if (params.beforeGetUpdate) {
             data = params.beforeGetUpdate.call(this, model);
         }
-        let viewLayout = this.getViewLayout();
+        const viewLayout = this.getViewLayout();
         Object.assign(data, {model, viewLayout}, params.templateData);
         return this.render(params.template, data);
     }

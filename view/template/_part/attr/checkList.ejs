@@ -6,9 +6,9 @@
 <div class="form-attr <%- p.css %> <%- p.required %> form-group" data-type="checkboxList">
     <label class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
+        <input name="<%- p.name %>" value="<%- p.value %>" type="hidden">
         <div>
-            <% for (let item of items) { %>
+            <% for (const item of items) { %>
             <label class="checkbox checkbox-inline">
                 <input value="<%- item.value %>" type="checkbox">
                 <span data-t="<%- p.translate %>"><%- item.text %></span>

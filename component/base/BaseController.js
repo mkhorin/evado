@@ -7,14 +7,6 @@ const Base = require('areto/base/Controller');
 
 module.exports = class BaseController extends Base {
 
-    static getConstants () {
-        return {
-            METHODS: {
-                'remove': ['post']
-            }
-        };
-    }
-
     getRefUrl () {
         const ref = this.isGet()
             ? this.getHttpHeader('referrer')
@@ -49,7 +41,7 @@ module.exports = class BaseController extends Base {
         }
         model = await model.findById(params.id).with(params.with).one();
         if (!model) {
-            throw new NotFound('Not found model');
+            throw new NotFound('Model not found');
         }
         return model;
     }
@@ -60,7 +52,7 @@ module.exports = class BaseController extends Base {
             try {
                 params.Class = this.module.require(file) || require(file);
             } catch (err) {
-                throw new NotFound(`Not found model class: ${file}`);
+                throw new NotFound(`Model class not found: ${file}`);
             }
         }
         return this.getModel(params);
@@ -76,7 +68,7 @@ module.exports = class BaseController extends Base {
 
     handleModelError (...models) {
         const result = {};
-        for (let model of models) {
+        for (const model of models) {
             if (model) {
                 result[model.constructor.name] = this.translateMessageMap(model.getFirstErrorMap());
             }
@@ -85,7 +77,7 @@ module.exports = class BaseController extends Base {
     }
 
     hasAnyModelError (...models) {
-        for (let model of models) {
+        for (const model of models) {
             if (model && model.hasError()) {
                 return true;
             }
@@ -110,22 +102,6 @@ module.exports = class BaseController extends Base {
         const request = this.getPostParams();
         const result = await (new Select2({request, query, params})).getList();
         this.sendJson(result);
-    }
-
-    // META
-
-    parseMetaParams (data) {
-        const result = {meta: this.module.getMeta()};
-        data = typeof data === 'string' ? data : '';
-        const [id, attrName, viewName, className] = data.split('.');
-        result.class = result.meta.getClass(className);
-        if (result.class) {
-            result.view = result.class.getView(viewName) || result.class;
-        }
-        if (result.view) {
-            result.attr = result.view.getAttr(attrName);
-        }
-        return result;
     }
 };
 module.exports.init();

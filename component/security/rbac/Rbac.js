@@ -72,8 +72,8 @@ module.exports = class Rbac extends Base {
     }
 
     static splitMetaItemsByType (items) {
-        let allow = [], deny = [];
-        for (let item of items) {
+        const allow = [], deny = [];
+        for (const item of items) {
             item.type === this.ALLOW ? allow.push(item) : deny.push(item);
         }
         return allow.length
@@ -81,13 +81,13 @@ module.exports = class Rbac extends Base {
             : {deny};
     }
 
-    static splitMetaItemMapByType (map) {
-        let allow = {}, deny = {};
-        for (let key of Object.keys(map)) {
-            if (map[key].type === this.ALLOW) {
-                allow[key] = map[key];
+    static splitMetaItemMapByType (data) {
+        const allow = {}, deny = {};
+        for (const key of Object.keys(data)) {
+            if (data[key].type === this.ALLOW) {
+                allow[key] = data[key];
             } else {
-                deny[key] = map[key];
+                deny[key] = data[key];
             }
         }
         return Object.values(allow).length
@@ -96,23 +96,23 @@ module.exports = class Rbac extends Base {
     }
 
     static indexMetaItemsByAction (items) {
-        let map = {};
-        for (let item of items) {
-            let actions = Array.isArray(item.actions) ? item.actions : [];
-            for (let action of actions) {
-                if (Array.isArray(map[action])) {
-                    map[action].push(item);
+        const result = {};
+        for (const item of items) {
+            const actions = Array.isArray(item.actions) ? item.actions : [];
+            for (const action of actions) {
+                if (Array.isArray(result[action])) {
+                    result[action].push(item);
                 } else {
-                    map[action] = [item];
+                    result[action] = [item];
                 }
             }
         }
-        return map;
+        return result;
     }
 
     static indexMetaItemsByTarget (items) {
-        let map = this.indexMetaItems(items, 'targetType');
-        for (let target of Object.keys(map)) {
+        const map = this.indexMetaItems(items, 'targetType');
+        for (const target of Object.keys(map)) {
             if (target !== this.ALL) {
                 map[target] = this.indexMetaItems(map[target], 'key');
             }
@@ -121,22 +121,22 @@ module.exports = class Rbac extends Base {
     }
 
     static indexMetaItemsByState (items) {
-        let map = {};
-        for (let item of items) {
+        const map = {};
+        for (const item of items) {
             if (item.view) {
                 ObjectHelper.push(item, `${item.view}.${item.class}`, map);
             } else if (item.class) {
                 ObjectHelper.push(item, `${item.class}`, map);
             }
         }
-        for (let item of items) {
+        for (const item of items) {
             if (!item.state && !item.view && item.class) {
                 this.concatFirstArrayItems(`${item.class}`, map);
             }
         }
-        for (let item of items) {
+        for (const item of items) {
             if (!item.state && item.view) {
-                let classKey = `${item.class}`;
+                const classKey = `${item.class}`;
                 this.concatFirstArrayItems(`${item.view}.${classKey}`, map, classKey);
             }
         }
@@ -144,7 +144,7 @@ module.exports = class Rbac extends Base {
     }
 
     static concatFirstArrayItems (targetKey, map, ...keys) {
-        for (let key of keys) {
+        for (const key of keys) {
             if (Array.isArray(map[key])) {
                 return map[targetKey] = map[targetKey].concat(map[key]);
             }
@@ -152,15 +152,15 @@ module.exports = class Rbac extends Base {
     }
 
     static indexMetaItems (items, key) {
-        let map = {};
-        for (let item of items) {
-            ObjectHelper.push(item, item[key], map);
+        const result = {};
+        for (const item of items) {
+            ObjectHelper.push(item, item[key], result);
         }
-        return map;
+        return result;
     }
 
     static expandAllAction (items) {
-        for (let item of items) {
+        for (const item of items) {
             if (item.actions && item.actions[0] === this.ALL) {
                 item.actions = this.ALL_ACTIONS;
             }
@@ -168,12 +168,13 @@ module.exports = class Rbac extends Base {
     }
 
     static getItemRuleData (item, rule) {
-        let name = `${rule.name}.${item.key}`;
+        const name = `${rule.name}.${item.key}`;
         return {...rule, name, item};
     }
 
     constructor (config) {
         super({
+            depends: ['metaHub'],
             Store: require('./DatabaseStore'),
             Item: require('./Item'),
             MetaInspector: require('./MetaInspector'),
@@ -185,7 +186,8 @@ module.exports = class Rbac extends Base {
     }
 
     async init () {
-        this.module.getMeta().onAfterLoad(this.prepareMetaDependencies.bind(this));
+        this.meta = this.module.getMetaHub();
+        this.meta.onAfterLoad(this.prepareMetaDependencies.bind(this));
         await super.init();
     }
 
@@ -199,18 +201,18 @@ module.exports = class Rbac extends Base {
         this.setMetaObjectFilterMap();
         this.setMetaTransitionMap();
         this.setMetaNavMap();
-        this.setUserFilters(data.userFilters);
+        this.setAssignmentFilters(data.assignmentFilters);
         this.prepareMetaDependencies();
     }
 
     prepareMetaDependencies () {
-        if (this.module.getMeta()) {
-            this.metaObjectFilters.map(filter => filter.prepare());
-        }
+        this.docMeta = this.meta.get('document');
+        this.navMeta = this.meta.get('navigation');
+        this.metaObjectFilters.map(filter => filter.prepare());
     }
 
     addParentRoles (items) {
-        for (let item of items) {
+        for (const item of items) {
             if (item.type === Rbac.ALLOW && Array.isArray(item.roles)) {
                 item.roles = this.getParentRoles(item.roles);
             }
@@ -218,8 +220,8 @@ module.exports = class Rbac extends Base {
     }
 
     getParentRoles (roles) {
-        for (let name of roles) {
-            let item = this.itemMap[name];
+        for (const name of roles) {
+            const item = this.itemMap[name];
             if (item instanceof this.Item && item.isRole() && Array.isArray(item.parents)) {
                 roles = roles.concat(item.parents
                     .filter(item => item.isRole())
@@ -231,28 +233,28 @@ module.exports = class Rbac extends Base {
     }
 
     resolveMetaItemRules () {
-        for (let item of Object.values(this.metaItems)) {
-            let rule = this.ruleMap[item.rule];
+        for (const item of Object.values(this.metaItems)) {
+            const rule = this.ruleMap[item.rule];
             if (rule && Object.prototype.hasOwnProperty.call(this.ruleMap, item.rule)) {
                 item.rule = this.constructor.getItemRuleData(item, rule);
             } else if (item.rule) {
-                this.log('error', `Not found rule: ${item.rule}`);
+                this.log('error', `Rule not found: ${item.rule}`);
                 item.rule = null;
             }
         }
     }
 
     setMetaMap () {
-        let items = this.metaItems.filter(item => {
+        const items = this.metaItems.filter(item => {
             return item.targetType !== this.TARGET_TRANSITION && item.targetType !== this.TARGET_ATTR
         });
         this.constructor.expandAllAction(items);
-        let map = this.indexMetaItemsByRole(items);
-        for (let role of Object.keys(map)) {
+        const map = this.indexMetaItemsByRole(items);
+        for (const role of Object.keys(map)) {
             map[role] = this.constructor.splitMetaItemsByType(map[role]);
-            for (let type of Object.keys(map[role])) {
-                let items = this.constructor.indexMetaItemsByAction(map[role][type]);
-                for (let action of Object.keys(items)) {
+            for (const type of Object.keys(map[role])) {
+                const items = this.constructor.indexMetaItemsByAction(map[role][type]);
+                for (const action of Object.keys(items)) {
                     items[action] = this.constructor.indexMetaItemsByTarget(items[action]);
                 }
                 map[role][type] = items;
@@ -262,7 +264,7 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaAttrMap () {
-        let items = this.metaItems.filter(item => item.type === this.DENY && item.targetType === this.TARGET_ATTR);
+        const items = this.metaItems.filter(item => item.type === this.DENY && item.targetType === this.TARGET_ATTR);
         this.constructor.expandAllAction(items);
         let map = this.indexMetaItemsByRoleAction(items);
         this.metaAttrMap = this.targetMetaAttrMap = this.objectTargetMetaAttrMap = null;
@@ -275,16 +277,16 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaObjectFilterMap () {
-        let items = this.metaItems.filter(item => {
+        const items = this.metaItems.filter(item => {
             return item.type === this.DENY
                 && (item.targetType === this.TARGET_STATE || item.targetType === this.TARGET_OBJECT)
                 && (item.actions.includes(Rbac.ALL) || item.actions.includes(Rbac.READ));
         });
-        let map = this.indexMetaItemsByRole(items);
+        const map = this.indexMetaItemsByRole(items);
         this.metaObjectFilters = [];
-        for (let role of Object.keys(map)) {
+        for (const role of Object.keys(map)) {
             map[role] = this.constructor.indexMetaItemsByState(map[role]);
-            for (let key of Object.keys(map[role])) {
+            for (const key of Object.keys(map[role])) {
                 map[role][key] = new MetaObjectFilter({
                     rbac: this,
                     items: map[role][key]
@@ -296,10 +298,10 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaTransitionMap () {
-        let items = this.metaItems.filter(item => {
+        const items = this.metaItems.filter(item => {
             return item.type === this.DENY && item.targetType === this.TARGET_TRANSITION;
         });
-        let map = this.indexMetaItemsByRoleKey(items);
+        const map = this.indexMetaItemsByRoleKey(items);
         if (map){
             this.MetaTransitionInspector.concatHierarchyItems(items, map);
         }
@@ -307,51 +309,58 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaNavMap () {
-        let targets = [this.TARGET_NAV_SECTION, this.TARGET_NAV_NODE];
-        let items = this.metaItems.filter(item => {
+        const targets = [this.TARGET_NAV_SECTION, this.TARGET_NAV_NODE];
+        const items = this.metaItems.filter(item => {
             return item.type === this.DENY && item.actions[0] === this.READ && targets.includes(item.targetType);
         });
         this.metaNavMap = this.indexMetaItemsByRoleKey(items);
     }
 
-    setUserFilters (items) {
-        this.userFilterMap = {};
-        for (let data of items) {
-            let filter = new UserFilterFactory({rbac: this, data});
-            if (filter.validate()) {
-                this.userFilterMap[filter.getId()] = filter;
-            }
-        }
-        this.userFilterItemNames = [];
-        for (let name of Object.keys(this.itemMap)) {
-            this.itemMap[name].setUserFilters(this.userFilterMap);
-            if (this.itemMap[name].userFilters.length) {
-                this.userFilterItemNames.push(name);
+    setAssignmentFilters (items) {
+        const data = this.createAssignmentFilterMap(items);
+        this.assignmentFilterItems = [];
+        for (const name of Object.keys(this.itemMap)) {
+            const item = this.itemMap[name];
+            if (item.setAssignmentFilters(data)) {
+                this.assignmentFilterItems.push(name);
             }
         }
     }
 
+    createAssignmentFilterMap (items) {
+        const result = {};
+        for (const item of items) {
+            try {
+                result[item._id] = ClassHelper.resolveSpawnClass(item.config, this.module);
+                item.config.module = this.module;
+            } catch (err) {
+                this.log('error', `Invalid assignment filter: ${util.inspect(item)}`);
+            }
+        }
+        return result;
+    }
+
     indexMetaItemsByRoleAction (items) {
-        let map = this.indexMetaItemsByRole(items);
-        for (let role of Object.keys(map)) {
+        const map = this.indexMetaItemsByRole(items);
+        for (const role of Object.keys(map)) {
             map[role] = this.constructor.indexMetaItemsByAction(map[role]);
         }
         return map;
     }
 
     indexMetaItemsByRoleKey (items) {
-        let map = this.indexMetaItemsByRole(items);
-        for (let role of Object.keys(map)) {
+        const map = this.indexMetaItemsByRole(items);
+        for (const role of Object.keys(map)) {
             map[role] = this.constructor.indexMetaItems(map[role], 'key');
         }
         return Object.values(map).length ? map : null;
     }
 
     indexMetaItemsByRole (items) {
-        let map = {};
-        for (let item of (items || [])) {
+        const map = {};
+        for (const item of (items || [])) {
             if (Array.isArray(item.roles)) {
-                for (let role of item.roles) {
+                for (const role of item.roles) {
                     if (Object.prototype.hasOwnProperty.call(this.itemMap, role)) {
                         ObjectHelper.push(item, role, map);
                     }
@@ -363,11 +372,10 @@ module.exports = class Rbac extends Base {
 
     async getUserAssignments (userId) {
         let roles = super.getUserAssignments(userId);
-        if (this.userFilterItemNames.length) {
+        if (this.assignmentFilterItems.length) {
             roles = roles || [];
-            let params = {userId};
-            for (let name of this.userFilterItemNames) {
-                if (!roles.includes(name) && await this.itemMap[name].resolveUserFilters(params)) {
+            for (const name of this.assignmentFilterItems) {
+                if (!roles.includes(name) && await this.itemMap[name].resolveAssignmentFilters(userId)) {
                     roles.push(name);
                 }
             }
@@ -395,7 +403,7 @@ module.exports = class Rbac extends Base {
 
     async createByData (data) {
         if (data) {
-            await this.store.createUserFilters(data.userFilters);
+            await this.store.createAssignmentFilters(data.assignmentFilters);
             await super.createByData(data);
             await this.store.createMetaItems(data.meta);
         }
@@ -403,7 +411,8 @@ module.exports = class Rbac extends Base {
 };
 module.exports.init();
 
+const util = require('util');
 const ArrayHelper = require('areto/helper/ArrayHelper');
+const ClassHelper = require('areto/helper/ClassHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');
 const MetaObjectFilter = require('./MetaObjectFilter');
-const UserFilterFactory = require('./UserFilterFactory');

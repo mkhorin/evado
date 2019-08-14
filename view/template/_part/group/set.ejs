@@ -11,8 +11,8 @@ const p = {
         <span data-t="<%- p.translate %>"><%- title %></span></span>
     </legend>
     <div class="form-set-body form-base-group-body">
-    <% for (let item of items) { %>
-        <% if (item.template) { %>
+    <% for (const item of items) {
+        if (item.template) { %>
         <%- include(item.template, item.params) %>
         <% } else { %>
         <%- item %>

@@ -1,20 +1,20 @@
 <!-- _part/nav/user -->
 <%
-let user = _controller.user ? _controller.user.model : null;
+const user = _controller.user;
 %>
 <li class="dropdown user user-menu">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="hidden-xs">
-            <%- user ? user.getTitle() : '[anonymous]' %>
+            <%- user.getTitle() %>
         </span>
     </a>
     <ul class="dropdown-menu">
-        <% if (user) { %>
+        <% if (user.identity) { %>
         <li class="user-body">
             <% if (user.assignments) { %>
             <p class="mb0">
-                <span data-t="">Role</span>:
-                <b><%- user.assignments.join(' ') %></b>
+                <span data-t="">Roles</span>:
+                <b><%- user.assignments.join(', ') %></b>
             </p>
             <% } %>
         </li>

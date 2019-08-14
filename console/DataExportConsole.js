@@ -8,7 +8,7 @@ const Base = require('./DataConsole');
 module.exports = class DataImportConsole extends Base {
 
     async execute () {
-        await FileHelper.createDir(this.dir);
+        await FileHelper.createDirectory(this.dir);
         await this.exportMeta();
         await this.exportTables(this.includes);
         this.log('info', `Data exported to ${this.dir}`);
@@ -16,14 +16,14 @@ module.exports = class DataImportConsole extends Base {
 
     async exportMeta () {
         const models = this.getMetaModels(this.params.meta);
-        for (let model of models) {
+        for (const model of models) {
             await model.exportData(this.exportTable.bind(this));
         }
     }
 
     async exportTables (tables) {
         if (Array.isArray(tables)) {
-            for (let table of tables) {
+            for (const table of tables) {
                 await this.exportTable(table);
             }
         }

@@ -12,8 +12,8 @@ module.exports = class BaseActiveRecord extends Base {
     }
 
     getFullTitle () {
-        let label = this.get('label');
-        let name = this.get('name') || this.getId();
+        const label = this.get('label');
+        const name = this.get('name') || this.getId();
         return label ? `${label} (${name})` : name ;
     }
 
@@ -23,7 +23,7 @@ module.exports = class BaseActiveRecord extends Base {
 
     getIdsWithEmptyRelation (name) {
         if (name && typeof name === 'string') {
-            let method = this['getIdsWithEmptyRelation'+ StringHelper.toFirstUpperCase(name)];
+            const method = this['getIdsWithEmptyRelation'+ StringHelper.toFirstUpperCase(name)];
             return this[method] ? this[method]() : undefined;
         }
     }

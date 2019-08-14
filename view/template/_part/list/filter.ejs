@@ -1,6 +1,6 @@
 <!-- _part/list/filter -->
 <%
-for (let column of data.columns) {
+for (const column of data.columns) {
     if (column.label === undefined) {
         column.label = model.getAttrLabel(column.name);
     }

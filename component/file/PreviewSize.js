@@ -41,7 +41,7 @@ module.exports = class PreviewSize extends Base {
         this._minCompositeWidth = this.width;
         this._minCompositeHeight = this.height;
         try {
-            for (let data of this.composite) {
+            for (const data of this.composite) {
                 await this.resolveCompositeInput(data);
             }
         } catch (err) {

@@ -27,19 +27,19 @@ module.exports = class CloneBehavior extends Base {
     async afterInsert () {
         if (this.original && Array.isArray(this.relations) && this.relations.length) {
             await this.original.findRelations(this.relations);
-            for (let name of this.relations) {
+            for (const name of this.relations) {
                 await this.cloneRelation(name);
             }
         }
     }
 
     async cloneRelation (name) {
-        let related = this.original.rel(name);
+        const related = this.original.rel(name);
         this.log('trace', `Clone relation: ${name} from ${this.original.constructor.name}`);
         if (!Array.isArray(related)) {
             return related.clone(this.owner);
         }
-        for (let model of related) {
+        for (const model of related) {
             await model.cloneFor(this.owner);
         }
     }

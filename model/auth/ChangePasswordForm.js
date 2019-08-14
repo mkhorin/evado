@@ -18,8 +18,7 @@ module.exports = class ChangePasswordForm extends Base {
                     operator: '!=',
                     message: 'Value must not be equal to current password'
                 }],
-                [['captchaCode'], require('areto/security/captcha/CaptchaValidator')],
-                [['currentPassword'], 'validateCurrentPassword', {skipOnAnyError: true}]
+                [['captchaCode'], require('areto/security/captcha/CaptchaValidator')]
             ],
             ATTR_LABELS: {
                 captchaCode: 'Verification code'
@@ -27,24 +26,19 @@ module.exports = class ChangePasswordForm extends Base {
         };
     }
 
-    async validateCurrentPassword (attr) {
-        if (!this.userModel) {
-            this.addError(attr, 'User is not identified');
-        } else if (!this.userModel.checkPassword(this.get(attr))) {
-            this.addError(attr, 'Invalid current password');
-        }
-    }
-
     async changePassword () {
         if (!await this.validate()) {
             return false;
         }
-        this.userModel.setPassword(this.get('newPassword'));
-        if (await this.userModel.save()) {
-            return true;
+        const auth = this.spawn('security/PasswordAuthService', {user: this.user});
+        if (!await auth.checkPassword(this.get('currentPassword'))) {
+            return this.addError('currentPassword', 'Invalid password');
         }
-        this.addError('newPassword', this.userModel.getFirstError());
-        return false;
+        const error = await auth.changePassword(this.get('newPassword'));
+        if (error) {
+            return this.addError('newPassword', error);
+        }
+        return true;
     }
 };
 module.exports.init();

@@ -48,7 +48,7 @@ module.exports = class Select2 extends Base {
         this.resolveKeyCondition(text, conditions);
         if (Array.isArray(this.params.searchAttrs)) {
             const stringSearch = this.getStringSearch(text);
-            for (let attr of this.params.searchAttrs) {
+            for (const attr of this.params.searchAttrs) {
                 if (typeof attr === 'string') {
                     conditions.push({[attr]: stringSearch});
                 } else {
@@ -63,7 +63,7 @@ module.exports = class Select2 extends Base {
 
     resolveKeyCondition (text, conditions) {
         if (this.query.model) {
-            let id = this.query.model.getDb().normalizeId(text);
+            const id = this.query.model.getDb().normalizeId(text);
             if (id) {
                 conditions.push({[this.query.model.PK]: id});
             }
@@ -76,7 +76,7 @@ module.exports = class Select2 extends Base {
 
     getItems (models) {
         const items = [];
-        for (let model of models) {
+        for (const model of models) {
             items.push({
                 id: model.getId(),
                 text: model.getTitle()

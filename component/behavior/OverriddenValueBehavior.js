@@ -41,7 +41,7 @@ module.exports = class OverriddenValueBehavior extends Base {
         const states = this.getStates();
         const origin = this.owner.rel(this.originAttr);
         const namePrefix = `${this.owner.constructor.name}[${this.stateAttr}]`;
-        for (let name of this.attrs) {
+        for (const name of this.attrs) {
             map[name] = {
                 attr: this.attrPrefix + name,
                 name: `${namePrefix}[${name}]`,
@@ -59,7 +59,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     filterStates (states = {}) {
-        for (let name of Object.keys(states)) {
+        for (const name of Object.keys(states)) {
             states[name] = !!states[name];
         }
         return states;
@@ -67,7 +67,7 @@ module.exports = class OverriddenValueBehavior extends Base {
 
     async setStateOriginValues (origin) {
         const states = this.getStates();
-        for (let name of Object.keys(states)) {
+        for (const name of Object.keys(states)) {
             if (!states[name]) {
                 this.owner.set(name, await this.getOriginValue(name, origin));
             }    
@@ -83,7 +83,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     getUpdatedAttrNames () {
         const states = this.getStates();
         const names = [];
-        for (let name of this.attrs) {
+        for (const name of this.attrs) {
             if (states[name]) {
                 names.push(name);
             }
@@ -94,7 +94,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     getInheritedAttrNames () {
         const states = this.getStates();
         const names = [];
-        for (let name of this.attrs) {
+        for (const name of this.attrs) {
             if (!states[name]) {
                 names.push(name);
             }
@@ -104,7 +104,7 @@ module.exports = class OverriddenValueBehavior extends Base {
 
     async setInheritedValues (origin) {
         const states = this.getStates();
-        for (let name of this.attrs) {
+        for (const name of this.attrs) {
             if (!states[name]) {
                 this.owner.set(name, await this.getOriginValue(name, origin));
             }
@@ -113,7 +113,7 @@ module.exports = class OverriddenValueBehavior extends Base {
 
     setStatesByData (data) {
         const states = {};
-        for (let name of this.attrs) {
+        for (const name of this.attrs) {
             states[name] = data.hasOwnProperty(name);
         }
         this.setStates(states);

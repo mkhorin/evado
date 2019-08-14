@@ -169,7 +169,7 @@ Jam.ListFilter.Condition = class {
 
     static createAttrItems (columns) {
         let result = '<option></option>';
-        for (let {name, label, translate} of columns) {
+        for (const {name, label, translate} of columns) {
             if (label === undefined) {
                 label = name;
             } else if (translate !== false) {

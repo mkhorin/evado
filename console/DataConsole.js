@@ -17,21 +17,21 @@ module.exports = class DataConsole extends Base {
 
     async drop () {
         const models = this.getMetaModels(this.params.meta);
-        for (let model of models) {
+        for (const model of models) {
             await model.dropData();
         }
     }
 
     getMetaModels (names) {
-        const meta = this.app.getMeta();
+        const metaHub = this.app.getMetaHub();
         if (!names) {
-            return meta.models;
+            return metaHub.models;
         }
         const models = [];
-        for (let name of this.wrapArray(names)) {
-            let model = meta.getModel(name);
+        for (const name of this.wrapArray(names)) {
+            const model = metaHub.get(name);
             if (!model) {
-                throw new Error(`Not found meta model: ${name}`);
+                throw new Error(`Meta model not found: ${name}`);
             }
             models.push(model);
         }

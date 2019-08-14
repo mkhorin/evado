@@ -64,15 +64,15 @@ Jam.ModelAttr.ValueMap = class extends Jam.ModelAttr {
     // EVENTS
 
     onAddItem (event) {
-        let $item = this.getItem(event.target);
-        let $new = $item.clone();
+        const $item = this.getItem(event.target);
+        const $new = $item.clone();
         $new.find('input').val('');
         $item.after($new);
     }
 
     onUpItem (event) {
-        let $item = this.getItem(event.target);
-        let $prev = $item.prev();
+        const $item = this.getItem(event.target);
+        const $prev = $item.prev();
         if ($prev.length) {
             $prev.before($item);
             this.onUpdate();
@@ -80,8 +80,8 @@ Jam.ModelAttr.ValueMap = class extends Jam.ModelAttr {
     }
 
     onDownItem (event) {
-        let $item = this.getItem(event.target);
-        let $next = $item.next();
+        const $item = this.getItem(event.target);
+        const $next = $item.next();
         if ($next.length) {
             $next.after($item);
             this.onUpdate();
@@ -89,7 +89,7 @@ Jam.ModelAttr.ValueMap = class extends Jam.ModelAttr {
     }
 
     onRemoveItem (event) {
-        let $items = this.getItems();
+        const $items = this.getItems();
         if ($items.length > 1) {
             this.getItem(event.target).remove();
         } else {

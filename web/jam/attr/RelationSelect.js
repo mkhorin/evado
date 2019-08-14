@@ -50,7 +50,7 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
     initChanges () {
         this.changes = {links: [], unlinks: [], removes: []};
         this.startValues = [];
-        for (let option of this.$select.children()) {
+        for (const option of this.$select.children()) {
             this.startValues.push(option.getAttribute('value'));
         }
         Object.assign(this.changes, Jam.Helper.parseJson(this.getValue()));
@@ -107,16 +107,16 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
     }
 
     getSelectedValue () {
-        let value = this.$select.val();
+        const value = this.$select.val();
         if (Array.isArray(value)) {
-            let $item = this.getSelect2ChoiceItems().filter('.active');
+            const $item = this.getSelect2ChoiceItems().filter('.active');
             return value[$item.index(this.select2ChoiceClass)];
         }
         return value;
     }
 
     getOneSelectedValue () {
-        let value = this.getSelectedValue();
+        const value = this.getSelectedValue();
         if (!value) {
             this.notice.warning('Select one item to action');
         }
@@ -154,7 +154,9 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
         if (Array.isArray(value)) {
             value.forEach(this.linkValue.bind(this));
         } else {
-            value && this.linkValue(value);
+            if (value) {
+                this.linkValue(value);
+            }
             if (!this.startValues.includes(value) && this.startValues.length
                 && !this.changes.removes.includes(this.startValues[0])) {
                 this.changes.unlinks = [this.startValues[0]];

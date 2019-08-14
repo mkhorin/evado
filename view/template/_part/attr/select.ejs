@@ -18,19 +18,19 @@ if (typeof items !== 'undefined' && items) {
     if (items === 'labels') {
         items = _controller.getLabelSelectItems(attr, model);
     }
-    for (let item of items) {
+    for (const item of items) {
         if (item.separator) {
-            let text = item[p.textKey] === undefined ? '------' : item[p.textKey];
+            const text = item[p.textKey] === undefined ? '------' : item[p.textKey];
             content += `<option disabled>${text}</option>`;
         } else {
-            let selected = item[p.valueKey] == p.value ? 'selected' : '';
+            const selected = item[p.valueKey] == p.value ? 'selected' : '';
             content += `<option ${selected} value="${item[p.valueKey]}" data-t="${p.itemTranslate}">${item[p.textKey]}</option>`;
         }
     }
 } else if (p.value !== '') {
     content += `<option selected value="${p.value}">${p.displayValue}</option>`;
 }
-content = `<select name="${p.name}" ${p.disabled} class="form-control form-value">${content}</select>`;
+content = `<select name="${p.name}" ${p.disabled} class="form-control">${content}</select>`;
 %>
 <div class="form-attr form-group<%- p.required %> <%- p.css %>"
      data-type="select"

@@ -25,7 +25,7 @@ module.exports = class FilePreview extends Base {
 
     async createSizes () {
         this.sizes = this.sizes || {};
-        for (let key of Object.keys(this.sizes)) {
+        for (const key of Object.keys(this.sizes)) {
             this.sizes[key] = this.spawn({
                 Class: this.PreviewSize,
                 ...this.sizes[key]
@@ -70,7 +70,7 @@ module.exports = class FilePreview extends Base {
     }
 
     async processAllSizes (filename, source) {
-        for (let key of Object.keys(this.sizes)) {
+        for (const key of Object.keys(this.sizes)) {
             if (!await this.processSize(key, filename, source)) {
                 return false;
             }
@@ -79,11 +79,11 @@ module.exports = class FilePreview extends Base {
 
     async processSize (key, filename, source) {
         let image = sharp(source);
-        let size = this.getSize(key);
-        let file = this.getSizePath(key, filename);
+        const size = this.getSize(key);
+        const file = this.getSizePath(key, filename);
         try {
             image = await size.process(image);
-            await FileHelper.createDir(path.dirname(file));
+            await FileHelper.createDirectory(path.dirname(file));
             await image.toFile(file);
             return true;
         } catch (err) {
@@ -92,7 +92,7 @@ module.exports = class FilePreview extends Base {
     }
 
     async remove (filename) {
-        for (let key of Object.keys(this.sizes)) {
+        for (const key of Object.keys(this.sizes)) {
             await FileHelper.remove(this.getSizePath(key, filename));
         }
     }

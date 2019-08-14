@@ -88,7 +88,7 @@ module.exports = class DataGrid extends Base {
         if (!order) {
             return false;
         }
-        for (let name of Object.keys(order)) {
+        for (const name of Object.keys(order)) {
             if (order[name] !== 1 && order[name] !== -1) {
                 throw new BadRequest(`Invalid order param`);
             }
@@ -103,9 +103,9 @@ module.exports = class DataGrid extends Base {
             return false;
         }
         const conditions = [];
-        for (let column of this.request.columns) {
+        for (const column of this.request.columns) {
             if (column.searchable === true) {
-                let condition = this.getConditionByType(column.type, column.name, value);
+                const condition = this.getConditionByType(column.type, column.name, value);
                 if (condition) {
                     conditions.push(condition);
                 }
@@ -120,7 +120,7 @@ module.exports = class DataGrid extends Base {
 
     renderModel (model) {
         const data = {[this.ROW_KEY]: model.getId()};
-        for (let column of this.request.columns) {
+        for (const column of this.request.columns) {
             data[column.name] = model.getViewAttr(column.name);
         }
         return data;

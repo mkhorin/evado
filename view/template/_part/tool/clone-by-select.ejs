@@ -10,7 +10,7 @@ data = {
 <div class="list-control-group ml10" data-sample-class="<%- data.sampleClass %>">
     <select class="form-control" title="<%- data.selectTitle %>">
         <option value="">-</option>
-        <% for (let item of data.items) { %>
+        <% for (const item of data.items) { %>
         <option value="<%- item[data.valueKey] %>">
             <%- item[data.textKey] %>
         </option>

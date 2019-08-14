@@ -92,7 +92,7 @@ Jam.DataGridPagination = class {
 
     render () {
         let result = '';
-        let numPages = this.getNumPages();
+        const numPages = this.getNumPages();
         if (numPages > 1 || !this.params.hideOnePageToggle) {
             result += this.renderDirectionToggle('previous', this.page - 1);
             result += this.renderPages();

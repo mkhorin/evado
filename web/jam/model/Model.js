@@ -51,10 +51,10 @@ Jam.Model = class extends Jam.Element {
 
     createAttrs () {
         this.attrs = [];
-        for (let attr of this.$attrs) {
+        for (const attr of this.$attrs) {
             this.attrs.push(Jam.ModelAttr.create($(attr), this));
         }        
-        for (let attr of this.attrs) {
+        for (const attr of this.attrs) {
             attr.init();
         }
     }
@@ -84,7 +84,7 @@ Jam.Model = class extends Jam.Element {
     }
 
     getValueFieldByAttr ($attr) {
-        return $attr.find('.form-value');
+        return $attr.find('[name]');
     }
 
     formatAttrName (name, className = this.params.className) {
@@ -181,7 +181,7 @@ Jam.Model = class extends Jam.Element {
     }
 
     onShowHistory () {
-        this.childModal.load(this.$history.data('url'));
+        this.childModal.load(this.getControl('history').data('url'));
     }
 
     onPostAction (event) {

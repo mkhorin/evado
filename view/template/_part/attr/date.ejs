@@ -1,15 +1,20 @@
 <!-- _part/attr/date -->
-
-<% const p = {}; %>
+<%
+const p = {
+    utc: typeof utc === 'undefined' || utc ? 'true' : '',
+    options: typeof options === 'undefined' ? '' : JSON.stringify(options)
+};
+%>
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group <%- required %>" data-type="date"
-     data-utc="<%- typeof utc === undefined || utc ? 'true' : '' %>"
-     data-params="<%= JSON.stringify(typeof options === 'object' ? options : {}) %>">
+<div class="form-attr form-group <%- p.required %>" data-type="date"
+     data-attraction='<%= p.attraction %>'
+     data-utc="<%- p.utc %>"
+     data-params="<%= p.options %>">
     <label for="<%- p.id %>" class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" type="hidden" class="form-value" value="<%- p.value %>">
+        <input name="<%- p.name %>" type="hidden" value="<%- p.value %>">
         <div class="input-group">
             <input id="<%- p.id %>" type="text" class="form-control datepicker">
             <div class="input-group-addon"><i class="fa fa-calendar"></i></div>

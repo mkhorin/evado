@@ -1,8 +1,8 @@
 <!-- _part/auth/captcha -->
 <%
-let name = model.getFormAttrName(attr);
-let holder = _t(typeof placeholder === 'undefined' ? model.getAttrLabel(attr) : placeholder);
-let error = _t(model.getFirstError(attr));
+const name = model.getFormAttrName(attr);
+const holder = _t(typeof placeholder === 'undefined' ? model.getAttrLabel(attr) : placeholder);
+const error = _t(model.getFirstError(attr), 'areto');
 %>
 <div class="captcha-container" data-jam="Captcha">
     <div class="captcha">

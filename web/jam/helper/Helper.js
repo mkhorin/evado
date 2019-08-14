@@ -26,8 +26,8 @@ Jam.Helper = class {
     static renderSelectOptions (data) {
         let result = data.hasEmpty ? `<option value="">${data.emptyText || ''}</option>` : '';
         if (Array.isArray(data.items)) {
-            for (let item of data.items) {
-                let selected = data.defaultValue === item.value ? ' selected' : '';
+            for (const item of data.items) {
+                const selected = data.defaultValue === item.value ? ' selected' : '';
                 result += `<option value="${item.value}" ${selected}>${item.text}</option>`;
             }
         }
@@ -129,7 +129,7 @@ Jam.ArrayHelper = class {
     static index (key, items) {
         const map = {};
         if (Array.isArray(items)) {
-            for (let item of items) {
+            for (const item of items) {
                 if (item) {
                     map[item[key]] = item;
                 }
@@ -140,8 +140,8 @@ Jam.ArrayHelper = class {
 
     static intersect (items, targets) {
         const result = [];
-        for (let item of items) {
-            for (let target of targets) {
+        for (const item of items) {
+            for (const target of targets) {
                 if (item === target) {
                     result.push(item);
                     break;
@@ -154,10 +154,8 @@ Jam.ArrayHelper = class {
     // get [ { key: value }, ... ] from object array
     static mapValueByKey (key, items, value) {
         const maps = [];
-        for (let item of items) {
-            maps.push({
-                [item[key]]: value !== undefined ? item[value] : item
-            });
+        for (const item of items) {
+            maps.push({[item[key]]: value !== undefined ? item[value] : item});
         }
         return maps;
     }
@@ -191,8 +189,8 @@ Jam.ArrayHelper = class {
     static shuffle (items) {
         let i = items.length;
         while (i) {
-            let j = Math.floor((i--) * Math.random());
-            let temp = items[i];
+            const j = Math.floor((i--) * Math.random());
+            const temp = items[i];
             items[i] = items[j];
             items[j] = temp;
         }
@@ -205,7 +203,7 @@ Jam.ArrayHelper = class {
 
     static uniqueByKey (key, items) {
         const map = {};
-        for (let item of items) {
+        for (const item of items) {
             if (!Object.prototype.hasOwnProperty.call(map, item[key])) {
                 map[item[key]] = item;
             }
@@ -259,9 +257,9 @@ Jam.DateHelper = class {
     }
 
     static resolveClientDate ($container) {
-        for (let item of $container.find('time[data-format]')) {
-            let $item = $(item);
-            let format = $item.attr('data-format');
+        for (const item of $container.find('time[data-format]')) {
+            const $item = $(item);
+            const format = $item.attr('data-format');
             if (format) {
                 let date = $item.attr('datetime');
                 date = $item.data('utc') ? date.slice(0, -1) : date;
@@ -331,7 +329,7 @@ Jam.ObjectHelper = class {
     }
 
     static unsetKeys (object, keys) {
-        for (let key of keys) {
+        for (const key of keys) {
             delete object[key];
         }
     }
@@ -341,9 +339,9 @@ Jam.ObjectHelper = class {
     }
 
     static assignUndefined (target, ...args) {
-        for (let source of args) {
+        for (const source of args) {
             if (source && typeof source === 'object') {
-                for (let key of Object.keys(source)) {
+                for (const key of Object.keys(source)) {
                     if (!Object.prototype.hasOwnProperty.call(target, key)) {
                         target[key] = source[key];
                     }
@@ -385,7 +383,7 @@ Jam.StringHelper = class {
     }
 
     static replaceParam (str, param, value) {
-        let re = new RegExp(`{${param}}`, 'g');
+        const re = new RegExp(`{${param}}`, 'g');
         return str.replace(re, value);
     }
 };
