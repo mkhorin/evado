@@ -44,7 +44,6 @@ for (const column of data.columns) {
 if (!hasKeyColumn) {
     data.columns.unshift({
         name: model.PK,
-        type: 'id',
         hidden: true,
         searchable: true,
         sortable: true
@@ -63,13 +62,14 @@ if (data.jam === undefined) {
     data.jam = 'MainList';
 }
 %>
-<div class="jmodal-scroll-container box-grid box" data-title="<%= blocks.title %>">
-    <div class="box-header with-border scroll-header">
+<div class="jmodal-scroll-container box-grid box"
+     data-tab="<%= blocks.tab %>"
+     data-title="<%= blocks.title %>">
 
+    <div class="box-header with-border scroll-header">
         <% if (typeof title !== 'undefined' && title) { %>
             <h4 class="box-title"><%= title %></h4>
         <% } %>
-
         <%- include(_view.get('_part/list/controls')) %>
     </div>
 

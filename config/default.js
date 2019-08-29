@@ -23,12 +23,7 @@ module.exports = {
                 'port': process.env.MONGO_PORT || 27017,
                 'database': process.env.MONGO_NAME,
                 'user': '',
-                'password': '',
-                'options': {
-                    bufferMaxEntries: 0,
-                    keepAlive: true,
-                    useNewUrlParser: true
-                }
+                'password': ''
             }
         },
         'cookie': {
@@ -47,6 +42,7 @@ module.exports = {
             limit: '10mb'
         },
         'scheduler': {
+            Class: require('../component/scheduler/Scheduler')
         },
         'rateLimit': {
             attempts: 3
@@ -66,26 +62,23 @@ module.exports = {
                 'httpOnly': true,
                 'path': '/'
             },
-            Identity: require('../model/User'),
-            UserLog: require('../model/UserLog')
+            Identity: require('../model/User')
         },
         'metaHub': {
-            Class: require('../component/meta/MetaHub'),
-            UserModel: require('../model/User'),
+            Class: require('../component/meta/MetaHub'),            
             rbacTablePrefix: 'sys_rbac_',
             inspectionEnabled: true
-        },
-        'fileStorage': require('./default-fileStorage'),
-
-        'mailer': {
-            Class: require('../component/mailer/Mailer'),
         },
         'notifier': {
             Class: require('../component/notifier/Notifier'),
         },
         'observer': {
             Class: require('../component/observer/Observer'),
-        }
+        },
+        'mailer': {
+            Class: require('../component/mailer/Mailer'),
+        },
+        'fileStorage': require('./default-fileStorage')
     },
     modules: {
     },
@@ -110,9 +103,19 @@ module.exports = {
     },
     assets: require('./default-assets'),
     classes: require('./default-classes'),
+    tasks: require('./default-tasks'),
     widgets: {
-        'globalMenu': {
-            Class: require('../component/widget/GlobalMenu')            
+        'commonMenu': {
+            Class: require('../component/widget/CommonMenu')
+        },
+        'notificationToggle': {
+            Class: require('../component/widget/NotificationToggle')
+        },
+        'notifications': {
+            Class: require('../component/widget/Notifications')
+        },
+        'user': {
+            Class: require('../component/widget/UserWidget')
         }
-    }
+    },
 };

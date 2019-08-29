@@ -5,6 +5,8 @@
 
 Jam.I18n.defaults = {
 
+    'Action completed': 'Действие завершено',
+    'Action failed': 'Действие не удалось',
     'Active': 'Активен',
     'Active indexes': 'Активные индексы',
     'Add': 'Добавить',
@@ -23,7 +25,6 @@ Jam.I18n.defaults = {
     'Confirm': 'Подтвердить',
     'Confirmation': 'Подтверждение',
     'Copy ID': 'Скопировать ID',
-    'Correct mistakes': 'Исправьте ошибки',
     'Create': 'Создать',
     'Created at': 'Создано',
     'Creator': 'Автор',
@@ -33,7 +34,7 @@ Jam.I18n.defaults = {
     'Default value': 'Значение по умолчанию',
     'Delete': 'Удалить',
     'Delete absolutely all metadata?': 'Удалить абсолютно все мета-данные?',
-    'Delete this object permanently?': 'Удалить этот объект навсегда?',
+    'Delete permanently?': 'Удалить безвозвратно?',
     'Description': 'Описание',
     'Download': 'Скачать',
     'Drop or select file here': 'Бросьте или выберите файл здесь',

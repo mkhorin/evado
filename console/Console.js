@@ -11,14 +11,16 @@ module.exports = class Console extends Base {
         super({
             params: {},
             AssetConsole: require('./AssetConsole'),
-            AuthConsole: require('./AuthConsole'),
             DataConsole: require('./DataConsole'),
             DataImportConsole: require('./DataImportConsole'),
             DataExportConsole: require('./DataExportConsole'),
-            IndexConsole: require('./IndexConsole'),
+            IndexingConsole: require('./IndexingConsole'),
+            SecurityConsole: require('./SecurityConsole'),
+            TaskConsole: require('./TaskConsole'),
             ...config
         });
         this.app = ClassHelper.spawn(this.Application);
+        this.module = this.app;
     }
 
     start () {
@@ -33,28 +35,6 @@ module.exports = class Console extends Base {
 
     deployAssets () {
         return this.execute('deploy', this.AssetConsole);
-    }
-
-    // AUTH
-
-    createUsers () {
-        return this.execute('createUsers', this.AuthConsole);
-    }
-
-    createRbac () {
-        return this.execute('createRbac', this.AuthConsole);
-    }
-
-    signUp (params) {
-        return this.execute('signUp', this.AuthConsole, params);
-    }
-
-    changePassword (params) {
-        return this.execute('changePassword', this.AuthConsole, params);
-    }
-
-    assignRole (params) {
-        return this.execute('assignRole', this.AuthConsole, params);
     }
 
     // META
@@ -81,10 +61,38 @@ module.exports = class Console extends Base {
         return this.execute('execute', this.DataExportConsole, params);
     }
 
-    // INDEX
+    // INDEXES
 
     createIndexes (params) {
-        return this.execute('create', this.IndexConsole, params);
+        return this.execute('create', this.IndexingConsole, params);
+    }
+
+    // SECURITY
+
+    createUsers () {
+        return this.execute('createUsers', this.SecurityConsole);
+    }
+
+    createRbac () {
+        return this.execute('createRbac', this.SecurityConsole);
+    }
+
+    signUp (params) {
+        return this.execute('signUp', this.SecurityConsole, params);
+    }
+
+    changePassword (params) {
+        return this.execute('changePassword', this.SecurityConsole, params);
+    }
+
+    assignRole (params) {
+        return this.execute('assignRole', this.SecurityConsole, params);
+    }
+
+    // TASKS
+
+    createTasks (params) {
+        return this.execute('create', this.TaskConsole, params);
     }
 
     // EXECUTE
@@ -103,8 +111,8 @@ module.exports = class Console extends Base {
     }
 
     createHandler (method, config, params) {
-        const instance = ClassHelper.spawn(config, {
-            console: this,
+        const instance = this.spawn(config, {
+            owner: this,
             app: this.app,
             params
         });

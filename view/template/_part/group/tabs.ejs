@@ -27,7 +27,9 @@ const p = {
                 <%- include(data.template, data) %>
                 <% } else { %>
                 <%- data %>
-            <% }}} %>
+            <% }}} else { %>
+                <%- include(item.content.template, item.content) %>
+            <% } %>
             </div>
         </div>
         <% } %>

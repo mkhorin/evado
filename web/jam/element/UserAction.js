@@ -7,8 +7,8 @@ Jam.UserAction = class extends Jam.Element {
 
     static post ($element, params) {
         return this.confirm($element).then(() => {
-            Jam.toggleGlobalLoader(true);
-            return $.post($element.data('url'), params).always(()=> Jam.toggleGlobalLoader(false));
+            Jam.toggleMainLoader(true);
+            return $.post($element.data('url'), params).always(()=> Jam.toggleMainLoader(false));
         });
     }
 
@@ -28,8 +28,19 @@ Jam.UserAction = class extends Jam.Element {
         return !this.$element.attr('disabled');
     }
 
-    getParam (name) {
-        return this.$element.data(name);
+    getNotice () {
+        const model = this.getModel();
+        return model ? model.notice : new Jam.ContentNotice;
+    }
+
+    getModel () {
+        const modal = Jam.modal.getLast();
+        return modal ? Jam.Element.findInstanceByParent(Jam.Model, modal.$container) : null;
+    }
+
+    getParam (name, defaults) {
+        const value = this.$element.data(name);
+        return value !== undefined ? value : defaults;
     }
 
     onClick (event) {
@@ -40,14 +51,17 @@ Jam.UserAction = class extends Jam.Element {
     }
 
     onDone (message) {
-        if (this.getParam('reloadPage')) {
-            return location.reload(true);
-        }
-        (new Jam.ContentNotice).success(message || 'Action is done');
+        const notice = ()=> this.getNotice().success(message || 'Action completed');
+        return this.getParam('reload') ? this.reload(notice) : notice();
+    }
+
+    reload (callback) {
+        const modal = Jam.modal.getLast();
+        modal ? modal.reload().done(callback) : location.reload(true);
     }
 
     onFail (message) {
-        (new Jam.ContentNotice).danger(message || 'Action failed');
+        this.getNotice().danger(message || 'Action failed');
     }
 
     toggleActive (state) {
@@ -56,8 +70,8 @@ Jam.UserAction = class extends Jam.Element {
     }
 
     toggleLoader (state) {
-        if (this.getParam('globalLoader')) {
-            return Jam.toggleGlobalLoader(state);
+        if (this.getParam('mainLoader', true)) {
+            return Jam.toggleMainLoader(state);
         }
         this.$element.toggleClass('loading', state);
         this.toggleActive(state);

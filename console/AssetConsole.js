@@ -31,7 +31,7 @@ module.exports = class AssetConsole extends Base {
     }
 
     log () {
-        this.console.log(...arguments);
+        this.owner.log(...arguments);
     }
 };
 

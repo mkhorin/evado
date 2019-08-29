@@ -23,7 +23,10 @@ if (typeof params !== 'undefined') {
             </button>
 
             <%- include(_view.get('_part/tool/model-history')) %>
-            <%- include(_view.get('_part/misc/universal-render'), {data: _data.get('customControls')}) %>
+
+            <% if (blocks.controls) { %>
+            <%- include(_view.get('_part/misc/render'), {data: blocks.controls.get()}) %>
+            <% } %>
 
             <% if (p.help) { %>
             <span class="model-help fa fa-question-circle" title="<%= p.help %>"></span>
@@ -37,7 +40,7 @@ if (typeof params !== 'undefined') {
         <div class="model-view model form-horizontal form"
              data-jam="<%- p.jam %>"
              data-params="<%= JSON.stringify(p) %>">
-            <%- body -%>
+            <%- body %>
         </div>
     </div>
 </div>

@@ -7,16 +7,16 @@ const Base = require('areto/base/Base');
 
 module.exports = class BaseMetaModel extends Base {
 
-    getModule () {
-        return this.hub.module;
-    }
-
     getPath () {
         return this.hub.getPath(...arguments);
     }
 
     getDb () {
         return this.hub.getDb();
+    }
+
+    spawnUser () {
+        return this.spawn(this.hub.User, ...arguments);
     }
 
     splitByModulePrefix () {

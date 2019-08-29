@@ -5,7 +5,7 @@
 
 const Base = require('areto/base/Base');
 
-module.exports = class AuthConsole extends Base {
+module.exports = class SecurityConsole extends Base {
 
     async createUsers () {
         this.log('info', 'Create users...');
@@ -13,11 +13,11 @@ module.exports = class AuthConsole extends Base {
         for (const data of items) {
             await this.createUser(data);
         }
-        this.log('info', 'Users created');
+        this.log('info', 'Users ready');
     }
 
     async createUser (data) {
-        const model = this.createUserModel({scenario: 'create'});
+        const model = this.spawnUser({scenario: 'create'});
         model.setSafeAttrs(data);
         if (!await model.save()) {
             return this.log('error', model.getFirstErrorMap());
@@ -27,17 +27,17 @@ module.exports = class AuthConsole extends Base {
     }
 
     findUserByParams () {
-        return this.createUserModel().findSame(this.params.name, this.params.email);
+        return this.spawnUser().findSame(this.params.name, this.params.email);
     }
 
-    createUserModel (params) {
-        return this.app.get('user').createUserModel(params);
+    spawnUser (config) {
+        return this.spawn('model/User', config);
     }
 
     async createRbac () {
         this.log('info', 'Create RBAC...');
         await this.app.get('rbac').createByData(this.app.getConfig('rbac'));
-        this.log('info', 'RBAC created');
+        this.log('info', 'RBAC ready');
     }
 
     async signUp () {
@@ -83,6 +83,6 @@ module.exports = class AuthConsole extends Base {
     }
 
     log () {
-        this.console.log(...arguments);
+        this.owner.log(...arguments);
     }
 };

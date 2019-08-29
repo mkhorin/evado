@@ -276,7 +276,7 @@ Jam.Uploader.File = class {
     }
 
     onRemoveFile () {
-        this.failed || this.uploader.options.confirmRemoveStatus.indexOf(this.status) === -1
+        this.failed || !this.uploader.options.confirmRemoveStatus.includes(this.status)
             ? this.remove()
             : this.trigger('confirmRemove');
     }
@@ -291,14 +291,6 @@ Jam.Uploader.File = class {
     // VALIDATE
 
     validate () {
-        // SKIP VALIDATION
-        /*this.status = 'validated';
-         this.trigger('validated');
-         this.uploader.processNext();
-         return; //*/
-
-        // try to load file as image, then validate it
-        // image loading occurs by event, not sequentially
         this.image = new Image;
         this.image.onload = ()=> this.startValidate();
         this.image.onerror = ()=> {
@@ -325,11 +317,11 @@ Jam.Uploader.File = class {
         if (options.extensions) {
             const index = file.name.lastIndexOf('.');
             const ext = index > - 1 ? file.name.substr(index + 1, file.name.length).toLowerCase() : '';
-            if (options.extensions.indexOf(ext) === -1) {
+            if (!options.extensions.includes(ext)) {
                 return options.wrongExtension.replace(/{extensions}/g, options.extensions.join(', '));
             }
         }
-        if (options.mimeTypes && options.mimeTypes.indexOf(file.type) === -1) {
+        if (options.mimeTypes && !options.mimeTypes.includes(file.type)) {
             return options.wrongMimeType.replace(/{mimeTypes}/g, options.mimeTypes.join(', '));
         }
         if (options.maxSize && options.maxSize < file.size) {

@@ -1,0 +1,13 @@
+<!-- _part/nav/user-toggle -->
+<li class="dropdown user user-menu" data-jam="LoadableContent" data-url="<%- _url([url, {id: 'user'}]) %>">
+    <a href="#" class="dropdown-toggle loadable-toggle" data-toggle="dropdown" title="User">
+        <span class="hidden-xs">
+            <%- _controller.user.getTitle() %>
+        </span>
+    </a>
+    <ul class="dropdown-menu loadable-content">
+        <li class="text-center">
+            <span class="fa fa-spinner fa-spin"></span>
+        </li>
+    </ul>
+</li>

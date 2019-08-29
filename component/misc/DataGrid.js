@@ -111,7 +111,9 @@ module.exports = class DataGrid extends Base {
                 }
             }
         }
-        this.query.andJoinByOr(conditions);
+        if (conditions.length) {
+            this.query.and(['OR', ...conditions]);
+        }
     }
 
     filterByColumns (models) {

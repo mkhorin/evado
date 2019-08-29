@@ -1,10 +1,10 @@
 <%
 const messages = _controller.getFlash('registered');
 const signIn = _t('Sign in');
-%>
-<% layout(_view.get('_layout/auth')) -%>
 
-<% block('title', signIn) -%>
+layout(_view.get('_layout/auth'));
+block('title', signIn);
+%>
 
 <% if (messages.length) { %>
 <div class="alert alert-success"><%- messages[0] %></div>

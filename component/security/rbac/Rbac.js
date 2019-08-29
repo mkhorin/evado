@@ -201,7 +201,7 @@ module.exports = class Rbac extends Base {
         this.setMetaObjectFilterMap();
         this.setMetaTransitionMap();
         this.setMetaNavMap();
-        this.setAssignmentFilters(data.assignmentFilters);
+        this.setAssignmentRules(data.assignmentRules);
         this.prepareMetaDependencies();
     }
 
@@ -316,25 +316,25 @@ module.exports = class Rbac extends Base {
         this.metaNavMap = this.indexMetaItemsByRoleKey(items);
     }
 
-    setAssignmentFilters (items) {
-        const data = this.createAssignmentFilterMap(items);
-        this.assignmentFilterItems = [];
+    setAssignmentRules (items) {
+        const data = this.createAssignmentRuleMap(items);
+        this.assignmentRuleItems = [];
         for (const name of Object.keys(this.itemMap)) {
             const item = this.itemMap[name];
-            if (item.setAssignmentFilters(data)) {
-                this.assignmentFilterItems.push(name);
+            if (item.setAssignmentRules(data)) {
+                this.assignmentRuleItems.push(name);
             }
         }
     }
 
-    createAssignmentFilterMap (items) {
+    createAssignmentRuleMap (items) {
         const result = {};
         for (const item of items) {
             try {
-                result[item._id] = ClassHelper.resolveSpawnClass(item.config, this.module);
+                result[item._id] = ClassHelper.resolveSpawn(item.config, this.module);
                 item.config.module = this.module;
             } catch (err) {
-                this.log('error', `Invalid assignment filter: ${util.inspect(item)}`);
+                this.log('error', `Invalid assignment rule: ${item._id}`, err);
             }
         }
         return result;
@@ -372,10 +372,10 @@ module.exports = class Rbac extends Base {
 
     async getUserAssignments (userId) {
         let roles = super.getUserAssignments(userId);
-        if (this.assignmentFilterItems.length) {
+        if (this.assignmentRuleItems.length) {
             roles = roles || [];
-            for (const name of this.assignmentFilterItems) {
-                if (!roles.includes(name) && await this.itemMap[name].resolveAssignmentFilters(userId)) {
+            for (const name of this.assignmentRuleItems) {
+                if (!roles.includes(name) && await this.itemMap[name].resolveAssignmentRules(userId)) {
                     roles.push(name);
                 }
             }
@@ -403,7 +403,7 @@ module.exports = class Rbac extends Base {
 
     async createByData (data) {
         if (data) {
-            await this.store.createAssignmentFilters(data.assignmentFilters);
+            await this.store.createAssignmentRules(data.assignmentRules);
             await super.createByData(data);
             await this.store.createMetaItems(data.meta);
         }
@@ -411,7 +411,6 @@ module.exports = class Rbac extends Base {
 };
 module.exports.init();
 
-const util = require('util');
 const ArrayHelper = require('areto/helper/ArrayHelper');
 const ClassHelper = require('areto/helper/ClassHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');

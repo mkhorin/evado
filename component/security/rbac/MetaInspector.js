@@ -230,8 +230,8 @@ module.exports = class MetaInspector extends Base {
         if (Object.values(this.rbac.metaObjectFilterMap).length) {
             this._objectConditions = [];
             this._metaObjectRuleCache = {};
-            if (!await this.filterObjectAssignments()) {
-                query.andJoinByOr(this._objectConditions);
+            if (!await this.filterObjectAssignments() && this._objectConditions.length) {
+                query.and(['OR', ...this._objectConditions]);
             }
             await PromiseHelper.setImmediate();
         }

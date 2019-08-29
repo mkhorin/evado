@@ -10,7 +10,7 @@ module.exports = class CrudController extends Base {
     static getConstants () {
         return {
             ACTIONS: {
-                'sort-rel': require('evado/component/action/SortRelAction'),
+                'sort-rel': require('../action/SortRelationAction'),
             },
             METHODS: {
                 'select': 'GET',
@@ -54,7 +54,7 @@ module.exports = class CrudController extends Base {
         };
         return this.render(params.template, {
             model: await this.getModel(params),
-            viewLayout: this.isAjax() ? '_layout/modal/model-view' : '_layout/empty',
+            _layout: this.isAjax() ? '_layout/modal/model-view' : '_layout/empty',
             ...params.templateData
         });
     }
@@ -75,8 +75,8 @@ module.exports = class CrudController extends Base {
         model.scenario = params.scenario;
         if (this.isGet()) {
             await model.setDefaultValues();
-            const viewLayout = this.getViewLayout();
-            return this.render(params.template, {model, viewLayout, ...params.templateData});
+            const _layout = this.getViewLayout();
+            return this.render(params.template, {model, _layout, ...params.templateData});
         }
         model.load(this.getPostParams());
         return this.saveModel(model, params.afterCreate);
@@ -111,9 +111,9 @@ module.exports = class CrudController extends Base {
         if (params.beforeGetUpdate) {
             data = params.beforeGetUpdate.call(this, model);
         }
-        const viewLayout = this.getViewLayout();
-        Object.assign(data, {model, viewLayout}, params.templateData);
-        return this.render(params.template, data);
+        const _layout = this.getViewLayout();
+        Object.assign(data, {model, _layout}, params.templateData);
+        await this.render(params.template, data);
     }
 
     async actionClone (params) {
@@ -122,9 +122,7 @@ module.exports = class CrudController extends Base {
             scenario: 'clone',
             ...params
         };
-        const sample = await this.getModelByClassName({
-            className: this.getQueryParam('sampleClass')
-        });
+        const sample = await this.getModelByClassName({className: this.getQueryParam('sampleClass')});
         params.model.getBehavior('clone').setOriginal(sample);
         return this.actionCreate(params);
     }
@@ -157,7 +155,7 @@ module.exports = class CrudController extends Base {
         }
         const Class = this.getModelClass();
         const models = await this.spawn(Class).findById(ids.split(',')).all();
-        await Class.removeBatch(models);
+        await Class.remove(models);
         this.sendStatus(200);
     }
 

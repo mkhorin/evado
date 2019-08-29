@@ -15,22 +15,22 @@ module.exports = class Item extends Base {
         return this.store.rbac.navMeta;
     }
 
-    setAssignmentFilters (data) {
-        const filters = [];
-        if (Array.isArray(this.assignmentFilters)) {
-            for (const key of this.assignmentFilters) {
+    setAssignmentRules (data) {
+        const rules = [];
+        if (Array.isArray(this.assignmentRules)) {
+            for (const key of this.assignmentRules) {
                 if (Object.prototype.hasOwnProperty.call(data, key)) {
-                    filters.push(data[key]);
+                    rules.push(data[key]);
                 }
             }
         }
-        this.assignmentFilters = filters;
-        return filters.length > 0;
+        this.assignmentRules = rules;
+        return rules.length > 0;
     }
 
-    async resolveAssignmentFilters (userId) {
-        if (Array.isArray(this.assignmentFilters)) {
-            for (const config of this.assignmentFilters) {
+    async resolveAssignmentRules (userId) {
+        if (Array.isArray(this.assignmentRules)) {
+            for (const config of this.assignmentRules) {
                 config.item = this;
                 config.userId = userId;
                 if (await (new config.Class(config)).execute()) {
@@ -44,18 +44,18 @@ module.exports = class Item extends Base {
 
     async resolveRelations () {
         const result = await super.resolveRelations();
-        await this.resolveAssignmentFilterRelation(result);
+        await this.resolveAssignmentRuleRelation(result);
         return result;
     }
 
-    async resolveAssignmentFilterRelation (result) {
-        const data = this.data.assignmentFilters;
+    async resolveAssignmentRuleRelation (result) {
+        const data = this.data.assignmentRules;
         if (!Array.isArray(data) || !data.length) {
-            return result.assignmentFilters = [];
+            return result.assignmentRules = [];
         }
-        result.assignmentFilters = await this.store.findAssignmentFilterByName(data).column(this.store.key);
+        result.assignmentRules = await this.store.findAssignmentRuleByName(data).column(this.store.key);
         if (ids.length !== data.length) {
-            throw new Error(`Assignment filter not found  for item: ${this.name}`);
+            throw new Error(`Assignment rule not found for item: ${this.name}`);
         }
     }
 
@@ -82,7 +82,7 @@ module.exports = class Item extends Base {
         for (const key of Object.keys(condition)) {
             condition[key] = condition[key] || '';
         }
-        ObjectHelper.deleteProps(['rule', 'actions', 'roles'], condition);
+        ObjectHelper.deleteProperties(['rule', 'actions', 'roles'], condition);
         return condition;
     }
 

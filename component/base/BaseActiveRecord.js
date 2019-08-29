@@ -7,6 +7,14 @@ const Base = require('areto/db/ActiveRecord');
 
 module.exports = class BaseActiveRecord extends Base {
 
+    static getConstants () {
+        return {
+            BEHAVIORS: {
+                relationChange: require('areto/behavior/RelationChangeBehavior'),
+            }
+        };
+    }
+
     getTitle () {
         return this.get('label') || this.get('name') || this.getId();
     }
@@ -17,8 +25,8 @@ module.exports = class BaseActiveRecord extends Base {
         return label ? `${label} (${name})` : name ;
     }
 
-    findForSelect (condition) {
-        return this.find(condition).select({name: 1, label: 1}).order({name: 1});
+    findForSelect () {
+        return this.find(...arguments).select({name: 1, label: 1}).order({name: 1});
     }
 
     getIdsWithEmptyRelation (name) {
@@ -27,24 +35,7 @@ module.exports = class BaseActiveRecord extends Base {
             return this[method] ? this[method]() : undefined;
         }
     }
-
-    // EVENTS
-
-    beforeValidate () {
-        this.attachBehaviors();
-        return super.beforeValidate();
-    }
-
-    beforeSave (insert) {
-        this.attachBehaviors();
-        return super.beforeSave(insert);
-    }
-
-    attachBehaviors () {
-        this.attachBehaviorOnce('relationChange', RelationChangeBehavior);
-    }
 };
 module.exports.init();
 
 const StringHelper = require('areto/helper/StringHelper');
-const RelationChangeBehavior = require('areto/behavior/RelationChangeBehavior');

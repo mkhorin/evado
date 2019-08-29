@@ -48,6 +48,6 @@ module.exports = class DataConsole extends Base {
     }
 
     log () {
-        this.console.log(...arguments);
+        this.owner.log(...arguments);
     }
 };

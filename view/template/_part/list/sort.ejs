@@ -24,7 +24,6 @@ for (const column of data.columns) {
 if (!hasKeyColumn) {
     data.columns.unshift({
         name: relModel.PK,
-        type: 'id',
         hidden: true,
         searchable: true,
         sortable: true
@@ -70,7 +69,7 @@ if (data.jam === undefined) {
             </button>
 
             <% if (typeof tools !== 'undefined') { %>
-            <%- include(_view.get('_part/misc/universal-render'), {data: tools}) %>
+            <%- include(_view.get('_part/misc/render'), {data: tools}) %>
             <% } %>
         </div>
     </div>

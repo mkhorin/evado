@@ -3,23 +3,43 @@
  */
 'use strict';
 
-const Base = require('areto/base/Base');
+const Base = require('areto/db/ActiveRecord');
 
 module.exports = class Listener extends Base {
 
-    constructor (config) {
-        super({
-            // recipient: [Recipient]
-            // event: [Event]
-            // notifier
-            // method: [methods]
-            ...config
-        });
-        this._listeners = [];
+    static getConstants () {
+        return {
+            TABLE: 'sys_listener',
+            ATTRS: [
+                'active',
+                'events',
+                'description',
+                'handlers',
+                'notices'
+            ]
+        };
     }
 
-    catch (name, data) {
+    findActive () {
+        return this.find({active: true}).with('handlers');
+    }
 
+    relHandlers () {
+        const Class = this.getClass('observer/EventHandler');
+        return this.hasMany(Class, Class.PK, 'handlers');
+    }
+
+    resolveHandlers () {
+        const handlers = this.rel('handlers').filter(model => model.resolve());
+        const notices = this.get('notices');
+        if (Array.isArray(notices) && notices.length) {
+            handlers.push(this.spawn('observer/NoticeHandler', {notices}));
+        }
+        const tasks = this.get('tasks');
+        if (Array.isArray(tasks) && tasks.length) {
+            handlers.push(this.spawn('observer/TaskHandler', {tasks}));
+        }
+        return handlers;
     }
 };
-module.exports.init();
+module.exports.init(module);

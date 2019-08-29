@@ -10,7 +10,7 @@ module.exports = class DatabaseStore extends Base {
     static getConstants () {
         return {
             TABLE_META_ITEM: 'meta_item',
-            TABLE_ASSIGNMENT_FILTER: 'assignment_filter'
+            TABLE_ASSIGNMENT_RULE: 'assignment_rule'
         };
     }
 
@@ -24,7 +24,7 @@ module.exports = class DatabaseStore extends Base {
     async loadData () {
         return Object.assign(await super.loadData(), {
             metaItems: await this.findMetaItem().all(),
-            assignmentFilters: await this.findAssignmentFilter().all()
+            assignmentRules: await this.findAssignmentRule().all()
         });
     }
 
@@ -32,19 +32,19 @@ module.exports = class DatabaseStore extends Base {
         return this.find(this.TABLE_META_ITEM);
     }
 
-    findAssignmentFilter () {
-        return this.find(this.TABLE_ASSIGNMENT_FILTER);
+    findAssignmentRule () {
+        return this.find(this.TABLE_ASSIGNMENT_RULE);
     }
 
-    findAssignmentFilterByName (name) {
-        return this.findAssignmentFilter().and({name});
+    findAssignmentRuleByName (name) {
+        return this.findAssignmentRule().and({name});
     }
 
     prepare (data) {
         const result = super.prepare(data);
         this.prepareMetaItems(data);
         result.metaItems = data.metaItems;
-        result.assignmentFilters = data.assignmentFilters;
+        result.assignmentRules = data.assignmentRules;
         return result;
     }
 
@@ -97,20 +97,20 @@ module.exports = class DatabaseStore extends Base {
 
     // CREATE
 
-    async createAssignmentFilters (data) {
+    async createAssignmentRules (data) {
         if (data) {
             for (const name of Object.keys(data)) {
-                await this.createAssignmentFilter(name, data[name]);
+                await this.createAssignmentRule(name, data[name]);
             }
         }
     }
 
-    async createAssignmentFilter (name, data) {
-        const filter = await this.findAssignmentFilterByName(name).one();
+    async createAssignmentRule (name, data) {
+        const filter = await this.findAssignmentRuleByName(name).one();
         if (filter) {
-            return this.log('warn', `Assignment filter already exists: ${name}`);
+            return this.log('warn', `Assignment rule already exists: ${name}`);
         }
-        return this.findAssignmentFilter().insert({name, ...data});
+        return this.findAssignmentRule().insert({name, ...data});
     }
 
     async createMetaItems (items) {

@@ -281,10 +281,13 @@ a:focus, button:focus {
 .loading {
     filter: grayscale(75%);
 }
+.loaded {
+    filter: none;
+}
 body.loading {
     overflow: hidden;
 }
-.global-loader {
+.main-loader {
     display: none;
     z-index: 2049;
 }

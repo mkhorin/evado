@@ -29,7 +29,6 @@ Jam.List = class extends Jam.Element {
 
     init () {
         this.$controls.on('click', '[data-id]', this.onControl.bind(this));
-        this.$controls.find('.list-tool').each((index, element)=> Jam.ListTool.create($(element), this));
         this.setDataGridParams();
         this.createDataGrid();
         this.initDataGrid();
@@ -263,11 +262,10 @@ Jam.List = class extends Jam.Element {
 
     post (url, data) {
         this.toggleLoader(true);
-        return this.xhr = $.post(url, data).always(()=> {
-            this.toggleLoader(false);
-        }).fail(xhr => {
-            this.notice.danger(xhr.responseText || xhr.statusText);
-        });
+        this.xhr = $.post(url, data)
+            .always(()=> this.toggleLoader(false))
+            .fail(xhr => this.notice.danger(xhr.responseText || xhr.statusText));
+        return this.xhr;
     }
 
     reload (resetPage) {

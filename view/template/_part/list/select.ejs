@@ -1,5 +1,8 @@
 <!-- _part/list/select -->
 <%
-data.jam = data.jam || 'SelectList'
+block('tab').defaults('Select');
+block('title').defaults('Select');
+
+data.jam = data.jam || 'SelectList';
 %>
 <%- include(_view.get('_part/list/grid')) %>

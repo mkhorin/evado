@@ -17,7 +17,7 @@ module.exports = class ModuleAsset extends Base {
         }
         await this.installSource(this.module.getPath(dir));
         for (let child of this.module.getModules()) {
-            await this.console.createModuleAsset(child).install();
+            await this.owner.createModuleAsset(child).install();
         }
     }
 
@@ -50,7 +50,7 @@ module.exports = class ModuleAsset extends Base {
         await PromiseHelper.setImmediate();
 
         for (let child of this.module.getModules()) {
-            await this.console.createModuleAsset(child).deploy();
+            await this.owner.createModuleAsset(child).deploy();
         }
     }
 

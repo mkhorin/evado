@@ -9,7 +9,6 @@ Jam.DataGridCommonSearch = class {
         this._value = '';
         this.grid = grid;
         this.$container = grid.$container.find('.data-grid-common-search');
-
         if (this.isExists())  {
             this.init();
         }
@@ -35,9 +34,6 @@ Jam.DataGridCommonSearch = class {
     }
 
     onKeyUpInput (event) {
-        if (event.keyCode === 27) {
-            this.$input.val('');
-        }
         let value = this.$input.val();
         if (value === '') {
             return this.execute(value);

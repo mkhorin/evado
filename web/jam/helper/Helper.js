@@ -109,7 +109,7 @@ Jam.ArrayHelper = class {
     }
 
     static diff (items, excluded) {
-        return items.filter(item => excluded.indexOf(item) === -1);
+        return items.filter(item => !excluded.includes(item));
     }
 
     static flip (items) {
@@ -171,7 +171,7 @@ Jam.ArrayHelper = class {
 
     static removeObjectsByKeyValues (key, values, items) {
         for (let i = items.length - 1; i >= 0; --i) {
-            if (values.indexOf(items[i][key]) !== -1) {
+            if (values.includes(items[i][key])) {
                 items.splice(i, 1);
             }
         }
@@ -298,11 +298,11 @@ Jam.FormatHelper = class {
     }
 
     static asDate (data) {
-        return dava ? (new Date(data)).toLocaleDateString() : '';
+        return data ? (new Date(data)).toLocaleDateString() : '';
     }
     
     static asDatetime (data) {
-        return dava ? (new Date(data)).toLocaleString() : '';
+        return data ? (new Date(data)).toLocaleString() : '';
     }
 
     static asTimestamp (data) {
@@ -403,7 +403,7 @@ Jam.UrlHelper = class {
 
     static addUrlParams (url, data) {
         data = typeof data === 'string' ? data : $.param(data);
-        return `${url}${url.indexOf('?') === -1 ? '?' : '&'}${data}`;
+        return `${url}${url.includes('?') ? '&' : '?'}${data}`;
     }
 
     static getUrlParams (url) {

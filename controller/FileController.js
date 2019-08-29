@@ -60,6 +60,5 @@ module.exports = class FileController extends Base {
         this.setHttpHeader(model.getPreviewHeaders());
         this.sendFile(file);
     }
-
 };
 module.exports.init(module);

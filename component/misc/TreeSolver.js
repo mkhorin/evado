@@ -45,7 +45,7 @@ module.exports = class TreeSolver extends Base {
         if (children.length === 0) {
             return children;
         }
-        if (CommonHelper.indexOf(this.model.getId(), children) !== -1) {
+        if (ArrayHelper.includes(this.model.getId(), children)) {
             throw new Error(this.constructor.getCircularError(this.model));
         }        
         return children.concat(await this.getDescendantIds(children));
@@ -70,4 +70,4 @@ module.exports = class TreeSolver extends Base {
     }
 };
 
-const CommonHelper = require('areto/helper/CommonHelper');
+const ArrayHelper = require('areto/helper/ArrayHelper');

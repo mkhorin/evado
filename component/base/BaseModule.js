@@ -19,7 +19,19 @@ module.exports = class BaseModule extends Base {
         return this.components.get('metaHub');
     }
 
+    getNotifier () {
+        return this.components.get('notifier');
+    }
+
+    getObserver () {
+        return this.components.get('observer');
+    }
+
+    getScheduler () {
+        return this.components.get('scheduler');
+    }
+
     catch () {
-        return this.components.get('observer').catch(...arguments);
+        return this.getObserver().catch(...arguments);
     }
 };

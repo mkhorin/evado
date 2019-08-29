@@ -14,17 +14,19 @@ const p = {
     <% } %>
     </ul>
     <div class="tab-content">
-        <% for (const item of items) { %>
-        <div class="tab-pane <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
-            <% if (typeof item.content === 'string') { %>
+        <% for (const {active, id, content} of items) { %>
+        <div class="tab-pane <%- active ? 'active' : '' %>" data-id="<%- id %>">
+            <% if (typeof content === 'string') { %>
                 <%- include(item.content) %>
-            <% } else if (Array.isArray(item.content)) {
-                for (const data of item.content) {
-                if (data.template) { %>
-                <%- include(data.template, data) %>
+            <% } else if (Array.isArray(content)) {
+                for (const item of content) {
+                if (item.template) { %>
+                <%- include(item.template, item) %>
                 <% } else { %>
-                <%- data %>
-            <% }}} %>
+                <%- item %>
+            <% }}} else { %>
+            <%- include(content.template, content) %>
+            <% } %>
         </div>
         <% } %>
     </div>

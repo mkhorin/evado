@@ -22,7 +22,7 @@ module.exports = class MetaTransit extends Base {
             throw new BadRequest(this.controller.translate('Transition in progress...'));
         }
         await this.resolve(model);
-        const transition = ArrayHelper.searchByProp(name, 'name', model.transitions);
+        const transition = ArrayHelper.searchByProperty(name, 'name', model.transitions);
         if (transition instanceof Transition) {
             return model.transit(transition);
         }

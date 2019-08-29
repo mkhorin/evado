@@ -1,0 +1,28 @@
+<!-- _widget/user -->
+<%
+const user = _controller.user;
+%>
+<% if (user.identity) { %>
+<li class="user-body">
+    <% if (user.assignments) { %>
+    <p class="mb0">
+        <span data-t="">Roles</span>:
+        <b><%- user.assignments.join(', ') %></b>
+    </p>
+    <% } %>
+</li>
+<li class="user-footer">
+    <form action="auth/sign-out" method="post">
+        <div class="pull-left">
+            <a href="user/profile" class="btn btn-default btn-flat" data-t="">Profile</a>
+        </div>
+        <div class="pull-right">
+            <button type="submit" class="btn btn-warning btn-flat" data-t="">Sign out</button>
+        </div>
+    </form>
+</li>
+<% } else { %>
+<li class="user-footer">
+    <a href="auth/sign-in" class="btn btn-default btn-flat" data-t="">Sign in</a>
+</li>
+<% } %>

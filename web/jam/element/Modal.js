@@ -33,6 +33,7 @@ Jam.Modal = class extends Jam.Element {
         this.$sample = $container.find('.sample.jmodal');
         this.handlers = [];
         this.stackToggle = new Jam.Modal.StackToggle(this);
+        this.$pool.on('keyup', this.onKeyUp.bind(this));
     }
 
     init () {
@@ -43,7 +44,7 @@ Jam.Modal = class extends Jam.Element {
 
     isActiveLast () {
         const $active = this.$pool.children('.active');
-        const $stacked = this.$pool.children('.stacked');
+        const $stacked = this.getStacked();
         return $active.length
             ? $active.next('.stacked').length === 0
             : $stacked.length === 0;
@@ -63,12 +64,16 @@ Jam.Modal = class extends Jam.Element {
         this.stackToggle.resize();
     }
 
-    isLastStacked ($modal) {
-        return this.getLastStacked().$modal.get(0) === $modal.get(0);
+    isLast ($modal) {
+        return this.getLast().$modal.get(0) === $modal.get(0);
     }
 
-    getLastStacked () {
-        return this.$pool.children('.stacked').last().data('modal');
+    getLast () {
+        return this.getStacked().last().data('modal');
+    }
+
+    getStacked () {
+        return this.$pool.children('.stacked');
     }
 
     create () {
@@ -107,7 +112,7 @@ Jam.Modal = class extends Jam.Element {
 
     afterClose (item) {
         item.$modal.removeClass('stacked active');
-        const $last = this.$pool.children('.stacked').last().addClass('active');
+        const $last = this.getStacked().last().addClass('active');
         $(document.body).toggleClass('jmodal-active', $last.length > 0);
         this.stackToggle.detach(item);
     }
@@ -119,13 +124,23 @@ Jam.Modal = class extends Jam.Element {
 
     onBackFromRoot () {
         $(document.body).removeClass('jmodal-root-active');
-        this.setActive(this.getLastStacked());
+        this.setActive(this.getLast());
     }
 
     onModalLink (event) {
         event.preventDefault();
         const link = event.currentTarget;
         Jam.modal.create().load(link.href || link.dataset.url);
+    }
+
+    onKeyUp (event) {
+        if (event.keyCode !== 27) {
+            return true;
+        }
+        const item = this.getLast();
+        if (item) {
+            item.close();
+        }
     }
 
     openFromUrl (url) {
@@ -151,7 +166,7 @@ Jam.Modal.Item = class {
 
     setActive () {
         this.$modal.addClass('active');
-        if (!this.modal.isLastStacked(this.$modal)) {
+        if (!this.modal.isLast(this.$modal)) {
             this.$modal.addClass('queued');
         }
     }
@@ -196,10 +211,11 @@ Jam.Modal.Item = class {
         this.$modal.toggleClass('reopen', this.$body.children().length > 0);
         this.url = url;
         this.loadParams = params;
-        return this.xhr = $.get(url, params)
+        this.xhr = $.get(url, params)
             .always(this.processAlways.bind(this))
             .done(data => this.processDone(data, initData))
             .fail(this.processFail.bind(this));
+        return this.xhr; 
     }
 
     processAlways () {
@@ -265,7 +281,7 @@ Jam.Modal.Item = class {
     reload (data) {
         if (this.checkLastActive()) {
             this.forceClose(data, true);
-            this.load(this.url, this.loadParams, this.initData);
+            return this.load(this.url, this.loadParams, this.initData);
         }
     }
 

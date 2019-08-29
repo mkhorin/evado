@@ -16,14 +16,17 @@ module.exports = class UserLog extends Base {
                 'user',
                 'ip',
                 'createdAt'
-            ],
-            ACTION_LOGIN: 'login',
-            ACTION_SIGN_UP: 'signUp',
+            ]
         };
     }
 
-    log (values) {
-        Object.assign(this._attrMap, values, {createdAt: new Date});
+    create (action, user, data) {
+        this.assignAttrs({
+            action,
+            user: user.getId(),
+            data,
+            createdAt: new Date
+        });
         return this.forceSave();
     }
 

@@ -1,7 +1,7 @@
-<!-- _part/nav/global-menu -->
+<!-- _widget/common-menu -->
 
-<% for (const item of items) { %>
-<% if (item.name === 'separator') { %>
+<% for (const item of items) {
+   if (item.name === 'separator') { %>
 <li role="separator" class="divider"></li>
 <% } else { %>
 <li class="<%- item.active ? 'active' : '' %>">

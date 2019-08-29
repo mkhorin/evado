@@ -5,7 +5,7 @@
 
 const Base = require('areto/base/Action');
 
-module.exports = class SortRelAction extends Base {
+module.exports = class SortRelationAction extends Base {
 
     async execute () {
         const {pid, rel} = this.getQueryParams();

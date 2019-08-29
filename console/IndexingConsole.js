@@ -5,11 +5,11 @@
 
 const Base = require('areto/base/Base');
 
-module.exports = class IndexConsole extends Base {
+module.exports = class IndexingConsole extends Base {
 
     async create () {
         await this.createModuleIndexes(this.app);
-        this.log('info', 'Indexes created');
+        this.log('info', 'Indexing ready');
     }
 
     async createModuleIndexes (module) {
@@ -45,6 +45,6 @@ module.exports = class IndexConsole extends Base {
     }
 
     log () {
-        this.console.log(...arguments);
+        this.owner.log(...arguments);
     }
 };

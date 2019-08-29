@@ -37,13 +37,13 @@ class Jam {
         return item ? this.getClass.call(item, name.substring(pos + 1)) : null;
     }
 
-    static toggleGlobalLoader (state) {
+    static toggleMainLoader (state) {
         $(document.body).toggleClass('loading', state);
     }
 
     static matcherSelectLabelAndValue (term, text, option) {
         term = term.toLowerCase();
-        return text.toLowerCase().indexOf(term) !== -1 || option.val().toLowerCase().indexOf(term) !== -1;
+        return text.toLowerCase().includes(term) || option.val().toLowerCase().includes(term);
     }
 }
 
@@ -66,11 +66,16 @@ Jam.Element = class {
     }
 
     static getInstance ($element) {
-        return $element.data(`jamOf${this.name}`);
+        return $element.data(`jammed`);
     }
 
-    static findInstance(name, $container) {
-        return this.getInstance($container.find(`[data-jam="${name}"]`));
+    static findInstanceByParent(parent, $container) {
+        for (const element of $container.find('[data-jam]')) {
+            const instance = this.getInstance($(element));
+            if (instance instanceof parent) {
+                return instance;
+            }
+        }
     }
 
     constructor ($element) {
@@ -81,12 +86,12 @@ Jam.Element = class {
     init () {
     }
 
-    findInstance (name) {
-        return this.constructor.findInstance(name, this.$element);
+    findInstanceByParent (parent) {
+        return this.constructor.findInstanceByParent(parent, this.$element);
     }
 
     setInstance ($element) {
-        return $element.data(`jamOf${this.constructor.name}`, this);
+        return $element.data('jammed', this);
     }
 };
 
@@ -123,9 +128,9 @@ Jam.Confirmation = class {
 
     constructor (params) {
         this.params = {
-            container: '#global-confirmation',
+            container: '#main-confirmation',
             headText: 'Confirmation',
-            confirmText: 'Confirm',
+            confirmText: 'Yes',
             cssClass: 'default',
             sendCancel: false,
             ...params
@@ -136,11 +141,11 @@ Jam.Confirmation = class {
         this.$confirm.click(this.onAction.bind(this, true));
         this.$cancel.click(this.onAction.bind(this, false));
         this.$container.click(this.onContainer.bind(this));
-        $(document.body).keyup(this.onKeyUp.bind(this));
+        this.$container.keyup(this.onKeyUp.bind(this));
     }
 
     showRemove (message, data) {
-        return this.show(message || 'Delete item permanently?', {
+        return this.show(message || 'Delete permanently?', {
             confirmText: 'Delete',
             cssClass: 'danger',
             ...data
@@ -152,7 +157,7 @@ Jam.Confirmation = class {
         data.message = message;
         this.build(data);
         this.$container.show();
-        this.$confirm.blur();
+        this.$cancel.focus();
         this._sendCancel = data.sendCancel;
         this._result = $.Deferred();
         return this._result;
@@ -305,7 +310,7 @@ Jam.LoadableContent = class extends Jam.Element {
     constructor ($container) {
         super($container);
         this.$container = $container;
-        this.$toggle = $container.find('[data-loadable-toggle]');
+        this.$toggle = $container.find('.loadable-toggle');
         this.$toggle.click(this.onToggle.bind(this));
     }
 

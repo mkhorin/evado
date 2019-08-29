@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('../../base/Base');
+const Base = require('areto/base/Base');
 
 module.exports = class Passport extends Base {
 

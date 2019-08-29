@@ -7,7 +7,7 @@ Jam.ColumnRenderer = class {
 
     static getRenderMethod (format) {
         const name = typeof format === 'string' ? format : format ? format.name : null;
-        const method = this.getFormatMethod(name)
+        const method = this.getFormatMethod(name);
         return this.render.bind(this, method);
     }
 
@@ -43,9 +43,10 @@ Jam.ColumnRenderer = class {
     }
 
     static render (method, data, column) {
-        return data === undefined || data === null
+        const result = data === undefined || data === null
             ? this.asNotSet(data)
             : method.call(this, data, column);
+        return typeof result === 'object' ? JSON.stringify(result, null, 1) : result;
     }
 
     static join (data, column, handler) {
@@ -95,8 +96,8 @@ Jam.ColumnRenderer = class {
 
     static asLink () {
         return this.join(...arguments, (data, {format}) => {
-            let url = data.url || format.url || '';
             let text = data.hasOwnProperty('text') ? data.text : data;
+            let url = data.url || format.url || '';
             if (!url) {
                 return text;
             }
@@ -104,7 +105,7 @@ Jam.ColumnRenderer = class {
                 ? {id: data.id, ...data.params} 
                 : {id: text};
             params = $.param({...format.params, ...params});
-            url += (url.indexOf('?') === -1 ? '?' : '&') + params;
+            url += (url.includes('?') ? '&' : '?') + params;
             return `<a href="${url}" class="modal-link">${text}</a>`;
         });
     }

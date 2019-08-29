@@ -7,11 +7,11 @@ const Base = require('areto/security/rbac/Rule');
 
 module.exports = class TestRule extends Base {
 
-    execute () {
+    async execute () {
         return true; // can item be applied
     }
 
-    getObjectCondition () {
+    async getObjectCondition () {
         return ['EXISTS', '_id']; // excluded object condition
     }
 };

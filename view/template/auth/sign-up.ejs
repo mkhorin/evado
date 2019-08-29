@@ -1,8 +1,9 @@
-<% const signUp = _t('Sign up'); %>
+<%
+const signUp = _t('Sign up');
 
-<% layout(_view.get('_layout/auth')) -%>
-
-<% block('title', signUp) -%>
+layout(_view.get('_layout/auth'));
+block('title', signUp);
+%>
 
 <p class="login-box-msg">
     <%- _t('Register a new user') %>

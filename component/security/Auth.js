@@ -13,16 +13,12 @@ module.exports = class Auth extends Base {
         });
     }
 
-    async afterLogin ({user}) {
-        await this.logAction(this.UserLog.ACTION_LOGIN, user);
-        return super.afterLogin(...arguments);
+    async afterLogin (event) {
+        await this.logUser('login', event.user);
+        return super.afterLogin(event);
     }
 
-    logAction (action, user) {
-        return this.spawn(this.UserLog).log({
-            action,
-            user: user.getId(),
-            ip: user.getIp()
-        });
+    logUser () {
+        return this.spawn('model/UserLog').create(...arguments);
     }
 };

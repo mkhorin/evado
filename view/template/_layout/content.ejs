@@ -1,4 +1,4 @@
-<% layout(_view.get('_layout/main')) -%>
+<% layout(_view.get('_layout/main')) %>
 
 <!-- _layout/content -->
 <div class="wrapper">
@@ -11,10 +11,10 @@
             <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button"></a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <%- include(_view.get('_part/nav/user')) %>
+                    <%- include(_view.get('_part/nav/user-toggle'), {url: '/default/widget'}) %>
                 </ul>
             </div>
-            <%- include(_view.get('_part/nav/global-menu-toggle'), {url: 'default/widget'}) %>
+            <%- include(_view.get('_part/nav/common-menu-toggle'), {url: 'default/widget'}) %>
             <%- include(_view.get('_part/tool/modal-back')) %>
         </nav>
     </header>
@@ -22,7 +22,7 @@
     <aside class="main-sidebar">
         <section class="sidebar">
             <div>
-                <%- _view.anchorWidget('mainMenu') %>
+                <%- _view.placeWidget('mainMenu') %>
             </div>
         </section>
     </aside>
@@ -34,7 +34,7 @@
 
         <section class="content">
             <%- include(_view.get('_part/misc/flash-alert')) %>
-            <%- body -%>
+            <%- body %>
         </section>
     </div>
 
@@ -43,7 +43,7 @@
 
 <%- include(_view.get('_part/misc/confirmation')) %>
 
-<div id="global-loader" class="global-loader loader">
+<div id="main-loader" class="main-loader loader">
     <span class="fa fa-spinner fa-spin spinner"></span>
 </div>
 

@@ -88,7 +88,7 @@ Jam.Model = class extends Jam.Element {
     }
 
     formatAttrName (name, className = this.params.className) {
-        return name.indexOf('[') === -1 ? `${className}[${name}]` : name;
+        return name.includes('[') ? name : `${className}[${name}]`;
     }
 
     beforeClose (event) {
@@ -137,8 +137,6 @@ Jam.Model = class extends Jam.Element {
             case 'sort': return this.onSort;
             case 'copyId': return this.onCopyId;
             case 'history': return this.onShowHistory;
-            case 'postAction': return this.onPostAction;
-            case 'modalAction': return this.onModalAction;
         }
     }
 
@@ -182,28 +180,6 @@ Jam.Model = class extends Jam.Element {
 
     onShowHistory () {
         this.childModal.load(this.getControl('history').data('url'));
-    }
-
-    onPostAction (event) {
-        this.$loader.show();
-        const $btn = $(event.currentTarget);
-        Jam.UserAction.post($btn).done(data => {
-            this.notice.success(data);
-        }).fail(xhr => {
-            xhr && this.notice.danger(xhr.responseText || xhr.statusText);
-        }).always(()=> {
-            this.$loader.hide();
-        });
-    }
-
-    onModalAction (event) {
-        const $btn = $(event.currentTarget);
-        this.childModal.load($btn.data('url'), $btn.data('params'));
-        this.childModal.one('afterClose', (event, data)=> {
-            if (data && data.saved) {
-                data.result && this.notice.success(data.result);
-            }
-        });
     }
 
     // VALIDATE

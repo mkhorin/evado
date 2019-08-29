@@ -99,7 +99,7 @@ const related = model.rel(attr);
                         <span class="glyphicon glyphicon-sort"></span>
                     </button>
                     <% } if (typeof tools !== 'undefined') { %>
-                    <%- include(_view.get('_part/misc/universal-render'), {data: tools}) %>
+                    <%- include(_view.get('_part/misc/render'), {data: tools}) %>
                     <% } %>
                 </div>
                 <select id="<%- p.id %>" class="form-control" <% if (d.multiple) { %>multiple<% } %>

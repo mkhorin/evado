@@ -91,7 +91,6 @@ for (const column of d.columns) {
 if (!hasKeyColumn) {
     d.columns.unshift({
         name: model.PK,
-        type: 'id',
         hidden: true,
         searchable: true,
         sortable: true
@@ -148,7 +147,7 @@ if (d.filter && !d.filter.url) {
                         <span class="glyphicon glyphicon-th"></span>
                     </button>
                     <% } if (typeof tools !== 'undefined') { %>
-                    <%- include(_view.get('_part/misc/universal-render'), {data: tools}) %>
+                    <%- include(_view.get('_part/misc/render'), {data: tools}) %>
                     <% } %>
                 </div>
             </div>

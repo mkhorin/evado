@@ -62,7 +62,7 @@ module.exports = class MetaListFilterCondition extends Base {
                 result.push(value);
             }
         }
-        return ArrayHelper.concatValues(result);
+        return ArrayHelper.concat(result);
     }
 };
 

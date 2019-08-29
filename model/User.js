@@ -124,6 +124,19 @@ module.exports = class User extends Base {
     checkAuthKey (key) {
         return this.getAuthKey() === key;
     }
+
+    // NOTICE
+
+    countNewMessages () {
+        return this.relNoticeMessageUsers().and({read: false}).count();
+    }
+
+    // RELATIONS
+
+    relNoticeMessageUsers () {
+        const Class = this.getClass('notifier/NoticeMessageUser');
+        return this.hasMany(Class, 'user', this.PK);
+    }
 };
 module.exports.init(module);
 

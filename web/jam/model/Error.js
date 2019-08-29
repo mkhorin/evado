@@ -37,7 +37,7 @@ Jam.ModelError = class {
         if ($errorAttrs.length && $errorAttrs.is(':visible')) {
             this.modal.scrollTo($errorAttrs);
         } else {
-            this.notice.danger(Jam.i18n.translate('Correct mistakes'));
+            this.notice.danger(Jam.i18n.translate('Action failed'));
         }
     }
 

@@ -26,7 +26,7 @@ module.exports = class MetaSelect2 extends Base {
             }
         }
         conditions.length
-            ? this.query.andJoinByOr(conditions)
+            ? this.query.and(['OR', ...conditions])
             : this.query.where(['FALSE']);
     }
 
