@@ -33,7 +33,7 @@
     if (p.format) {
         switch (p.format) {
             case 'label':
-                p.displayValue = model.getAttrValueLabel(attr) || p.displayValue;
+                p.displayValue = model.constructor.getAttrValueLabel(attr, p.value) || p.displayValue;
                 break;
             default:
                 p.displayValue = _format(p.displayValue, p.format);

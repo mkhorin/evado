@@ -37,9 +37,22 @@ Jam.DataGrid = class {
     }
 
     init () {
+        this.prepareColumns();
         this.renderer.drawTableFrame();
         this.renderer.$thead.on('click', '.order-toggle', this.onToggleOrder.bind(this));
         setTimeout(this.load.bind(this), 0);
+    }
+
+    prepareColumns () {
+        for (const column of this.params.columns) {
+            this.resolveColumnTranslation(column);
+        }
+    }
+
+    resolveColumnTranslation (column) {
+        if (!column.hasOwnProperty('translate') && column.format === 'label') {
+            column.translate = '';
+        }
     }
 
     translate () {

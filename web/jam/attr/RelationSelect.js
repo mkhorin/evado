@@ -118,7 +118,7 @@ Jam.ModelAttr.RelationSelect = class extends Jam.ModelAttr {
     getOneSelectedValue () {
         const value = this.getSelectedValue();
         if (!value) {
-            this.notice.warning('Select one item to action');
+            this.notice.warning('Select one item to act');
         }
         return value;
     }

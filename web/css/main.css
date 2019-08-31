@@ -1784,8 +1784,8 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
     margin-top: -2px;
 }
 .select2-container--default .select2-selection__clear {
-    font-size: 16px;
-    color: #888;
+    font-size: 18px;
+    color: #999;
 }
 .select2-container--default .select2-selection--single .select2-selection__clear {
     margin-right: 5px;
@@ -1814,9 +1814,9 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
     background: #f8f8f8;
 }
 
-/* CONFIRMATION */
+/* DIALOG */
 
-.confirmation {
+.dialog {
     display: none;
     position: fixed;
     top: 0;
@@ -1826,66 +1826,69 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
     background: rgba(0, 0, 0, 0.3);
     z-index: 2049;
 }
-.confirmation > .box {
+.dialog > .box {
     position: fixed;
-    top: 25%;
-    left: calc(50% - 160px);
-    width: 320px;
+    top: 15%;
+    left: calc(50% - 210px);
+    width: 420px;
     background: #fff;
-    border: 1px solid var(--color-light-warning);
+    border: 1px solid var(--color-light-primary);
     border-top-width: 4px;
 }
-.confirmation > .box > .box-head {
+.dialog > .box > .box-head {
     padding: 15px 20px;
     font-size: 16px;
-    color: var(--color-dark-warning);
+    color: var(--color-dark-primary);
+    line-height: 1.4;
 }
-.confirmation > .box > .box-body {
+.dialog > .box > .box-body {
+    max-height: 420px;
+    overflow: auto;
     padding: 0 20px 20px;
 }
-.confirmation > .box > .box-foot {
+.dialog > .box > .box-foot {
     text-align: center;
     padding: 15px 20px;
     border-top: 1px solid #eee;
 }
-.confirmation .btn-confirm {
+.dialog .btn-submit {
     margin-right: 10px;
     color: #fff;
-    background-color: var(--color-light-warning);
-    border-color: var(--color-dark-warning);
+    background-color: var(--color-light-primary);
+    border-color: var(--color-dark-primary);
 }
-.confirmation .btn-confirm:hover,
-.confirmation .btn-confirm:active {
-    background-color: var(--color-dark-warning)
+.dialog .btn-submit:hover,
+.dialog .btn-submit:active {
+    background-color: var(--color-dark-primary)
 }
 
-.confirmation-warning > .box {
+.dialog-warning > .box {
     border-color: var(--color-light-warning);
 }
-.confirmation-warning > .box > .box-head {
+.dialog-warning > .box > .box-head {
     color: var(--color-dark-warning);
 }
-.confirmation-warning .btn-confirm {
+.dialog-warning .btn-submit {
     background-color: var(--color-light-warning);
     border-color: var(--color-dark-warning);
 }
-.confirmation-warning .btn-confirm:hover,
-.confirmation-warning .btn-confirm:active {
+.dialog-warning .btn-submit:hover,
+.dialog-warning .btn-submit:active {
     background-color: var(--color-dark-warning)
 }
 
-.confirmation-danger > .box {
+.dialog-danger > .box {
     border-color: var(--color-light-danger);
 }
-.confirmation-danger > .box > .box-head {
+.dialog-danger > .box > .box-head {
     color: var(--color-dark-danger);
 }
-.confirmation-danger .btn-confirm {
+.dialog-danger .btn-submit {
     background-color: var(--color-light-danger);
     border-color: var(--color-dark-danger);
 }
-.confirmation-danger .btn-confirm:hover,
-.confirmation-danger .btn-confirm:active {
+.dialog-danger .btn-submit:hover,
+.dialog-danger .btn-submit:active {
     background-color: var(--color-dark-danger)
 }
 
@@ -1897,6 +1900,21 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 }
 .util-container > .util-pool {
     display: inline-block;
+}
+
+/* NOTIFICATIONS */
+
+.notifications-menu .unread-counter,
+.notifications-menu .messages,
+.notifications-menu.has-unread .empty-message {
+    display: none;
+}
+.notifications-menu.has-unread .unread-counter,
+.notifications-menu.has-unread .messages {
+    display: block;
+}
+.notifications-menu .messages > li > a > i {
+    margin-right: 5px;
 }
 
 /* MEDIA */

@@ -8,7 +8,7 @@ const error = _t(model.getFirstError(attr), 'areto');
     <div class="captcha">
         <img src="<%- `${url}?_=${_controller.timestamp}` %>" class="captcha-image">
         <a href="#" class="captcha-refresh" tabindex="-1">
-            <span class="fa fa-sync-alt"></span>
+            <span class="fa fa-redo-alt"></span>
         </a>
     </div>
     <div class="form-attr form-group has-feedback <%- error ? 'has-error' : '' %>">

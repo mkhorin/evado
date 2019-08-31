@@ -73,6 +73,28 @@
 .data-grid-common-search {
     position: relative;
     margin-bottom: 10px;
+    user-select: none;
+}
+.data-grid-common-search input {
+    padding-right: 28px;
+}
+.has-advanced-search .data-grid-common-search input {
+    padding-right: 44px;
+}
+.data-grid-common-search .clear {
+    display: none;
+    position: absolute;
+    top: 1px;
+    right: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 11;
+}
+.has-advanced-search .data-grid-common-search .clear {
+    right: 28px;
+}
+.has-value.data-grid-common-search .clear {
+    display: block;
 }
 .data-grid-common-search .advanced-toggle {
     display: none;
@@ -85,9 +107,6 @@
 }
 .data-grid-common-search .advanced-toggle:hover {
     color:#444;
-}
-.has-advanced-search .data-grid-common-search input {
-    padding-right: 28px;
 }
 .has-advanced-search .data-grid-common-search .advanced-toggle {
     display: block;

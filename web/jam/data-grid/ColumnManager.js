@@ -98,7 +98,6 @@ Jam.DataGridColumnManager = class {
             : false;
     }
 
-
     getStoreKey () {
         return `column_manager_${this.params.id}`;
     }

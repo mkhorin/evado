@@ -216,12 +216,12 @@ Jam.List = class extends Jam.Element {
         return $rows ? this.getObjectIds($rows).join() : '';
     }
 
-    getSelectedRow (message = 'Select one item to action') {
+    getSelectedRow (message = 'Select one item to act') {
         const $row = this.findSelectedRows();
         return $row.length === 1 ? $row : this.notice.warning(message);
     }
 
-    getSelectedRows (message = 'Select items to action') {
+    getSelectedRows (message = 'Select items to act') {
         const $rows = this.findSelectedRows();
         return $rows.length ? $rows : this.notice.warning(message);
     }
@@ -314,7 +314,7 @@ Jam.List = class extends Jam.Element {
     onRemove () {
         const $rows = this.getSelectedRows();
         if ($rows) {
-            Jam.confirmation.showRemove().then(this.removeObjects.bind(this, $rows));
+            Jam.dialog.confirmRemove().then(this.removeObjects.bind(this, $rows));
         }
     }
 
@@ -352,9 +352,6 @@ Jam.SelectList = class extends Jam.List {
     init () {
         Object.assign(this.params, this.modal.initData);
         super.init();
-        this.$selectBtn = this.getControl('select');
-        this.$selectBtn.show();
-        this.$selectBtn.click(this.onSelect.bind(this));
     }
 
     onDoubleClickRow (event) {
@@ -363,6 +360,13 @@ Jam.SelectList = class extends Jam.List {
         event.ctrlKey
             ? this.openNewPage()
             : this.onSelect();
+    }
+
+    getControlMethod (id) {
+        switch (id) {
+            case 'select': return this.onSelect;
+        }
+        return super.getControlMethod(id);
     }
 
     onSelect () {

@@ -14,9 +14,9 @@ Jam.UserAction = class extends Jam.Element {
 
     static confirm ($element) {
         const message = $element.data('confirm');
-        const method = $element.data('confirmMethod') || 'show';
+        const method = $element.data('confirmMethod') || 'confirm';
         return message
-            ? Jam.confirmation[method](message, $element.data('confirmParams'))
+            ? Jam.dialog[method](message, $element.data('confirmParams'))
             : $.Deferred().resolve();
     }
 

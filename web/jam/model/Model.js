@@ -166,7 +166,7 @@ Jam.Model = class extends Jam.Element {
     }
 
     onRemove () {
-        Jam.confirmation.showRemove().then(this.removeModel.bind(this));
+        Jam.dialog.confirmRemove().then(this.removeModel.bind(this));
     }
 
     onReload () {

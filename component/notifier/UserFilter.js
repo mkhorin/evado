@@ -12,6 +12,8 @@ module.exports = class UserFilter extends Base {
             TABLE: 'sys_userFilter',
             ATTRS: [
                 'name',
+                'description',
+                'items',
                 'includes',
                 'excludes',
                 'condition'
@@ -38,3 +40,5 @@ module.exports = class UserFilter extends Base {
 
 };
 module.exports.init(module);
+
+const ArrayHelper = require('areto/helper/ArrayHelper');

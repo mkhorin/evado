@@ -43,10 +43,17 @@ Jam.ColumnRenderer = class {
     }
 
     static render (method, data, column) {
-        const result = data === undefined || data === null
-            ? this.asNotSet(data)
-            : method.call(this, data, column);
-        return typeof result === 'object' ? JSON.stringify(result, null, 1) : result;
+        if (data === undefined || data === null) {
+            return this.asNotSet(data);
+        }
+        const result = method.call(this, data, column);
+        if (typeof result === 'object') {
+            return JSON.stringify(result, null, 1);
+        }
+        if (typeof column.translate === 'string') {
+            return Jam.i18n.translate(result, column.translate);
+        }
+        return result;
     }
 
     static join (data, column, handler) {

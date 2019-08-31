@@ -124,30 +124,41 @@ Jam.Events = class {
     }
 };
 
-Jam.Confirmation = class {
+Jam.Dialog = class {
 
     constructor (params) {
         this.params = {
-            container: '#main-confirmation',
-            headText: 'Confirmation',
-            confirmText: 'Yes',
+            container: '#main-dialog',
+            header: 'Dialog',
+            submitText: 'Submit',
+            cancelText: 'Cancel',
+            returnCancel: false,
+            strictCancel: false,
             cssClass: 'default',
-            sendCancel: false,
             ...params
         };
         this.$container = $(this.params.container);
-        this.$confirm = this.$container.find('.btn-confirm');
+        this.$submit = this.$container.find('.btn-submit');
         this.$cancel = this.$container.find('.btn-cancel');
-        this.$confirm.click(this.onAction.bind(this, true));
+        this.$submit.click(this.onAction.bind(this, true));
         this.$cancel.click(this.onAction.bind(this, false));
         this.$container.click(this.onContainer.bind(this));
         this.$container.keyup(this.onKeyUp.bind(this));
     }
 
-    showRemove (message, data) {
-        return this.show(message || 'Delete permanently?', {
+    confirmRemove (message, data) {
+        return this.confirm(message || 'Delete permanently?', {
             confirmText: 'Delete',
             cssClass: 'danger',
+            ...data
+        });
+    }
+
+    confirm (message, data) {
+        return this.show(message, {
+            header: 'Confirmation',
+            submitText: 'Confirm',
+            cssClass: 'warning',
             ...data
         });
     }
@@ -157,40 +168,44 @@ Jam.Confirmation = class {
         data.message = message;
         this.build(data);
         this.$container.show();
-        this.$cancel.focus();
-        this._sendCancel = data.sendCancel;
+        if (!data.strictCancel) {
+            this.$cancel.focus();
+        }
+        this._returnCancel = data.returnCancel;
+        this._strictCancel = data.strictCancel;
         this._result = $.Deferred();
         return this._result;
     }
 
     build (data) {
-        this.$container.removeClass().addClass(`confirmation-${data.cssClass} confirmation`);
-        this.$container.find('.box-head').html(Jam.i18n.translate(data.headText));
+        this.$container.removeClass().addClass(`dialog-${data.cssClass} dialog`);
+        this.$container.find('.box-head').html(Jam.i18n.translate(data.header));
         this.$container.find('.box-body').html(Jam.i18n.translate(data.message));
-        this.$confirm.html(Jam.i18n.translate(data.confirmText));
+        this.$submit.html(Jam.i18n.translate(data.submitText)).toggle(!!data.submitText);
+        this.$cancel.html(Jam.i18n.translate(data.cancelText)).toggle(!!data.cancelText);
     }
 
     onAction (status) {
         this.$container.hide();
-        if (status || this._sendCancel) {
+        if (status || this._returnCancel) {
             this._result.resolve(status);
         }
     }
 
     onContainer (event) {
-        if (event.target === event.currentTarget) {
+        if (event.target === event.currentTarget && !this._strictCancel) {
             this.onAction(false);
         }
     }
 
     onKeyUp (event) {
-        if (event.keyCode === 27) {
+        if (event.keyCode === 27 && !this._strictCancel) {
             this.onAction(false);
         }
     }
 };
 
-Jam.Scheduler = class {
+Jam.Deferred = class {
 
     constructor () {
         this._tasks = [];
@@ -198,7 +213,10 @@ Jam.Scheduler = class {
     }
 
     add (task) {
-        this._tasks = this._tasks.concat(task);
+        if (!(task instanceof Jam.DeferredTask)) {
+            task = new Jam.DeferredTask(...arguments);
+        }
+        this._tasks.push(task);
         this.process();
     }
 
@@ -214,7 +232,7 @@ Jam.Scheduler = class {
     }
 };
 
-Jam.Task = class {
+Jam.DeferredTask = class {
 
     constructor (handler, params) {
         this.handler = handler;
@@ -302,74 +320,6 @@ Jam.Cache = class {
 
     clear () {
         this._data = {};
-    }
-};
-
-Jam.LoadableContent = class extends Jam.Element {
-
-    constructor ($container) {
-        super($container);
-        this.$container = $container;
-        this.$toggle = $container.find('.loadable-toggle');
-        this.$toggle.click(this.onToggle.bind(this));
-    }
-
-    isLoading () {
-        return this.$container.hasClass('loading');
-    }
-
-    onToggle () {
-        if (!this.isLoading()) {
-            this.load();
-        }
-    }
-
-    onAlways () {
-        this.$container.addClass('loaded');
-    }
-
-    onDone (data) {
-        this.setContent(data);
-    }
-
-    onFail () {
-        this.setContent('');
-    }
-
-    load () {
-        this.abort();
-        this.$container.removeClass('loaded').addClass('loading');
-        this.xhr = $[this.getMethod()](this.getUrl(), this.getRequestData())
-            .always(this.onAlways.bind(this))
-            .done(this.onDone.bind(this))
-            .fail(this.onFail.bind(this));
-    }
-
-    abort () {
-        if (this.xhr) {
-            this.xhr.abort();
-        }
-        this.$container.removeClass('loading');
-    }
-
-    getMethod () {
-        return this.$container.data('method') || 'get';
-    }
-
-    getUrl () {
-        return this.$container.data('url');
-    }
-
-    getRequestData () {
-        return {
-            url: location.pathname,
-            params: location.search,
-            ...this.$container.data('params')
-        };
-    }
-
-    setContent (data) {
-        this.$container.find('.loadable-content').html(data);
     }
 };
 

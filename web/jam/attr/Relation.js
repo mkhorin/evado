@@ -10,7 +10,7 @@ Jam.ModelAttr.Relation = class extends Jam.ModelAttr {
             return false;
         }
         this.activated = true;
-        Jam.scheduler.add(new Jam.Task(this.createList.bind(this)));
+        Jam.deferred.add(this.createList.bind(this));
     }
 
     createList (afterInit) {

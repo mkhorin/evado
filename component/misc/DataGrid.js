@@ -123,9 +123,19 @@ module.exports = class DataGrid extends Base {
     renderModel (model) {
         const data = {[this.ROW_KEY]: model.getId()};
         for (const column of this.request.columns) {
-            data[column.name] = model.getViewAttr(column.name);
+            data[column.name] = this.renderModelAttr(column, model);
         }
         return data;
+    }
+
+    renderModelAttr ({name, format}, model) {
+        if (!format) {
+            return model.getViewAttr(name);
+        }
+        if (format === 'label') {
+            return model.getAttrValueLabel(name);
+        }
+        return model.getViewAttr(name);
     }
 
     // FILTER

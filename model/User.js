@@ -98,7 +98,24 @@ module.exports = class User extends Base {
             this.setAuthKey();
         }
     }
-   
+
+    // NOTICE
+
+    findUnreadMessages () {
+        return this.relNoticeMessageUsers().and({read: false});
+    }
+
+    readMessage (id) {
+        return this.relNoticeMessageUsers().and(['ID', 'message', id]).update({read: true});
+    }
+
+    // RELATIONS
+
+    relNoticeMessageUsers () {
+        const Class = this.getClass('notifier/NoticeMessageUser');
+        return this.hasMany(Class, 'user', this.PK);
+    }
+
     // PASSWORD
 
     checkPassword (password) {
@@ -123,19 +140,6 @@ module.exports = class User extends Base {
 
     checkAuthKey (key) {
         return this.getAuthKey() === key;
-    }
-
-    // NOTICE
-
-    countNewMessages () {
-        return this.relNoticeMessageUsers().and({read: false}).count();
-    }
-
-    // RELATIONS
-
-    relNoticeMessageUsers () {
-        const Class = this.getClass('notifier/NoticeMessageUser');
-        return this.hasMany(Class, 'user', this.PK);
     }
 };
 module.exports.init(module);

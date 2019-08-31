@@ -87,7 +87,7 @@ module.exports = class Notice extends Base {
     }
 
     async getUsersByFilter (id) {
-        const model = await this.spawn('notifier/UserFilter').findById(id).all();
+        const model = await this.spawn('notifier/UserFilter').findById(id).one();
         return model ? model.resolve() : [];
     }
 

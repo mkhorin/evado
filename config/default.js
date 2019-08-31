@@ -108,9 +108,6 @@ module.exports = {
         'commonMenu': {
             Class: require('../component/widget/CommonMenu')
         },
-        'notificationToggle': {
-            Class: require('../component/widget/NotificationToggle')
-        },
         'notifications': {
             Class: require('../component/widget/Notifications')
         },

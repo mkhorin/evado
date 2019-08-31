@@ -3,10 +3,11 @@
  */
 'use strict';
 
-Jam.confirmation = new Jam.Confirmation;
+Jam.dialog = new Jam.Dialog;
 Jam.i18n = new Jam.I18n;
 Jam.resource = new Jam.Resource;
-Jam.scheduler = new Jam.Scheduler;
+Jam.deferred = new Jam.Deferred;
+Jam.serverPolling = new Jam.ServerPolling;
 
 Jam.i18n.translateDocument();
 Jam.createElements();
