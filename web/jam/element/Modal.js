@@ -226,18 +226,20 @@ Jam.Modal.Item = class {
 
     processDone (content, initData) {
         this.initData = initData;
-        this.$body.empty().append(Jam.resource.resolve(content));
-        const $container = this.$body.children().first();
-        Jam.i18n.translateContainer($container);
-        this.title = Jam.i18n.translate($container.data('title')) || '';
-        this.tabTitle = $container.data('tab');
-        this.tabTitle = this.tabTitle ? Jam.i18n.translate(this.tabTitle) : this.title;
-        const url = Jam.UrlHelper.getNewPageUrl($container.data('url') || this.getLoadUrl());
-        this.$title.html(`<a href="${url}" target="_blank">${this.title}</a>`);
-        Jam.DateHelper.resolveClientDate(this.$body);
-        Jam.createElements($container);
-        this.resize();
-        this.modal.afterLoad(this);
+        Jam.resource.resolve(content, result => {
+            this.$body.empty().append(result);
+            const $container = this.$body.children().first();
+            Jam.i18n.translateContainer($container);
+            this.title = Jam.i18n.translate($container.data('title')) || '';
+            this.tabTitle = $container.data('tab');
+            this.tabTitle = this.tabTitle ? Jam.i18n.translate(this.tabTitle) : this.title;
+            const url = Jam.UrlHelper.getNewPageUrl($container.data('url') || this.getLoadUrl());
+            this.$title.html(`<a href="${url}" target="_blank">${this.title}</a>`);
+            Jam.DateHelper.resolveClientDate(this.$body);
+            Jam.createElements($container);
+            this.resize();
+            this.modal.afterLoad(this);
+        });
     }
 
     processFail (xhr) {

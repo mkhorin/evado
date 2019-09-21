@@ -11,7 +11,9 @@
 
     <link rel="stylesheet" href="css/module.css">
 </head>
-<body class="hold-transition skin-black sidebar-mini" data-title="<%= blocks.title %>">
+<body class="hold-transition skin-black sidebar-mini"
+      data-csrf="<%- _controller.getCsrfToken() %>"
+      data-title="<%= blocks.title %>">
 
     <%- body %>
 

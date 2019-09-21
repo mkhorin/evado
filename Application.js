@@ -7,12 +7,20 @@ const Base = require('areto/base/Application');
 
 module.exports = class Evado extends Base {
 
+    getMailer () {
+        return this.components.get('mailer');
+    }
+
     getNotifier () {
         return this.components.get('notifier');
     }
 
     getObserver () {
         return this.components.get('observer');
+    }
+
+    getRbac () {
+        return this.components.get('rbac');
     }
 
     getScheduler () {

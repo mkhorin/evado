@@ -5,7 +5,6 @@
     p.hint = typeof hint === 'undefined' ? model.getAttrHint(attr) : hint;
     p.extHint = typeof extHint === 'undefined' ? '' : extHint;
     p.placeholder = typeof placeholder === 'undefined' ? '' : placeholder;
-    p.type = typeof type === 'undefined' ? '' : type;
     p.disabled = typeof disabled === 'undefined' ? '' : disabled;
     p.required = typeof required === 'undefined' ? model.isAttrRequired(attr) : required;
     p.required = p.required ? ' required' : '';
@@ -15,7 +14,7 @@
     p.labelCss = typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss;
     p.valueCss = typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss;
     p.translate = typeof translate === 'undefined' ? '' : translate;
-    p.handler = typeof handler === 'undefined' ? '' : JSON.stringify(handler);
+    p.handler = typeof handler === 'undefined' ? p.handler || '' : JSON.stringify(handler);
 
     p.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
     if (p.sourceValue === undefined && typeof defaultValue !== 'undefined') {

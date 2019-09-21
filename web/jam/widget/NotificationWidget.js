@@ -11,11 +11,15 @@ Jam.NotificationWidget = class extends Jam.Element {
         this.$messages = this.$element.find('.messages');
         this.$messages.on('click', 'a', this.onMenuItem.bind(this));
         this._url = this.$element.data('url');
-        this._task = Jam.serverPolling.add({
+        this._refresh = Jam.serverPolling.add({
             period: this.$element.data('period'),
             url: this._url,
-            done: this.onTaskDone.bind(this)
+            done: this.onRefreshDone.bind(this)
         });
+    }
+
+    isOpen () {
+        return this.$element.hasClass('open');
     }
 
     hasUnread () {
@@ -24,15 +28,18 @@ Jam.NotificationWidget = class extends Jam.Element {
 
     onShowDropdown (event) {
         if (!this._loaded && this.hasUnread()) {
-            this._task.execute();
+            this._refresh.execute();
         }
         return true;
     }
 
-    onTaskDone (data) {
+    onRefreshDone (data) {
         const {counter, items} = data || {};
         this.setCounter(counter);
         this.drawMenuItems(items);
+        if (!this.isOpen()) {
+            this.resolvePopup(items);
+        }
         this._loaded = true;
     }
 
@@ -55,12 +62,15 @@ Jam.NotificationWidget = class extends Jam.Element {
 
     onMenuItem (event) {
         event.preventDefault();
+        this.requestMessage(event.target.dataset.id);
+    }
+
+    requestMessage (message) {
         Jam.toggleMainLoader(true);
-        const message = event.target.dataset.id;
         $.get(this._url, {message}).always(()=> {
             Jam.toggleMainLoader(false);
         }).done(data => {
-            this.onTaskDone(data);
+            this.onRefreshDone(data);
             this.showMessage(data);
         });
     }
@@ -75,5 +85,34 @@ Jam.NotificationWidget = class extends Jam.Element {
                 strictCancel: true
             });
         }
+    }
+
+    // POPUP
+
+    resolvePopup (items) {
+        this.$popup = this.$popup || this.createPopup();
+        this.togglePopup(false);
+        if (Array.isArray(items) && items.length) {
+            this.buildPopup(items[0]);
+            setTimeout(()=> this.togglePopup(true), 500);
+        }
+    }
+
+    togglePopup (state) {
+        this.$popup.toggleClass('open', state);
+    }
+
+    createPopup () {
+        return $(`<div class="notification-popup"></div>`)
+            .appendTo(document.body)
+            .click(this.onPopup.bind(this));
+    }
+
+    buildPopup ({id, title}) {
+        this.$popup.data('id', id).html(title || '...');
+    }
+
+    onPopup () {
+        this.requestMessage(this.$popup.data('id'));
     }
 };

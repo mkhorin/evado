@@ -23,7 +23,7 @@ module.exports = class BaseMenu extends Base {
     }
 
     getAccess (data) {
-        return this.module.get('rbac').getNavAccess(this.controller.user.assignments, data);
+        return this.module.getRbac().getNavAccess(this.controller.user.assignments, data);
     }
 
     getItemUrl (item) {

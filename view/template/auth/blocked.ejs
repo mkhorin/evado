@@ -1,15 +1,15 @@
 <%
-const accessBlocked = _t('Access blocked');
+const blocked = _t('Access blocked');
 
 layout(_view.get('_layout/auth'));
-block('title', accessBlocked);
+block('title', blocked);
 %>
 <div class="alert alert-danger text-center">
     <% if (model.getAttempts()) { %>
     <%- _t('Access blocked for') %>
-    <b><%- _format(model.getBlockedTill() - (new Date), 'duration') %></b>
+    <b><%- _format(model.getDuration(), 'duration') %></b>
     <% } else { %>
-    <%- accessBlocked %>
+    <%- blocked %>
     <% } %>
 </div>
 

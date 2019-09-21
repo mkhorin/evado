@@ -27,6 +27,10 @@ module.exports = class BaseModule extends Base {
         return this.components.get('observer');
     }
 
+    getRbac () {
+        return this.components.get('rbac');
+    }
+
     getScheduler () {
         return this.components.get('scheduler');
     }

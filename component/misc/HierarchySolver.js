@@ -5,7 +5,7 @@
 
 const Base = require('areto/base/Base');
 
-module.exports = class TreeSolver extends Base {
+module.exports = class HierarchySolver extends Base {
 
     static getCircularError (model) {
         return this.wrapClassMessage(`Circular inheritance in ${model.constructor.name}`);
@@ -19,14 +19,19 @@ module.exports = class TreeSolver extends Base {
         });
     }
 
-    async getParentQuery (query) {
+    async getDescendantQuery () {
+        const descendants = await this.getDescendantIds([this.model.getId()]);
+        return this.model.find({[this.model.PK]: descendants}, ...arguments);
+    }
+
+    async getParentQuery () {
         let descendants = [];
         let id = this.model.getId();
         if (id) {
             descendants = await this.getDescendantIds([id]);
             descendants.push(id);
         }
-        return query.andNotIn(this.model.PK, descendants);
+        return this.model.find(['NOT IN', this.model.PK, descendants], ...arguments);
     }
 /*
     getParentSelectItems (query, textKey) {

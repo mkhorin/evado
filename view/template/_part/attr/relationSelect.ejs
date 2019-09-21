@@ -1,6 +1,9 @@
 <!-- _part/attr/relationSelect -->
-
-<% const p = {}; %>
+<%
+const p = {
+    handler: 'RelationSelect'
+};
+%>
 <%- include('_params', {p}) %>
 <%
 const d = {
@@ -70,7 +73,7 @@ if (d.modalSort) {
 }
 const related = model.rel(attr);
 %>
-<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-type="relationSelect">
+<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

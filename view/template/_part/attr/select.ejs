@@ -1,6 +1,7 @@
 <!-- _part/attr/select -->
 <%
 const p = {
+    handler: 'Select',
     hasEmpty: typeof hasEmpty === 'undefined' ? true : hasEmpty,
     emptyText: typeof emptyText === 'undefined' ? '' : emptyText,
     valueKey: typeof valueKey === 'undefined' ? 'value' : valueKey,
@@ -33,7 +34,7 @@ if (typeof items !== 'undefined' && items) {
 content = `<select name="${p.name}" ${p.disabled} class="form-control">${content}</select>`;
 %>
 <div class="form-attr form-group<%- p.required %> <%- p.css %>"
-     data-type="select"
+     data-handler="<%= p.handler %>"
      data-select2="<%= p.select2 %>"
      data-masters="<%= p.masters %>"
      data-attraction='<%= p.attraction %>'>

@@ -11,23 +11,36 @@ module.exports = class UserLog extends Base {
         return {
             TABLE: 'sys_userLog',
             ATTRS: [
-                'action',
-                'data',
+                'event',
                 'user',
                 'ip',
-                'createdAt'
-            ]
+                'time',
+                'data'
+            ],
+            INDEXES: [[{user: 1}, {unique: false}]],
+            OVERFLOW: 30,
+            TRUNCATION: 20
         };
     }
 
-    create (action, user, data) {
-        this.assignAttrs({
-            action,
-            user: user.getId(),
-            data,
-            createdAt: new Date
+    async create (user, event, data, identity) {
+        const userId = identity ? identity.getId() : user.getId();
+        this.set('user', userId);
+        this.set('event', event);
+        this.set('ip', user.getIp());
+        this.set('time', new Date);
+        this.set('data', data);
+        await this.forceSave();
+        return this.truncate(userId, event);
+    }
+
+    async truncate (user, event) {
+        return ModelHelper.truncateOverflow({
+            query: this.find({user, event}),
+            overflow: this.module.getParam('userLogOverflow', this.OVERFLOW),
+            truncation: this.module.getParam('userLogTruncation', this.TRUNCATION),
+            inBulk: true
         });
-        return this.forceSave();
     }
 
     relUser () {
@@ -36,3 +49,5 @@ module.exports = class UserLog extends Base {
     }
 };
 module.exports.init(module);
+
+const ModelHelper = require('../component/helper/ModelHelper');

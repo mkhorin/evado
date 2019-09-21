@@ -9,7 +9,7 @@ module.exports = class MetaSecurity extends Base {
 
     constructor (config) {
         super(config);
-        this.rbac = this.controller.module.get('rbac');
+        this.rbac = this.controller.module.getRbac();
     }
 
     getForbiddenAttrs (action) {

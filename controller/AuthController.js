@@ -10,12 +10,7 @@ module.exports = class AuthController extends Base {
     static getConstants () {
         return {
             ACTIONS: {
-                'captcha': {
-                    Class: require('areto/security/captcha/CaptchaAction'),
-                    minLength: 3,
-                    maxLength: 4,
-                    fixedVerifyCode: '123'
-                }
+                'captcha': require('../component/action/CaptchaAction')
             },
             BEHAVIORS: {
                 'access': {
@@ -27,7 +22,10 @@ module.exports = class AuthController extends Base {
                         actions: ['sign-up'],
                         match: action => action.controller.canSignUp() ? undefined /* to continue rules */ : false
                     },{
-                        actions: ['sign-in', 'sign-up'],
+                        actions: ['request-reset', 'reset-password'],
+                        match: action => action.controller.canResetPassword() ? undefined : false
+                    },{
+                        actions: ['sign-in', 'sign-up', 'request-reset', 'reset-password'],
                         permissions: ['?'],
                         deny: action => action.render('signed', {model: action.controller.user.identity})
                     }]
@@ -49,9 +47,14 @@ module.exports = class AuthController extends Base {
             return this.render('sign-in', {model});
         }
         model.captchaAction = this.createAction('captcha');
-        await model.load(this.getPostParams()).login()
-            ? this.goBack()
-            : this.render('sign-in', {model});
+        if (!await model.load(this.getPostParams()).login()) {
+            return this.render('sign-in', {model});
+        }
+        if (this.user.getIdentity().isVerified()) {
+            return this.goBack();
+        }
+        this.setFlash('error', 'User is not verified');
+        return this.redirect('request-verification');
     }
 
     async actionSignOut () {
@@ -68,7 +71,7 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).register()) {
             return this.render('sign-up', {model});
         }
-        this.setFlash('registered', this.translate('Registration completed'));
+        this.setFlash('success', 'Registration completed');
         this.goLogin();
     }
 
@@ -81,12 +84,68 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).changePassword()) {
             return this.render('change-password', {model});
         }
-        this.setFlash('passwordChanged', this.translate('Password changed'));
+        this.setFlash('success', 'Password changed');
         this.reload();
+    }
+
+    async actionRequestReset () {
+        const model = this.spawn('model/auth/RequestResetForm', {user: this.user});
+        if (this.isGet()) {
+            return this.render('request-reset', {model});
+        }
+        model.captchaAction = this.createAction('captcha');
+        if (!await model.load(this.getPostParams()).request()) {
+            return this.render('request-reset', {model});
+        }
+        this.setFlash('success', `${this.translate('Reset key sent to')} ${model.get('email')}`);
+        this.reload();
+    }
+
+    async actionResetPassword () {
+        const model = this.spawn('model/auth/ResetPasswordForm', {user: this.user});
+        if (this.isGet()) {
+            return this.render('reset-password', {model});
+        }
+        await model.load(this.getPostParams());
+        model.set('key', this.getQueryParam('key'));
+        model.captchaAction = this.createAction('captcha');
+        if (!await model.resetPassword()) {
+            return this.render('reset-password', {model});
+        }
+        this.setFlash('success', 'New password set');
+        this.goLogin();
+    }
+
+    async actionRequestVerification () {
+        const model = this.spawn('model/auth/RequestVerificationForm', {user: this.user});
+        if (this.isGet()) {
+            return this.render('request-verification', {model});
+        }
+        model.captchaAction = this.createAction('captcha');
+        if (!await model.load(this.getPostParams()).request()) {
+            return this.render('request-verification', {model});
+        }
+        this.setFlash('success', `${this.translate('Verification key sent to')} ${model.get('email')}`);
+        this.reload();
+    }
+
+    async actionVerify () {
+        const model = this.spawn('model/auth/VerifyForm', {user: this.user});
+        model.set('key', this.getQueryParam('key'));
+        if (!await model.verify()) {
+            this.setFlash('error', model.getFirstError());
+            return this.redirect('request-verification');
+        }
+        this.setFlash('success', 'User verified');
+        this.goHome();
     }
 
     canSignUp () {
         return this.module.getParam('allowSignUp');
+    }
+
+    canResetPassword () {
+        return this.module.getParam('allowPasswordReset');
     }
 
     blockByRateLimit (model) {

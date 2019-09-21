@@ -17,14 +17,14 @@ Jam.ModelAttraction = class {
             const $item = $(item);
             const data = $item.data('attraction');
             if (data) {
-                this.elements.push(new Jam.ModelAttraction.Element($item, data, this));
+                this.elements.push(new Jam.ModelAttractionElement($item, data, this));
             }
         }
         this.model.events.on('change', this.update.bind(this));
         this.update();
     }
 
-    update () {
+    update (event, target) {
         for (const element of this.elements) {
             element.update();
         }
@@ -32,7 +32,7 @@ Jam.ModelAttraction = class {
     }
 };
 
-Jam.ModelAttraction.Element = class {
+Jam.ModelAttractionElement = class {
 
     constructor ($item, data, attraction) {
         this.attraction = attraction;
@@ -56,10 +56,10 @@ Jam.ModelAttraction.Element = class {
 
     create (id, data) {
         switch (id) {
-            case 'visible': return new Jam.ModelAttraction.Visible(this, data);
-            case 'enabled': return new Jam.ModelAttraction.Enabled(this, data);
-            case 'required': return new Jam.ModelAttraction.Required(this, data);
-            case 'value': return new Jam.ModelAttraction.Value(this, data);
+            case 'visible': return new Jam.ModelAttractionVisible(this, data);
+            case 'enabled': return new Jam.ModelAttractionEnabled(this, data);
+            case 'required': return new Jam.ModelAttractionRequired(this, data);
+            case 'value': return new Jam.ModelAttractionValue(this, data);
         }
     }
 
@@ -70,7 +70,7 @@ Jam.ModelAttraction.Element = class {
     }
 };
 
-Jam.ModelAttraction.Action = class {
+Jam.ModelAttractionAction = class {
 
     constructor (element, data) {
         this.element = element;
@@ -91,7 +91,7 @@ Jam.ModelAttraction.Action = class {
     }
 };
 
-Jam.ModelAttraction.Visible = class extends Jam.ModelAttraction.Action {
+Jam.ModelAttractionVisible = class extends Jam.ModelAttractionAction {
 
     update () {
         const group = this.element.$item.data('group');
@@ -101,7 +101,7 @@ Jam.ModelAttraction.Visible = class extends Jam.ModelAttraction.Action {
     }
 };
 
-Jam.ModelAttraction.Enabled = class extends Jam.ModelAttraction.Action {
+Jam.ModelAttractionEnabled = class extends Jam.ModelAttractionAction {
 
     update () {
         if (this.element.attr) {
@@ -112,14 +112,14 @@ Jam.ModelAttraction.Enabled = class extends Jam.ModelAttraction.Action {
     }
 };
 
-Jam.ModelAttraction.Required = class extends Jam.ModelAttraction.Action {
+Jam.ModelAttractionRequired = class extends Jam.ModelAttractionAction {
 
     update () {
         //this.element.$item.toggleClass('hidden', !this.isValid());
     }
 };
 
-Jam.ModelAttraction.Value = class extends Jam.ModelAttraction.Action {
+Jam.ModelAttractionValue = class extends Jam.ModelAttractionAction {
 
     init () {
         if (!this.element.attr) {
@@ -131,7 +131,7 @@ Jam.ModelAttraction.Value = class extends Jam.ModelAttraction.Action {
 
     getValue () {
         return Array.isArray(this.value)
-            ? this.element.attraction.model.getValueFieldByName(this.value[0]).val()
+            ? this.element.attraction.model.getAttr(this.value[0]).getValue()
             : this.value;
     }
 

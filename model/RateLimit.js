@@ -18,9 +18,8 @@ module.exports = class RateLimit extends Base {
                 'updatedAt'
             ],
             BEHAVIORS: {
-                'timestamp': require('areto/behavior/TimestampBehavior')
-            },
-            RATE_LIMIT: 3
+                'timestamp': {Class: require('areto/behavior/TimestampBehavior')}
+            }
         };
     }
 
@@ -38,18 +37,26 @@ module.exports = class RateLimit extends Base {
         this.set('counter', 0)
     }
 
-    isExceeded (value = this.RATE_LIMIT) {
-        return this.get('counter') > value;
+    isExceeded () {
+        return this.get('counter') >= this.getAttempts();
+    }
+
+    getAttempts () {
+        return this.rateLimit.getAttempts(this.type);
+    }
+
+    getTimeout () {
+        return this.rateLimit.getTimeout(this.type);
     }
 
     increment () {
         this.set('counter', this.get('counter') + 1);
-        this.forceSave(()=>{});
+        return this.update();
     }
 
     reset () {
         this.set('counter', 0);
-        this.forceSave(()=>{});
+        return this.update();
     }
 };
 module.exports.init(module);

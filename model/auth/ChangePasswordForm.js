@@ -11,14 +11,16 @@ module.exports = class ChangePasswordForm extends Base {
         return {
             RULES: [
                 [['currentPassword', 'newPassword', 'newPasswordRepeat', 'captchaCode'], 'required'],
-                [['currentPassword', 'newPassword'], 'string', {min: 6, max: 24}],
                 [['newPasswordRepeat'], 'compare', {compareAttr: 'newPassword'}],
                 [['newPassword'], 'compare', {
                     compareAttr: 'currentPassword',
                     operator: '!=',
-                    message: 'Value must not be equal to current password'
+                    message: 'Password must not be equal to the current'
                 }],
-                [['captchaCode'], require('areto/security/captcha/CaptchaValidator')]
+                [['currentPassword', 'newPassword'], (attr, model)=> {
+                    return model.spawn('security/PasswordValidator').validateAttr(attr, model);
+                }],
+                [['captchaCode'], require('areto/security/captcha/CaptchaValidator')]                
             ],
             ATTR_LABELS: {
                 captchaCode: 'Verification code'
@@ -30,15 +32,19 @@ module.exports = class ChangePasswordForm extends Base {
         if (!await this.validate()) {
             return false;
         }
-        const auth = this.spawn('security/PasswordAuthService', {user: this.user});
-        if (!await auth.checkPassword(this.get('currentPassword'))) {
+        const current = this.get('currentPassword');
+        const service = this.spawn('security/PasswordAuthService');
+        const password = await service.spawnPassword().findByUser(this.user.getId()).one();
+        if (!password || !password.check(current)) {
             return this.addError('currentPassword', 'Invalid password');
         }
-        const error = await auth.changePassword(this.get('newPassword'));
-        if (error) {
-            return this.addError('newPassword', error);
-        }
-        return true;
+        try {
+            await service.changePassword(this.get('newPassword'), this.user.getIdentity());
+            await this.user.log('change-password');
+            return true;            
+        } catch (err) {
+            this.addError('newPassword', err);
+        }       
     }
 };
 module.exports.init();

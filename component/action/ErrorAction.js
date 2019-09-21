@@ -43,13 +43,15 @@ module.exports = class ErrorAction extends Base {
     }
 
     isAuthRedirect () {
-        if (this.controller.user.isGuest()) {
-            this.controller.user.setReturnUrl(this.controller.getOriginalUrl());
-            const url = this.controller.user.getLoginUrl();
-            if (url) {
-                this.controller.redirect(url);
-                return true;
-            }
+        const user = this.controller.user; 
+        if (!user.isGuest()) {
+            return false;
+        }
+        user.setReturnUrl(this.controller.getOriginalUrl());
+        const url = user.getLoginUrl();
+        if (url) {
+            this.controller.redirect(url);
+            return true;
         }
     }
 };

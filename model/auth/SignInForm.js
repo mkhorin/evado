@@ -14,7 +14,7 @@ module.exports = class SignInForm extends Base {
                 [['email', 'password'], 'required'],
                 ['email', 'email'],
                 ['rememberMe', 'checkbox'],
-                ['password', 'string', {min: 6, max:24}],
+                ['password', (attr, model)=> model.spawn('security/PasswordValidator').validateAttr(attr, model)],
                 ['captchaCode', 'required', {on: [CAPTCHA_SCENARIO]}],
                 ['captchaCode', require('areto/security/captcha/CaptchaValidator'), {on: [CAPTCHA_SCENARIO]}]
             ],
@@ -32,6 +32,7 @@ module.exports = class SignInForm extends Base {
             rateLimit: config.module.get('rateLimit'),
             rateLimitType: 'signIn',
             rememberPeriod: 7 * 24 * 3600,
+            captchaEnabled: true,
             ...config
         });
     }
@@ -55,18 +56,21 @@ module.exports = class SignInForm extends Base {
         if (!await this.validate()) {
             return false;
         }
-        const auth = this.spawn('security/PasswordAuthService', {user: this.user});
-        const error = await auth.login(this.getAttrMap());
-        if (error) {
-            this.addError('email', error);
+        try {
+            const service = this.spawn('security/PasswordAuthService');
+            const identity = await service.login(this.get('email'), this.get('password'), this.user);
+            const duration = this.get('rememberMe') ? this.rememberPeriod : 0;
+            await this.user.login({identity, duration});
+        } catch (err) {
+            this.addError('email', err);
         }
         await this.updateRateLimit();
         this.toggleCaptchaScenario();
-        return !error;
+        return !this.hasError();
     }
 
     toggleCaptchaScenario () {
-        this.scenario = this.rateLimitModel && this.rateLimitModel.isLimited()
+        this.scenario = this.rateLimitModel && this.rateLimitModel.isExceeded()
             ? this.CAPTCHA_SCENARIO : null;
     }
 

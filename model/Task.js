@@ -17,7 +17,7 @@ module.exports = class Task extends Base {
                 'startup', // run at server startup
                 'startDate', // Date
                 'startTime', // 00:00:00
-                'period', // seconds
+                'period', // duration
                 'repeats', // 0 - endless
                 'stopOnFail',
                 'job',
@@ -31,7 +31,8 @@ module.exports = class Task extends Base {
                 ['startDate', 'date'],
                 ['startTime', 'regexp', {pattern: 'HH:mm:ss'}],
                 [['active', 'startup', 'stopOnFail'], 'checkbox'],
-                [['period', 'repeats'], 'number', {integerOnly: true}],
+                ['repeats', 'number', {integerOnly: true}],
+                ['period', 'regexp', {pattern: 'duration'}],
                 [['period', 'repeats'], 'default', {value: 0}],
                 ['job', 'spawn', {BaseClass: require('areto/scheduler/Job')}]
             ]

@@ -39,7 +39,7 @@ Jam.ModelAttr.Select = class extends Jam.ModelAttr {
     createDependencies () {
         for (const master of this.masters) {
             master.name = master.attr;
-            master.$value = this.model.getValueFieldByName(master.name);
+            master.$value = this.model.getValueField(master.name);
             master.$value.change(this.onChangeMaster.bind(this));
             master.attr = Jam.ModelAttr.get(master.$value);
         }

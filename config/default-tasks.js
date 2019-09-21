@@ -5,7 +5,7 @@
 
 module.exports = {
 
-    'noticeMessageSending': {
+    'sendNoticeMessage': {
         job: {Class: require('../component/scheduler/NoticeMessageJob')},
         startup: true
     }

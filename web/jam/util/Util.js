@@ -44,7 +44,7 @@ Jam.Util = class {
     onItemClick (event) {
         event.preventDefault();
 
-        //$.post(this.params.url, {id: this.params.id});
+        //Jam.Helper.post(this.$item, this.params.url, {id: this.params.id});
 
     }
 };

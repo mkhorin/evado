@@ -6,36 +6,17 @@
 Jam.ModelAttr = class {
 
     static create ($attr, model) {
-        const config = this.getSpawnByHandler($attr.data('handler')) || this.getSpawnByType($attr.data('type'));
-        return config
-            ? new config.Class($attr, model, config)
-            : new this($attr, model);
-    }
-
-    static getSpawnByHandler (handler) {
-        return Jam.ClassHelper.normalizeHandlerSpawn(handler, this, this);
+        const data = $attr.data('handler');
+        if (!data) {
+            return new this($attr, model);
+        }
+        const config = Jam.ClassHelper.normalizeSpawn(data, this, this);
+        return new config.Class($attr, model, config);
     }
 
     static getSpawnByType (type) {
         const map = this.getClassMap();
         return map.hasOwnProperty(type) ? {Class: map[type]} : null;
-    }
-
-    static getClassMap () {
-        return {
-            'checkbox': Jam.ModelAttr.Checkbox,
-            'checkboxList': Jam.ModelAttr.CheckboxList,
-            'date': Jam.ModelAttr.Date,
-            'enum': Jam.ModelAttr.Enum,
-            'json': Jam.ModelAttr.Json,
-            'radioList': Jam.ModelAttr.RadioList,
-            'radioEnum': Jam.ModelAttr.RadioEnum,
-            'relation': Jam.ModelAttr.Relation,
-            'relationSelect': Jam.ModelAttr.RelationSelect,
-            'select': Jam.ModelAttr.Select,
-            'valueMap': Jam.ModelAttr.ValueMap,
-            'file': Jam.ModelAttr.File
-        };
     }
 
     static get ($elem) {
@@ -50,8 +31,7 @@ Jam.ModelAttr = class {
         this.$attr = $attr;
         this.model = model;
         this.$value = model.getValueFieldByAttr(this.$attr);
-        this.$attr.data('model-attr', this);
-        this.type = $attr.data('type');
+        this.$attr.data('model-attr', this);        
         this.params = this.$attr.data('params') || {};
     }
 

@@ -24,8 +24,8 @@ module.exports = class NoticeMessage extends Base {
             UNLINK_ON_REMOVE: [
                 'noticeMessageUsers'
             ],
-            OVERFLOWED_AMOUNT: 10,
-            TRUNCATED_AMOUNT: 5
+            OVERFLOW: 10,
+            TRUNCATION: 5
         };
     }
 
@@ -68,12 +68,11 @@ module.exports = class NoticeMessage extends Base {
         if (!notice) {
             return this.log('error', 'Notice not found');
         }
-        const query = this.find({notice: notice.getId()});
-        if (await query.count() > notice.getOption('overflowedMessages', this.OVERFLOWED_AMOUNT)) {
-            const offset = notice.getOption('truncatedMessages', this.TRUNCATED_AMOUNT);
-            const models = await query.order({[query.model.PK]: -1}).offset(offset).all();
-            await query.model.constructor.remove(models);
-        }
+        await ModelHelper.truncateOverflow({
+            query: this.find({notice: notice.getId()}),
+            overflow: notice.getOption('messageOverflow', this.OVERFLOW),
+            truncation: notice.getOption('messageTruncation', this.TRUNCATION)
+        });
         return true;
     }
 
@@ -88,3 +87,5 @@ module.exports = class NoticeMessage extends Base {
     }
 };
 module.exports.init(module);
+
+const ModelHelper = require('../helper/ModelHelper');

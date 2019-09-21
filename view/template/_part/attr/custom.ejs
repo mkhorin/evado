@@ -6,7 +6,9 @@ const p = {
 %>
 <%- include('_params', {p: p}) %>
 
-<div class="form-group <%- p.css %>" data-attraction='<%= p.attraction %>'>
+<div class="form-attr form-group <%- p.css %>"
+     data-handler="<%= p.handler %>"
+     data-attraction='<%= p.attraction %>'>
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

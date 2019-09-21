@@ -9,25 +9,33 @@ module.exports = class CommonMenu extends Base {
 
     run () {
         const items = this.items || this.getDefaultItems();
-        return this.renderTemplate('_widget/common-menu', {items});
+        const active = this.getActiveItem(items, this.controller.getQueryParam('url'));
+        return this.renderTemplate('_widget/common-menu', {items, active});
+    }
+
+    getActiveItem (items, sourceUrl) {
+        for (const item of items) {
+            if (item.url) {
+                const index = sourceUrl.indexOf(item.url);
+                if (index === 0 || index === 1) {
+                    return item;
+                }
+            }
+        }
     }
 
     getDefaultItems () {
-        const items = this.getModuleItems(this.module.app.modules);
+        const app = this.module.app;
+        const items = app.modules.map(this.getModuleItem, this);
         items.push(this.getSeparatorItem());
-        items.push(this.getModuleItem(this.module.app));
+        items.push(this.getModuleItem(app));
         return items;
-    }
-
-    getModuleItems (modules) {
-        return modules.map(this.getModuleItem.bind(this));
     }
 
     getModuleItem (module, config) {
         return {
             url: module.get('url').resolve(''),
             text: module.getTitle(),
-            active: module === this.module,
             ...config
         };
     }

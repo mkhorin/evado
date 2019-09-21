@@ -22,10 +22,15 @@ module.exports = class DatabaseStore extends Base {
     }
 
     async loadData () {
-        return Object.assign(await super.loadData(), {
+        this.data = await super.loadData();
+        return Object.assign(this.data, {
             metaItems: await this.findMetaItem().all(),
             assignmentRules: await this.findAssignmentRule().all()
         });
+    }
+
+    getItem (id) {
+        return this.data.itemMap[id];
     }
 
     findMetaItem () {

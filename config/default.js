@@ -34,6 +34,9 @@ module.exports = {
             lifetime: 3600
         },
         'i18n': {
+            sources: {
+                'mail': {forceTranslation: true}
+            }
         },
         'formatter': {
             Class: require('../component/misc/Formatter')
@@ -61,8 +64,7 @@ module.exports = {
             identityCookie: {
                 'httpOnly': true,
                 'path': '/'
-            },
-            Identity: require('../model/User')
+            }
         },
         'metaHub': {
             Class: require('../component/meta/MetaHub'),            
@@ -76,19 +78,36 @@ module.exports = {
             Class: require('../component/observer/Observer'),
         },
         'mailer': {
-            Class: require('../component/mailer/Mailer'),
+            Class: require('../component/mailer/DummyMailer')
         },
         'fileStorage': require('./default-fileStorage')
     },
     modules: {
     },
     params: {
+        'allowSignUp': true,
+        'allowPasswordReset': true,
+        'passwordChangeUrl': '/auth/change-password',
+        'expiredPasswordMessage': 'You password has expired',
+        'userPasswordValidator': {
+            min: 6,
+            max: 24
+        },
+        'oldUserPasswords': 0,
+        'minUserPasswordLifetime': 'P10D',
+        'maxUserPasswordLifetime': 'P30D',
+        'verificationLifetime': 'P1D',
+        'repeatVerificationTimeout': 'P1D',
+        'captcha': {
+            minLength: 4,
+            maxLength: 5
+        },
+        'static': {},
         'template': {
             engine: require('areto-ejs'),
             extension: 'ejs'
         },
-        'static': {},
-        'allowSignUp': true
+        'serverAddress': 'http://localhost'
     },
     metaModels: {
         'document': {
@@ -115,4 +134,10 @@ module.exports = {
             Class: require('../component/widget/UserWidget')
         }
     },
+    indexes: [
+        'model/User',
+        'model/UserLog',
+        'security/UserPassword',
+        'security/Verification'
+    ]
 };

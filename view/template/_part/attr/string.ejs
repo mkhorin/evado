@@ -4,9 +4,8 @@
 <%- include('_params', {p}) %>
 
 <div class="form-attr form-group<%- p.required %> <%- p.css %>"
-     data-type="<%- p.type %>"
-     data-attraction='<%= p.attraction %>'
-     data-handler="<%= p.handler %>">
+     data-handler="<%= p.handler %>"
+     data-attraction='<%= p.attraction %>'>
     <label for="<%- p.id %>" title="<%= p.extHint %>"
            class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

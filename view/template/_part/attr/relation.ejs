@@ -1,6 +1,9 @@
 <!-- _part/attr/relation -->
-
-<% const p = {}; %>
+<%
+const p = {
+    handler: 'Relation'
+};
+%>
 <%- include('_params', {p}) %>
 <%
 const d = {
@@ -90,6 +93,7 @@ for (const column of d.columns) {
 }
 if (!hasKeyColumn) {
     d.columns.unshift({
+        type: 'id',
         name: model.PK,
         hidden: true,
         searchable: true,
@@ -100,7 +104,7 @@ if (d.filter && !d.filter.url) {
     d.filter.url = _url(`${relUrl}/filter`);
 }
 %>
-<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-type="relation">
+<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint%>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

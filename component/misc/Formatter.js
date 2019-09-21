@@ -27,7 +27,7 @@ module.exports = class Formatter extends Base {
     }
 
     asNoAccess (value, params = {}) {
-        return this.translate(this.noAccessFormat, I18n.APP_CATEGORY, params.language);
+        return this.translate(this.noAccessFormat, I18n.APP_SOURCE, params.language);
     }
 
     asPreview (value, params = {}) {

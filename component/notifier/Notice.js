@@ -40,14 +40,14 @@ module.exports = class Notice extends Base {
         this.data = data;
         this.resolveTemplate();
         for (const method of this.get('methods')) {
-            await this.executeByMethod(method);
+            await this.notify(method);
         }
     }
 
-    executeByMethod (method) {
+    notify (method) {
         switch (method) {
-            case 'message': return this.executeAsMessage();
-            case 'email': return this.executeAsEmail();
+            case 'message': return this.notifyByMessage();
+            case 'email': return this.notifyByEmail();
         }
     }
 
@@ -65,7 +65,7 @@ module.exports = class Notice extends Base {
 
     // MESSAGE
 
-    async executeAsMessage () {
+    async notifyByMessage () {
         const model = this.spawn('notifier/NoticeMessage');
         if (!await model.create(this)) {
             const error = `Message creation failed`;
@@ -88,12 +88,12 @@ module.exports = class Notice extends Base {
 
     async getUsersByFilter (id) {
         const model = await this.spawn('notifier/UserFilter').findById(id).one();
-        return model ? model.resolve() : [];
+        return model ? model.getUsers() : [];
     }
 
     // EMAIL
 
-    executeAsEmail () {
+    notifyByEmail () {
         // this.module.getMailer().execute(this);
     }
 };

@@ -1,0 +1,10 @@
+<%
+layout(_view.get('_layout/auth'));
+block('title', 'Verification error');
+%>
+
+<div class="alert alert-danger"><%- error %></div>
+
+<div class="text-center">
+    <a href="auth/request-verification"><%- _t('Request verification') %></a>
+</div>

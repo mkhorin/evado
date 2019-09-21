@@ -40,6 +40,8 @@ Jam.Model = class extends Jam.Element {
         this.error = new Jam.ModelError(this);
         this.utilManager = new Jam.UtilManager(this.$controls, this);
         this.changeTracker.start();
+        this.behaviors = Jam.ClassHelper.spawnInstances(this.params.behaviors, {owner: this});
+        this.behaviors.forEach(item => item.init());
     }
 
     createNotice () {
@@ -71,15 +73,15 @@ Jam.Model = class extends Jam.Element {
         return this.$controls.find(`[data-action="${id}"]`);
     }
 
-    getAttrByName (name, className) {
-        return Jam.ModelAttr.get(this.getValueFieldByName(name, className));
+    getAttr (name, className) {
+        return Jam.ModelAttr.get(this.getValueField(name, className));
     }
 
     getAttrByElement (element) {
         return $(element).closest('.form-attr');
     }
 
-    getValueFieldByName (name, className) {
+    getValueField (name, className) {
         return this.$form.find(`[name="${this.formatAttrName(name, className)}"]`);
     }
 
@@ -195,7 +197,7 @@ Jam.Model = class extends Jam.Element {
     forceSave (reopen) {
         this.$loader.show();
         this.events.trigger('beforeSave');
-        $.post(this.params.url, this.$form.serialize()).done(data => {
+        Jam.Helper.post(this.$form, this.params.url, this.$form.serialize()).done(data => {
             this.saved = true;
             this.reopen = reopen;
             this.id = data;
@@ -210,7 +212,7 @@ Jam.Model = class extends Jam.Element {
 
     removeModel () {
         this.$loader.show();
-        $.post(this.params.remove, {id: this.id}).done(()=> {
+        Jam.Helper.post(this.$form, this.params.remove, {id: this.id}).done(()=> {
             this.saved = true;
             this.changeTracker.reset();
             this.modal.close();
@@ -255,8 +257,8 @@ Jam.ModelChangeTracker = class {
 
     start () {
         this.reset();
-        this.$form.find('[name]').on('change keyup', ()=> {
-            this.form.events.trigger('change');
+        this.$form.on('change keyup','[name]', event => {
+            this.form.events.trigger('change', event.target);
         });
     }
 };

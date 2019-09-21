@@ -23,7 +23,9 @@ module.exports = class NoticeMessage extends Base {
         for (const user of users) {
             data.push({read: false, message, user});
         }
-        return this.find().insert(data);
+        if (data.length) {
+            return this.find().insert(data);
+        }
     }
 };
 module.exports.init(module);

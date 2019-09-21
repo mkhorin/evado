@@ -17,7 +17,8 @@ module.exports = class CrudController extends Base {
                 'remove': 'POST',
                 'remove-list': 'POST',
                 'export': 'POST'
-            }
+            },
+
         };
     }
 

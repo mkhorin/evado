@@ -16,29 +16,53 @@ module.exports = class UserFilter extends Base {
                 'items',
                 'includes',
                 'excludes',
-                'condition'
+                'config'
             ]
         };
     }
 
-    async resolve () {
+    async getUsers () {
         let users = this.get('includes');
         users = Array.isArray(users) ? users: [];
-        users.push(...await this.resolveCondition());
-        const excludes = ArrayHelper.flip(this.get('excludes'));
-        for (let i = users.length - 1; i >= 0; --i) {
-            if (excludes.hasOwnProperty(users[i])) {
-                users.splice(i, 1);
-            }
-        }
+        users.push(...await this.resolveConfig());
+        users.push(...await this.resolveRbacItems());
+        users = MongoHelper.diff(users, this.get('excludes'));
         return users;
     }
 
-    resolveCondition () { // query condition or class Condition
-        return [];
+    async resolveRbacItems () {
+        const rbac = this.module.getRbac();
+        const result = [];
+        for (let item of this.get('items')) {
+            item = rbac.store.getItem(item);
+            if (item) {
+                if (Array.isArray(rbac.itemUserMap[item.name])) {
+                    result.push(...rbac.itemUserMap[item.name]);
+                }
+                item = rbac.itemMap[item.name];
+                if (item) {
+                    result.push(...await item.getAssignmentUsers());
+                }
+            }
+        }
+        return result;
     }
 
+    resolveConfig () {
+        const config = this.get('config');
+        if (!config) {
+            return [];
+        }
+        try {
+            const instance = this.spawn(ClassHelper.resolveSpawn(config, this.module));
+            return instance.getUsers();
+        } catch (err) {
+            this.log('error', 'Invalid configuration:', err);
+            return [];
+        }
+    }
 };
 module.exports.init(module);
 
-const ArrayHelper = require('areto/helper/ArrayHelper');
+const ClassHelper = require('areto/helper/ClassHelper');
+const MongoHelper = require('areto/helper/MongoHelper');

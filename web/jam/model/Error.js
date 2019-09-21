@@ -59,7 +59,7 @@ Jam.ModelError = class {
 
     processOne (className, attrName, message, errors) {
         errors.all += `<p>${attrName}: ${message}</p>`;
-        const attr = this.model.getAttrByName(attrName, className);
+        const attr = this.model.getAttr(attrName, className);
         if (attr) {
             attr.$attr.addClass('has-error').find('.error-block').html(message);
         } else {

@@ -1,9 +1,10 @@
 <!-- _part/attr/file -->
 
-<% const p = {}; %>
+<% const p = {handler: 'File'}; %>
+
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group<%- p.required %>" data-type="file">
+<div class="form-attr form-group<%- p.required %>" data-handler="<%= p.handler %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

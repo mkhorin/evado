@@ -16,7 +16,7 @@ module.exports = class UnsetChangedAttrBehavior extends Base {
     }
 
     afterValidate () {
-        if (!this.owner.hasError() && this.owner.isAttrChanged(this.attr)) {
+        if (!this.owner.hasError() && !this.owner.isNew() && this.owner.isAttrChanged(this.attr)) {
             this.owner.unset(this.attr);
         }
     }

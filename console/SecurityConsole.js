@@ -16,14 +16,15 @@ module.exports = class SecurityConsole extends Base {
         this.log('info', 'Users ready');
     }
 
-    async createUser (data) {
-        const model = this.spawnUser({scenario: 'create'});
-        model.setSafeAttrs(data);
-        if (!await model.save()) {
-            return this.log('error', model.getFirstErrorMap());
+    async createUser () {
+        try {
+            const service = this.spawn('security/PasswordAuthService');
+            const user = await service.register(this.params);
+            this.log('info', `User created: ${this.params.email}`);
+            return user;
+        } catch (err) {
+            return this.log('error', err);
         }
-        this.log('info', `User created: ${data.email}`);
-        return model;
     }
 
     findUserByParams () {
@@ -36,16 +37,8 @@ module.exports = class SecurityConsole extends Base {
 
     async createRbac () {
         this.log('info', 'Create RBAC...');
-        await this.app.get('rbac').createByData(this.app.getConfig('rbac'));
+        await this.app.getRbac().createByData(this.app.getConfig('rbac'));
         this.log('info', 'RBAC ready');
-    }
-
-    async signUp () {
-        await this.createUser({
-            name: this.params.name,
-            email: this.params.email,
-            password: this.params.password
-        });
     }
 
     async changePassword () {
@@ -53,10 +46,14 @@ module.exports = class SecurityConsole extends Base {
         if (!user) {
             return this.log('error', `User not found`);
         }
-        user.set('password', this.params.password);
-        await user.save()
-            ? this.log('info', `Password changed`)
-            : this.log('error', user.getFirstErrorMap());
+        try {
+            const service = this.spawn('security/PasswordAuthService');
+            await service.changePassword(this.params.password, user);
+            this.log('info', `Password changed`);
+            return true;
+        } catch (err) {
+            this.log('error', error);
+        }
     }
 
     async assignRole () {
@@ -64,7 +61,7 @@ module.exports = class SecurityConsole extends Base {
         if (!user) {
             return this.log('error', `User not found`);
         }
-        const store = this.app.get('rbac').store;
+        const store = this.app.getRbac().store;
         const item = await store.findItemByName(this.params.role).one();
         if (!item) {
             return this.log('error', 'Role not found');

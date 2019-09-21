@@ -8,7 +8,7 @@ Jam.ModelCondition = class {
     constructor (data, model) {
         this.data = data;
         this.model = model;
-        this._fieldCache = {};
+        this.attrMap = {};
     }
 
     isValid () {
@@ -20,10 +20,10 @@ Jam.ModelCondition = class {
     }
 
     getValue (name) {
-        if (!Object.prototype.hasOwnProperty.call(this._fieldCache, name)) {
-            this._fieldCache[name] = this.model.getValueFieldByName(name);
+        if (!this.attrMap.hasOwnProperty(name)) {
+            this.attrMap[name] = this.model.getAttr(name);
         }
-        return this._fieldCache[name].val();
+        return this.attrMap[name] && this.attrMap[name].getValue();
     }
 
     validate (data) {
@@ -34,7 +34,7 @@ Jam.ModelCondition = class {
         if (operator && typeof operator === 'object') {
             operator = 'AND';
         } else {
-            data = data.slice(1)
+            data = data.slice(1);
         }
         return Jam.ModelCondition.OPERATORS.hasOwnProperty(operator)
             ? this[Jam.ModelCondition.OPERATORS[operator]](operator, data)

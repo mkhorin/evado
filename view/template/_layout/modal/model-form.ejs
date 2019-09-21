@@ -7,13 +7,16 @@ const p = {
     key: model.PK,
     className: model.NAME,
     timestamp: _controller.timestamp,
-    remove: _url('remove')
+    remove: _url('remove'),
+    behaviors: block('behaviors').get()
 };
 if (typeof params !== 'undefined') {
     Object.assign(p, params);
 }
 %>
-<div class="jmodal-scroll-container box-info box" data-title="<%= blocks.title %>" data-tab="<%= blocks.tab %>">
+<div class="jmodal-scroll-container box-info box"
+     data-title="<%= blocks.title %>"
+     data-tab="<%= blocks.tab %>">
 
     <div class="box-header with-border scroll-header">
         <div class="model-controls">
@@ -62,6 +65,7 @@ if (typeof params !== 'undefined') {
             <%- body %>
         </form>
     </div>
+
     <div class="model-loader overlay">
         <i class="fa fa-spinner fa-spin"></i>
     </div>

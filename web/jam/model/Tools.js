@@ -49,6 +49,6 @@ Jam.ModelTools = class {
 
     handlerDefault ($elem) {
         this.toggleLoading(true);
-        return $.post($elem.data('url')).done(data => this.alertSuccess(data));
+        return Jam.Helper.post$.post($elem.data('url'), Jam.Helper.addCsrf($elem)).done(data => this.alertSuccess(data));
     }
 };

@@ -9,16 +9,14 @@ module.exports = class Auth extends Base {
 
     constructor (config) {
         super({
+            Identity: config.module.getClass('model/User'),
+            WebUser: require('./WebUser'),
             ...config
         });
     }
 
     async afterLogin (event) {
-        await this.logUser('login', event.user);
+        await event.user.log('login');
         return super.afterLogin(event);
-    }
-
-    logUser () {
-        return this.spawn('model/UserLog').create(...arguments);
     }
 };

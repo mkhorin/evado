@@ -1,9 +1,12 @@
 <!-- _part/attr/valueMap -->
 
-<% const p = {}; %>
+<% const p = {handler: 'ValueMap'}; %>
+
 <%- include('_params', {p}) %>
 
-<div class="value-map form-attr form-group<%- p.required %>" data-type="valueMap">
+<div class="value-map form-attr form-group<%- p.required %>"
+     data-handler="<%= p.handler %>"
+     data-attraction='<%= p.attraction %>'>
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

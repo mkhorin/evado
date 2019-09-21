@@ -16,8 +16,8 @@ module.exports = class ModuleAsset extends Base {
             await this.installSource(this.module.origin.getPath(dir));
         }
         await this.installSource(this.module.getPath(dir));
-        for (let child of this.module.getModules()) {
-            await this.owner.createModuleAsset(child).install();
+        for (const child of this.module.getModules()) {
+            await this.console.createModuleAsset(child).install();
         }
     }
 
@@ -49,14 +49,14 @@ module.exports = class ModuleAsset extends Base {
         await this.deployVendors(params);
         await PromiseHelper.setImmediate();
 
-        for (let child of this.module.getModules()) {
-            await this.owner.createModuleAsset(child).deploy();
+        for (const child of this.module.getModules()) {
+            await this.console.createModuleAsset(child).deploy();
         }
     }
 
     async deployVendors (params) {
         if (params.files) {
-            for (let vendor of Object.keys(params.files)) {
+            for (const vendor of Object.keys(params.files)) {
                 await this.deployVendor(vendor, params.files[vendor], params);
             }
         }
@@ -70,7 +70,7 @@ module.exports = class ModuleAsset extends Base {
             files = params.defaults[files] || [];
         }
         let deployed = false;
-        for (let name of files) {
+        for (const name of files) {
             if (this.module.origin && await this.deployVendorFile(name, vendor, this.module.origin, params)) {
                 deployed = true;
             }

@@ -11,13 +11,12 @@ module.exports = class SignUpForm extends Base {
         return {
             RULES: [
                 [['name', 'email', 'password', 'passwordRepeat', 'captchaCode'], 'required'],
-                ['name', 'string', {min: 3, max: 24}],
+                ['name', 'string', {min: 2, max: 24}],
                 ['name', 'regexp', {pattern: /^[а-яa-z\s-]+$/i}],
                 ['email', 'email'],
-                ['password', 'string', {min: 6, max: 24}],
+                ['password', (attr, model)=> model.spawn('security/PasswordValidator').validateAttr(attr, model)],
                 ['passwordRepeat', 'compare', {compareAttr: 'password'}],
-                ['captchaCode', require('areto/security/captcha/CaptchaValidator')],
-                ['passwordRepeat', 'compare', {compareAttr: 'password'}]
+                ['captchaCode', require('areto/security/captcha/CaptchaValidator')]
             ],
             ATTR_LABELS: {
                 captchaCode: 'Verification code'
@@ -28,13 +27,17 @@ module.exports = class SignUpForm extends Base {
     async register () {
         if (!await this.validate()) {
             return false;
+        }        
+        try {
+            const service = this.spawn('security/PasswordAuthService');
+            const identity = await service.register(this.getAttrMap());
+            /*if (this.loginAfterRegister) {
+                await this.user.login({identity, duration: 0});
+            }//*/
+            return true;
+        } catch (err) {
+            this.addErrors(err);
         }
-        const auth = this.spawn('security/PasswordAuthService', {user: this.user});
-        const errors = await auth.register(this.getAttrMap());
-        if (errors) {
-            return this.addErrors(errors);
-        }
-        return true;
     }
 };
 module.exports.init(module);

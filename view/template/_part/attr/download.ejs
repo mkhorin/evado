@@ -10,7 +10,7 @@ const preview = model.isImage()
 %>
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group">
+<div class="form-attr form-group" data-handler="<%= p.handler %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

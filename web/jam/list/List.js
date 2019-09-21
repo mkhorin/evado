@@ -216,12 +216,12 @@ Jam.List = class extends Jam.Element {
         return $rows ? this.getObjectIds($rows).join() : '';
     }
 
-    getSelectedRow (message = 'Select one item to act') {
+    getSelectedRow (message = 'Select one item for action') {
         const $row = this.findSelectedRows();
         return $row.length === 1 ? $row : this.notice.warning(message);
     }
 
-    getSelectedRows (message = 'Select items to act') {
+    getSelectedRows (message = 'Select items for action') {
         const $rows = this.findSelectedRows();
         return $rows.length ? $rows : this.notice.warning(message);
     }
@@ -262,7 +262,7 @@ Jam.List = class extends Jam.Element {
 
     post (url, data) {
         this.toggleLoader(true);
-        this.xhr = $.post(url, data)
+        this.xhr = Jam.Helper.post(this.$container, url, data)
             .always(()=> this.toggleLoader(false))
             .fail(xhr => this.notice.danger(xhr.responseText || xhr.statusText));
         return this.xhr;

@@ -1,15 +1,15 @@
 <%
-const signUp = _t('Sign up');
+const title = _t('Sign up');
 
 layout(_view.get('_layout/auth'));
-block('title', signUp);
+block('title', title);
 %>
 
 <p class="login-box-msg">
     <%- _t('Register a new user') %>
 </p>
 
-<form action="auth/sign-up" method="post" class="form">
+<form method="post" class="form">
 
     <%- include('./input', {
         attr: 'name',
@@ -46,7 +46,7 @@ block('title', signUp);
 
     <div class="form-attr form-group mt20">
         <button type="submit" class="btn btn-primary btn-block btn-flat">
-            <%- signUp %>
+            <%- title %>
         </button>
     </div>
 </form>

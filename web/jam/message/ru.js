@@ -99,8 +99,8 @@ Jam.I18n.defaults = {
     'Select box': 'Выпадающий список',
     'Select column to sort': 'Выберите колонку для сортировки',
     'Select date...': 'Выберите дату...',
-    'Select items to act': 'Выберите объекты для действия',
-    'Select one item to act': 'Выберите объект для действия',
+    'Select items for action': 'Выберите объекты для действия',
+    'Select one item for action': 'Выберите объект для действия',
     'Select values to restore': 'Выберите значения для восстановления',
     'Sign in': 'Войти',
     'Sign out': 'Выйти',
@@ -124,6 +124,7 @@ Jam.I18n.defaults = {
     'View': 'Просмотр',
 
     'Yes': 'Да',
+    'You have no new notifications': 'Нет новых уведомлений',
 
     'begins': 'начинается',
 

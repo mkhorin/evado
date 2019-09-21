@@ -658,7 +658,7 @@ body.loading {
 }
 .checkbox-inline + .checkbox-inline,
 .radio-inline + .radio-inline {
-    margin-left: 15px;
+    margin-left: 18px;
 }
 .login-box, .register-box {
     margin: 3% auto;
@@ -680,6 +680,16 @@ body.loading {
 .register-box-body .has-success .form-control-feedback {
     color: var(--color-dark-success);
 }
+.login-box-footer {
+    text-align: center;
+}
+.login-box-footer .btn {
+    margin-top: 20px;
+}
+.login-box-footer .btn + .btn {
+    margin-left: 10px;
+}
+
 .captcha {
     margin-bottom: 10px;
 }
@@ -776,7 +786,7 @@ textarea.form-control {
     margin-right: 0;
 }
 .inline-group-container .col {
-    margin-right: 15px;
+    margin-right: 20px;
 }
 .inline-group-container .col,
 .inline-group-container .form-group {
@@ -831,6 +841,9 @@ textarea.form-control {
 }
 .model .form-header {
     margin-top: -10px;
+}
+.control-label[title]:not([title=""]) {
+    color: #268;
 }
 
 /* TABS */
@@ -1377,6 +1390,9 @@ input[type=checkbox].condition-value {
     position: relative;
     padding: 15px 15px 20px;
 }
+.jmodal-body > .box > .box-body > form{
+    min-height: 280px;
+}
 .jmodal-body > .box > .default-notice {
     margin: 10px 15px 0 15px;
 }
@@ -1915,6 +1931,28 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 }
 .notifications-menu .messages > li > a > i {
     margin-right: 5px;
+}
+
+.notification-popup {
+    position: fixed;
+    right: 0;
+    bottom: -50px;
+    width: 100%;
+    max-width: 480px;
+    z-index: 2048;
+    padding: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    background: rgba(240, 220, 140, 0.7);
+    transition: bottom 0.5s ease;
+}
+.notification-popup:hover {
+    background: rgba(240, 220, 140, 1.0);
+}
+.notification-popup.open {
+    bottom: 5px;
 }
 
 /* MEDIA */

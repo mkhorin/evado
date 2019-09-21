@@ -7,14 +7,14 @@ const Base = require('areto/base/Controller');
 
 module.exports = class BaseController extends Base {
 
-    getRefUrl () {
-        const ref = this.isGet()
+    getReferrer () {
+        const url = this.isGet()
             ? this.getHttpHeader('referrer')
             : this.getPostParam('referrer');
-        return ref ? ref : '';
+        return url ? url : '';
     }
 
-    backToRef (url = 'index') {
+    redirectToReferrer (url = 'index') {
         this.redirect(this.getPostParam('referrer') || url);
     }
 

@@ -1,6 +1,7 @@
 <!-- _part/attr/json -->
-
-<% const p = {}; %>
+<%
+const p = {handler: 'Json'};
+%>
 <%- include('_params', {p}) %>
 <%
 if (p.value) {
@@ -9,7 +10,7 @@ if (p.value) {
 }
 %>
 <div class="<%- p.required %> <%- p.css %> form-attr form-group"
-     data-type="json"
+     data-handler="<%= p.handler %>"
      data-attraction='<%= p.attraction %>'>
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>

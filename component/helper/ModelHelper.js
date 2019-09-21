@@ -17,12 +17,12 @@ module.exports = class ModelHelper {
         for (const [attrs, type, params] of rules) {
             const format = formatMap[type] || this.formatDefaultRule;
             for (const model of models) {
-                if (Array.isArray(attrs)) {
-                    for (const attr of attrs) {
-                        format(model, attr, formatter, type, params);
-                    }
-                } else {
-                    format(model, attrs, formatter, type, params);
+                if (!Array.isArray(attrs)) {
+                    format(attrs, model, formatter, type, params);
+                    continue;
+                }
+                for (const attr of attrs) {
+                    format(attr, model, formatter, type, params);
                 }
             }
         }
@@ -34,7 +34,7 @@ module.exports = class ModelHelper {
         };
     }
 
-    static formatRelationRule (model, attr, formatter, type, {url} = {}) {
+    static formatRelationRule (attr, model, formatter, type, {url} = {}) {
         const related = model.rel(attr);
         if (!related) {
             return model.setViewAttr(attr, model.get(attr));
@@ -47,7 +47,19 @@ module.exports = class ModelHelper {
         }));
     }
 
-    static formatDefaultRule (model, attr, formatter, type, params) {
+    static formatDefaultRule (attr, model, formatter, type, params) {
         model.setViewAttr(attr, formatter.format(model.get(attr), type, params));
+    }
+
+    static async truncateOverflow ({query, overflow, truncation, inBulk}) {
+        if (await query.count() > overflow) {
+            const model = query.model;
+            query.order({[model.PK]: -1}).offset(truncation);
+            if (inBulk) {
+                const ids = await query.ids();
+                return query.order(null).where({[model.PK]: ids}).remove();
+            }
+            return model.constructor.remove(await query.all());
+        }
     }
 };

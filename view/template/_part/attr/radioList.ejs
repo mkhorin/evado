@@ -1,6 +1,8 @@
 <!-- _part/attr/radioList -->
 <%
-const p = {};
+const p = {
+    handler: 'RadioList'
+};
 if (items === 'labels') {
     items = _controller.getLabelSelectItems(attr, model);
 }
@@ -8,7 +10,7 @@ if (items === 'labels') {
 <%- include('_params', {p}) %>
 
 <div class="form-attr <%- p.css %> <%- p.required %> form-group"
-     data-type="radioList"
+     data-handler="<%= p.handler %>"
      data-attraction='<%= p.attraction %>'>
     <label class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

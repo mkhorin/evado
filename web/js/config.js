@@ -38,6 +38,7 @@ if ($.fn.datetimepicker) {
         ignoreReadonly: false,
         useCurrent: false,
         toolbarPlacement: 'bottom',
+        widgetPositioning: {vertical: 'bottom'},
         // widgetParent: 'body',
         // debug: true
     };

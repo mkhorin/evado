@@ -1,0 +1,40 @@
+<%
+const title = _t('Request verification');
+const error = _controller.getFlash('error').join();
+const success = _controller.getFlash('success').join();
+layout(_view.get('_layout/auth'));
+block('title', title);
+%>
+
+<% if (success) { %>
+<div class="alert alert-success"><%- success %></div>
+<div class="text-center">
+    <a href="/"><%- _t('Back to main') %></a>
+</div>
+<% } else { %>
+
+<% if (error) { %>
+<div class="alert alert-error"><%- error %></div>
+<% }%>
+
+<p class="login-box-msg"><%- title %></p>
+
+<form method="post" class="form">
+    <%- include('./input', {
+        attr: 'email',
+        type: 'email',
+        iconClass: 'glyphicon glyphicon-envelope',
+        autocomplete: 'on'
+    }) %>
+    <%- include('./captcha', {
+        attr: 'captchaCode',
+        iconClass: 'glyphicon glyphicon-check',
+        url: 'auth/captcha'
+    }) %>
+    <div class="form-attr form-group mt20">
+        <button type="submit" class="btn btn-primary btn-block btn-flat">
+            <%- _t('Send') %>
+        </button>
+    </div>
+</form>
+<% } %>

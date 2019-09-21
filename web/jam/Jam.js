@@ -148,7 +148,7 @@ Jam.Dialog = class {
 
     confirmRemove (message, data) {
         return this.confirm(message || 'Delete permanently?', {
-            confirmText: 'Delete',
+            submitText: 'Delete',
             cssClass: 'danger',
             ...data
         });
@@ -250,49 +250,56 @@ Jam.DeferredTask = class {
 
 Jam.Resource = class {
 
-    constructor () {
-        this._map = {};
-        this.addLinks(document.head);
-        this.addLinks(document.body);
-        this.addScripts(document.head);
-        this.addScripts(document.body);
-    }
-
-    has (key) {
-        return this._map[key] === true;
-    }
-
-    addLinks (container, remove) {
-        for (const node of container.querySelectorAll('link')) {
-            this.add(node.getAttribute('href'));
-            if (remove) {
-                node.remove();
-            }
-        }
-    }
-
-    addScripts (container, remove) {
-        for (const node of container.querySelectorAll('script')) {
-            this.add(node.getAttribute('src'));
-            if (remove) {
-                node.remove();
-            }
-        }
-    }
-
-    add (key) {
-        if (this.has(key)) {
-            return false;
-        }
-        return this._map[key] = true;
-    }
-
-    resolve (data) {
+    resolve (content, done) {
         const container = document.createElement('template');
-        container.innerHTML = data;
-        this.addLinks(container.content, true);
-        this.addScripts(container.content, true);
-        return container.content;
+        container.innerHTML = content;
+        const result = container.content;
+        const elements = [];
+        this.resolveElements('link', 'href', result, elements);
+        this.resolveElements('script', 'src', result, elements);
+        Jam.AsyncHelper.each(elements, (element, cb)=> {
+            element.addEventListener('load', event => cb(), {once: true});
+        }, ()=> done(result));
+    }
+
+    resolveElements (selector, key, container, elements) {
+        for (const node of container.querySelectorAll(selector)) {
+            const id = node.getAttribute(key);
+            const data = this.getData();
+            if (data[id] !== true) {
+                elements.push(this.createElement(selector, key, node));
+                data[id] = true;
+            }
+            node.remove();
+        }
+    }
+
+    createElement (selector, key, node) {
+        const element = document.createElement(selector);
+        element[key] = node[key];
+        element.rel = node.rel;
+        document.head.appendChild(element);
+        return element;
+    }
+
+    getData () {
+        if (!this._data) {
+            this._data = this.createData();
+        }
+        return this._data;
+    }
+
+    createData () {
+        const data = {};
+        this.indexElements('link', 'href', data);
+        this.indexElements('script', 'src', data);
+        return data;
+    }
+
+    indexElements (selector, key, data) {
+        for (const node of document.querySelectorAll(selector)) {
+            data[node[key]] = true;
+        }
     }
 };
 

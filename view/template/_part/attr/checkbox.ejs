@@ -1,10 +1,10 @@
 <!-- _part/attr/checkbox -->
 
-<% const p = {}; %>
+<% const p = {handler: 'Checkbox'}; %>
+
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group <%- p.css %>" data-type="checkbox"
-     data-attraction='<%= p.attraction %>'>
+<div class="form-attr form-group <%- p.css %>" data-handler="<%= p.handler %>" data-attraction='<%= p.attraction %>'>
     <div class="<%- p.labelCss %>"></div>
     <div class="<%- p.valueCss %>">
         <div class="checkbox checkbox-init">

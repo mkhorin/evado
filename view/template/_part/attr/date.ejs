@@ -1,13 +1,14 @@
 <!-- _part/attr/date -->
 <%
 const p = {
+    handler: 'Date',
     utc: typeof utc === 'undefined' || utc ? 'true' : '',
     options: typeof options === 'undefined' ? '' : JSON.stringify(options)
 };
 %>
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group <%- p.required %>" data-type="date"
+<div class="form-attr form-group <%- p.required %>" data-handler="<%= p.handler %>"
      data-attraction='<%= p.attraction %>'
      data-utc="<%- p.utc %>"
      data-params="<%= p.options %>">

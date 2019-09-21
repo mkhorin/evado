@@ -17,7 +17,6 @@ module.exports = {
             'dist/css',
             'dist/js/adminlte.min.js'
         ],
-        'async': ['dist'],
         'bootstrap': ['dist'],
         'bootstrap-daterangepicker': [
             'daterangepicker.css',

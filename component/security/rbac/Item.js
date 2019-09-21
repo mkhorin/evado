@@ -31,13 +31,21 @@ module.exports = class Item extends Base {
     async resolveAssignmentRules (userId) {
         if (Array.isArray(this.assignmentRules)) {
             for (const config of this.assignmentRules) {
-                config.item = this;
-                config.userId = userId;
-                if (await (new config.Class(config)).execute()) {
+                if (await (new config.Class(config)).execute(this, userId)) {
                     return true; // can assign item to user
                 }
             }
         }
+    }
+
+    async getAssignmentUsers () {
+        const users = [];
+        if (Array.isArray(this.assignmentRules)) {
+            for (const config of this.assignmentRules) {
+                users.push(...await (new config.Class(config)).getUsers(this));
+            }
+        }
+        return users;
     }
 
     // CREATE

@@ -202,6 +202,7 @@ module.exports = class Rbac extends Base {
         this.setMetaTransitionMap();
         this.setMetaNavMap();
         this.setAssignmentRules(data.assignmentRules);
+        this.setItemUserMap();
         this.prepareMetaDependencies();
     }
 
@@ -316,6 +317,16 @@ module.exports = class Rbac extends Base {
         this.metaNavMap = this.indexMetaItemsByRoleKey(items);
     }
 
+    setItemUserMap () {
+        this.itemUserMap = {};
+        for (let user of Object.keys(this.assignmentMap)) {
+            user = MongoHelper.createObjectId(user);
+            for (const item of this.assignmentMap[user]) {
+                ObjectHelper.push(user, item, this.itemUserMap);
+            }
+        }
+    }
+
     setAssignmentRules (items) {
         const data = this.createAssignmentRuleMap(items);
         this.assignmentRuleItems = [];
@@ -371,16 +382,28 @@ module.exports = class Rbac extends Base {
     }
 
     async getUserAssignments (userId) {
-        let roles = super.getUserAssignments(userId);
-        if (this.assignmentRuleItems.length) {
-            roles = roles || [];
-            for (const name of this.assignmentRuleItems) {
-                if (!roles.includes(name) && await this.itemMap[name].resolveAssignmentRules(userId)) {
-                    roles.push(name);
-                }
+        const items = super.getUserAssignments(userId);
+        if (!this.assignmentRuleItems.length) {
+            return items;
+        }
+        const ruleItems = await this.getUserAssignmentsByRules(userId);
+        if (!items) {
+            return ruleItems;
+        }
+        if (ruleItems.length) {
+            items.push(...ruleItems);
+        }
+        return items;
+    }
+
+    async getUserAssignmentsByRules (userId) {
+        const items = [];
+        for (const name of this.assignmentRuleItems) {
+            if (!items.includes(name) && await this.itemMap[name].resolveAssignmentRules(userId)) {
+                items.push(name);
             }
         }
-        return roles;
+        return items;
     }
 
     getAccess (assignments, data, params) {
@@ -415,3 +438,4 @@ const ArrayHelper = require('areto/helper/ArrayHelper');
 const ClassHelper = require('areto/helper/ClassHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');
 const MetaObjectFilter = require('./MetaObjectFilter');
+const MongoHelper = require('areto/helper/MongoHelper');

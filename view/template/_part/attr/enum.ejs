@@ -1,15 +1,19 @@
 <!-- _part/attr/enum -->
 <%
 const p = {
+    handler: 'Enum',
     select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
     sets: typeof sets === 'undefined' ? '' : JSON.stringify(sets)
 };
 %>
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-type="enum"
-     data-value="<%= p.value %>" data-sets="<%= p.sets %>"
-     data-select2="<%= p.select2 %>" data-attraction='<%= p.attraction %>'>
+<div class="form-attr form-group<%- p.required %> <%- p.css %>"
+     data-handler="<%= p.handler %>"
+     data-value="<%= p.value %>"
+     data-sets="<%= p.sets %>"
+     data-select2="<%= p.select2 %>"
+     data-attraction='<%= p.attraction %>'>
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
