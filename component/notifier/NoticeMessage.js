@@ -12,13 +12,13 @@ module.exports = class NoticeMessage extends Base {
             TABLE: 'sys_noticeMessage',
             ATTRS: [
                 'notice',
-                'header',
-                'content',
+                'subject',
+                'text',
                 'sentAt',
                 'createdAt'
             ],
             RULES: [
-                [['header', 'content'], 'required'],
+                [['subject', 'text'], 'required'],
                 ['sentAt', 'default', {value: null}]
             ],
             UNLINK_ON_REMOVE: [
@@ -43,8 +43,8 @@ module.exports = class NoticeMessage extends Base {
 
     create (notice) {
         this.set('notice', notice.getId());
-        this.set('header', notice.get('header'));
-        this.set('content', notice.get('content'));
+        this.set('subject', notice.get('subject'));
+        this.set('text', notice.get('text'));
         this.set('createdAt', new Date);
         return this.save();
     }
@@ -58,9 +58,27 @@ module.exports = class NoticeMessage extends Base {
             return this.log('error', 'Notice not found');
         }
         const users = await notice.getUsers();
-        await this.spawn('notifier/NoticeMessageUser').addMessage(this.getId(), users);
+        for (const method of notice.get('methods')) {
+            switch (method) {
+                case 'message': await this.sendAsMessage(users); break;
+                case 'email': await this.sendAsEmail(users); break;
+            }
+        }
         await this.directUpdate({sentAt: new Date});
         return true;
+    }
+
+    sendAsMessage (users) {
+        return this.spawn('notifier/NoticeMessageUser').addMessage(this.getId(), users);
+    }
+
+    async sendAsEmail (users) {
+        const emails = await this.spawn('model/User').findById(users).column('email');
+        return this.module.getMailer().send({
+            recipient: emails,
+            subject: this.get('subject'),
+            text: this.get('text')
+        });
     }
 
     async truncate () {

@@ -26,18 +26,24 @@ module.exports = class Mailer extends Base {
     }
 
     async init () {
-        this._transport = this.engine.createTransport(this.settings);
+        this.formatter = this.module.get('formatter');
+        this.urlManager = this.module.get('urlManager');
+        this.transport = await this.createTransport();
     }
 
-    getSender (key) {
-        return this.senderMap.hasOwnProperty(key) ? this.senderMap : null;
+    createTransport () {
+        return this.engine.createTransport(this.settings);
     }
 
     async send (data) {
         data = await this.prepareData(data);
         await this.beforeSend(data);
-        const result = await this.forceSend(data);
+        const result = await this.directSend(data);
         await this.afterSend(result, data);
+    }
+
+    getSender (key) {
+        return this.senderMap.hasOwnProperty(key) ? this.senderMap : null;
     }
 
     async prepareData ({sender, recipient, subject, text}) {
@@ -57,11 +63,11 @@ module.exports = class Mailer extends Base {
         return this.trigger(this.EVENT_AFTER_SEND, new Event({result, data}));
     }
 
-    async forceSend (data) {
+    async directSend (data) {
         try {
-            const result = await this._transport.sendMail({
+            const result = await this.transport.sendMail({
                 from: data.sender,
-                to: data.recipient.toString(),
+                to: data.recipient,
                 subject: data.subject,
                 text: data.text,
             });
@@ -69,7 +75,36 @@ module.exports = class Mailer extends Base {
             return result;
         } catch (err) {
             this.log('error', 'Sending failed', err);
-            throw Error('Sending failed');
+            throw 'Sending failed';
+        }
+    }
+
+    translate (message, params, source = this.defaultMessageSource) {
+        return this.module.translate(message, this.defaultMessageSource, params);
+    }
+
+    sendPasswordReset () {
+        return this.sendVerificationInternal('passwordReset', '/auth/reset-password', ...arguments);
+    }
+
+    sendVerification () {
+        return this.sendVerificationInternal('verification', '/auth/verify', ...arguments);
+    }
+
+    async sendVerificationInternal (name, link, verification, user) {
+        try {
+            let time = this.module.getParam('verificationLifetime');
+            time = this.formatter.format(time, 'duration');
+            link = this.urlManager.createAbsolute(link);
+            link = `${link}?key=${verification.get('key')}`;
+            await this.send({
+                recipient: user.getEmail(),
+                subject: this.translate(`${name}.subject`),
+                text: this.translate(`${name}.text`, {name: user.getTitle(), link, time})
+            });
+        } catch (err) {
+            await verification.remove();
+            throw err;
         }
     }
 };

@@ -34,7 +34,7 @@ module.exports = class CommonMenu extends Base {
 
     getModuleItem (module, config) {
         return {
-            url: module.get('url').resolve(''),
+            url: module.get('urlManager').resolve(''),
             text: module.getTitle(),
             ...config
         };

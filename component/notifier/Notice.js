@@ -12,8 +12,8 @@ module.exports = class Notice extends Base {
             TABLE: 'sys_notice',
             ATTRS: [
                 'active',
-                'header',
-                'content',
+                'subject',
+                'text',
                 'methods',
                 'users',
                 'userFilters',
@@ -39,15 +39,11 @@ module.exports = class Notice extends Base {
     async execute (data) {
         this.data = data;
         this.resolveTemplate();
-        for (const method of this.get('methods')) {
-            await this.notify(method);
-        }
-    }
-
-    notify (method) {
-        switch (method) {
-            case 'message': return this.notifyByMessage();
-            case 'email': return this.notifyByEmail();
+        const model = this.spawn('notifier/NoticeMessage');
+        if (!await model.create(this)) {
+            const error = 'Message creation failed';
+            this.addError('error', error);
+            this.log('error', `${error}:`, model.getErrors());
         }
     }
 
@@ -56,21 +52,10 @@ module.exports = class Notice extends Base {
             const config = this.getOption('MessageTemplate') || this.getClass('notifier/MessageTemplate');
             const Class = ClassHelper.resolveSpawn(config, this.module);
             const template = this.spawn(Class, {data: this.data});
-            this.set('header', template.resolveHeader(this.get('header')));
-            this.set('content', template.resolveContent(this.get('content')));
+            this.set('subject', template.resolveSubject(this.get('subject')));
+            this.set('text', template.resolveText(this.get('text')));
         } catch (err) {
             this.log('error', 'Invalid message template:', err);
-        }
-    }
-
-    // MESSAGE
-
-    async notifyByMessage () {
-        const model = this.spawn('notifier/NoticeMessage');
-        if (!await model.create(this)) {
-            const error = `Message creation failed`;
-            this.addError('error', error);
-            this.log('error', `${error}:`, model.getErrors());
         }
     }
 
@@ -89,12 +74,6 @@ module.exports = class Notice extends Base {
     async getUsersByFilter (id) {
         const model = await this.spawn('notifier/UserFilter').findById(id).one();
         return model ? model.getUsers() : [];
-    }
-
-    // EMAIL
-
-    notifyByEmail () {
-        // this.module.getMailer().execute(this);
     }
 };
 module.exports.init(module);

@@ -7,10 +7,11 @@ const Base = require('./Mailer');
 
 module.exports = class DummyMailer extends Base {
 
-    async init () {
+    createTransport () {
+        return null;
     }
 
-    forceSend (data) {
+    directSend (data) {
         this.log('info', 'Message sent:', data);
         return data;
     }

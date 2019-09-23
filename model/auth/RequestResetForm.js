@@ -27,8 +27,8 @@ module.exports = class RequestResetForm extends Base {
         try {
             const service = this.spawn('security/PasswordAuthService');
             const user = await this.getUser(service);
-            const model = await service.createVerification(user);
-            await this.send(model.get('key'));
+            const verification = await service.createVerification(user);
+            await this.module.getMailer().sendPasswordReset(verification, user);
             await this.user.log('request-reset', undefined, user);
             return true;
         } catch (err) {
@@ -42,9 +42,6 @@ module.exports = class RequestResetForm extends Base {
             throw 'User not found';
         }
         return user;
-    }
-
-    send (key) {
     }
 };
 module.exports.init();

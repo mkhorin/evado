@@ -32,8 +32,8 @@ module.exports = class Notifications extends Base {
         await this.user.readMessage(id);
         const data = await this.getUnreadMessages();
         data.message = {
-          header: model.get('header'),
-          content: model.get('content'),
+          subject: model.get('subject'),
+          text: model.get('text'),
           sentAt: model.get('sentAt')
         };
         return data;
@@ -48,7 +48,7 @@ module.exports = class Notifications extends Base {
             for (const model of models) {
                 items.push({
                     id: model.getId(),
-                    title: model.get('header')
+                    title: model.get('subject')
                 });
             }
         }

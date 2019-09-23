@@ -28,7 +28,7 @@ module.exports = class RequestVerificationForm extends Base {
             const service = this.spawn('security/PasswordAuthService');
             const user = await this.getUser(service);
             const verification = await service.createVerification(user);
-            await this.send(user, verification);
+            await this.module.getMailer().sendVerification(verification, user);
             await this.user.log('request-verification', undefined, user);
             return true;
         } catch (err) {
@@ -45,20 +45,6 @@ module.exports = class RequestVerificationForm extends Base {
             throw 'User is already verified';
         }
         return user;
-    }
-
-    send (user, verification) {
-        const url = this.module.get('url').createAbsolute('/admin/verify');
-        const lifetime = this.module.getParam('verificationLifetime');
-        return this.module.getMailer().send({
-            recipient: user.getEmail(),
-            subject: this.module.translate('verification.subject', 'mail'),
-            text: this.module.translate('verification.text', 'mail', {
-                name: user.getTitle(),
-                link: `${url}?key=${verification.get('key')}`,
-                time: this.module.get('formatter').format(lifetime, 'duration')
-            })
-        });
     }
 };
 module.exports.init();

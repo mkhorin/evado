@@ -30,10 +30,10 @@ module.exports = class SignUpForm extends Base {
         }        
         try {
             const service = this.spawn('security/PasswordAuthService');
-            const identity = await service.register(this.getAttrMap());
-            /*if (this.loginAfterRegister) {
-                await this.user.login({identity, duration: 0});
-            }//*/
+            const user = await service.register(this.getAttrMap());
+            const verification = await service.createVerification(user);
+            await this.module.getMailer().sendVerification(verification, user);
+            await this.user.log('register', undefined, user);
             return true;
         } catch (err) {
             this.addErrors(err);

@@ -28,7 +28,7 @@ module.exports = class User extends Base {
                 ['email', 'email'],
                 [['blocked', 'verified', 'expiredPassword'], 'checkbox'],
                 ['unlockAt', 'date'],
-                [['name', 'email'], 'unique', {skipOnAnyError: true, ignoreCase: true}]
+                [['name', 'email'], 'unique', {ignoreCase: true, skipOnAnyError: true}]
             ],
             BEHAVIORS: {
                 'timestamp': require('areto/behavior/TimestampBehavior')

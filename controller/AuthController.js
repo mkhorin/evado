@@ -71,8 +71,8 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).register()) {
             return this.render('sign-up', {model});
         }
-        this.setFlash('success', 'Registration completed');
-        this.goLogin();
+        this.setFlash('info', `${this.translate('Verification key sent to')} ${model.get('email')}`);
+        this.goHome();
     }
 
     async actionChangePassword () {

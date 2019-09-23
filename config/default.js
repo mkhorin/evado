@@ -94,7 +94,7 @@ module.exports = {
             max: 24
         },
         'oldUserPasswords': 0,
-        'minUserPasswordLifetime': 'P10D',
+        'minUserPasswordLifetime': 'P10D', // ISO_8601#Durations
         'maxUserPasswordLifetime': 'P30D',
         'verificationLifetime': 'P1D',
         'repeatVerificationTimeout': 'P1D',

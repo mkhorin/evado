@@ -23,8 +23,8 @@ module.exports = class TestMailer extends Base {
         return super.init();
     }
 
-    async forceSend (data) {
-        const result = await super.forceSend();
+    async directSend (data) {
+        const result = await super.directSend(data);
         this.log('info', 'Preview:', this.engine.getTestMessageUrl(result));
         return result;
     }
