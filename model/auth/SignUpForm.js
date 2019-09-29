@@ -12,7 +12,7 @@ module.exports = class SignUpForm extends Base {
             RULES: [
                 [['name', 'email', 'password', 'passwordRepeat', 'captchaCode'], 'required'],
                 ['name', 'string', {min: 2, max: 24}],
-                ['name', 'regexp', {pattern: /^[а-яa-z\s-]+$/i}],
+                ['name', 'regex', {pattern: /^[а-яa-z\s-]+$/i}],
                 ['email', 'email'],
                 ['password', (attr, model)=> model.spawn('security/PasswordValidator').validateAttr(attr, model)],
                 ['passwordRepeat', 'compare', {compareAttr: 'password'}],

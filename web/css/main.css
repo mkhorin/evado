@@ -149,6 +149,9 @@ label.checkbox {
     margin-right: 30px !important;
 }
 
+hr {
+    border-color: #ccc;
+}
 a:hover {
     color: #a00;
 }
@@ -550,7 +553,7 @@ body.loading {
     padding-top: 15px;
 }
 .model-view .form-group {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 .model-controls .btn {
     margin: 0 3px 0 0;
@@ -843,7 +846,7 @@ textarea.form-control {
     margin-top: -10px;
 }
 .control-label[title]:not([title=""]) {
-    color: #268;
+    color: #579;
 }
 
 /* TABS */
@@ -1801,7 +1804,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 }
 .select2-container--default .select2-selection__clear {
     font-size: 18px;
-    color: #999;
+    color: #aaa;
 }
 .select2-container--default .select2-selection--single .select2-selection__clear {
     margin-right: 5px;

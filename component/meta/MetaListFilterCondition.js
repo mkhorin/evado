@@ -8,13 +8,12 @@ const Base = require('../misc/ListFilterCondition');
 module.exports = class MetaListFilterCondition extends Base {
 
     parse ({attr}) {
-        if (this.view.searchAttrs.includes(this.view.getAttr(attr))) {
-            return super.parse(...arguments);
-        }
-        throw new BadRequest(this.wrapClassMessage(`Invalid search attribute: ${attr}.${this.view.id}`));
+        return this.view.searchAttrs.includes(this.view.getAttr(attr))
+            ? super.parse(...arguments)
+            : this.throwBadRequest(`Invalid search attribute: ${attr}.${this.view.id}`);
     }
 
-    parseRelation ({attr, operation}) {
+    parseRelation ({attr, op}) {
         let rel = this.getRelation(attr);
         let value = this.formatByValueType(...arguments);
         if (!value) {
@@ -25,17 +24,18 @@ module.exports = class MetaListFilterCondition extends Base {
             value = this.getRelationValue(rel, query);
             attr = rel.linkAttrName;
         }
-        return this.formatSelectorCondition(attr, operation, value);
+        return this.formatSelectorCondition(attr, op, value);
     }
 
     async parseNested ({attr, value}) {
         const rel = this.getRelation(attr);
         const query = rel.refClass.find();
-        const condition = await (new this.constructor({
-            view: rel.attr.getRefView('searchView', 'list'),
+        const filter = this.grid.createFilter({
+            view: rel.attr.getRefClass(),
             items: value,
             query
-        })).resolve();
+        });
+        const condition = await filter.resolve();
         query.and(condition);
         if (rel.isBackRef()) {
             attr = rel.linkAttrName;
@@ -48,10 +48,7 @@ module.exports = class MetaListFilterCondition extends Base {
 
     getRelation (name) {
         const attr = this.view.getAttr(name);
-        if (attr.rel) {
-            return attr.rel;
-        }
-        throw new BadRequest(this.wrapClassMessage(`Invalid relation: ${attr.id}`));
+        return attr.rel || this.throwBadRequest(`Invalid relation: ${attr.id}`);
     }
 
     async getRelationValue (rel, query) {
@@ -67,4 +64,3 @@ module.exports = class MetaListFilterCondition extends Base {
 };
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
-const BadRequest = require('areto/error/BadRequestHttpException');

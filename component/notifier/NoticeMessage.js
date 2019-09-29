@@ -53,7 +53,7 @@ module.exports = class NoticeMessage extends Base {
         if (this.isSent()) {
             return this.log('error', 'Message already sent');
         }
-        const notice = await this.findRelation('notice');
+        const notice = await this.resolveRelation('notice');
         if (!notice) {
             return this.log('error', 'Notice not found');
         }
@@ -82,7 +82,7 @@ module.exports = class NoticeMessage extends Base {
     }
 
     async truncate () {
-        const notice = await this.findRelation('notice');
+        const notice = await this.resolveRelation('notice');
         if (!notice) {
             return this.log('error', 'Notice not found');
         }

@@ -13,6 +13,7 @@ module.exports = class MetaDataGrid extends Base {
             // controller: this,
             metaData: config.controller.metaData,
             view: config.controller.getView(),
+            ListFilterCondition,
             ...config
         });
     }
@@ -92,12 +93,12 @@ module.exports = class MetaDataGrid extends Base {
         if (!Array.isArray(this.request.filter)) {
             return null;
         }
-        this.query.and(await (new ListFilterCondition({
-            view: this.metaData.view,
+        const filter = this.createFilter({
+            view: this.metaData.class,
             items: this.request.filter,
-            query: this.query,
-            ...this.filter
-        })).resolve());
+            query: this.query
+        });
+        this.query.and(await filter.resolve());
     }
 
     filterByColumns (models) {

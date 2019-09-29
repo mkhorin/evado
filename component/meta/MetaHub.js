@@ -21,10 +21,10 @@ module.exports = class MetaHub extends Base {
                 Class: require('./SingleProcessing'),
                 busyMessage: 'Metadata updating in progress'
             },
-            User: require('./MetaModels'),
             ...config
         });
         this.basePath = this.module.getPath(this.basePath);
+        this.User = this.getClass('model/User');
     }
 
     init () {

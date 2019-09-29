@@ -35,13 +35,15 @@
                 p.displayValue = model.constructor.getAttrValueLabel(attr, p.value) || p.displayValue;
                 break;
             default:
-                p.displayValue = _format(p.displayValue, p.format);
+                p.displayValue = Array.isArray(p.format)
+                    ? _format(p.displayValue, ...p.format)
+                    : _format(p.displayValue, p.format);
         }
-    }
-    if (p.value === undefined || p.value === null) {
-        p.value = '';
     }
     if (p.displayValue === undefined || p.displayValue === null) {
         p.displayValue = _format(null);
+    }
+    if (p.value === null || p.value === undefined) {
+        p.value = '';
     }
 %>

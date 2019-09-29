@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.SortList = class extends Jam.List {
+Jam.SortList = class SortList extends Jam.List {
 
     init () {
         super.init();

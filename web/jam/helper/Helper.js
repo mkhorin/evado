@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.Helper = class {
+Jam.Helper = class Helper {
 
     static confirm (message) {
         return !message || confirm(Jam.i18n.translate(message));
@@ -103,7 +103,7 @@ Jam.Helper = class {
     }
 };
 
-Jam.ArrayHelper = class {
+Jam.ArrayHelper = class ArrayHelper {
 
     static equals (a, b) {
         if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
@@ -236,7 +236,7 @@ Jam.ArrayHelper = class {
     }
 };
 
-Jam.ClassHelper = class {
+Jam.ClassHelper = class ClassHelper {
 
     static normalizeSpawn (config, container, BaseClass) {
         if (!config) {
@@ -276,7 +276,15 @@ Jam.ClassHelper = class {
     }
 };
 
-Jam.DateHelper = class {
+Jam.DateHelper = class DateHelper {
+
+    static isValid (date) {
+        if (!date) {
+            return false;
+        }
+        date = date instanceof Date ? date : new Date(date);
+        return !isNaN(date.getTime());
+    }
 
     static stringify (date, absolute) {
         return (absolute ? moment(date).utcOffset(0, true) : moment.utc(date)).format();
@@ -299,7 +307,7 @@ Jam.DateHelper = class {
     }
 };
 
-Jam.FormatHelper = class {
+Jam.FormatHelper = class FormatHelper {
 
     static asBoolean (data) {
         return Jam.i18n.translate(Number(data) === 0 ? 'No' : 'Yes');
@@ -324,15 +332,18 @@ Jam.FormatHelper = class {
     }
 
     static asDate (data) {
-        return data ? (new Date(data)).toLocaleDateString() : '';
+        const date = new Date(data);
+        return !data ? '' : Jam.DateHelper.isValid(date) ? date.toLocaleDateString() : data;
     }
     
     static asDatetime (data) {
-        return data ? (new Date(data)).toLocaleString() : '';
+        const date = new Date(data);
+        return !data ? '' : Jam.DateHelper.isValid(date) ? date.toLocaleString() : data;
     }
 
     static asTimestamp (data) {
-        return data ? moment(data).format('L LTS') : '';
+        const date = moment(data);
+        return !data ? '' : date.isValid() ? date.format('L LTS') : data;
     }
 
     static asThumb (data) {
@@ -340,7 +351,7 @@ Jam.FormatHelper = class {
     }
 };
 
-Jam.ObjectHelper = class {
+Jam.ObjectHelper = class ObjectHelper {
 
     static push (value, key, map) {
         if (Array.isArray(map[key])) {
@@ -398,7 +409,7 @@ Jam.ObjectHelper = class {
     }
 };
 
-Jam.StringHelper = class {
+Jam.StringHelper = class StringHelper {
 
     static toFirstUpperCase (str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -414,7 +425,7 @@ Jam.StringHelper = class {
     }
 };
 
-Jam.UrlHelper = class {
+Jam.UrlHelper = class UrlHelper {
 
     static getNewPageUrl (modal) {
         return this.addUrlParams(location.href, {modal});
@@ -447,7 +458,7 @@ Jam.UrlHelper = class {
     }
 };
 
-Jam.AsyncHelper = class {
+Jam.AsyncHelper = class AsyncHelper {
 
     static each (items, handler, callback) {
         if (!Array.isArray(items) || !items.length) {

@@ -71,7 +71,7 @@ module.exports = class Select2 extends Base {
     }
 
     getStringSearch (text) {
-        return new RegExp('^'+ EscapeHelper.escapeRegExp(text), 'i');
+        return new RegExp('^'+ EscapeHelper.escapeRegex(text), 'i');
     }
 
     getItems (models) {

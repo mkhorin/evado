@@ -47,7 +47,7 @@ class Jam {
     }
 }
 
-Jam.Behavior = class {
+Jam.Behavior = class Behavior {
 
     constructor (owner, params) {
         this.owner = owner;
@@ -59,7 +59,7 @@ Jam.Behavior = class {
     }
 };
 
-Jam.Element = class {
+Jam.Element = class Element {
 
     static createInstance ($element) {
         return this.getInstance($element) || Reflect.construct(this, arguments);
@@ -95,7 +95,7 @@ Jam.Element = class {
     }
 };
 
-Jam.Events = class {
+Jam.Events = class Events {
 
     constructor (prefix, params) {
         this.prefix = prefix;
@@ -124,7 +124,7 @@ Jam.Events = class {
     }
 };
 
-Jam.Dialog = class {
+Jam.Dialog = class Dialog {
 
     constructor (params) {
         this.params = {
@@ -205,7 +205,7 @@ Jam.Dialog = class {
     }
 };
 
-Jam.Deferred = class {
+Jam.Deferred = class Deferred {
 
     constructor () {
         this._tasks = [];
@@ -232,7 +232,7 @@ Jam.Deferred = class {
     }
 };
 
-Jam.DeferredTask = class {
+Jam.DeferredTask = class DeferredTask {
 
     constructor (handler, params) {
         this.handler = handler;
@@ -248,7 +248,7 @@ Jam.DeferredTask = class {
     }
 };
 
-Jam.Resource = class {
+Jam.Resource = class Resource {
 
     resolve (content, done) {
         const container = document.createElement('template');
@@ -303,7 +303,7 @@ Jam.Resource = class {
     }
 };
 
-Jam.Cache = class {
+Jam.Cache = class Cache {
 
     constructor () {
         this.clear();
@@ -330,7 +330,7 @@ Jam.Cache = class {
     }
 };
 
-Jam.IndexSorting = class extends Jam.Element {
+Jam.IndexSorting = class IndexSorting extends Jam.Element {
 
     init () {
         this.sort();
@@ -341,7 +341,7 @@ Jam.IndexSorting = class extends Jam.Element {
     }
 };
 
-Jam.Captcha = class extends Jam.Element {
+Jam.Captcha = class Captcha extends Jam.Element {
 
     init () {
         this.$element.find('.captcha-refresh').click(this.onRefresh.bind(this));

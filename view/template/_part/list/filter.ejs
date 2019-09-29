@@ -1,13 +1,6 @@
 <!-- _part/list/filter -->
 <%
-for (const column of data.columns) {
-    if (column.label === undefined) {
-        column.label = model.getAttrLabel(column.name);
-    }
-    if (column.items === 'labels') {
-        column.items = _controller.getLabelSelectItems(column.name, model);
-    } 
-}
+_controller.resolveFilterColumns(data.columns, model);
 %>
 <div class="list-filter" data-params="<%= JSON.stringify(data) %>">
 
@@ -21,7 +14,7 @@ for (const column of data.columns) {
             <span class="condition-logical-or text-warning">OR</span>
         </div>
         <div class="remove-condition text-danger">
-            <span class="glyphicon glyphicon-remove"></span>
+            <span class="fa fa-times"></span>
         </div>
         <div class="condition-content row">
             <div class="col-sm-5 condition-attr-container">
@@ -50,8 +43,8 @@ for (const column of data.columns) {
                     <option>!=</option>
                     <option><</option>
                     <option>></option>
-                    <option>>=</option>
                     <option><=</option>
+                    <option>>=</option>
                 </select>
             </div>
             <div class="col-sm-5">
@@ -68,11 +61,18 @@ for (const column of data.columns) {
                 <select class="condition-operation form-control">
                     <option value="equal" data-t="">equal</option>
                     <option value="not equal" data-t="">not equal</option>
+                    <option value="nested" data-t="">nested</option>
                 </select>
             </div>
             <div class="col-sm-5">
-                <input class="condition-value form-control default-focus" type="text"
-                       placeholder="Input ID...">
+                <div class="simple-condition-content">
+                    <input class="condition-value form-control default-focus" type="text" placeholder="Input ID...">
+                </div>
+                <div class="nested-condition-content">
+                    <button class="add-condition btn btn-success btn-light" type="button" title="Add condition">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -83,8 +83,8 @@ for (const column of data.columns) {
                     <option>!=</option>
                     <option><</option>
                     <option>></option>
-                    <option>>=</option>
                     <option><=</option>
+                    <option>>=</option>
                 </select>
             </div>
             <div class="col-sm-5">

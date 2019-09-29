@@ -26,13 +26,13 @@ module.exports = class Task extends Base {
             RULES: [
                 [['name', 'job'], 'required'],
                 [['name', 'description'], 'string'],
-                ['name', 'regexp', {pattern: /^[0-9a-zA-Z-]+$/}],
+                ['name', 'regex', {pattern: /^[0-9a-zA-Z-]+$/}],
                 ['name', 'unique'],
                 ['startDate', 'date'],
-                ['startTime', 'regexp', {pattern: 'HH:mm:ss'}],
+                ['startTime', 'regex', {pattern: 'HH:mm:ss'}],
                 [['active', 'startup', 'stopOnFail'], 'checkbox'],
                 ['repeats', 'number', {integerOnly: true}],
-                ['period', 'regexp', {pattern: 'duration'}],
+                ['period', 'regex', {pattern: 'duration'}],
                 [['period', 'repeats'], 'default', {value: 0}],
                 ['job', 'spawn', {BaseClass: require('areto/scheduler/Job')}]
             ]

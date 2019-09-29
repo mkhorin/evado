@@ -28,13 +28,6 @@ module.exports = class BaseActiveRecord extends Base {
     findForSelect () {
         return this.find(...arguments).select({name: 1, label: 1}).order({name: 1});
     }
-
-    getIdsWithEmptyRelation (name) {
-        if (name && typeof name === 'string') {
-            const method = this['getIdsWithEmptyRelation'+ StringHelper.toFirstUpperCase(name)];
-            return this[method] ? this[method]() : undefined;
-        }
-    }
 };
 module.exports.init();
 

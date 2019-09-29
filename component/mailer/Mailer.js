@@ -80,7 +80,7 @@ module.exports = class Mailer extends Base {
     }
 
     translate (message, params, source = this.defaultMessageSource) {
-        return this.module.translate(message, this.defaultMessageSource, params);
+        return this.module.translate(message, source, params);
     }
 
     sendPasswordReset () {

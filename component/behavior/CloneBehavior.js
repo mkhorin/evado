@@ -26,7 +26,7 @@ module.exports = class CloneBehavior extends Base {
 
     async afterInsert () {
         if (this.original && Array.isArray(this.relations) && this.relations.length) {
-            await this.original.findRelations(this.relations);
+            await this.original.resolveRelations(this.relations);
             for (const name of this.relations) {
                 await this.cloneRelation(name);
             }

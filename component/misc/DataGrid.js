@@ -18,9 +18,9 @@ module.exports = class DataGrid extends Base {
         super({
             // controller:
             // query: [Query]
-            // filter: {}
             // formatRules: [[attrName, type, {params}], ...]
             request: config.controller.getPostParams(),
+            ListFilterCondition,
             ...config
         });
         this.params = this.params || {};
@@ -144,11 +144,15 @@ module.exports = class DataGrid extends Base {
         if (!Array.isArray(this.request.filter)) {
             return false;
         }
-        this.query.and(await (new ListFilterCondition({
+        const filter = this.createFilter({
             items: this.request.filter,
-            query: this.query,
-            ...this.filter
-        })).resolve());
+            query: this.query
+        });
+        this.query.and(await filter.resolve());
+    }
+
+    createFilter (params) {
+        return this.spawn(this.ListFilterCondition, {grid: this, ...params});
     }
 
     getConditionByType (type, attr, value) {

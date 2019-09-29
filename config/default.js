@@ -73,6 +73,7 @@ module.exports = {
         },
         'notifier': {
             Class: require('../component/notifier/Notifier'),
+            tasks: ['sendNoticeMessage']
         },
         'observer': {
             Class: require('../component/observer/Observer'),
@@ -94,7 +95,7 @@ module.exports = {
             max: 24
         },
         'oldUserPasswords': 0,
-        'minUserPasswordLifetime': 'P10D', // ISO_8601#Durations
+        'minUserPasswordLifetime': 'P10D', // ISO_8601#Duration
         'maxUserPasswordLifetime': 'P30D',
         'verificationLifetime': 'P1D',
         'repeatVerificationTimeout': 'P1D',

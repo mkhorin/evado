@@ -23,6 +23,5 @@ module.exports = class TreeDataGrid extends Base {
             [this.HAS_CHILDREN_KEY]: true
         });
     }
-
 };
 module.exports.init();

@@ -9,7 +9,7 @@ module.exports = class Notifier extends Base {
 
     constructor (config) {
         super({
-            tasks: [], //['sendNoticeMessage'],
+            // tasks: [],
             ...config
         });
     }

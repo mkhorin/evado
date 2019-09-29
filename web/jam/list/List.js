@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.List = class extends Jam.Element {
+Jam.List = class List extends Jam.Element {
 
     constructor ($grid, data) {
         super($grid);
@@ -339,7 +339,7 @@ Jam.List = class extends Jam.Element {
     }
 };
 
-Jam.MainList = class extends Jam.List {
+Jam.MainList = class MainList extends Jam.List {
 
     init () {
         super.init();
@@ -347,7 +347,7 @@ Jam.MainList = class extends Jam.List {
     }
 };
 
-Jam.SelectList = class extends Jam.List {
+Jam.SelectList = class SelectList extends Jam.List {
 
     init () {
         Object.assign(this.params, this.modal.initData);
@@ -400,14 +400,14 @@ Jam.SelectList = class extends Jam.List {
     }
 };
 
-Jam.TreeList = class extends Jam.List {
+Jam.TreeList = class TreeList extends Jam.List {
 
     createDataGrid () {
         this.grid = new Jam.TreeDataGrid(this.$grid, this.params);
     }
 };
 
-Jam.MainTreeList = class extends Jam.TreeList {
+Jam.MainTreeList = class MainTreeList extends Jam.TreeList {
 
     init () {
         super.init();

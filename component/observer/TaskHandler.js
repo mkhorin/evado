@@ -12,7 +12,7 @@ module.exports = class TaskHandler extends Base {
         for (const id of this.tasks) {
             const task = scheduler.getTask(id);
             if (task && task.isActive()) {
-                await task.execute();
+                await task.execute(data);
             }
         }
     }

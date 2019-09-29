@@ -54,7 +54,7 @@ module.exports = class OverriddenValueBehavior extends Base {
 
     async beforeSave () {
         this.owner.set(this.stateAttr, this.filterStates(this.getStates()));
-        const origin = await this.owner.findRelation(this.originAttr);
+        const origin = await this.owner.resolveRelation(this.originAttr);
         return this.setStateOriginValues(origin);
     }
 

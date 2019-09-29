@@ -17,7 +17,7 @@ module.exports = class Util extends Base {
     static getName () {
         const index = this.name.lastIndexOf('Util');
         if (index === -1) {
-            throw new Error(this.wrapClassMessage(`Invalid utility class name: ${this.name}`));
+            throw new Error(`Invalid utility class name: ${this.name}`);
         }
         return StringHelper.camelToId(this.name.substring(0, index));
     }

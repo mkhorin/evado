@@ -11,11 +11,13 @@ Jam.NotificationWidget = class extends Jam.Element {
         this.$messages = this.$element.find('.messages');
         this.$messages.on('click', 'a', this.onMenuItem.bind(this));
         this._url = this.$element.data('url');
+        this._enabledPopup = this.$element.data('popup');
         this._refresh = Jam.serverPolling.add({
             period: this.$element.data('period'),
             url: this._url,
             done: this.onRefreshDone.bind(this)
         });
+
     }
 
     isOpen () {
@@ -37,7 +39,7 @@ Jam.NotificationWidget = class extends Jam.Element {
         const {counter, items} = data || {};
         this.setCounter(counter);
         this.drawMenuItems(items);
-        if (!this.isOpen()) {
+        if (this._enabledPopup && !this.isOpen() ) {
             this.resolvePopup(items);
         }
         this._loaded = true;
@@ -78,8 +80,8 @@ Jam.NotificationWidget = class extends Jam.Element {
     showMessage (data) {
         data = data && data.message;
         if (data) {
-            Jam.dialog.show(data.content, {
-                header: data.header,
+            Jam.dialog.show(data.text, {
+                header: data.subject,
                 submitText: '',
                 cancelText: 'Close',
                 strictCancel: true

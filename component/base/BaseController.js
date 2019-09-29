@@ -27,6 +27,20 @@ module.exports = class BaseController extends Base {
         return SelectHelper.getMapItems(this.translateMessageMap(map));
     }
 
+    resolveFilterColumns (columns, model) {
+        for (const column of columns) {
+            if (column.label === undefined) {
+                column.label = model.getAttrLabel(column.name);
+            }
+            if (column.items === 'labels') {
+                column.items = this.getLabelSelectItems(column.name, model);
+            }
+            if (column.columns) {
+                this.resolveFilterColumns(column.columns, model.getRelation(column.name).model);
+            }
+        }
+    }
+
     // MODEL
 
     async getModel (params = {}) {
@@ -87,11 +101,11 @@ module.exports = class BaseController extends Base {
     // LIST
 
     sendDataGridList (query, params) {
-        return (new DataGrid({controller: this, query, params})).sendList();
+        return this.spawn({Class: DataGrid, controller: this, query, params}).sendList();
     }
 
     sendTreeDataGridList (query, params) {
-        return (new TreeDataGrid({controller: this, query, params})).sendList();
+        return this.spawn({Class: TreeDataGrid, controller: this, query, params}).sendList();
     }
 
     async sendSelectList (query, params) {

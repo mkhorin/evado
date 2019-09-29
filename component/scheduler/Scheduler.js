@@ -53,7 +53,7 @@ module.exports = class Scheduler extends Base {
         return super.executeTask(task ? task.id : null);
     }
 
-    spawnTask (params) {
+    spawnTask () {
         return this.spawn('model/Task');
     }
 };

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ListSort = class {
+Jam.ListSort = class ListSort {
 
     constructor (owner, params) {
         if (typeof params === 'string') {

@@ -3,14 +3,13 @@
  */
 'use strict';
 
-Jam.ListFilter = class {
+Jam.ListFilter = class ListFilter {
 
     constructor (list, params) {
         this.list = list;
         this.conditions = [];
         this.params = {...params};
         this.$container = list.$content.find('.list-filter');
-
         if (this.isExists()) {
             this.init();
         }
@@ -108,7 +107,7 @@ Jam.ListFilter = class {
 
 // GROUP
 
-Jam.ListFilter.Group = class {
+Jam.ListFilter.Group = class Group {
 
     constructor (filter, columns) {
         this.filter = filter;
@@ -165,7 +164,7 @@ Jam.ListFilter.Group = class {
 
 // CONDITION
 
-Jam.ListFilter.Condition = class {
+Jam.ListFilter.Condition = class Condition {
 
     static createAttrItems (columns) {
         let result = '<option></option>';
@@ -218,13 +217,14 @@ Jam.ListFilter.Condition = class {
     }
 
     createType (params) {
-        let Type = Jam.ListFilter.StringType;
+        let type = 'StringType';
         switch (params.type) {
-            case 'boolean': Type = Jam.ListFilter.BooleanType; break;
-            case 'date': Type = Jam.ListFilter.DateType; break;
-            case 'selector': Type = Jam.ListFilter.SelectorType; break;
+            case 'boolean': type = 'BooleanType'; break;
+            case 'date': type = 'DateType'; break;
+            case 'id': type = 'IdType'; break;
+            case 'selector': type = 'SelectorType'; break;
         }
-        return new Type(params, this);
+        return new Jam.ListFilter[type](params, this);
     }
 
     getOperation () {
@@ -269,29 +269,28 @@ Jam.ListFilter.Condition = class {
     }
 
     serialize () {
-        const operation = this.getOperation();
+        const op = this.getOperation();
         const value = this.getValue();
-        if (operation && value !== undefined ) {
-            return this.type.resolveRequestData({
-                and: this.logical !== 'or',
-                attr: this.getAttr(),
-                op: operation,
-                val: value
-            });
+        if (op && value !== undefined) {
+            const and = this.logical !== 'or';
+            const attr = this.getAttr();
+            return this.type.getRequestData({and, attr, op, value});
         }
     }
 };
 
 // TYPE
 
-Jam.ListFilter.Type = class {
+Jam.ListFilter.Type = class Type {
 
     constructor (params, condition) {
         this.condition = condition;
         this.filter = condition.filter;
         this.name = params.type;
-        this.params = params;
-        this.commonParams = this.filter.getTypeParams(this.name);
+        this.params = {
+            ...params,
+            ...this.filter.getTypeParams(this.name)
+        };
         this.init();
     }
 
@@ -324,17 +323,18 @@ Jam.ListFilter.Type = class {
         this.condition.$attrContainer.nextAll().remove();
     }
 
-    resolveRequestData (data) {
+    getRequestData (data) {
         return Object.assign(data, {
             type: this.name,
-            valType: this.params.valueType
+            inline: this.params.inline,
+            valueType: this.params.valueType
         });
     }
 };
 
 // STRING
 
-Jam.ListFilter.StringType = class extends Jam.ListFilter.Type {
+Jam.ListFilter.StringType = class StringType extends Jam.ListFilter.Type {
 
     constructor (params) {
         params.type = params.type || 'string';
@@ -355,7 +355,7 @@ Jam.ListFilter.StringType = class extends Jam.ListFilter.Type {
 
 // BOOLEAN
 
-Jam.ListFilter.BooleanType = class extends Jam.ListFilter.Type {
+Jam.ListFilter.BooleanType = class BooleanType extends Jam.ListFilter.Type {
 
     init () {
         super.init();
@@ -370,7 +370,7 @@ Jam.ListFilter.BooleanType = class extends Jam.ListFilter.Type {
 
 // DATE
 
-Jam.ListFilter.DateType = class extends Jam.ListFilter.Type {
+Jam.ListFilter.DateType = class DateType extends Jam.ListFilter.Type {
 
     init () {
         super.init();
@@ -397,15 +397,39 @@ Jam.ListFilter.DateType = class extends Jam.ListFilter.Type {
     }
 };
 
-// SELECTOR
+// ID
 
-Jam.ListFilter.SelectorType = class extends Jam.ListFilter.Type {
+Jam.ListFilter.IdType = class IdType extends Jam.ListFilter.StringType {
 
     init () {
         super.init();
-        this.params.items ? this.createSimple() : this.createAjax();
-        this.resolveNested();
-        this.condition.getOperationItem().change(this.onChangeOperation.bind(this));
+        this.nested = new Jam.ListFilter.Nested(this);
+    }
+
+    getValue () {
+        return this.nested.active() ? this.nested.getValue() : super.getValue();
+    }
+
+    remove () {
+        super.remove();
+        this.nested.remove();
+    }
+};
+
+// SELECTOR
+
+Jam.ListFilter.SelectorType = class SelectorType extends Jam.ListFilter.Type {
+
+    init () {
+        super.init();
+        if (this.params.items) {
+            this.createSimple();
+        } else if (this.params.url) {
+            this.createAjax();
+        } else {
+            this.removeEqualOptions();
+        }
+        this.nested = new Jam.ListFilter.Nested(this);
     }
 
     createSimple () {
@@ -415,41 +439,49 @@ Jam.ListFilter.SelectorType = class extends Jam.ListFilter.Type {
     }
 
     createAjax () {
-        const params = this.commonParams = {
+        this.params = {
             pageSize: 10,
             inputDelay: 500,
             minInputLength: 1,
             maxInputLength: 24,
             placeholder: '',
-            ...this.commonParams,
             ...this.params
         };
         this.getValueItem().select2({
             ajax: this.getAjaxParams(),
-            allowClear: params.allowClear,
-            placeholder: params.placeholder,
-            minimumInputLength: params.minInputLength,
-            maximumInputLength: params.maxInputLength,
-            maximumSelectionLength: params.maxSelectionLength,
-            minimumResultsForSearch: params.pageSize
+            allowClear: this.params.allowClear,
+            placeholder: this.params.placeholder,
+            minimumInputLength: this.params.minInputLength,
+            maximumInputLength: this.params.maxInputLength,
+            maximumSelectionLength: this.params.maxSelectionLength,
+            minimumResultsForSearch: this.params.pageSize
         });
     }
 
     getAjaxParams () {
         return {
             type: 'POST',
-            url: this.commonParams.url,
+            url: this.params.url,
             dataType: 'json',
             data: this.getQueryParams.bind(this),
             processResults: this.processResults.bind(this),
-            delay: this.commonParams.inputDelay,
+            delay: this.params.inputDelay,
             cache: true
         };
     }
 
+    removeEqualOptions () {
+        const $select = this.condition.getOperationItem();
+        $select.children().first().remove();
+        $select.children().first().remove();
+    }
+
     focus () {
         //super.focus();
-        this.getValueItem().select2('open');
+        const $value = this.getValueItem();
+        if ($value.data('select2')) {
+            $value.select2('open');
+        }
     }
 
     getQueryParams (params) {
@@ -457,37 +489,53 @@ Jam.ListFilter.SelectorType = class extends Jam.ListFilter.Type {
             id: this.params.id,
             search: params.term,
             page: params.page,
-            pageSize: this.commonParams.pageSize
+            pageSize: this.params.pageSize
         };
     }
 
     processResults (data, params) {
         params.page = params.page || 1;
         return {
-            pagination: {more: (params.page * this.commonParams.pageSize) < data.total},
+            pagination: {more: (params.page * this.params.pageSize) < data.total},
             results: data.items
         };
     }
 
-    resolveRequestData (data) {
-        return Object.assign(super.resolveRequestData(data), {
-            rel: this.params.relation || ''
-        });
+    getRequestData (data) {
+        return super.getRequestData(Object.assign(data, {
+            relation: this.params.relation
+        }));
     }
 
-    isNested () {
+    getValue () {
+        return this.nested.active() ? this.nested.getValue() : super.getValue();
+    }
+
+    remove () {
+        super.remove();
+        this.nested.remove();
+    }
+};
+
+// NESTED
+
+Jam.ListFilter.Nested = class Nested {
+
+    constructor (type) {
+        this.type = type;
+        this.condition = type.condition;
+        this.filter = type.filter;
+        this.params = type.params;
+        this.resolve();
+        this.condition.getOperationItem().change(this.onChangeOperation.bind(this));
+        this.onChangeOperation();
+    }
+
+    active () {
         return this.condition.getOperation() === 'nested';
     }
 
-    toggleNested (state) {
-        this.condition.$container.toggleClass('has-nested', state);
-    }
-
-    onChangeOperation () {
-        this.toggleNested(this.isNested());
-    }
-
-    resolveNested () {
+    resolve () {
         const columns = this.params.columns;
         if (!Array.isArray(columns) || !columns.length) {
             return this.condition.getOperationItem().children().last().remove(); // remove nested option
@@ -498,11 +546,23 @@ Jam.ListFilter.SelectorType = class extends Jam.ListFilter.Type {
         this.$addCondition.click(this.onAddCondition.bind(this));
     }
 
+    onChangeOperation () {
+        this.toggle(this.active());
+    }
+
     onAddCondition () {
         this.group.addCondition();
     }
 
+    toggle (state) {
+        this.condition.$container.toggleClass('has-nested', state);
+    }
+
     getValue () {
-        return this.isNested() ? this.group.serialize() : super.getValue();
+        return this.group.serialize();
+    }
+
+    remove () {
+        this.condition.$groupContainer.html('');
     }
 };
