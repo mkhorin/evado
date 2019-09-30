@@ -50,22 +50,19 @@ module.exports = class SortRelationAction extends Base {
     }
 
     async renderOrder () {
-        const data = {
+        let data = {
             'parentModel': this.parentModel,
             'relModel': this.relation.model,
             'models': await this.relation.order({[this.orderBehavior.orderAttr]: 1}).all(),
             'orderAttr': this.orderBehavior.orderAttr
         };
         data.relController = data.relModel.createController().assignSource(this.controller);
-        const viewModel = data.relController.createViewModel('sort', {data});
-        let content;
-        if (viewModel) {
-            await viewModel.prepareModels(data.models);
-            content = await data.relController.renderViewModel(viewModel, 'sort', false);
-        } else {
-            content = await data.relController.renderTemplate('sort', data, false);
+        const model = data.relController.createViewModel('sort', {data});
+        if (model) {
+            await model.prepareModels(data.models);
+            data = await model.getTemplateData();
         }
-        return this.send(content);
+        this.send(await data.relController.renderTemplate('sort', data));
     }
 };
 

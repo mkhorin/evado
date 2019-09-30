@@ -45,7 +45,7 @@ module.exports = class DataGrid extends Base {
         this.setOffset();
         this.setLimit();
         this.setOrder();
-        this.setCommonSearch(this.request.search, this.request.columns);
+        await this.resolveCommonSearch(this.request.search, this.request.columns);
         await this.resolveFilter();
         this._result.totalSize = await this.query.count();
         await this.setModels();
@@ -98,22 +98,38 @@ module.exports = class DataGrid extends Base {
         }
     }
 
-    setCommonSearch (value, columns) {
+    async resolveCommonSearch (value, columns) {
         if (typeof value !== 'string' || !value.length || !Array.isArray(columns)) {
             return false;
         }
         const conditions = [];
+        const ownerMap = {};
         for (const column of this.request.columns) {
             if (column.searchable === true) {
                 const condition = this.getConditionByType(column.type, column.name, value);
                 if (condition) {
-                    conditions.push(condition);
+                    column.owner
+                        ? ObjectHelper.push(condition, column.owner, ownerMap)
+                        : conditions.push(condition);
                 }
             }
+        }
+        for (const name of Object.keys(ownerMap)) {
+            conditions.push(await this.resolveOwnerConditions(name, ownerMap[name]));
         }
         if (conditions.length) {
             this.query.and(['OR', ...conditions]);
         }
+    }
+
+    async resolveOwnerConditions (owner, conditions) {
+        const rel = this.query.model.getRelation(owner);
+        if (!rel) {
+            return this.throwBadRequest(`Relation not found: ${owner}`);
+        }
+        const query = rel.model.find(...conditions);
+        // simple relation without via
+        return {[rel.linkKey]: await query.column(rel.refKey)};
     }
 
     filterByColumns (models) {
@@ -186,3 +202,4 @@ module.exports.init();
 const BadRequest = require('areto/error/BadRequestHttpException');
 const ListFilterCondition = require('./ListFilterCondition');
 const ModelHelper = require('../helper/ModelHelper');
+const ObjectHelper = require('areto/helper/ObjectHelper');

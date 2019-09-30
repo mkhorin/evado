@@ -50,8 +50,8 @@ module.exports = class ListFilterCondition extends Base {
         if (typeof data.attr !== 'string') {
             return this.throwBadRequest('Invalid attribute');
         }
-        if (data.inline) {
-            return this.parseInline(data);
+        if (data.owner) {
+            return this.parseOwner(data);
         }
         if (data.op === 'nested') {
             return this.parseNested(data);
@@ -62,8 +62,8 @@ module.exports = class ListFilterCondition extends Base {
         return this.parseByType(data);
     }
 
-    async parseInline ({attr, value, inline, relation}) {
-        const rel = this.getRelation(inline, this.query.model);
+    async parseOwner ({attr, value, owner, relation}) {
+        const rel = this.getRelation(owner, this.query.model);
         const condition = await this.parseByType(...arguments);
         const query = rel.model.find(condition);
         if (!relation) { // simple relation without via
