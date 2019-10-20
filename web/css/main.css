@@ -50,7 +50,9 @@ body {
 }
 
 :root {
+    --color-hover-row: #fff8e8;
     --color-selected-row: #fff0d8;
+    --color-title-label: #678;
 
     --color-light-primary: #3c8dbc;
     --color-dark-primary: #367fa9;
@@ -62,6 +64,17 @@ body {
     --color-dark-warning: #e08e0b;
     --color-light-danger: #dd4b39;
     --color-dark-danger: #d73925;
+
+    --back-light-primary: #e9ecff;
+    --border-light-primary: #bbc4ff;
+    --back-light-info: #e9f7f9;
+    --border-light-info: #b0d6e0;
+    --back-light-success: #e9f9e9;
+    --border-light-success: #b4edb4;
+    --back-light-warning: #fcf5de;
+    --border-light-warning: #fcd48e;
+    --back-light-danger: #feeaee;
+    --border-light-danger: #edc0c0;
 }
 
 label {
@@ -199,6 +212,14 @@ a:focus, button:focus {
 .content-header > h1 {
     font-size: 18px;
 }
+.content-header > h2 {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: #555;
+}
+.content-header > h2:empty {
+    display: none;
+}
 .sidebar-menu .treeview-menu li a {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -290,7 +311,7 @@ a:focus, button:focus {
 body.loading {
     overflow: hidden;
 }
-.main-loader {
+.global-loader {
     display: none;
     z-index: 2049;
 }
@@ -365,12 +386,35 @@ body.loading {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
 .main-footer {
     background: #ecf0f5;
 }
+
 .json-editor-text {
     font-family: Consolas, monospace;
+}
+.json-editor .alert {
+    margin-bottom: 0;
+}
+.json-editor .modal-body {
+    padding-bottom: 0;
+}
+.json-editor .modal-footer {
+    border: none;
+}
+
+.list-group-container > .controls {
+    margin-bottom: 15px;
+}
+.list-group-striped .list-group-item:nth-child(odd) {
+    background: #f8f8f8;
+}
+.list-group-striped .list-group-item:hover {
+    background: var(--color-hover-row);
+}
+
+.select-modal.empty .alert-empty {
+    display:block;
 }
 
 /* BUTTONS  */
@@ -408,8 +452,8 @@ body.loading {
     color: #000;
 }
 .btn-light.btn-primary {
-    background-color: #e9ecff;
-    border-color: #bbc4ff;
+    background-color: var(--back-light-primary);
+    border-color: var(--border-light-primary);
 }
 .btn-light.btn-primary:hover,
 .btn-light.btn-primary:active,
@@ -419,8 +463,8 @@ body.loading {
     border-color: #9ba4df;
 }
 .btn-light.btn-success {
-    background-color: #e9f9e9;
-    border-color: #b4edb4;
+    background-color: var(--back-light-success);
+    border-color: var(--border-light-success);
 }
 .btn-light.btn-success:hover,
 .btn-light.btn-success:active,
@@ -430,8 +474,8 @@ body.loading {
     border-color: #84cd84;
 }
 .btn-light.btn-warning {
-    background-color: #fcf5de;
-    border-color: #fcd48e;
+    background-color: var(--back-light-warning);
+    border-color: var(--border-light-warning);
 }
 .btn-light.btn-warning:hover,
 .btn-light.btn-warning:active,
@@ -441,8 +485,8 @@ body.loading {
     border-color: #c0b06e;
 }
 .btn-light.btn-danger {
-    background-color: #feeaee;
-    border-color: #edc0c0;
+    background-color: var(--back-light-danger);
+    border-color: var(--border-light-danger);
 }
 .btn-light.btn-danger:hover,
 .btn-light.btn-danger:active,
@@ -452,8 +496,8 @@ body.loading {
     border-color: #cda0a0;
 }
 .btn-light.btn-info {
-    background-color: #e9f7f9;
-    border-color: #b0d6e0;
+    background-color: var(--back-light-info);
+    border-color: var(--border-light-info);
 }
 .btn-light.btn-info:hover,
 .btn-light.btn-info:active,
@@ -476,6 +520,11 @@ body.loading {
 }
 .btn .caret {
     margin-left: 3px;
+}
+
+.controls .btn,
+.controls .btn-group {
+    margin: 0 2px 0 0;
 }
 
 /* MENU */
@@ -832,7 +881,11 @@ textarea.form-control {
     cursor: not-allowed;
 }
 .form-group .file-preview {
-    margin-top: 20px;
+    margin-top: 15px;
+}
+.file-preview .file-size {
+    color: #666;
+    margin-left: 5px;
 }
 .form-group .radio-list label {
     color: #000;
@@ -846,7 +899,7 @@ textarea.form-control {
     margin-top: -10px;
 }
 .control-label[title]:not([title=""]) {
-    color: #579;
+    color: var(--color-title-label);
 }
 
 /* TABS */
@@ -984,6 +1037,8 @@ textarea.form-control {
     display: inline-block;
 }
 
+/* TABLE */
+
 .table {
     margin:0 0 7px !important;
 }
@@ -1035,47 +1090,72 @@ textarea.form-control {
     background-color: #ffd8e8 !important;
 }
 
+/* NOTICE */
+
 .notice {
     padding: 0;
+    border: none;
 }
 .alert {
     padding: 10px 15px;
+    border: none;
+}
+.alert:last-child {
+    margin-bottom: 0;
+}
+.alert-empty {
+    display: none;
 }
 .notice.notice-info.light,
 .alert.alert-info.light {
-    color: #31708f !important;
-    background: #e9f7f9 !important;
-    border-color: #b0d6e0;
+    color: var(--color-dark-info) !important;
+    background: var(--back-light-info) !important;
+    border-color: var(--border-light-info);
 }
 .notice.notice-success.light,
 .alert.alert-success.light {
-    color: #009040 !important;
-    background: #e9f9e9 !important;
-    border-color: #b4edb4;
+    color: var(--color-dark-success) !important;
+    background: var(--back-light-success) !important;
+    border-color: var(--border-light-success);
 }
 .notice.notice-warning.light,
 .alert.alert-warning.light {
-    color: #8a6d3b !important;
-    background: #fcf5de !important;
-    border-color: #fcd48e;
+    color: var(--color-dark-warning) !important;
+    background: var(--back-light-warning) !important;
+    border-color: var(--border-light-warning);
 }
 .notice.notice-danger.light,
 .alert.alert-danger.light {
-    color: #800 !important;
-    background: #feeaee !important;
-    border-color: #edc0c0;
+    color: var(--color-dark-danger) !important;
+    background: var(--back-light-danger) !important;
+    border-color: var(--border-light-danger);
 }
-.notice > .close {
+.notice.light .close {
     margin: 6px 10px 0 0;
-    color: #fff;
-    opacity: 0.7;
+    opacity: 0.4;
 }
-.notice.light > .close {
-    color: #000;
-    opacity: 0.3;
+.notice.light .close:hover {
+    opacity: 1.0;
+}
+.notice-info.light .close,
+.alert-info.light .close {
+    color: var(--color-dark-info);
+}
+.notice-success.light .close,
+.alert-success.light .close {
+    color: var(--color-dark-success);
+}
+.notice-warning.light .close,
+.alert-warning.light .close {
+    color: var(--color-dark-warning);
+}
+.notice-danger.light .close,
+.alert-danger.light .close {
+    color: var(--color-dark-danger);
 }
 .notice .message {
     padding: 8px 30px 8px 15px;
+    margin: 0;
 }
 .notice .message p {
     margin: 0;
@@ -1086,7 +1166,7 @@ textarea.form-control {
 .content-notice {
     margin-bottom: 10px;
 }
-.box-grid .default-notice {
+.box-body .default-notice {
     margin-bottom: 10px;
 }
 .form-group .box .default-notice {
@@ -1103,7 +1183,7 @@ textarea.form-control {
     opacity: 1;
 }
 
-/* LIST COLUMN SELECTOR */
+/* COLUMN SELECTOR */
 
 .column-selector {
     display: none;
@@ -1207,12 +1287,12 @@ textarea.form-control {
 .condition-logical-or {
     display: none;
 }
-.filter-condition.and > .condition-logical > .condition-logical-and,
-.filter-condition.or > .condition-logical > .condition-logical-or {
+.filter-condition.and:not(:first-child) > .condition-logical > .condition-logical-and,
+.filter-condition.or:not(:first-child) > .condition-logical > .condition-logical-or {
     display: block;
 }
-.filter-condition.and > .condition-content > .condition-attr-container,
-.filter-condition.or > .condition-content > .condition-attr-container {
+.filter-condition.and:not(:first-child) > .condition-content > .condition-attr-container,
+.filter-condition.or:not(:first-child) > .condition-content > .condition-attr-container {
     padding-left: 50px;
 }
 
@@ -1269,6 +1349,9 @@ input[type=checkbox].condition-value {
     margin-top: 8px;
 }
 
+.list-group:last-child {
+    margin-bottom: 0;
+}
 .list-group-item {
     padding: 6px 10px;
 }
@@ -1631,7 +1714,7 @@ body.jmodal-root-active .jmodal-area {
     float: right;
     margin: 17px 0 0 0;
     font-size: 15px;
-    color: #ccc;
+    color: #999;
 }
 .uploader-remove:hover {
     cursor: pointer;
@@ -1842,7 +1925,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.2);
     z-index: 2049;
 }
 .dialog > .box {

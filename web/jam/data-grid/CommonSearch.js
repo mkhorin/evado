@@ -56,6 +56,7 @@ Jam.DataGridCommonSearch = class {
     execute (value) {
         if (value !== this._value) {
             this._value = value;
+            this.toggleFiltered(value);
             this.grid.load({resetPage: true});
         }
         this.toggleHasValue(value);
@@ -63,5 +64,9 @@ Jam.DataGridCommonSearch = class {
 
     toggleHasValue (value) {
         this.$container.toggleClass('has-value', value.length > 0);
+    }
+
+    toggleFiltered (value) {
+        this.$container.toggleClass('filtered', value.length > 0);
     }
 };

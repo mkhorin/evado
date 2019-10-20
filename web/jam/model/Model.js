@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.Model = class extends Jam.Element {
+Jam.Model = class Model extends Jam.Element {
 
     constructor ($form) {
         super($form);
@@ -29,12 +29,13 @@ Jam.Model = class extends Jam.Element {
         this.$controls.on('click', '[data-id]', this.onControl.bind(this));
         this.beforeCloseMethod = this.beforeClose.bind(this);
         this.modal.onClose(this.beforeCloseMethod);
-        this.grouper = new Jam.ModelGrouper(this);
+        this.grouping = new Jam.ModelGrouping(this);
         this.createAttrs();
-        this.attraction = new Jam.ModelAttraction(this);
+        this.validation = new Jam.ModelValidation(this);
+        this.binder = new Jam.ModelBinder(this);
         if (this.params.hideEmptyGroups) {
-            this.attraction.events.on('update', this.grouper.toggleEmpty.bind(this.grouper));
-            this.grouper.toggleEmpty();
+            this.binder.events.on('update', this.grouping.toggleEmpty.bind(this.grouping));
+            this.grouping.toggleEmpty();
         }
         this.changeTracker = new Jam.ModelChangeTracker(this);
         this.error = new Jam.ModelError(this);
@@ -59,6 +60,10 @@ Jam.Model = class extends Jam.Element {
         for (const attr of this.attrs) {
             attr.init();
         }
+    }
+
+    isChanged () {
+        return this.changeTracker.isChanged();
     }
 
     isNew () {
@@ -94,12 +99,12 @@ Jam.Model = class extends Jam.Element {
     }
 
     beforeClose (event) {
-        if (this.changeTracker.isChanged() && !Jam.Helper.confirm('Close without saving?')) {
-            return event.stopPropagation();
+        if (this.isChanged()) {
+            event.deferred = Jam.dialog.confirm('Close without saving?');
         }
         const message = this.inProgress();
-        if (message && !Jam.Helper.confirm(message)) {
-            return event.stopPropagation();
+        if (message) {
+            event.deferred = Jam.Helper.addDeferred(()=> Jam.dialog.confirm(message), event.deferred);
         }
         event.data = {
             result: this.id,
@@ -120,7 +125,8 @@ Jam.Model = class extends Jam.Element {
 
     onControl (event) {
         this.beforeControl(event);
-        this.getControlMethod(event.currentTarget.dataset.id).call(this, event);
+        const method = this.getControlMethod(event.currentTarget.dataset.id);
+        method && method.call(this, event);
     }
 
     beforeControl () {

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.DataGridAjaxProvider = class {
+Jam.DataGridAjaxProvider = class DataGridAjaxProvider {
 
     constructor (grid) {
         this.grid = grid;
@@ -67,13 +67,17 @@ Jam.DataGridAjaxProvider = class {
             columns: this.params.columns,
             start: this.grid.pagination.page * length,
             search: this.grid.commonSearch.getValue(),
-            order: this.grid.order,
+            order: this.getOrder(),
             ...data
         };
     }
+
+    getOrder () {
+        return {...this.grid.grouping, ...this.grid.order};
+    }
 };
 
-Jam.TreeDataGridAjaxProvider = class extends Jam.DataGridAjaxProvider {
+Jam.TreeDataGridAjaxProvider = class TreeDataGridAjaxProvider extends Jam.DataGridAjaxProvider {
 
     load ({node}) {
         this.node = node;

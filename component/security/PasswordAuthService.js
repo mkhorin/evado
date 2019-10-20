@@ -53,7 +53,7 @@ module.exports = class PasswordAuthService extends Base {
     async failLogin (email, user) {
         const data = {email, ip: user.getIp()};
         this.module.log('warn', this.failedMessage, data);
-        await this.module.catch('auth.fail', data);
+        await this.module.emitEvent('auth.fail', data);
         throw this.failedMessage;
     }
 

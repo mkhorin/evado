@@ -7,9 +7,9 @@ Jam.UserAction = class extends Jam.Element {
 
     static post ($element, params) {
         return this.confirm($element).then(() => {
-            Jam.toggleMainLoader(true);
+            Jam.toggleGlobalLoader(true);
             return Jam.Helper.post($element, $element.data('url'), params)
-                .always(()=> Jam.toggleMainLoader(false));
+                .always(()=> Jam.toggleGlobalLoader(false));
         });
     }
 
@@ -29,6 +29,14 @@ Jam.UserAction = class extends Jam.Element {
         return !this.$element.attr('disabled');
     }
 
+    needSaveChanges () {
+        const model = this.getModel();
+        const message = this.$element.data('needSaveChanges');
+        if (message && model && model.isChanged()) {
+            return Jam.dialog.alert(message);
+        }
+    }
+
     getNotice () {
         const model = this.getModel();
         return model ? model.notice : new Jam.ContentNotice;
@@ -46,7 +54,7 @@ Jam.UserAction = class extends Jam.Element {
 
     onClick (event) {
         event.preventDefault();
-        if (this.isActive()) {
+        if (this.isActive() && !this.needSaveChanges()) {
             this.execute();
         }
     }
@@ -71,8 +79,8 @@ Jam.UserAction = class extends Jam.Element {
     }
 
     toggleLoader (state) {
-        if (this.getParam('mainLoader', true)) {
-            return Jam.toggleMainLoader(state);
+        if (this.getParam('globalLoader', true)) {
+            return Jam.toggleGlobalLoader(state);
         }
         this.$element.toggleClass('loading', state);
         this.toggleActive(state);

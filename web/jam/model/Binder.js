@@ -3,21 +3,21 @@
  */
 'use strict';
 
-Jam.ModelAttraction = class {
+Jam.ModelBinder = class ModelBinder {
 
     constructor (model) {
         this.model = model;
         this.elements = [];
-        this.events = new Jam.Events('ModelAttraction');
+        this.events = new Jam.Events('ModelBinder');
         this.init();
     }
 
     init () {
-        for (const item of this.model.$form.find('[data-attraction]')) {
+        for (const item of this.model.$form.find('[data-binder]')) {
             const $item = $(item);
-            const data = $item.data('attraction');
+            const data = $item.data('binder');
             if (data) {
-                this.elements.push(new Jam.ModelAttractionElement($item, data, this));
+                this.elements.push(new Jam.ModelBinderElement($item, data, this));
             }
         }
         this.model.events.on('change', this.update.bind(this));
@@ -32,10 +32,10 @@ Jam.ModelAttraction = class {
     }
 };
 
-Jam.ModelAttractionElement = class {
+Jam.ModelBinderElement = class ModelBinderElement {
 
-    constructor ($item, data, attraction) {
-        this.attraction = attraction;
+    constructor ($item, data, binder) {
+        this.binder = binder;
         this.$item = $item;
         this.attr = Jam.ModelAttr.get($item);
         this.data = data || {};
@@ -49,17 +49,17 @@ Jam.ModelAttractionElement = class {
             if (action) {
                 this.actions[id] = action;
             } else {
-                console.error(`Invalid attraction action: ${id}`);
+                console.error(`Invalid binder action: ${id}`);
             }
         }
     }
 
     create (id, data) {
         switch (id) {
-            case 'visible': return new Jam.ModelAttractionVisible(this, data);
-            case 'enabled': return new Jam.ModelAttractionEnabled(this, data);
-            case 'required': return new Jam.ModelAttractionRequired(this, data);
-            case 'value': return new Jam.ModelAttractionValue(this, data);
+            case 'visible': return new Jam.ModelBinderVisible(this, data);
+            case 'enabled': return new Jam.ModelBinderEnabled(this, data);
+            case 'required': return new Jam.ModelBinderRequired(this, data);
+            case 'value': return new Jam.ModelBinderValue(this, data);
         }
     }
 
@@ -70,7 +70,7 @@ Jam.ModelAttractionElement = class {
     }
 };
 
-Jam.ModelAttractionAction = class {
+Jam.ModelBinderAction = class ModelBinderAction {
 
     constructor (element, data) {
         this.element = element;
@@ -79,7 +79,7 @@ Jam.ModelAttractionAction = class {
     }
 
     init () {
-        this.condition = new Jam.ModelCondition(this.data, this.element.attraction.model);
+        this.condition = new Jam.ModelCondition(this.data, this.element.binder.model);
     }
 
     isValid () {
@@ -91,7 +91,7 @@ Jam.ModelAttractionAction = class {
     }
 };
 
-Jam.ModelAttractionVisible = class extends Jam.ModelAttractionAction {
+Jam.ModelBinderVisible = class ModelBinderVisible extends Jam.ModelBinderAction {
 
     update () {
         const group = this.element.$item.data('group');
@@ -101,7 +101,7 @@ Jam.ModelAttractionVisible = class extends Jam.ModelAttractionAction {
     }
 };
 
-Jam.ModelAttractionEnabled = class extends Jam.ModelAttractionAction {
+Jam.ModelBinderEnabled = class ModelBinderEnabled extends Jam.ModelBinderAction {
 
     update () {
         if (this.element.attr) {
@@ -112,26 +112,26 @@ Jam.ModelAttractionEnabled = class extends Jam.ModelAttractionAction {
     }
 };
 
-Jam.ModelAttractionRequired = class extends Jam.ModelAttractionAction {
+Jam.ModelBinderRequired = class extends Jam.ModelBinderAction {
 
     update () {
         //this.element.$item.toggleClass('hidden', !this.isValid());
     }
 };
 
-Jam.ModelAttractionValue = class extends Jam.ModelAttractionAction {
+Jam.ModelBinderValue = class extends Jam.ModelBinderAction {
 
     init () {
         if (!this.element.attr) {
-            return console.error('Attraction: Value action without model attribute');
+            return console.error('Binder value action without model attribute');
         }
         this.value = this.element.attr.normalizeValue(this.data[0]);
-        this.condition = new Jam.ModelCondition(this.data[1], this.element.attraction.model);
+        this.condition = new Jam.ModelCondition(this.data[1], this.element.binder.model);
     }
 
     getValue () {
         return Array.isArray(this.value)
-            ? this.element.attraction.model.getAttr(this.value[0]).getValue()
+            ? this.element.binder.model.getAttr(this.value[0]).getValue()
             : this.value;
     }
 

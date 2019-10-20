@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelError = class {
+Jam.ModelError = class ModelError {
 
     constructor (model) {
         this.model = model;

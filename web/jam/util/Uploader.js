@@ -31,8 +31,8 @@ Jam.Uploader = class {
             maxSize: null,
             extensions: null,
             mimeTypes: null,
-            tooSmall: 'File size cannot be smaller than {limit} B',
-            tooBig: 'File size cannot exceed {limit} B',
+            tooSmall: 'File size cannot be smaller than {limit} bytes',
+            tooBig: 'File size cannot exceed {limit} bytes',
             wrongExtension: 'Only these extensions are allowed: {extensions}',
             wrongMimeType: 'Only these MIME types are allowed: {mimeTypes}',
             imageOnly: false,
@@ -40,11 +40,11 @@ Jam.Uploader = class {
             maxWidth: null,
             minHeight: 1,
             minWidth: 1,
-            notImage: 'The file is not an image',
-            overHeight: 'The height cannot be larger than {limit} px',
-            overWidth: 'The width cannot be larger than {limit} px',
-            underHeight: 'The height cannot be smaller than {limit} px',
-            underWidth: 'The width cannot be smaller than {limit} px',
+            notImage: 'File is not an image',
+            overHeight: 'Height cannot be larger than {limit} px',
+            overWidth: 'Width cannot be larger than {limit} px',
+            underHeight: 'Height cannot be smaller than {limit} px',
+            underWidth: 'Width cannot be smaller than {limit} px',
             tooMany: 'Too many files',
             alreadyExists: 'This file has already been selected',
             confirmRemoveStatus: ['done', 'uploading'],
@@ -71,15 +71,21 @@ Jam.Uploader = class {
 
     init () {
         this.initDropZone();
-        if (this.options.mimeTypes) {
-            this.$input.attr('accept', this.options.mimeTypes.join());
-        }
+        this.setInputAccept();
         if (this.options.maxFiles > 1) {
             this.$input.attr('multiple', true);
         }
-        this.$input.change(event => {
-            this.setFiles(event.target.files);
-        });
+        this.$input.change(event => this.setFiles(event.target.files));
+    }
+
+    setInputAccept () {
+        let {accept, mimeTypes} = this.options;
+        if (!accept && mimeTypes) {
+            accept = mimeTypes.join();
+        }
+        if (accept) {
+            this.$input.attr('accept', accept);
+        }
     }
 
     initDropZone () {

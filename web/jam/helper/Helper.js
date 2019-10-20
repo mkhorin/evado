@@ -96,6 +96,10 @@ Jam.Helper = class Helper {
         });
     }
 
+    static addDeferred (spawn, deferred) {
+        return deferred ? deferred.then(spawn) : spawn();
+    }
+
     static post ($element, url, data) {
         const csrf = $element.closest('[data-csrf]').data('csrf');
         data = typeof data === 'string' ? `csrf=${csrf}&${data}` : {csrf, ...data};
@@ -226,9 +230,9 @@ Jam.ArrayHelper = class ArrayHelper {
 
     static searchByNestedValue (value, key, items) {
         if (Array.isArray(items)) {
-            for (let i = 0; i < items.length; ++i) {
-                if (Jam.ObjectHelper.getNestedValue(key, items[i]) === value) {
-                    return i;
+            for (let index = 0; index < items.length; ++index) {
+                if (Jam.ObjectHelper.getNestedValue(key, items[index]) === value) {
+                    return index;
                 }
             }
         }

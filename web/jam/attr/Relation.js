@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelAttr.Relation = class extends Jam.ModelAttr {
+Jam.ModelAttr.Relation = class Relation extends Jam.ModelAttr {
 
     activate () {
         if (!this.canActivate()) {
@@ -18,7 +18,7 @@ Jam.ModelAttr.Relation = class extends Jam.ModelAttr {
     }
 };
 
-Jam.AttrList = class extends Jam.List {
+Jam.AttrList = class AttrList extends Jam.List {
 
     init () {
         this.model = this.attr.model;
@@ -69,6 +69,11 @@ Jam.AttrList = class extends Jam.List {
         return super.getControlMethod(id);
     }
 
+    beforeControl () {
+        super.beforeControl();
+        this.model.beforeControl();
+    }
+
     onAfterCloseModal (event, data) {
         if (data && data.result) {
             this.linkObjects(data.result);
@@ -87,7 +92,7 @@ Jam.AttrList = class extends Jam.List {
     onRemove () {
         const $rows = this.getSelectedRows();
         if ($rows) {
-            this.removeObjects($rows);
+            Jam.dialog.confirmRemove('Delete selected items?').then(()=> this.removeObjects($rows));
         }
     }
 
@@ -156,7 +161,7 @@ Jam.AttrList = class extends Jam.List {
     }
 };
 
-Jam.AttrListChanges = class {
+Jam.AttrListChanges = class AttrListChanges {
 
     constructor (list) {
         this.data = {};

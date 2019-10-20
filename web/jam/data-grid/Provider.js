@@ -23,11 +23,15 @@ Jam.DataGridProvider = class {
         let data = this.params.data;
         const maxSize = data.length;
         data = this.useCommonSearch(data);
-        this.orderData(data, this.grid.order);
+        this.sortData(data, this.getOrder());
         const totalSize = data.length;
         const interval = this.grid.pagination.getDataInterval(totalSize);
         const items = data.slice(...interval);
         this.grid.afterLoad({items, totalSize, maxSize});
+    }
+
+    getOrder () {
+        return {...this.grid.grouping, ...this.grid.order};
     }
 
     // FILTER DATA
@@ -59,9 +63,9 @@ Jam.DataGridProvider = class {
         return false;
     }
 
-    // ORDER DATA
+    // SORT DATA
 
-    orderData (data, order) {
+    sortData (data, order) {
         if (!order) {
             return false;
         }

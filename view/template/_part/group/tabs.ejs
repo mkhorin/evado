@@ -1,11 +1,11 @@
 <!-- _part/group/tabs -->
 <%
 const p = {
-    attraction: typeof attraction === 'undefined' ? '' : JSON.stringify(attraction),
+    binder: typeof binder === 'undefined' ? '' : JSON.stringify(binder),
     translate: typeof translate === 'undefined' ? '' : translate
 };
 %>
-<div class="tabs form-tabs" data-attraction="<%= p.attraction %>">
+<div class="tabs form-tabs" data-binder="<%= p.binder %>">
     <ul class="nav nav-tabs" role="tablist">
     <% for (const item of items) { %>
     <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
@@ -17,7 +17,7 @@ const p = {
         <% for (const item of items) { %>
         <div class="form-base-group tab-pane <%- item.active ? 'active' : '' %>"
              data-id="<%- item.id %>"
-             data-attraction="<%= item.attraction === undefined ? '' : JSON.stringify(item.attraction) %>">
+             data-binder="<%= item.binder === undefined ? '' : JSON.stringify(item.binder) %>">
             <div class="form-base-group-body">
             <% if (typeof item.content === 'string') { %>
                 <%- include(item.content) %>

@@ -37,7 +37,7 @@ class Jam {
         return item ? this.getClass.call(item, name.substring(pos + 1)) : null;
     }
 
-    static toggleMainLoader (state) {
+    static toggleGlobalLoader (state) {
         $(document.body).toggleClass('loading', state);
     }
 
@@ -158,6 +158,16 @@ Jam.Dialog = class Dialog {
         return this.show(message, {
             header: 'Confirmation',
             submitText: 'Confirm',
+            cssClass: 'warning',
+            ...data
+        });
+    }
+
+    alert (message, data) {
+        return this.show(message, {
+            header: 'Warning',
+            submitText: false,
+            cancelText: 'Close',
             cssClass: 'warning',
             ...data
         });

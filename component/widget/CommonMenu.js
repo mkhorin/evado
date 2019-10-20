@@ -26,7 +26,12 @@ module.exports = class CommonMenu extends Base {
 
     getDefaultItems () {
         const app = this.module.app;
-        const items = app.modules.map(this.getModuleItem, this);
+        const items = [];
+        for (const module of app.modules) {
+            if (!module.hidden) {
+                items.push(this.getModuleItem(module));
+            }
+        }
         items.push(this.getSeparatorItem());
         items.push(this.getModuleItem(app));
         return items;

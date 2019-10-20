@@ -15,7 +15,6 @@ module.exports = {
         'actionProfiler': {
             Class: require('areto/log/actionProfiler')
         },
-        'view': {},
         'db': {
             Class: require('areto/db/MongoDatabase'),
             settings: {
@@ -84,6 +83,10 @@ module.exports = {
         'fileStorage': require('./default-fileStorage')
     },
     modules: {
+        'api': {
+            Class: require('evado/module/api/Module'),
+            hidden: true
+        }
     },
     params: {
         'allowSignUp': true,

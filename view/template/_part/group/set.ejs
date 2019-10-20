@@ -2,11 +2,11 @@
 <%
 const p = {
     active: typeof active !== 'undefined' && active ? 'active' : '',
-    attraction: typeof attraction === 'undefined' ? '' : JSON.stringify(attraction),
+    binder: typeof binder === 'undefined' ? '' : JSON.stringify(binder),
     translate: typeof translate === 'undefined' ? '' : translate
 };
 %>
-<fieldset class="form-base-group form-set <%- p.active %>" data-attraction='<%- p.attraction %>'>
+<fieldset class="form-base-group form-set <%- p.active %>" data-binder='<%- p.binder %>'>
     <legend><span class="form-set-toggle"><span class="fa fa-plus"></span>
         <span data-t="<%- p.translate %>"><%- title %></span></span>
     </legend>

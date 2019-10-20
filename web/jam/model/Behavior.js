@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.SetAttrValueBehavior = class {
+Jam.SetAttrValueBehavior = class SetAttrValueBehavior {
 
     constructor (params) {
         this.model = params.owner;

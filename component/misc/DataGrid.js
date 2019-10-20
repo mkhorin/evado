@@ -40,7 +40,6 @@ module.exports = class DataGrid extends Base {
 
     async getList () {
         this._result = {};
-        this._viewModel = this.controller.createViewModel(this.params.viewModel, {params: this.params});
         this._result.maxSize = await this.query.count();
         this.setOffset();
         this.setLimit();
@@ -50,23 +49,9 @@ module.exports = class DataGrid extends Base {
         this._result.totalSize = await this.query.count();
         await this.setModels();
         ModelHelper.formatByRules(this.params.formatRules, this._models, this.controller);
-        if (this._viewModel) {
-            await this._viewModel.prepareModels(this._models);
-        }
+        await this.prepareViewModels();
         this._result.items = this.filterByColumns(this._models);
         return this._result;
-    }
-
-    async setModels () {
-        let links = this.request.changes && this.request.changes.links;
-        if (Array.isArray(links) && links.length) {
-            const key = this.query.model.PK;
-            this._models = await this.query.and(['NOT ID', key, links]).all();
-            links = await this.query.model.find(['ID', key, links]).with(this.query).offset(0).all();
-            this._models = links.concat(this._models);
-        } else {
-            this._models = await this.query.all();
-        }
     }
 
     setOffset () {
@@ -95,6 +80,18 @@ module.exports = class DataGrid extends Base {
         }
         if (Object.values(order).length) {
             this.query.order(order);
+        }
+    }
+
+    async setModels () {
+        let links = this.request.changes && this.request.changes.links;
+        if (Array.isArray(links) && links.length) {
+            const key = this.query.model.PK;
+            this._models = await this.query.and(['NOT ID', key, links]).all();
+            links = await this.query.model.find(['ID', key, links]).with(this.query).offset(0).all();
+            this._models = links.concat(this._models);
+        } else {
+            this._models = await this.query.all();
         }
     }
 
@@ -130,6 +127,11 @@ module.exports = class DataGrid extends Base {
         const query = rel.model.find(...conditions);
         // simple relation without via
         return {[rel.linkKey]: await query.column(rel.refKey)};
+    }
+
+    prepareViewModels () {
+        const model = this.controller.createViewModel(this.params.viewModel, {params: this.params});
+        return model ? model.prepareModels(this._models) : null;
     }
 
     filterByColumns (models) {

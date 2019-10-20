@@ -26,7 +26,7 @@ Jam.DataGridRenderer = class {
     initColumns () {
         for (const column of this.params.columns) {
             if (typeof column.render !== 'function') {
-                column.render = this.renderCellValue.bind(this);
+                column.render = this.defaultCellValueRender.bind(this);
             }
         }
     }
@@ -47,14 +47,18 @@ Jam.DataGridRenderer = class {
         return this.$table.find(`tbody [data-name="${name}"]`);
     }
 
-    getDirectionCode (direction) {
+    getDirection ($element) {
+        return $element.hasClass('asc') ? 1 : -1;
+    }
+
+    getDirectionName (direction) {
         return direction === 1 ? ' asc' : direction === -1 ? ' desc' : '';
     }
 
     toggleOrder ($toggle, direction) {
         const $cell = $toggle.closest('th');
         const name = $cell.data('name');
-        const code = this.getDirectionCode(direction);
+        const code = this.getDirectionName(direction);
         $cell.removeClass('asc').removeClass('desc').addClass(code);
         $toggle.attr('title', this.locale[code]);
         this.getNameCells(name).toggleClass('ordered', !!code);
@@ -78,6 +82,9 @@ Jam.DataGridRenderer = class {
     }
 
     renderBody (data) {
+        this._groupName = this.grid.getGroupName();
+        this._groupDirection = this.grid.getGroupDirection() === 1 ? 'asc' : 'desc';
+        delete this._lastGroupValue;
         return data.map(row => this.renderBodyRow(row)).join('');
     }
 
@@ -85,33 +92,60 @@ Jam.DataGridRenderer = class {
         if (!data) {
             return '';
         }
-        let content = '';
+        let cells = '';
+        this._rowValueMap = {};
         for (let i = 0; i < this.columns.length; ++i) {
-            content += this.renderBodyCell(data, this.columns[i], i);
+            cells += this.renderBodyCell(data, this.columns[i], i);
         }
-        return this.renderBodyRowHtml(this.params.getRowId(data), content, ...arguments);
+        const id = this.params.getRowId(data);
+        return this.renderBodyGroup(data) + this.renderBodyRowHtml(id, cells);
+    }
+
+    renderBodyGroup (data) {
+        const column = this.grid.getColumn(this._groupName);
+        if (!column) {
+            return '';
+        }
+        const value = this.renderValue(data, column);
+        if (value === this._lastGroupValue) {
+            return '';
+        }
+        this._lastGroupValue = value;
+        return this.renderBodyGroupHtml(value, column);
+    }
+
+    renderBodyGroupHtml (value, {name, label}) {
+        const direction = this._groupDirection;
+        const span = this.columns.length;
+        const sort = '<span class="order-toggle fa" title="Sort"></span>';
+        label = this.grid.translate(label || name);
+        return `<tr class="group ${direction}"><th title="${label}" colspan="${span}">${value}${sort}</th></tr>`;
     }
 
     renderBodyRowHtml (id, content) {
-        return `<tr data-id="${id}">${content}</tr>`;
+        return `<tr class="item" data-id="${id}">${content}</tr>`;
     }
 
     renderBodyCell (data, column, index) {
-        const value = column.render(data[column.name], column, index, data);
-        return this.renderBodyCellHtml(value, column, index, data);
+        const value = this.renderValue(data, column);
+        return this.renderBodyCellHtml(value, column, index);
     }
 
     renderBodyCellHtml (value, column) {
         return `<td class="${this.getBodyCellClass(...arguments)}" data-name="${column.name}">${value}</td>`;
     }
 
-    renderCellValue (value) {
-        return value;
+    renderValue (data, column) {
+        return column.render(data[column.name], column, data);
     }
 
     getBodyCellClass (value, column) {
         const cssClass = this.grid.getOrderDirection(column.name) ? ' ordered' : '';
         return column.cssClass ? `${cssClass} ${column.cssClass}` : cssClass;
+    }
+
+    defaultCellValueRender (value) {
+        return value;
     }
 
     // HEAD
@@ -120,21 +154,20 @@ Jam.DataGridRenderer = class {
         return this.createHeadByMatrix(this.createHeadMatrix(this.columns));
     }
 
-    renderHeadColumn (column, col, row) {
-        const name = column.name;
+    renderHeadColumn ({name, label}, colSpan, rowSpan) {
         let cssClass = 'column';
         if (this.grid.isSortableColumn(name)) {
-            cssClass += ' sortable '+ this.getDirectionCode(this.grid.getOrderDirection(name));
+            cssClass += ' sortable '+ this.getDirectionName(this.grid.getOrderDirection(name));
         }
-        const label = this.grid.translate(column.label || name);
-        return '<th class="'+ cssClass +'" rowspan="'+ row +'" data-name="'+ name +'">'
+        label = this.grid.translate(label || name);
+        return '<th class="'+ cssClass +'" rowspan="'+ rowSpan +'" data-name="'+ name +'">'
             + '<span class="column-label search-toggle" title="'+ name +'">'+ label +'</span>'
             + '<span class="order-toggle fa" title="'+ this.locale.orderToggle +'"></span></th>';
     }
 
-    renderHeadGroup (group, col, row) {
-        const label = this.grid.translate(group.label || group.name);
-        return `<th class="group" colspan="${col}" rowspan="${row}" data-name="${group.name}">${label}</th>`;
+    renderHeadGroup ({name, label}, colSpan, rowSpan) {
+        label = this.grid.translate(label || name);
+        return `<th class="group" colspan="${colSpan}" rowspan="${rowSpan}" data-name="${name}">${label}</th>`;
     }
 
     createHeadMatrix (columns) {
@@ -229,15 +262,15 @@ Jam.TreeDataGridRenderer = class extends Jam.DataGridRenderer {
     }
 
     renderBodyRowHtml (id, content, data, depth) {
-        const cssClass = data._node_hasChildren ? 'has-children' : '';
-        const nodeClass = data._node_class || '';
-        return `<tr class="${cssClass}" data-depth="${depth || 0}" data-id="${id}" data-class="${nodeClass}">${content}</tr>`;
+        const css = data._node_hasChildren ? 'has-children' : '';
+        const node = data._node_class || '';
+        return `<tr class="${css}" data-depth="${depth || 0}" data-id="${id}" data-class="${node}">${content}</tr>`;
     }
 
-    renderBodyCellHtml (value, column, index, data) {
+    renderBodyCellHtml (value, column, index) {
         if (index === 0) {
             value += this.params.nodeToggle;
         }
-        return super.renderBodyCellHtml(value, column, index, data);
+        return super.renderBodyCellHtml(value, column, index);
     }
 };

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelAttr.Enum = class extends Jam.ModelAttr {
+Jam.ModelAttr.Enum = class Enum extends Jam.ModelAttr {
 
     init () {
         super.init();
@@ -61,7 +61,7 @@ Jam.ModelAttr.Enum = class extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttr.RadioEnum = class extends Jam.ModelAttr {
+Jam.ModelAttr.RadioEnum = class RadioEnum extends Jam.ModelAttr {
 
     init () {
         super.init();
@@ -122,7 +122,7 @@ Jam.ModelAttr.RadioEnum = class extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttr.EnumSet = class {
+Jam.ModelAttr.EnumSet = class EnumSet {
 
     static createSets (data, owner) {
         const sets = [];
@@ -135,10 +135,10 @@ Jam.ModelAttr.EnumSet = class {
     }
 
     static filterItems (sets) {
-        let items = [];
+        const items = [];
         for (const set of sets) {
             if (set.isActive()) {
-                items = items.concat(set.items);
+                items.push(...set.items);
             }
         }
         return Jam.ArrayHelper.uniqueByKey('value', items);

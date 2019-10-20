@@ -35,8 +35,8 @@ Jam.List = class List extends Jam.Element {
         this.createFilter();
         this.grid.init();
         this.$tbody = this.grid.renderer.$tbody;
-        this.$tbody.on('click', 'tr', this.onClickRow.bind(this));
-        this.$tbody.on('dblclick', 'tr', this.onDoubleClickRow.bind(this));
+        this.$tbody.on('click', 'tr.item', this.onClickRow.bind(this));
+        this.$tbody.on('dblclick', 'tr.item', this.onDoubleClickRow.bind(this));
     }
 
     createDataGrid () {

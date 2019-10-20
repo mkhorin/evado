@@ -32,7 +32,7 @@ Jam.ListFilter = class ListFilter {
         this.$container.toggle(state);
         this.load();
         if (this.isVisible() && this.group && this.group.isEmpty()) {
-            this.addCondition();
+            this.onAddCondition();
         }
     }
 
@@ -53,12 +53,12 @@ Jam.ListFilter = class ListFilter {
         this.$content = this.$container.children('.filter-content');
         this.group = new Jam.ListFilter.Group(this, this.params.columns);
         this.$content.append(this.group.$container);
-        //this.$tools = this.$container.children('.filter-tools');
         this.$controls = this.$container.children('.filter-controls');
-        this.$controls.find('.add-condition').click(this.addCondition.bind(this));
-        this.$controls.find('.apply-filter').click(this.apply.bind(this));
-        this.$controls.find('.reset-filter').click(this.reset.bind(this));
-        this.addCondition();
+        this.$controls.find('.add').click(this.onAddCondition.bind(this));
+        this.$apply = this.$controls.find('.apply').click(this.onApply.bind(this));
+        this.$controls.find('.reset').click(this.onReset.bind(this));
+        this.onAddCondition();
+        this.store = new Jam.ListFilterStore(this);
         this.events.trigger('afterBuild');
     }
 
@@ -70,17 +70,17 @@ Jam.ListFilter = class ListFilter {
         return this.params.types && this.params.types[id];
     }
 
-    apply () {
+    getEmptyCondition () {
+        return this.group.getEmptyCondition();
+    }
+
+    onApply () {
         this._applied = true;
         this.list.reload({resetPage: true});
         this.triggerActive();
     }
 
-    serialize () {
-        return this.group ? this.group.serialize() : undefined;
-    }
-
-    reset () {
+    onReset () {
         this.group.reset();
         this.$container.hide();
         this.triggerActive();
@@ -90,11 +90,7 @@ Jam.ListFilter = class ListFilter {
         }
     }
 
-    getEmptyCondition () {
-        return this.group.getEmptyCondition();
-    }
-
-    addCondition () {
+    onAddCondition () {
         return this.group.addCondition();
     }
 
@@ -102,6 +98,19 @@ Jam.ListFilter = class ListFilter {
         const hasData = !!this.serialize();
         this.$container.toggleClass('active', hasData);
         this.events.trigger('toggleActive', hasData);
+    }
+
+    serialize () {
+        return this.group ? this.group.serialize() : undefined;
+    }
+
+    parse (items) {
+        this.group.reset();
+        for (const item of items) {
+            this.group.addCondition().parse(item);
+        }
+        this.onApply();
+        this.$apply.focus();
     }
 };
 
@@ -156,9 +165,6 @@ Jam.ListFilter.Group = class Group {
 
     afterConditionRemove (condition) {
         Jam.ArrayHelper.removeValue(condition, this.conditions);
-        if (!this.isEmpty()) {
-            this.conditions[0].resetLogical();
-        }
     }
 };
 
@@ -183,19 +189,16 @@ Jam.ListFilter.Condition = class Condition {
         this.group = group;
         this.filter = group.filter;
         this.events = new Jam.Events('ListFilter.Condition');
-        this.logical = 'and';
         this.$container = this.filter.$conditionSample.clone().removeClass('hidden');
         this.$container.data('condition', this);
-        if (!this.group.isEmpty()) {
-            this.$container.addClass(this.logical);
-        }
+        this.setAnd(true);
         this.$content = this.$container.children('.condition-content');
         this.$groupContainer = this.$container.children('.condition-group');
         this.$attrContainer = this.$content.find('.condition-attr-container');
         this.$attrSelect = this.$attrContainer.find('.condition-attr');
         this.$attrSelect.change(this.onChangeAttr.bind(this));
-        this.$container.find('.remove-condition').click(this.remove.bind(this));
-        this.$container.find('.condition-logical').click(this.toggleLogical.bind(this));
+        this.$container.find('.remove-condition').click(this.onRemove.bind(this));
+        this.$container.find('.condition-logical').click(this.onToggleLogical.bind(this));
         this.$attrSelect.html(this.constructor.createAttrItems(this.group.columns)).select2();
     }
 
@@ -231,6 +234,10 @@ Jam.ListFilter.Condition = class Condition {
         return this.getOperationItem().val();
     }
 
+    setOperation (value) {
+        return this.getOperationItem().val(value).change();
+    }
+
     getOperationItem () {
         return this.$container.find('.condition-operation');
     }
@@ -240,20 +247,17 @@ Jam.ListFilter.Condition = class Condition {
     }
 
     getValueItem () {
-        return this.$container.find('.condition-value');
+        return this.$container.children('.condition-content').find('.condition-value');
     }
 
-    toggleLogical () {
-        this.$container.removeClass('and or');
-        if (this.logical) {
-            this.logical = this.logical === 'and' ? 'or' : 'and';
-            this.$container.addClass(this.logical);
-        }
+    onToggleLogical () {
+        this.setAnd(!this.and);
     }
 
-    resetLogical () {
-        this.logical = undefined;
-        this.toggleLogical();
+    setAnd (and) {
+        this.and = and;
+        this.$container.removeClass(this.and ? 'or' : 'and');
+        this.$container.addClass(this.and ? 'and' : 'or');
     }
 
     removeType () {
@@ -263,7 +267,7 @@ Jam.ListFilter.Condition = class Condition {
         }
     }
 
-    remove () {
+    onRemove () {
         this.$container.remove();
         this.group.afterConditionRemove(this);
     }
@@ -272,10 +276,17 @@ Jam.ListFilter.Condition = class Condition {
         const op = this.getOperation();
         const value = this.getValue();
         if (op && value !== undefined) {
-            const and = this.logical !== 'or';
+            const and = this.and;
             const attr = this.getAttr();
             return this.type.getRequestData({and, attr, op, value});
         }
+    }
+
+    parse (data) {
+        this.setAnd(data.and);
+        this.$attrSelect.val(data.attr).change();
+        this.setOperation(data.op);
+        this.type.changeValue(data.value, data.text);
     }
 };
 
@@ -304,6 +315,10 @@ Jam.ListFilter.Type = class Type {
 
     setValue (value) {
         return this.getValueItem().val(value);
+    }
+
+    changeValue (value) {
+        return this.setValue(value);
     }
 
     getValueItem () {
@@ -348,7 +363,7 @@ Jam.ListFilter.StringType = class StringType extends Jam.ListFilter.Type {
 
     onKeyUp (event) {
         if (event.keyCode === 13 && this.getValue().length) {
-            this.filter.apply();
+            this.filter.onApply();
         }
     }
 };
@@ -359,12 +374,16 @@ Jam.ListFilter.BooleanType = class BooleanType extends Jam.ListFilter.Type {
 
     init () {
         super.init();
-        this.getValueItem().change(this.changeValue.bind(this));
+        this.getValueItem().change(this.onChangeValue.bind(this));
         this.changeValue();
     }
 
-    changeValue () {
+    onChangeValue () {
         this.setValue(this.getValueItem().is(':checked') ? 'true' : 'false');
+    }
+
+    changeValue (value) {
+        return this.setValue(value).prop('checked', value === 'true');
     }
 };
 
@@ -395,6 +414,10 @@ Jam.ListFilter.DateType = class DateType extends Jam.ListFilter.Type {
             this.picker.hide();
         }
     }
+
+    changeValue (value) {
+        this.picker.date(new Date(value));
+    }
 };
 
 // ID
@@ -414,6 +437,10 @@ Jam.ListFilter.IdType = class IdType extends Jam.ListFilter.StringType {
         super.remove();
         this.nested.remove();
     }
+
+    changeValue (value) {
+        return this.nested.active() ? this.nested.parse(value) : this.setValue(value);
+    }
 };
 
 // SELECTOR
@@ -424,12 +451,16 @@ Jam.ListFilter.SelectorType = class SelectorType extends Jam.ListFilter.Type {
         super.init();
         if (this.params.items) {
             this.createSimple();
-        } else if (this.params.url) {
+        } else if (this.isAjax()) {
             this.createAjax();
         } else {
             this.removeEqualOptions();
         }
         this.nested = new Jam.ListFilter.Nested(this);
+    }
+
+    isAjax () {
+        return this.params.url;
     }
 
     createSimple () {
@@ -503,12 +534,34 @@ Jam.ListFilter.SelectorType = class SelectorType extends Jam.ListFilter.Type {
 
     getRequestData (data) {
         return super.getRequestData(Object.assign(data, {
-            relation: this.params.relation
+            relation: this.params.relation,
+            text: this.getText()
         }));
     }
 
     getValue () {
         return this.nested.active() ? this.nested.getValue() : super.getValue();
+    }
+
+    getText () {
+        return this.getValueItem().find(":selected").text();
+    }
+
+    changeValue (value) {
+        if (this.nested.active()) {
+            this.nested.parse(value);
+        } else if (this.isAjax()) {
+            this.changeAjaxValue(...arguments);
+        } else {
+            this.setValue(value).change();
+        }
+        this.getValueItem().select2('close');
+    }
+
+    changeAjaxValue (value, text) {
+        const $select = this.getValueItem().select2('destroy');
+        $select.empty().append(new Option(text, value, true, true));
+        this.createAjax();
     }
 
     remove () {
@@ -564,5 +617,11 @@ Jam.ListFilter.Nested = class Nested {
 
     remove () {
         this.condition.$groupContainer.html('');
+    }
+
+    parse (items) {
+        for (const item of items) {
+            this.group.addCondition().parse(item);
+        }
     }
 };

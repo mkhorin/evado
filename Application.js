@@ -27,8 +27,8 @@ module.exports = class Evado extends Base {
         return this.components.get('scheduler');
     }
 
-    catch () {
-        return this.getObserver().catch(...arguments);
+    emitEvent (name, data) {
+        return this.getObserver().catch(name, data);
     }
 
     // EVENTS

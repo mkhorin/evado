@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelCondition = class {
+Jam.ModelCondition = class ModelCondition {
 
     constructor (data, model) {
         this.data = data;

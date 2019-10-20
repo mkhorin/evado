@@ -68,9 +68,9 @@ Jam.NotificationWidget = class extends Jam.Element {
     }
 
     requestMessage (message) {
-        Jam.toggleMainLoader(true);
+        Jam.toggleGlobalLoader(true);
         $.get(this._url, {message}).always(()=> {
-            Jam.toggleMainLoader(false);
+            Jam.toggleGlobalLoader(false);
         }).done(data => {
             this.onRefreshDone(data);
             this.showMessage(data);

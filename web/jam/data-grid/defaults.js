@@ -48,12 +48,12 @@ Jam.DataGrid.defaults = {
         infoFiltered: '(filtered from #{MAX})'
     },
     AjaxProvider: Jam.DataGridAjaxProvider,
-    ColumnManager: Jam.DataGridColumnManager,
     CommonSearch: Jam.DataGridCommonSearch,
     PageJumper: Jam.DataGridPageJumper,
     Pagination: Jam.DataGridPagination,
     Provider: Jam.DataGridProvider,
-    Renderer: Jam.DataGridRenderer
+    Renderer: Jam.DataGridRenderer,
+    Tuner: Jam.DataGridTuner
 };
 
 Jam.TreeDataGrid.defaults = {

@@ -15,6 +15,10 @@ module.exports = class BaseMetaModel extends Base {
         return this.hub.getDb();
     }
 
+    emitEvent (name, data) {
+        return this.module.emitEvent(`meta.${this.name}.${name}`, data);
+    }
+
     spawnUser () {
         return this.spawn(this.hub.User, ...arguments);
     }

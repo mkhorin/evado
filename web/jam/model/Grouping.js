@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelGrouper = class {
+Jam.ModelGrouping = class ModelGrouping {
 
     constructor (model) {
         this.model = model;
@@ -37,7 +37,7 @@ Jam.ModelGrouper = class {
     }
 
     loadStates () {
-        const data = store.get(this.getStoreId());
+        const data = store.get(this.getStoreKey());
         if (Array.isArray(data) && data.length === this.groups.length) {
             for (let i = 0; i < data.length; ++i) {
                 this.groups[i].toggleState(data[i]);
@@ -53,18 +53,18 @@ Jam.ModelGrouper = class {
         for (const group of this.groups) {
             data.push(group.isActive());
         }
-        store.set(this.getStoreId(), data);
+        store.set(this.getStoreKey(), data);
     }
 
-    getStoreId () {
-        return `model-grouper-${this.model.params.className}`;
+    getStoreKey () {
+        return `model-grouping-${this.model.params.className}`;
     }
 
     setMaxDepth (depth) {
         this.maxDepth = this.maxDepth < depth ? depth : this.maxDepth;
     }
 
-    toggleEmpty () { // after attraction visible
+    toggleEmpty () { // after binder visible
         for (let depth = this.maxDepth; depth >= 0; --depth) {
             for (const group of this.groups) {
                 if (group.depth === depth) {
@@ -84,7 +84,7 @@ Jam.ModelGrouper = class {
         $group.data('group').update();
         /*
         if (!$group.hasClass('collapsed')) {
-            Jam.Model.get($group.data('grouper').closest('.form')).onAttrParentActive($group);
+            Jam.Model.get($group.data('grouping').closest('.form')).onAttrParentActive($group);
             // Jam.Model.get($group.closest('.form')).onAttrParentActive($group);
         }//*/
     }
@@ -104,9 +104,9 @@ Jam.ModelGrouper = class {
 
 Jam.ModelGroup = class {
 
-    constructor (id, $group, grouper) {
-        this.id = grouper;
-        this.grouper = grouper;
+    constructor (id, $group, grouping) {
+        this.id = grouping;
+        this.grouping = grouping;
         this.$group = $group;
         this.$group.data('group', this);
         this.$content = $group.children('.form-base-group-body');
@@ -115,7 +115,7 @@ Jam.ModelGroup = class {
     }
 
     init () {
-        this.grouper.setMaxDepth(this.depth);
+        this.grouping.setMaxDepth(this.depth);
     }
 
     isActive () {
@@ -131,11 +131,11 @@ Jam.ModelGroup = class {
     }
 
     update () {
-        this.grouper.saveStates();
+        this.grouping.saveStates();
         Jam.ModelAttr.getAttrs(this.$group).forEach(attr => attr.activate());
     }
 
-    // a group can be hidden by attraction or by empty content
+    // a group can be hidden by binder or by empty content
     toggleEmpty () {
         this.$group.toggleClass('empty-group', this.isEmpty());
     }

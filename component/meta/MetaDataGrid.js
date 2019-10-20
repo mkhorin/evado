@@ -13,6 +13,7 @@ module.exports = class MetaDataGrid extends Base {
             // controller: this,
             metaData: config.controller.metaData,
             view: config.controller.getView(),
+            gridView: 'grid',
             ListFilterCondition,
             ...config
         });
@@ -20,6 +21,7 @@ module.exports = class MetaDataGrid extends Base {
 
     async getList () {
         this._result = {};
+        this._viewModel = this.controller.createViewModel(this.viewModel);
         await this.metaData.security.access.filterObjects(this.query);
         this._result.maxSize = await this.query.count();
         this.setOffset();
@@ -32,19 +34,9 @@ module.exports = class MetaDataGrid extends Base {
         await this.metaData.security.resolveListForbiddenAttrs(this._models, this.metaData.view);
         this._extraData = this.controller.extraMeta.getData(this.metaData.view);
         this._columnMap = this._extraData.columnMap;
+        await this.prepareViewModels();
         this._result.items = await this.filterByColumns(this._models);
         return this._result;
-    }
-
-    async setModels () {
-        let links = this.request.changes && this.request.changes.links;
-        if (Array.isArray(links) && links.length) {
-            this._models = await this.query.and(['NOT ID', this.query.view.getKey(), links]).all();
-            links = await this.query.where(['ID', this.query.view.getKey(), links]).offset(0).all();
-            this._models = links.concat(this._models);
-        } else {
-            this._models = await this.query.all();
-        }
     }
 
     setOrder () {
@@ -99,6 +91,22 @@ module.exports = class MetaDataGrid extends Base {
             query: this.query
         });
         this.query.and(await filter.resolve());
+    }
+
+    async setModels () {
+        let links = this.request.changes && this.request.changes.links;
+        if (Array.isArray(links) && links.length) {
+            this._models = await this.query.and(['NOT ID', this.query.view.getKey(), links]).all();
+            links = await this.query.where(['ID', this.query.view.getKey(), links]).offset(0).all();
+            this._models = links.concat(this._models);
+        } else {
+            this._models = await this.query.all();
+        }
+    }
+
+    prepareViewModels () {
+        const model = this.view.createViewModel();
+        return model ? model.prepareModels(this._models) : null;
     }
 
     filterByColumns (models) {
@@ -162,7 +170,7 @@ module.exports = class MetaDataGrid extends Base {
                 return model.related.getTitle(attr);
             }
             if (attr.isFile()) {
-                return this.renderFileAttr(value, attr, model);
+                return this.renderFileAttr(attr, model);
             }
         }
         return this.controller.format(value, attr.getFormat());
@@ -196,25 +204,18 @@ module.exports = class MetaDataGrid extends Base {
         });
     }
 
-    renderFileAttr (value, attr, model) {
-        const data = this.getFileAttrData(attr, model);
-        const text = data.Behavior.getName(model);
-        if (data.preview && data.Behavior.isImage(model)) {
-            return this.controller.format(data.preview + model.getId(), 'preview', {
-                download: data.download + model.getId(),
-                text
-            });
+    renderFileAttr (attr, model) {
+        const data = this.controller.extraMeta.getModelFileData(model, attr);
+        if (!data.file) {
+            return this.controller.format(null);
         }
-        return this.controller.format(data.download + model.getId(), 'download', {text});
-    }
-
-    getFileAttrData (attr, model) {
-        if (!this._fileAttrData) {
-            const Behavior = model.class.FileBehaviorConfig.Class;
-            this._fileAttrData = Behavior.getViewData(attr, model.view, this.controller.module.NAME);
-            this._fileAttrData.Behavior = Behavior;
+        if (!data.preview) {
+            return this.controller.format(data.download, 'download', {text: data.name});
         }
-        return this._fileAttrData;
+        return this.controller.format(data.preview, 'preview', {
+            download: data.download,
+            text: data.name
+        });
     }
 };
 

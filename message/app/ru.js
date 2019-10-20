@@ -12,8 +12,6 @@ module.exports = {
 
     'Forgot password': 'Забыли пароль',
 
-    'Go to sign in': 'Вход в систему',
-
     'Invalid authentication': 'Неверная аутентификация',
 
     'Name': 'Имя',

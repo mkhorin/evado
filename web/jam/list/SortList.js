@@ -49,8 +49,8 @@ Jam.SortList = class SortList extends Jam.List {
     }
 
     beforeClose (event) {
-        if (this.changed && !Jam.Helper.confirm('Close without saving?')) {
-            event.stopPropagation();
+        if (this.changed) {
+            event.deferred = Jam.dialog.confirm('Close without saving?');
         }
         event.data = {saved: this.saved};
     }

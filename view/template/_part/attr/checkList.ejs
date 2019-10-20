@@ -1,12 +1,14 @@
 <!-- _part/attr/checkList -->
-
-<% const p = {handler: 'CheckboxList'}; %>
-
+<%
+const p = {
+    allValue: typeof allValue === 'undefined' ? null : allValue,
+    handler: 'CheckboxList'
+};
+%>
 <%- include('_params', {p}) %>
 
-<div class="form-attr <%- p.css %> <%- p.required %> form-group"
-     data-handler="<%= p.handler %>"
-     data-attraction='<%= p.attraction %>'>
+<div class="form-attr <%- p.css %> <%- p.required %> form-group" data-handler="<%= p.handler %>"
+     data-binder='<%= p.binder %>' data-all="<%- p.allValue %>">
     <label class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" value="<%- p.value %>" type="hidden">

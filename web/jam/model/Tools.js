@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelTools = class {
+Jam.ModelTools = class ModelTools {
 
     constructor (model) {
         this.$tools = model.$container.find('.model-tools');

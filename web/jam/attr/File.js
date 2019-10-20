@@ -94,15 +94,18 @@ Jam.ModelAttr.File = class extends Jam.ModelAttr {
     }
 
     onConfirmFileRemove (event, data) {
-        if (Jam.Helper.confirm(this.$uploader.data('removeConfirm'))) {
-            data.remove();
+        const message = this.$uploader.data('removeConfirm');
+        if (message) {
+            Jam.dialog.confirmRemove(message).then(()=> data.remove());    
         }
     }
 
-    onRemoveFile (event, data) {
-        this.$value.val(Jam.Helper.removeCommaValue(data.info.id, this.$value.val()));
-        if (this.uploader.options.remove) {
-            $.post(this.uploader.options.remove, {id: data.info.id});
+    onRemoveFile (event, {info}) {
+        if (info) {
+            this.$value.val(Jam.Helper.removeCommaValue(info.id, this.$value.val()));
+            if (this.uploader.options.remove) {
+                $.post(this.uploader.options.remove, {id: info.id});
+            }
         }
     }
 

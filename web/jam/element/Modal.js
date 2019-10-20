@@ -257,15 +257,18 @@ Jam.Modal.Item = class {
     }
 
     close (data) {
-        if (this.checkLastActive()) {
-            const event = $.Event(this.getEventName('beforeClose'));
-            this.$modal.triggerHandler(event, data);
-            // if not one of the handlers stops the event, then close it
-            if (!event.isPropagationStopped()) {
-                // the event.data can be set by listener
-                this.forceClose(event.data || data);
-            }
+        if (!this.checkLastActive()) {
+            return false;
         }
+        const event = $.Event(this.getEventName('beforeClose'));
+        this.$modal.triggerHandler(event, data);
+        if (event.isPropagationStopped()) {
+            return false;
+        }
+        data = event.data || data; // event.data can be set by listener
+        event.deferred
+            ? event.deferred.then(()=> this.forceClose(data))
+            : this.forceClose(data);
     }
 
     forceClose (data, reloading) {
@@ -298,8 +301,7 @@ Jam.Modal.Item = class {
         if (this.modal.isActiveLast(this.$modal)) {
             return true;
         }
-        alert('Go to last modal tab');
-        return false;
+        Jam.dialog.alert('Go to last modal tab');
     }
 
     ensure () {

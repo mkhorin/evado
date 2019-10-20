@@ -18,6 +18,7 @@ Jam.DataGrid = class {
         Object.assign(this, params.overridenMethods);
         this.params = params;
         this.order = {...params.order};
+        this.grouping = {...params.grouping};
         this.events = new Jam.Events('DataGrid');
         this.locale = params.locale;
         this.$container = $(container);
@@ -29,8 +30,8 @@ Jam.DataGrid = class {
         this.commonSearch = new params.CommonSearch(this);
         this.columnGroupMap = Jam.ArrayHelper.index('name', params.columnGroups);
         this.columnMap = Jam.ArrayHelper.index('name', params.columns);
-        if (params.ColumnManager) {
-            this.columnManager = new params.ColumnManager(this);
+        if (params.Tuner) {
+            this.tuner = new params.Tuner(this);
         }
         this.$info = this.$container.find('.data-grid-info');
         this.$container.data('dataGrid', this);
@@ -40,6 +41,7 @@ Jam.DataGrid = class {
         this.prepareColumns();
         this.renderer.drawTableFrame();
         this.renderer.$thead.on('click', '.order-toggle', this.onToggleOrder.bind(this));
+        this.renderer.$tbody.on('click', '.order-toggle', this.onToggleGroupOrder.bind(this));
         setTimeout(this.load.bind(this), 0);
     }
 
@@ -96,12 +98,20 @@ Jam.DataGrid = class {
         return this.params.columns.filter(column => !column.hidden);
     }
 
-    getOrderDirection (name) {
-        return this.order && this.order.hasOwnProperty(name) && this.order[name];
+    getGroupName () {
+        return this.grouping ? Object.keys(this.grouping)[0] : null;
     }
 
-    setPage (page) {
-        this.pagination.setPage(page);
+    getGroupDirection () {
+        return this.grouping ? Object.values(this.grouping)[0] : null;
+    }
+
+    setGrouping (name, direction) {
+        this.grouping = name ? {[name]: direction} : null;
+    }
+
+    getOrderDirection (name) {
+        return this.order.hasOwnProperty(name) ? this.order[name] : null;
     }
 
     setOrder (name, direction) {
@@ -117,6 +127,11 @@ Jam.DataGrid = class {
         this.renderer.clearOrder();
     }
 
+    setPage (page) {
+        this.pagination.setPage(page);
+    }
+
+    
     load (params = {}) {
         if (params.resetPage) {
             this.setPage(0);
@@ -177,7 +192,7 @@ Jam.DataGrid = class {
         const $toggle = $(event.currentTarget);
         const $cell = $toggle.closest('th');
         const name = $cell.data('name');
-        let direction = $cell.hasClass('asc') ? -1 : 1;
+        let direction = -this.renderer.getDirection($cell);
         if (event.shiftKey) {
             direction = 0;
             delete this.order[name];
@@ -188,6 +203,12 @@ Jam.DataGrid = class {
             this.setOrder(name, direction);
         }
         this.renderer.toggleOrder($toggle, direction);
+        this.load();
+    }
+
+    onToggleGroupOrder (event) {
+        const $row = $(event.currentTarget).closest('tr');
+        this.setGrouping(this.getGroupName(), -this.renderer.getDirection($row));
         this.load();
     }
 
