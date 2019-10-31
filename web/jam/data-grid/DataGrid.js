@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.DataGrid = class {
+Jam.DataGrid = class DataGrid {
 
     static get (container) {
         return $(container).data('dataGrid');
@@ -232,7 +232,7 @@ Jam.DataGrid = class {
     }
 };
 
-Jam.TreeDataGrid = class extends Jam.DataGrid {
+Jam.TreeDataGrid = class TreeDataGrid extends Jam.DataGrid {
 
     constructor (container, params) {
         super(container, $.extend(true, {}, Jam.TreeDataGrid.defaults, params));
@@ -271,7 +271,7 @@ Jam.TreeDataGrid = class extends Jam.DataGrid {
     }
 };
 
-Jam.TreeDataGridNode = class {
+Jam.TreeDataGridNode = class TreeDataGridNode {
 
     static get ({$row}) {
         return $row.data('node') || Reflect.construct(this, arguments);

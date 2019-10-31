@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.Tabs = class extends Jam.Element {
+Jam.Tabs = class Tabs extends Jam.Element {
 
     constructor ($container) {
         super($container);

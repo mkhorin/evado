@@ -64,7 +64,7 @@ Jam.ModelGrouping = class ModelGrouping {
         this.maxDepth = this.maxDepth < depth ? depth : this.maxDepth;
     }
 
-    toggleEmpty () { // after binder visible
+    toggleEmpty () { // after show action
         for (let depth = this.maxDepth; depth >= 0; --depth) {
             for (const group of this.groups) {
                 if (group.depth === depth) {
@@ -102,7 +102,7 @@ Jam.ModelGrouping = class ModelGrouping {
     }
 };
 
-Jam.ModelGroup = class {
+Jam.ModelGroup = class ModelGroup {
 
     constructor (id, $group, grouping) {
         this.id = grouping;
@@ -146,7 +146,7 @@ Jam.ModelGroup = class {
     }
 };
 
-Jam.ModelTabGroup = class extends Jam.ModelGroup {
+Jam.ModelTabGroup = class ModelTabGroup extends Jam.ModelGroup {
 
     init () {
         super.init();

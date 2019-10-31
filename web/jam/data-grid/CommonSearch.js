@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.DataGridCommonSearch = class {
+Jam.DataGridCommonSearch = class DataGridCommonSearch {
 
     constructor (grid) {
         this._value = '';

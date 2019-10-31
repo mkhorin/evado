@@ -2,11 +2,11 @@
 <%
 const p = {
     active: typeof active !== 'undefined' && active ? 'active' : '',
-    binder: typeof binder === 'undefined' ? '' : JSON.stringify(binder),
+    actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
     translate: typeof translate === 'undefined' ? '' : translate
 };
 %>
-<fieldset class="form-base-group form-set <%- p.active %>" data-binder='<%- p.binder %>'>
+<fieldset class="form-base-group form-set <%- p.active %>" data-action-binder='<%- p.actionBinder %>'>
     <legend><span class="form-set-toggle"><span class="fa fa-plus"></span>
         <span data-t="<%- p.translate %>"><%- title %></span></span>
     </legend>

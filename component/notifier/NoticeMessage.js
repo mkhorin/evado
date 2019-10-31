@@ -22,7 +22,7 @@ module.exports = class NoticeMessage extends Base {
                 ['sentAt', 'default', {value: null}]
             ],
             UNLINK_ON_REMOVE: [
-                'noticeMessageUsers'
+                'recipients'
             ],
             OVERFLOW: 10,
             TRUNCATION: 5
@@ -69,7 +69,7 @@ module.exports = class NoticeMessage extends Base {
     }
 
     sendAsMessage (users) {
-        return this.spawn('notifier/NoticeMessageUser').addMessage(this.getId(), users);
+        return this.spawn('notifier/Recipient').addMessage(this.getId(), users);
     }
 
     async sendAsEmail (users) {
@@ -99,8 +99,8 @@ module.exports = class NoticeMessage extends Base {
         return this.hasOne(Class, Class.PK, 'notice');
     }
 
-    relNoticeMessageUsers () {
-        const Class = this.getClass('notifier/NoticeMessageUser');
+    relRecipients () {
+        const Class = this.getClass('notifier/Recipient');
         return this.hasMany(Class, 'message', this.PK).removeOnUnlink();
     }
 };

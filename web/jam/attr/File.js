@@ -3,11 +3,11 @@
  */
 'use strict';
 
-Jam.ModelAttr.File = class extends Jam.ModelAttr {
+Jam.ModelAttrFile = class ModelAttrFile extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.events = new Jam.Events('ModelAttr.File');
+        this.events = new Jam.Events(this.constructor.name);
     }
 
     init () {

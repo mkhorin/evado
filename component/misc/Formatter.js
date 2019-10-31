@@ -33,6 +33,10 @@ module.exports = class Formatter extends Base {
     asPreview (value, params = {}) {
         return `<a href="${params.download}" class="download-link" target="_blank"><img src="${value}" alt="${params.text}"></a>`;
     }
+
+    asTranslatable (value, category = '') {
+        return `<span data-t="${category}">${value}</span>`;
+    }
 };
 module.exports.init();
 

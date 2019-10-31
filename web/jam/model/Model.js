@@ -32,9 +32,9 @@ Jam.Model = class Model extends Jam.Element {
         this.grouping = new Jam.ModelGrouping(this);
         this.createAttrs();
         this.validation = new Jam.ModelValidation(this);
-        this.binder = new Jam.ModelBinder(this);
+        this.actionBinder = new Jam.ActionBinder(this);
         if (this.params.hideEmptyGroups) {
-            this.binder.events.on('update', this.grouping.toggleEmpty.bind(this.grouping));
+            this.actionBinder.events.on('update', this.grouping.toggleEmpty.bind(this.grouping));
             this.grouping.toggleEmpty();
         }
         this.changeTracker = new Jam.ModelChangeTracker(this);
@@ -246,7 +246,7 @@ Jam.Model = class Model extends Jam.Element {
     }
 };
 
-Jam.ModelChangeTracker = class {
+Jam.ModelChangeTracker = class ModelChangeTracker {
 
     constructor (form) {
         this.form = form;

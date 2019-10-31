@@ -8,8 +8,9 @@ const p = {
 %>
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group <%- p.required %>" data-handler="<%= p.handler %>"
-     data-binder='<%= p.binder %>'
+<div class="form-attr form-group <%- p.required %>"
+     data-handler="<%= p.handler %>"
+     data-action-binder='<%= p.actionBinder %>'
      data-utc="<%- p.utc %>"
      data-params="<%= p.options %>">
     <label for="<%- p.id %>" class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"

@@ -9,7 +9,7 @@
     p.required = typeof required === 'undefined' ? model.isAttrRequired(attr) : required;
     p.required = p.required ? ' required' : '';
     p.format = typeof format === 'undefined' ? '' : format;
-    p.binder = typeof binder === 'undefined' ? '' : JSON.stringify(binder);
+    p.actionBinder = typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder);
     p.css = typeof css === 'undefined' ? '' : css;
     p.labelCss = typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss;
     p.valueCss = typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss;

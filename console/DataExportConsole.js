@@ -7,11 +7,15 @@ const Base = require('./DataConsole');
 
 module.exports = class DataImportConsole extends Base {
 
+    getDefaultParams () {
+        return {space: 2};
+    }
+
     async execute () {
-        await FileHelper.createDirectory(this.dir);
+        await FileHelper.createDirectory(this.directory);
         await this.exportMeta();
         await this.exportTables(this.includes);
-        this.log('info', `Data exported to ${this.dir}`);
+        this.log('info', `Data exported to ${this.directory}`);
     }
 
     async exportMeta () {
@@ -36,7 +40,7 @@ module.exports = class DataImportConsole extends Base {
         let data = await this.app.getDb().find(table, {});
         MongoHelper.normalizeExportData(data);
         data = JSON.stringify(data, null, parseInt(this.params.space));
-        await fs.promises.writeFile(path.join(this.dir, `${table}.json`), data);
+        await fs.promises.writeFile(path.join(this.directory, `${table}.json`), data);
         this.log('info', `Exported: ${table}`);
     }
 };

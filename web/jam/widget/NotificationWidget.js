@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.NotificationWidget = class extends Jam.Element {
+Jam.NotificationWidget = class NotificationWidget extends Jam.Element {
 
     init () {
         this.setCounter(this.$element.data('counter'));

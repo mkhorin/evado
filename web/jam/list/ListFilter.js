@@ -51,7 +51,7 @@ Jam.ListFilter = class ListFilter {
         this.$conditionSample = this.$container.children('.filter-condition');
         this.$typeSamples = this.$container.children('.filter-types');
         this.$content = this.$container.children('.filter-content');
-        this.group = new Jam.ListFilter.Group(this, this.params.columns);
+        this.group = new Jam.ListFilterGroup(this, this.params.columns);
         this.$content.append(this.group.$container);
         this.$controls = this.$container.children('.filter-controls');
         this.$controls.find('.add').click(this.onAddCondition.bind(this));
@@ -116,12 +116,12 @@ Jam.ListFilter = class ListFilter {
 
 // GROUP
 
-Jam.ListFilter.Group = class Group {
+Jam.ListFilterGroup = class ListFilterGroup {
 
     constructor (filter, columns) {
         this.filter = filter;
         this.columns = columns;
-        this.events = new Jam.Events('ListFilter.Group');
+        this.events = new Jam.Events(this.constructor.name);
         this.$container = filter.$groupSample.clone().removeClass('hidden');
         this.conditions = [];
     }
@@ -149,7 +149,7 @@ Jam.ListFilter.Group = class Group {
     }
 
     createCondition () {
-        return new Jam.ListFilter.Condition(this);
+        return new Jam.ListFilterCondition(this);
     }
 
     reset () {
@@ -170,7 +170,7 @@ Jam.ListFilter.Group = class Group {
 
 // CONDITION
 
-Jam.ListFilter.Condition = class Condition {
+Jam.ListFilterCondition = class ListFilterCondition {
 
     static createAttrItems (columns) {
         let result = '<option></option>';
@@ -188,7 +188,7 @@ Jam.ListFilter.Condition = class Condition {
     constructor (group) {
         this.group = group;
         this.filter = group.filter;
-        this.events = new Jam.Events('ListFilter.Condition');
+        this.events = new Jam.Events(this.constructor.name);
         this.$container = this.filter.$conditionSample.clone().removeClass('hidden');
         this.$container.data('condition', this);
         this.setAnd(true);
@@ -220,14 +220,14 @@ Jam.ListFilter.Condition = class Condition {
     }
 
     createType (params) {
-        let type = 'StringType';
+        let type = 'String';
         switch (params.type) {
-            case 'boolean': type = 'BooleanType'; break;
-            case 'date': type = 'DateType'; break;
-            case 'id': type = 'IdType'; break;
-            case 'selector': type = 'SelectorType'; break;
+            case 'boolean': type = 'Boolean'; break;
+            case 'date': type = 'Date'; break;
+            case 'id': type = 'Id'; break;
+            case 'selector': type = 'Selector'; break;
         }
-        return new Jam.ListFilter[type](params, this);
+        return new Jam[`ListFilter${type}Type`](params, this);
     }
 
     getOperation () {
@@ -292,7 +292,7 @@ Jam.ListFilter.Condition = class Condition {
 
 // TYPE
 
-Jam.ListFilter.Type = class Type {
+Jam.ListFilterType = class ListFilterType {
 
     constructor (params, condition) {
         this.condition = condition;
@@ -349,7 +349,7 @@ Jam.ListFilter.Type = class Type {
 
 // STRING
 
-Jam.ListFilter.StringType = class StringType extends Jam.ListFilter.Type {
+Jam.ListFilterStringType = class ListFilterStringType extends Jam.ListFilterType {
 
     constructor (params) {
         params.type = params.type || 'string';
@@ -370,7 +370,7 @@ Jam.ListFilter.StringType = class StringType extends Jam.ListFilter.Type {
 
 // BOOLEAN
 
-Jam.ListFilter.BooleanType = class BooleanType extends Jam.ListFilter.Type {
+Jam.ListFilterBooleanType = class ListFilterBooleanType extends Jam.ListFilterType {
 
     init () {
         super.init();
@@ -389,7 +389,7 @@ Jam.ListFilter.BooleanType = class BooleanType extends Jam.ListFilter.Type {
 
 // DATE
 
-Jam.ListFilter.DateType = class DateType extends Jam.ListFilter.Type {
+Jam.ListFilterDateType = class ListFilterDateType extends Jam.ListFilterType {
 
     init () {
         super.init();
@@ -422,11 +422,11 @@ Jam.ListFilter.DateType = class DateType extends Jam.ListFilter.Type {
 
 // ID
 
-Jam.ListFilter.IdType = class IdType extends Jam.ListFilter.StringType {
+Jam.ListFilterIdType = class ListFilterIdType extends Jam.ListFilterStringType {
 
     init () {
         super.init();
-        this.nested = new Jam.ListFilter.Nested(this);
+        this.nested = new Jam.ListFilterNested(this);
     }
 
     getValue () {
@@ -445,7 +445,7 @@ Jam.ListFilter.IdType = class IdType extends Jam.ListFilter.StringType {
 
 // SELECTOR
 
-Jam.ListFilter.SelectorType = class SelectorType extends Jam.ListFilter.Type {
+Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
 
     init () {
         super.init();
@@ -456,7 +456,7 @@ Jam.ListFilter.SelectorType = class SelectorType extends Jam.ListFilter.Type {
         } else {
             this.removeEqualOptions();
         }
-        this.nested = new Jam.ListFilter.Nested(this);
+        this.nested = new Jam.ListFilterNested(this);
     }
 
     isAjax () {
@@ -572,7 +572,7 @@ Jam.ListFilter.SelectorType = class SelectorType extends Jam.ListFilter.Type {
 
 // NESTED
 
-Jam.ListFilter.Nested = class Nested {
+Jam.ListFilterNested = class ListFilterNested {
 
     constructor (type) {
         this.type = type;
@@ -593,7 +593,7 @@ Jam.ListFilter.Nested = class Nested {
         if (!Array.isArray(columns) || !columns.length) {
             return this.condition.getOperationItem().children().last().remove(); // remove nested option
         }
-        this.group = new Jam.ListFilter.Group(this.filter, columns);
+        this.group = new Jam.ListFilterGroup(this.filter, columns);
         this.condition.$groupContainer.html(this.group.$container);
         this.$addCondition = this.condition.$content.find('.add-condition');
         this.$addCondition.click(this.onAddCondition.bind(this));

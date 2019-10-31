@@ -5,15 +5,34 @@
 
 module.exports = class MetaHelper {
 
+    static isSystemName (name) {
+        return name.indexOf('_') === 0;
+    }
+
+    static sortByOrderNumber (items) {
+        return items.sort((a, b)=> a.orderNumber - b.orderNumber);
+    }
+    
+    static sortDataByOrderNumber (items) {
+        return items.sort((a, b)=> a.data.orderNumber - b.data.orderNumber);
+    }
+
+    static createTitle ({data}) {
+        return data.label || StringHelper.generateLabel(data.name);
+    }
+
+    static addClosingChar (text, char) {
+        return typeof text === 'string' && text.length && text.slice(-1) !== char ? (text + char) : text;
+    }
+
     static splitByPrefix (name, separator, prefixes) {
-        if (typeof name !== 'string') {
-            return;
-        }
-        const pos = name.indexOf(separator);
-        if (pos !== -1) {
-            const prefix = name.substring(0, pos);
-            if (prefixes.includes(prefix)) {
-                return [prefix, name.substring(pos + 1)];
+        if (typeof name === 'string') {
+            const pos = name.indexOf(separator);
+            if (pos !== -1) {
+                const prefix = name.substring(0, pos);
+                if (prefixes.includes(prefix)) {
+                    return [prefix, name.substring(pos + 1)];
+                }
             }
         }
     }
@@ -100,8 +119,9 @@ module.exports = class MetaHelper {
         let values = [];
         for (const attr of attrs) {
             for (const model of models) {
-                if (model._values[attr.name]) {
-                    values = values.concat(model._values[attr.name]);
+                const value = model.get(attr.name);
+                if (value !== undefined) {
+                    values = values.concat(value);
                 }
             }
         }
@@ -132,3 +152,5 @@ module.exports = class MetaHelper {
         }
     }
 };
+
+const StringHelper = require('areto/helper/StringHelper');

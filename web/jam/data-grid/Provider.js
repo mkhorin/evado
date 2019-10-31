@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.DataGridProvider = class {
+Jam.DataGridProvider = class DataGridProvider {
 
     constructor (grid) {
         this.grid = grid;

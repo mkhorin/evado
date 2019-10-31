@@ -16,14 +16,14 @@ module.exports = class SecurityConsole extends Base {
         this.log('info', 'Users ready');
     }
 
-    async createUser () {
+    async createUser (data = this.params) {
         try {
             const service = this.spawn('security/PasswordAuthService');
-            const user = await service.register(this.params);
-            this.log('info', `User created: ${this.params.email}`);
+            const user = await service.register(data);
+            this.log('info', `User created: ${data.email}`);
             return user;
         } catch (err) {
-            return this.log('error', err);
+            this.log('error', err);
         }
     }
 
@@ -35,10 +35,10 @@ module.exports = class SecurityConsole extends Base {
         return this.spawn('model/User', config);
     }
 
-    async createRbac () {
-        this.log('info', 'Create RBAC...');
-        await this.app.getRbac().createByData(this.app.getConfig('rbac'));
-        this.log('info', 'RBAC ready');
+    async createSecurity () {
+        this.log('info', 'Create security...');
+        await this.app.getRbac().createByData(this.app.getConfig('security'));
+        this.log('info', 'Security ready');
     }
 
     async changePassword () {

@@ -48,19 +48,14 @@ module.exports = class MetaHub extends Base {
         return MetaHelper.splitByPrefix(name, '-', this.moduleNames);
     }
 
-    log () {
-        CommonHelper.log(this.module, 'META', ...arguments);
-    }
-
     // LOAD
-
-    onAfterLoad (handler) {
-        this.on(this.EVENT_AFTER_LOAD, handler);
-    }
 
     async load () {
         this.moduleNames = this.module.modules.keys();
+        this.loadErrors = [];
+        this._logHandler = this.logLoadError;
         await this.models.load();
+        this._logHandler = null;
         await this.afterLoad();
     }
 
@@ -75,6 +70,10 @@ module.exports = class MetaHub extends Base {
         }
     }
 
+    onAfterLoad (handler) {
+        this.on(this.EVENT_AFTER_LOAD, handler);
+    }
+
     // PROCESSING
 
     isBusy () {
@@ -83,8 +82,7 @@ module.exports = class MetaHub extends Base {
 
     reload () {
         return this.process(async ()=> {
-            await this.models.load();
-            await this.afterLoad();
+            await this.load();
             await PromiseHelper.setImmediate();
         });
     }
@@ -93,6 +91,20 @@ module.exports = class MetaHub extends Base {
         return this.processing.execute(handler);
     }
 
+    // LOG
+
+    logLoadError (type, message) {
+        if (type === 'error') {
+            this.loadErrors.push(message);
+        }
+    }
+
+    log () {
+        if (this._logHandler) {
+            this._logHandler.apply(this, arguments);
+        }
+        CommonHelper.log(this.module, 'META', ...arguments);
+    }
 };
 module.exports.init();
 

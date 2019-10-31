@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.DataGridTuner = class {
+Jam.DataGridTuner = class DataGridTuner {
 
     constructor (grid) {
         this.grid = grid;

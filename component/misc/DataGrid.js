@@ -150,8 +150,9 @@ module.exports = class DataGrid extends Base {
         if (!format) {
             return model.getViewAttr(name);
         }
-        if (format === 'label') {
-            return model.getAttrValueLabel(name);
+        switch (format) {
+            case 'label': return model.getAttrValueLabel(name);
+            case 'raw': return model.get(name);
         }
         return model.getViewAttr(name);
     }

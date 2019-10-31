@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.TreeMenu = class extends Jam.Element {
+Jam.TreeMenu = class TreeMenu extends Jam.Element {
 
     constructor ($menu) {
         super($menu);
@@ -34,7 +34,7 @@ Jam.TreeMenu = class extends Jam.Element {
     }
 };
 
-Jam.LoadableTreeMenu = class extends Jam.TreeMenu {
+Jam.LoadableTreeMenu = class LoadableTreeMenu extends Jam.TreeMenu {
 
     init () {
         super.init();

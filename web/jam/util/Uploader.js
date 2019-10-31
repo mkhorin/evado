@@ -18,7 +18,7 @@
 // uploader:file:confirmRemove - remove file after user confirm
 // uploader:file:removed - remove file
 
-Jam.Uploader = class {
+Jam.Uploader = class Uploader {
 
     static create ($uploader) {
         return $uploader.data('uploader') || new Jam.Uploader($uploader);
@@ -148,7 +148,7 @@ Jam.Uploader = class {
         }
         if (files.length) {
             for (let i = 0; i < files.length; ++i) { // 'of' not work
-                this.files.push(new Jam.Uploader.File(files[i], this));
+                this.files.push(new Jam.UploaderFile(files[i], this));
             }
             this.hideDropZone(counter.total);
             this.$input.wrap('<form>').closest('form').get(0).reset();
@@ -213,13 +213,13 @@ Jam.Uploader = class {
     setSavedFile (data) {
         const counter = this.count();
         this.hideDropZone(counter.total + 1);
-        const file = new Jam.Uploader.File(data, this);
+        const file = new Jam.UploaderFile(data, this);
         file.setSaved();
         this.files.push(file);
     }
 };
 
-Jam.Uploader.File = class {
+Jam.UploaderFile = class UploaderFile {
 
     constructor (file, uploader) {
         this.failed = false;

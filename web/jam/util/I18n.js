@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.I18n = class {
+Jam.I18n = class I18n {
 
     constructor () {
         this._data = this.constructor;

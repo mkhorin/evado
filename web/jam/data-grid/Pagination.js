@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.DataGridPagination = class {
+Jam.DataGridPagination = class DataGridPagination {
 
     constructor (grid) {
         this.grid = grid;

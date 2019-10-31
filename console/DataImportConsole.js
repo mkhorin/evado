@@ -10,17 +10,17 @@ module.exports = class DataImportConsole extends Base {
     async execute () {
         let files = [];
         try {
-            files = await fs.promises.readdir(this.dir);
+            files = await fs.promises.readdir(this.directory);
         } catch (err) {
-            return this.log('warn', `Invalid import directory: ${this.dir}`);
+            return this.log('warn', `Invalid import directory: ${this.directory}`);
         }
         for (const file of files) {
             if (FileHelper.isJsonExtension(file)) {
-                await this.importFile(path.join(this.dir, file));
+                await this.importFile(path.join(this.directory, file));
             }
         }
-        await this.app.getMeta().afterDataImport();
-        this.log('info', `Data imported from ${this.dir}`);
+        await this.app.getMetaHub().afterDataImport();
+        this.log('info', `Data imported from ${this.directory}`);
     }
 
     async importFile (file) {

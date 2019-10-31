@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.LoadableContent = class extends Jam.Element {
+Jam.LoadableContent = class LoadableContent extends Jam.Element {
 
     constructor ($container) {
         super($container);
@@ -67,6 +67,11 @@ Jam.LoadableContent = class extends Jam.Element {
     }
 
     setContent (data) {
-        this.$container.find('.loadable-content').html(data);
+        Jam.resource.resolve(data, result => {
+            const $content = this.$container.find('.loadable-content');
+            $content.html(result);
+            Jam.i18n.translateContainer($content);
+            Jam.createElements($content);
+        });
     }
 };

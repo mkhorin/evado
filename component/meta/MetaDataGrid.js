@@ -59,26 +59,7 @@ module.exports = class MetaDataGrid extends Base {
     }
 
     setCommonSearch () {
-        const value = this.request.search;
-        if (typeof value !== 'string' || !value.length) {
-            return false;
-        }
-        const conditions = [];
-        for (const attr of this.metaData.view.commonSearchAttrs) {
-            const condition = attr.getSearchCondition(value);
-            if (condition) {
-                conditions.push(condition);
-            }
-        }
-        if (!this.metaData.view.commonSearchAttrs.includes(this.metaData.class.getKey())) {
-            const condition = this.metaData.class.key.getCondition(value);
-            if (condition) {
-                conditions.push(condition);
-            }
-        }
-        conditions.length
-            ? this.query.and(['OR', ...conditions])
-            : this.query.where(['FALSE']);
+        this.query.andSearch(this.request.search);
     }
 
     async resolveFilter () {
@@ -158,7 +139,7 @@ module.exports = class MetaDataGrid extends Base {
     }
 
     renderAttr (attr, model) {
-        const value = model.semantic.get(attr.name);
+        const value = model.headline.get(attr.name);
         if (attr.rel) {
             return this.renderRelationAttr(value, attr, model);
         }

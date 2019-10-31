@@ -4,6 +4,10 @@ const user = _controller.user;
 %>
 <% if (user.identity) { %>
 <li class="user-body">
+    <p class="">
+        <span class="fa fa-user text-primary mr5"></span>
+        <b><%- _controller.user.getTitle() %></b>
+    </p>
     <% if (user.assignments) { %>
     <p class="mb0">
         <span data-t="">Roles</span>:

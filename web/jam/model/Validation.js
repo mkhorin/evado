@@ -7,7 +7,7 @@ Jam.ModelValidation = class ModelValidation {
 
     constructor (model) {
         this.model = model;
-        this.events = new Jam.Events('ModelValidation');
+        this.events = new Jam.Events(this.constructor.name);
         this.init();
     }
 

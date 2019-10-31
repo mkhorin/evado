@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.Modal = class extends Jam.Element {
+Jam.Modal = class Modal extends Jam.Element {
 
     static getClosestBody ($element) {
         const $body = $element.closest('.jmodal-body');
@@ -30,9 +30,9 @@ Jam.Modal = class extends Jam.Element {
         Jam.modal = this;
         this.$container = $container;
         this.$pool = $container.find('.jmodal-pool');
-        this.$sample = $container.find('.sample.jmodal');
+        this.template = Jam.Helper.getTemplate('modal', $container);
         this.handlers = [];
-        this.stackToggle = new Jam.Modal.StackToggle(this);
+        this.stackToggle = new Jam.ModalStackToggle(this);
         this.$pool.on('keyup', this.onKeyUp.bind(this));
     }
 
@@ -77,17 +77,17 @@ Jam.Modal = class extends Jam.Element {
     }
 
     create () {
-        return new Jam.Modal.Item(this);
+        return new Jam.ModalItem(this);
     }
 
     createModal (item) {
         let $modal = this.$pool.children().not('.stacked').eq(0);
-        if ($modal.length !== 0) {
+        if ($modal.length) {
             return $modal;
         }
-        $modal = this.$sample.clone().removeClass('sample');
+        $modal = $(this.template);
         this.$pool.append($modal);
-        $modal.on('click', '.jmodal-close', () => item.close());
+        $modal.on('click', '.jmodal-close', event => item.close());
         $modal.click(event => {
             if (!$modal.hasClass('loading') && event.target === $modal.get(0)) {
                 item.close();
@@ -151,7 +151,7 @@ Jam.Modal = class extends Jam.Element {
     }    
 };
 
-Jam.Modal.Item = class {
+Jam.ModalItem = class ModalItem {
 
     static resize (element) {
         const item = $(element).closest('.jmodal').data('item');
@@ -212,29 +212,32 @@ Jam.Modal.Item = class {
         this.url = url;
         this.loadParams = params;
         this.xhr = $.get(url, params)
-            .always(this.processAlways.bind(this))
-            .done(data => this.processDone(data, initData))
-            .fail(this.processFail.bind(this));
+            .always(this.onAlways.bind(this))
+            .done(data => this.onDone(data, initData))
+            .fail(this.onFail.bind(this));
         return this.xhr; 
     }
 
-    processAlways () {
+    onAlways () {
         this.toggleLoading(false);
         this.loadedUrl = this.xhr.url;
         this.xhr = null;
     }
 
-    processDone (content, initData) {
+    onDone (content, initData) {
         this.initData = initData;
         Jam.resource.resolve(content, result => {
             this.$body.empty().append(result);
             const $container = this.$body.children().first();
             Jam.i18n.translateContainer($container);
+
             this.title = Jam.i18n.translate($container.data('title')) || '';
             this.tabTitle = $container.data('tab');
             this.tabTitle = this.tabTitle ? Jam.i18n.translate(this.tabTitle) : this.title;
+
             const url = Jam.UrlHelper.getNewPageUrl($container.data('url') || this.getLoadUrl());
             this.$title.html(`<a href="${url}" target="_blank">${this.title}</a>`);
+
             Jam.DateHelper.resolveClientDate(this.$body);
             Jam.createElements($container);
             this.resize();
@@ -242,7 +245,7 @@ Jam.Modal.Item = class {
         });
     }
 
-    processFail (xhr) {
+    onFail (xhr) {
         this.$body.html(`<div class="jmodal-error"><pre>${xhr.responseText}</pre></div>`);
         this.title = Jam.i18n.translate(`${xhr.status} ${xhr.statusText}` || 'Error');
         this.tabTitle = this.title;
@@ -301,7 +304,7 @@ Jam.Modal.Item = class {
         if (this.modal.isActiveLast(this.$modal)) {
             return true;
         }
-        Jam.dialog.alert('Go to last modal tab');
+        Jam.dialog.alert('Close the last modal tab');
     }
 
     ensure () {
@@ -333,14 +336,14 @@ Jam.Modal.Item = class {
     }
 };
 
-Jam.Modal.StackToggle = class {
+Jam.ModalStackToggle = class ModalStackToggle {
 
     constructor (modal) {
         this.modal = modal;
         this.$stack = modal.$container.find('.jmodal-stack');
         this.$root = this.$stack.find('.root');
         this.$pool = this.$stack.find('.jmodal-stack-pool');
-        this.$sample = this.$stack.find('.sample');
+        this.template = Jam.Helper.getTemplate('stack', modal.$container);
         this.$close = this.$stack.children('.jmodal-close');
         this.init();
     }
@@ -359,11 +362,13 @@ Jam.Modal.StackToggle = class {
     attach (modal) {
         let $item = this.getItem(modal);
         if (!$item.length) {
-            $item = this.$sample.clone().removeClass('sample').data('modal', modal);
+            $item = $(Jam.Helper.resolveTemplate(this.template, {
+                title: Jam.Helper.clearHtml(modal.title),
+                text: modal.tabTitle
+            }));
+            $item.data('modal', modal);
             this.$pool.append($item);
         }
-        $item.find('.text').html(modal.tabTitle);
-        $item.attr('title', Jam.Helper.clearHtml(modal.title));
         this.resize();
     }
 
@@ -385,10 +390,13 @@ Jam.Modal.StackToggle = class {
         if (this.$stack.css('position') === 'fixed') {
             const left = modal.$container.offset().left;
             this.$stack.offset({left});
+
             const poolWidth = modal.$container.width() - this.$root.outerWidth();
             this.$pool.width(poolWidth);
+
             const maxItemWidth = Math.round(poolWidth / $children.length);
             $children.css('max-width', maxItemWidth);
+
             const reminder = poolWidth - maxItemWidth * $children.length;
             $children.last().css('max-width', maxItemWidth + reminder);
         }

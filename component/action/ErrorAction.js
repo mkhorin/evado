@@ -30,9 +30,10 @@ module.exports = class ErrorAction extends Base {
         if (status === 403 && this.isAuthRedirect()) {
             return true;
         }
+        /*
         if (controller.isPost()) {
             return this.sendText(message);
-        }
+        } //*/
         switch (status) {
             case 400:
             case 403:

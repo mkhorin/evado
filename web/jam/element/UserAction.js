@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.UserAction = class extends Jam.Element {
+Jam.UserAction = class UserAction extends Jam.Element {
 
     static post ($element, params) {
         return this.confirm($element).then(() => {
@@ -87,7 +87,7 @@ Jam.UserAction = class extends Jam.Element {
     }
 };
 
-Jam.ModalUserAction = class extends Jam.UserAction {
+Jam.ModalUserAction = class ModalUserAction extends Jam.UserAction {
 
     execute () {
         Jam.ContentNotice.clear();

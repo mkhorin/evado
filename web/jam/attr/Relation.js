@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelAttr.Relation = class Relation extends Jam.ModelAttr {
+Jam.ModelAttrRelation = class ModelAttrRelation extends Jam.ModelAttr {
 
     activate () {
         if (!this.canActivate()) {

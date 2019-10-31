@@ -26,7 +26,7 @@ module.exports = {
 //    'notifier/NoticeJob': require('../component/notifier/NoticeJob'),
 
     'notifier/NoticeMessage': require('../component/notifier/NoticeMessage'),
-    'notifier/NoticeMessageUser': require('../component/notifier/NoticeMessageUser'),
+    'notifier/Recipient': require('../component/notifier/Recipient'),
     'notifier/UserFilter': require('../component/notifier/UserFilter'),
 
     'observer/EventHandler': require('../component/observer/EventHandler'),

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.DataGridRenderer = class {
+Jam.DataGridRenderer = class DataGridRenderer {
 
     constructor (grid) {
         this.$table = grid.$container.find('.data-grid-table');
@@ -254,7 +254,7 @@ Jam.DataGridRenderer = class {
     }
 };
 
-Jam.TreeDataGridRenderer = class extends Jam.DataGridRenderer {
+Jam.TreeDataGridRenderer = class TreeDataGridRenderer extends Jam.DataGridRenderer {
 
     drawNode ($row, items) {
         const depth = parseInt($row.data('depth')) + 1;

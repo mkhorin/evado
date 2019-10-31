@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.Notice = class {
+Jam.Notice = class Notice {
 
     constructor (params) {
         this.params = {
@@ -68,7 +68,7 @@ Jam.Notice = class {
     }
 };
 
-Jam.ContentNotice = class extends Jam.Notice {
+Jam.ContentNotice = class ContentNotice extends Jam.Notice {
 
     static clear ($container = $('#content')) {
         $container.find('.content-notice').remove();

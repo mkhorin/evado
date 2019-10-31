@@ -3,21 +3,21 @@
  */
 'use strict';
 
-Jam.ModelBinder = class ModelBinder {
+Jam.ActionBinder = class ActionBinder {
 
     constructor (model) {
         this.model = model;
         this.elements = [];
-        this.events = new Jam.Events('ModelBinder');
+        this.events = new Jam.Events(this.constructor.name);
         this.init();
     }
 
     init () {
-        for (const item of this.model.$form.find('[data-binder]')) {
+        for (const item of this.model.$form.find('[data-action-binder]')) {
             const $item = $(item);
-            const data = $item.data('binder');
+            const data = $item.data('actionBinder');
             if (data) {
-                this.elements.push(new Jam.ModelBinderElement($item, data, this));
+                this.elements.push(new Jam.ActionBinderElement($item, data, this));
             }
         }
         this.model.events.on('change', this.update.bind(this));
@@ -32,7 +32,7 @@ Jam.ModelBinder = class ModelBinder {
     }
 };
 
-Jam.ModelBinderElement = class ModelBinderElement {
+Jam.ActionBinderElement = class ActionBinderElement {
 
     constructor ($item, data, binder) {
         this.binder = binder;
@@ -49,17 +49,17 @@ Jam.ModelBinderElement = class ModelBinderElement {
             if (action) {
                 this.actions[id] = action;
             } else {
-                console.error(`Invalid binder action: ${id}`);
+                console.error(`Invalid action binder: ${id}`);
             }
         }
     }
 
     create (id, data) {
         switch (id) {
-            case 'visible': return new Jam.ModelBinderVisible(this, data);
-            case 'enabled': return new Jam.ModelBinderEnabled(this, data);
-            case 'required': return new Jam.ModelBinderRequired(this, data);
-            case 'value': return new Jam.ModelBinderValue(this, data);
+            case 'show': return new Jam.ActionBinderShow(this, data);
+            case 'require': return new Jam.ActionBinderRequire(this, data);
+            case 'enable': return new Jam.ActionBinderEnable(this, data);
+            case 'value': return new Jam.ActionBinderValue(this, data);
         }
     }
 
@@ -70,7 +70,7 @@ Jam.ModelBinderElement = class ModelBinderElement {
     }
 };
 
-Jam.ModelBinderAction = class ModelBinderAction {
+Jam.ActionBinderBase = class ActionBinderBase {
 
     constructor (element, data) {
         this.element = element;
@@ -91,7 +91,7 @@ Jam.ModelBinderAction = class ModelBinderAction {
     }
 };
 
-Jam.ModelBinderVisible = class ModelBinderVisible extends Jam.ModelBinderAction {
+Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderBase {
 
     update () {
         const group = this.element.$item.data('group');
@@ -101,7 +101,14 @@ Jam.ModelBinderVisible = class ModelBinderVisible extends Jam.ModelBinderAction 
     }
 };
 
-Jam.ModelBinderEnabled = class ModelBinderEnabled extends Jam.ModelBinderAction {
+Jam.ActionBinderRequire = class ActionBinderRequire extends Jam.ActionBinderBase {
+
+    update () {
+        //this.element.$item.toggleClass('hidden', !this.isValid());
+    }
+};
+
+Jam.ActionBinderEnable = class ActionBinderEnabled extends Jam.ActionBinderBase {
 
     update () {
         if (this.element.attr) {
@@ -112,18 +119,12 @@ Jam.ModelBinderEnabled = class ModelBinderEnabled extends Jam.ModelBinderAction 
     }
 };
 
-Jam.ModelBinderRequired = class extends Jam.ModelBinderAction {
 
-    update () {
-        //this.element.$item.toggleClass('hidden', !this.isValid());
-    }
-};
-
-Jam.ModelBinderValue = class extends Jam.ModelBinderAction {
+Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderBase {
 
     init () {
         if (!this.element.attr) {
-            return console.error('Binder value action without model attribute');
+            return console.error('Action binder value without model attribute');
         }
         this.value = this.element.attr.normalizeValue(this.data[0]);
         this.condition = new Jam.ModelCondition(this.data[1], this.element.binder.model);

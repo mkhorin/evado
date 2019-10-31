@@ -3,11 +3,11 @@
  */
 'use strict';
 
-Jam.ModelAttr.Enum = class Enum extends Jam.ModelAttr {
+Jam.ModelAttrEnum = class ModelAttrEnum extends Jam.ModelAttr {
 
     init () {
         super.init();
-        this.sets = Jam.ModelAttr.EnumSet.createSets(this.$attr.data('sets'), this);
+        this.sets = Jam.ModelAttrEnumSet.createSets(this.$attr.data('sets'), this);
         this.select2 = this.$attr.data('select2');
         this.$select = this.$attr.find('select');
         this.$select.change(this.changeValue.bind(this));
@@ -47,7 +47,7 @@ Jam.ModelAttr.Enum = class Enum extends Jam.ModelAttr {
     }
 
     updateItems () {
-        const items = Jam.ModelAttr.EnumSet.filterItems(this.sets);
+        const items = Jam.ModelAttrEnumSet.filterItems(this.sets);
         this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
         return this.items === items;
     }
@@ -61,11 +61,11 @@ Jam.ModelAttr.Enum = class Enum extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttr.RadioEnum = class RadioEnum extends Jam.ModelAttr {
+Jam.ModelAttrRadioEnum = class ModelAttrRadioEnum extends Jam.ModelAttr {
 
     init () {
         super.init();
-        this.sets = Jam.ModelAttr.EnumSet.createSets(this.$attr.data('sets'), this);
+        this.sets = Jam.ModelAttrEnumSet.createSets(this.$attr.data('sets'), this);
         this.$list = this.$attr.find('.radio-items');
         this.$list.on('change', '[type="radio"]', this.changeValue.bind(this));
         this.model.events.on('change', this.onUpdate.bind(this));
@@ -110,7 +110,7 @@ Jam.ModelAttr.RadioEnum = class RadioEnum extends Jam.ModelAttr {
     }
 
     updateItems () {
-        const items = Jam.ModelAttr.EnumSet.filterItems(this.sets);
+        const items = Jam.ModelAttrEnumSet.filterItems(this.sets);
         this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
         return this.items === items;
     }
@@ -122,7 +122,7 @@ Jam.ModelAttr.RadioEnum = class RadioEnum extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttr.EnumSet = class EnumSet {
+Jam.ModelAttrEnumSet = class ModelAttrEnumSet {
 
     static createSets (data, owner) {
         const sets = [];

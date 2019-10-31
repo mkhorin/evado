@@ -3,14 +3,14 @@
  */
 'use strict';
 
-Jam.ModelAttr = class {
+Jam.ModelAttr = class ModelAttr {
 
     static create ($attr, model) {
-        const data = $attr.data('handler');
-        if (!data) {
+        const name = $attr.data('handler');
+        if (!name) {
             return new this($attr, model);
         }
-        const config = Jam.ClassHelper.normalizeSpawn(data, this, this);
+        const config = Jam.ClassHelper.normalizeSpawn(this.name + name, this);
         return new config.Class($attr, model, config);
     }
 
@@ -97,7 +97,7 @@ Jam.ModelAttr = class {
     }
 };
 
-Jam.ModelAttr.Checkbox = class extends Jam.ModelAttr {
+Jam.ModelAttrCheckbox = class ModelAttrCheckbox extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
@@ -124,7 +124,7 @@ Jam.ModelAttr.Checkbox = class extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttr.CheckboxList = class extends Jam.ModelAttr {
+Jam.ModelAttrCheckboxList = class ModelAttrCheckboxList extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
@@ -171,7 +171,7 @@ Jam.ModelAttr.CheckboxList = class extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttr.Date = class extends Jam.ModelAttr {
+Jam.ModelAttrDate = class ModelAttrDate extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
@@ -222,7 +222,7 @@ Jam.ModelAttr.Date = class extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttr.RadioList = class extends Jam.ModelAttr {
+Jam.ModelAttrRadioList = class ModelAttrRadioList extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);

@@ -55,7 +55,7 @@ module.exports = class MetaSecurity extends Base {
         });
     }
 
-    resolveOnTitle (model) {
+    resolveOnRead (model) {
         return this.resolve({
             targetType: Rbac.TARGET_OBJECT,
             target: model,
@@ -86,6 +86,14 @@ module.exports = class MetaSecurity extends Base {
             targetType: Rbac.TARGET_OBJECT,
             target: model,
             actions: [Rbac.READ, Rbac.UPDATE]
+        });
+    }
+
+    resolveOnDelete (model) {
+        return this.resolve({
+            targetType: Rbac.TARGET_OBJECT,
+            target: model,
+            actions: [Rbac.DELETE]
         });
     }
 

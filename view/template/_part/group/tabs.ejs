@@ -1,14 +1,14 @@
 <!-- _part/group/tabs -->
 <%
 const p = {
-    binder: typeof binder === 'undefined' ? '' : JSON.stringify(binder),
+    actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
     translate: typeof translate === 'undefined' ? '' : translate
 };
 %>
-<div class="tabs form-tabs" data-binder="<%= p.binder %>">
+<div class="tabs form-tabs" data-action-binder="<%= p.actionBinder %>">
     <ul class="nav nav-tabs" role="tablist">
     <% for (const item of items) { %>
-    <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
+    <li class="nav-tab <%- item.active ? 'active' : '' %>" title="<%= item.hint || '' %>" data-id="<%- item.id %>">
         <a href="#" data-t="<%- p.translate %>"><%- item.label || item.id %></a>
     </li>
     <% } %>
@@ -17,7 +17,7 @@ const p = {
         <% for (const item of items) { %>
         <div class="form-base-group tab-pane <%- item.active ? 'active' : '' %>"
              data-id="<%- item.id %>"
-             data-binder="<%= item.binder === undefined ? '' : JSON.stringify(item.binder) %>">
+             data-action-binder="<%= item.actionBinder === undefined ? '' : JSON.stringify(item.actionBinder) %>">
             <div class="form-base-group-body">
             <% if (typeof item.content === 'string') { %>
                 <%- include(item.content) %>

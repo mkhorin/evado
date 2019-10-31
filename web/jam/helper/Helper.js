@@ -242,7 +242,7 @@ Jam.ArrayHelper = class ArrayHelper {
 
 Jam.ClassHelper = class ClassHelper {
 
-    static normalizeSpawn (config, container, BaseClass) {
+    static normalizeSpawn (config, BaseClass, container) {
         if (!config) {
             return null;
         }

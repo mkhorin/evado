@@ -75,7 +75,7 @@ Jam.ListFilterStore = class Store {
     onToggleSave () {
         const data = this.filter.serialize();
         if (!data) {
-            return Jam.dialog.alert('Add filter conditions before saving');
+            return Jam.dialog.alert('Add condition before saving');
         }
         this.updatedItem = null;
         this.clearErrors();

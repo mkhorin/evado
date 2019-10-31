@@ -11,6 +11,10 @@ module.exports = class BaseModule extends Base {
         return this.label || super.getTitle();
     }
 
+    getMailer () {
+        return this.components.get('mailer');
+    }
+
     getMeta (name) {
         return this.getMetaHub().get(name);
     }

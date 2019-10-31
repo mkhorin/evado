@@ -52,7 +52,7 @@ body {
 :root {
     --color-hover-row: #fff8e8;
     --color-selected-row: #fff0d8;
-    --color-title-label: #678;
+    --color-title-label: #689;
 
     --color-light-primary: #3c8dbc;
     --color-dark-primary: #367fa9;
@@ -239,6 +239,16 @@ a:focus, button:focus {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px
+}
+
+.main-header .navbar .dropdown-menu li a {
+    color: #000 !important;
+}
+.main-header .navbar .dropdown-menu li.active a {
+    color: #fff !important;
+}
+.main-header .navbar .dropdown-menu li.divider {
+    background-color: #ccc !important;
 }
 
 .datepicker {
@@ -660,9 +670,9 @@ body.loading {
 .form-group.has-success .form-control-feedback.success {
     display: block;
 }
-.form-group.required .control-label:after {
+.form-group.required .control-label:before {
     content: "*";
-    margin-left: 3px;
+    margin-right: 3px;
     color: #e00;
 }
 .form-group .error-block {
@@ -1925,7 +1935,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.3);
     z-index: 2049;
 }
 .dialog > .box {

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.UtilManager = class {
+Jam.UtilManager = class UtilManager {
 
     constructor ($container, owner) {
         this.owner = owner;
@@ -32,7 +32,7 @@ Jam.UtilManager = class {
     }
 };
 
-Jam.Util = class {
+Jam.Util = class Util {
 
     constructor ($item, manager, params) {
         this.$item = $item;

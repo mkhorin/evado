@@ -5,7 +5,7 @@
 
 const Base = require('areto/base/Base');
 
-module.exports = class TestRule extends Base {
+module.exports = class TestAssignmentRule extends Base {
 
     async execute (item, userId) {
         return true;  // can assign item to user

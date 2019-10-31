@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelAttr.Select = class extends Jam.ModelAttr {
+Jam.ModelAttrSelect = class ModelAttrSelect extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);

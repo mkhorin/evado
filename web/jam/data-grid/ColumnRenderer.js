@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ColumnRenderer = class {
+Jam.ColumnRenderer = class ColumnRenderer {
 
     static getRenderMethod (format) {
         const name = typeof format === 'string' ? format : format ? format.name : null;
@@ -43,8 +43,11 @@ Jam.ColumnRenderer = class {
     }
 
     static render (method, data, column) {
-        if (data === undefined || data === null) {
-            return this.asNotSet(data);
+        if (data === undefined) {
+            return this.asNotSet();
+        }
+        if (data === null) {
+            return this.asNull();
         }
         const result = method.call(this, data, column);
         if (typeof result === 'object') {
@@ -67,10 +70,6 @@ Jam.ColumnRenderer = class {
             separator = column.separator;
         }
         return data.map(data => handler(data, column)).join(separator);
-    }
-
-    static asNotSet (data) {
-        return `<span class="not-set">${data}</span>`;
     }
 
     static asDefault () {
@@ -115,6 +114,14 @@ Jam.ColumnRenderer = class {
             url += (url.includes('?') ? '&' : '?') + params;
             return `<a href="${url}" class="modal-link">${text}</a>`;
         });
+    }
+
+    static asNotSet () {
+        return `<span class="not-set">[${Jam.i18n.translate('not set')}]</span>`;
+    }
+
+    static asNull () {
+        return '<span class="not-set">null</span>';
     }
 
     static asSelect (data, {format}) {

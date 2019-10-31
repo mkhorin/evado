@@ -97,17 +97,17 @@ module.exports = class User extends Base {
     // NOTICE
 
     findUnreadMessages () {
-        return this.relNoticeMessageUsers().and({read: false});
+        return this.relRecipients().and({read: false});
     }
 
     readMessage (id) {
-        return this.relNoticeMessageUsers().and(['ID', 'message', id]).updateAll({read: true});
+        return this.relRecipients().and(['ID', 'message', id]).updateAll({read: true});
     }
 
     // RELATIONS
 
-    relNoticeMessageUsers () {
-        const Class = this.getClass('notifier/NoticeMessageUser');
+    relRecipients () {
+        const Class = this.getClass('notifier/Recipient');
         return this.hasMany(Class, 'user', this.PK);
     }
 

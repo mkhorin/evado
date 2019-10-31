@@ -4,4 +4,6 @@
 
 <%- include('_params', {p}) %>
 
-<input name="<%- p.name %>" type="hidden" value="<%= p.value %>">
+<div class="form-attr hidden" data-handler="<%= p.handler %>">
+    <input name="<%- p.name %>" type="hidden" value="<%= p.value %>">
+</div>

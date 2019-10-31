@@ -3,6 +3,19 @@
  */
 'use strict';
 
+// web/jam/util/I18n.js
+
+// extend default translation category
+// use: <span data-t="">Some text</span>
+// use: <div title="Some text"></div>
+// use: <input placeholder="Some text" type="text" />
+
+// define custom translation category
+// use: <span data-t="custom">Any text</span>
+// use: <div data-t="custom" title="Any text"></div>
+// use: <input data-t="custom" placeholder="Any text" type="text"/>
+// use: <div data-t-title="customTitle" title="Any title" data-t="custom">Any text</div>
+
 Jam.I18n.defaults = {
 
     'Action completed': 'Действие завершено',
@@ -11,6 +24,7 @@ Jam.I18n.defaults = {
     'Active indexes': 'Активные индексы',
     'Add': 'Добавить',
     'Add condition': 'Добавить условие',
+    'Add condition before saving': 'Добавьте условие перед сохранением',
     'Advanced search': 'Расширенный поиск',
     'Apply': 'Применить',
 
@@ -19,8 +33,10 @@ Jam.I18n.defaults = {
 
     'Can not restore ambiguous values': 'Не могу восстановить неоднозначные значения',
     'Cancel': 'Отменить',
+    'Change password': 'Изменить пароль',
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
+    'Close the last modal tab': 'Закройте последнюю модальную вкладку',
     'Close without saving?': 'Закрыть без сохранения?',
     'Confirm': 'Подтвердить',
     'Confirmation': 'Подтверждение',
@@ -46,7 +62,6 @@ Jam.I18n.defaults = {
 
     'File': 'Файл',
 
-    'Go to last modal tab': 'Перейдите к последней модальной вкладке',
     'Group': 'Группа',
 
     'History': 'История',
@@ -61,7 +76,10 @@ Jam.I18n.defaults = {
     'Input value...': 'Введите значение...',
     'Invalid verification code': 'Неверный проверочный код',
 
+    'Job': 'Работа',
+
     'Label': 'Ярлык',
+    'Last done at': 'Последний раз сделано',
     'Link': 'Добавить',
 
     'Main': 'Главная',
@@ -71,6 +89,7 @@ Jam.I18n.defaults = {
 
     'Name': 'Название',
     'No': 'Нет',
+    'No saved filters yet': 'Пока нет сохраненных фильтров',
 
     'Order': 'Порядок',
     'Order number': 'Порядковый номер',
@@ -94,12 +113,14 @@ Jam.I18n.defaults = {
 
     'Save': 'Сохранить',
     'Save and close': 'Сохранить и закрыть',
+    'Save filter': 'Сохранить фильтр',
     'Search...': 'Искать...',
     'Select': 'Выбрать',
     'Select all': 'Выбрать все',
     'Select box': 'Выпадающий список',
     'Select column to sort': 'Выберите колонку для сортировки',
     'Select date...': 'Выберите дату...',
+    'Select filter': 'Выбрать фильтр',
     'Select items for action': 'Выберите объекты для действия',
     'Select one item for action': 'Выберите объект для действия',
     'Select values to restore': 'Выберите значения для восстановления',
@@ -125,6 +146,8 @@ Jam.I18n.defaults = {
     'Value': 'Значение',
     'View': 'Просмотр',
 
+    'Warning': 'Предупреждение',
+
     'Yes': 'Да',
     'You have no new notifications': 'Нет новых уведомлений',
 
@@ -137,5 +160,6 @@ Jam.I18n.defaults = {
     'equal': 'равно',
 
     'nested': 'вложенный',
-    'not equal': 'не равно'
+    'not equal': 'не равно',
+    'not set': 'не задано'
 };

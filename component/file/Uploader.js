@@ -16,7 +16,7 @@ module.exports = class Uploader extends Base {
     }
 
     async execute (req, res) {
-        const dir = this.generateDir();
+        const dir = this.generateDirectory();
         const upload = this.createSingleMulter(dir);
         await PromiseHelper.promise(upload.bind(this, req, res));
         const file = req.file;
@@ -38,7 +38,7 @@ module.exports = class Uploader extends Base {
         }).single(this.fieldName);
     }
 
-    generateDir () { // by months
+    generateDirectory () { // by months
         const now = new Date;
         return now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2);
     }

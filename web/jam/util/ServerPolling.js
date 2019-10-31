@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ServerPolling = class {
+Jam.ServerPolling = class ServerPolling {
 
     constructor () {
         this._tasks = [];
@@ -63,7 +63,7 @@ Jam.ServerPolling = class {
     }
 };
 
-Jam.ServerPollingTask = class {
+Jam.ServerPollingTask = class ServerPollingTask {
 
     constructor (data) {
         this.period = data.period || 0;

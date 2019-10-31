@@ -9,7 +9,7 @@ module.exports = class NoticeMessage extends Base {
 
     static getConstants () {
         return {
-            TABLE: 'sys_noticeMessageUser',
+            TABLE: 'sys_recipient',
             ATTRS: [
                 'read',
                 'message',
