@@ -10,6 +10,7 @@ module.exports = class DatabaseStore extends Base {
     static getConstants () {
         return {
             TABLE_META_ITEM: 'meta_item',
+            TABLE_META_TARGET: 'meta_target',
             TABLE_ASSIGNMENT_RULE: 'assignment_rule'
         };
     }
@@ -21,9 +22,18 @@ module.exports = class DatabaseStore extends Base {
         });
     }
 
+    async clearAll () {
+        const db = this.getDb();
+        await db.truncate(this.getTableName(this.TABLE_META_ITEM));
+        await db.truncate(this.getTableName(this.TABLE_META_TARGET));
+        await db.truncate(this.getTableName(this.TABLE_ASSIGNMENT_RULE));
+        await super.clearAll();
+    }
+
     async loadData () {
         this.data = await super.loadData();
         return Object.assign(this.data, {
+            metaTargets: await this.findMetaTarget().all(),
             metaItems: await this.findMetaItem().all(),
             assignmentRules: await this.findAssignmentRule().all()
         });
@@ -37,6 +47,10 @@ module.exports = class DatabaseStore extends Base {
         return this.find(this.TABLE_META_ITEM);
     }
 
+    findMetaTarget () {
+        return this.find(this.TABLE_META_TARGET);
+    }
+
     findAssignmentRule () {
         return this.find(this.TABLE_ASSIGNMENT_RULE);
     }
@@ -47,56 +61,81 @@ module.exports = class DatabaseStore extends Base {
 
     prepare (data) {
         const result = super.prepare(data);
-        this.prepareMetaItems(data);
+        this.prepareMeta(data);
         result.metaItems = data.metaItems;
         result.assignmentRules = data.assignmentRules;
         return result;
     }
 
-    prepareMetaItems (data) {
-        if (Array.isArray(data.metaItems)) {
-            for (const item of data.metaItems) {
-                this.prepareMetaItem(item, data);
+    prepareMeta (data) {
+        const itemMap = this.indexMetaItems(data);
+        data.metaItems = [];
+        for (const target of data.metaTargets) {
+            if (itemMap[target.item]) {
+                data.metaItems.push({
+                    ...itemMap[target.item],
+                    ...this.prepareMetaTarget(target)
+                });
             }
         }
     }
 
-    prepareMetaItem (item, data) {
+    indexMetaItems (data) {
+        const result = {};
+        for (const item of data.metaItems) {
+            this.prepareMetaItem(item, data);
+            if (item.actions.length && item.roles.length) {
+                result[item._id] = item;
+                delete item._id;
+            }
+        }
+        return result;
+    }
+
+    prepareMetaItem (item, {itemMap, ruleMap}) {
         const roles = [];
-        const items = Array.isArray(item.roles) ? item.roles : [];
-        for (const key of items) {
-            if (Object.prototype.hasOwnProperty.call(data.itemMap, key)) {
-                roles.push(data.itemMap[key].name);
+        if (Array.isArray(item.roles)) {
+            for (const key of item.roles) {
+                if (Object.prototype.hasOwnProperty.call(itemMap, key)) {
+                    roles.push(itemMap[key].name);
+                }
             }
         }
         item.roles = roles;
-        item.key = this.getItemKey(item);
-        item.rule = Object.prototype.hasOwnProperty.call(data.ruleMap, item.rule)
-            ? data.ruleMap[item.rule].name
-            : null;
+        item.actions = Array.isArray(item.actions) ? item.actions : [];
+        item.rule = Object.prototype.hasOwnProperty.call(ruleMap, item.rule) ? ruleMap[item.rule].name : null;
     }
 
-    getItemKey (item) {
-        const view = `${item.view}.${item.class}`;
-        switch (item.targetType) {
+    prepareMetaTarget (data) {
+        data.targetType = data.type;
+        data.key = this.getItemKey(data);
+        delete data._id;
+        delete data.type;
+        delete data.item;
+        return data;
+    }
+
+    getItemKey (data) {
+        const view = `${data.view}.${data.class}`;
+        switch (data.type) {
             case this.rbac.ALL:
                 return this.rbac.ALL;
             case this.rbac.TARGET_CLASS:
-                return `${item.class}`;
+                return `${data.class}`;
             case this.rbac.TARGET_VIEW:
                 return `${view}`;
             case this.rbac.TARGET_STATE:
-                return `${item.state}.${view}`;
+                return `${data.state}.${view}`;
             case this.rbac.TARGET_OBJECT:
-                return `${item.object}.${item.state}.${view}`;
+                return `${data.object}.${data.state}.${view}`;
             case this.rbac.TARGET_TRANSITION:
-                return `${item.transition}.${item.object}.${item.class}`;
+                return `${data.transition}.${data.object}.${data.class}`;
             case this.rbac.TARGET_ATTR:
-                return `${item.attr}.${item.object}.${item.state}.${view}`;
+                return `${data.attr}.${data.object}.${data.state}.${view}`;
             case this.rbac.TARGET_NAV_SECTION:
-                return `${item.navSection}`;
+                return `${data.navSection}`;
             case this.rbac.TARGET_NAV_NODE:
-                return `${item.navNode}.${item.navSection}`;
+                return `${data.navNode}.${data.navSection}`;
         }
     }
 

@@ -18,9 +18,10 @@ module.exports = class DataGrid extends Base {
         super({
             // controller:
             // query: [Query]
-            // formatRules: [[attrName, type, {params}], ...]
+            // formatRules: [[attrName, type, {params}], ...] // server data formatting
             request: config.controller.getPostParams(),
-            ListFilterCondition,
+            CommonSearch,
+            ListFilter,
             ...config
         });
         this.params = this.params || {};
@@ -41,16 +42,17 @@ module.exports = class DataGrid extends Base {
     async getList () {
         this._result = {};
         this._result.maxSize = await this.query.count();
+        this.columns = this.request.columns;
         this.setOffset();
         this.setLimit();
         this.setOrder();
-        await this.resolveCommonSearch(this.request.search, this.request.columns);
+        await this.resolveCommonSearch();
         await this.resolveFilter();
         this._result.totalSize = await this.query.count();
         await this.setModels();
         ModelHelper.formatByRules(this.params.formatRules, this._models, this.controller);
         await this.prepareViewModels();
-        this._result.items = this.filterByColumns(this._models);
+        this._result.items = this.render();
         return this._result;
     }
 
@@ -61,7 +63,7 @@ module.exports = class DataGrid extends Base {
 
     setLimit () {
         // in mongodb limit 0 (null) or -N means no limit
-        this.limit = parseInt(this.request.length);
+        this.limit = parseInt(this.request.length || 10);
         if (isNaN(this.limit) || this.limit < 0 || this.limit > this.MAX_ITEMS) {
             throw new BadRequest(`Invalid length param`);
         }
@@ -95,38 +97,22 @@ module.exports = class DataGrid extends Base {
         }
     }
 
-    async resolveCommonSearch (value, columns) {
-        if (typeof value !== 'string' || !value.length || !Array.isArray(columns)) {
-            return false;
-        }
-        const conditions = [];
-        const ownerMap = {};
-        for (const column of this.request.columns) {
-            if (column.searchable === true) {
-                const condition = this.getConditionByType(column.type, column.name, value);
-                if (condition) {
-                    column.owner
-                        ? ObjectHelper.push(condition, column.owner, ownerMap)
-                        : conditions.push(condition);
-                }
-            }
-        }
-        for (const name of Object.keys(ownerMap)) {
-            conditions.push(await this.resolveOwnerConditions(name, ownerMap[name]));
-        }
-        if (conditions.length) {
-            this.query.and(['OR', ...conditions]);
+    resolveCommonSearch () {
+        const value = this.request.search;
+        if (typeof value === 'string' && value.length) {
+            const search = new this.CommonSearch({
+                columns: this.columns,
+                controller: this.controller
+            });
+            return search.resolve(this.query, value);
         }
     }
 
-    async resolveOwnerConditions (owner, conditions) {
-        const rel = this.query.model.getRelation(owner);
-        if (!rel) {
-            return this.throwBadRequest(`Relation not found: ${owner}`);
+    resolveFilter () {
+        const items = this.request.filter;
+        if (Array.isArray(items)) {
+            return (new this.ListFilter({items})).resolve(this.query);
         }
-        const query = rel.model.find(...conditions);
-        // simple relation without via
-        return {[rel.linkKey]: await query.column(rel.refKey)};
     }
 
     prepareViewModels () {
@@ -134,13 +120,13 @@ module.exports = class DataGrid extends Base {
         return model ? model.prepareModels(this._models) : null;
     }
 
-    filterByColumns (models) {
-        return Array.isArray(this.request.columns) ? models.map(this.renderModel, this) : [];
+    render () {
+        return this._models.map(this.renderModel, this);
     }
 
     renderModel (model) {
         const data = {[this.ROW_KEY]: model.getId()};
-        for (const column of this.request.columns) {
+        for (const column of this.columns) {
             data[column.name] = this.renderModelAttr(column, model);
         }
         return data;
@@ -150,59 +136,36 @@ module.exports = class DataGrid extends Base {
         if (!format) {
             return model.getViewAttr(name);
         }
-        switch (format) {
-            case 'label': return model.getAttrValueLabel(name);
-            case 'raw': return model.get(name);
+        switch (format.name || format) {
+            case 'label':
+                return model.getAttrValueLabel(name);
+            case 'raw':
+                return model.get(name);
+            case 'relation':
+                return this.renderModelRelation(name, model);
         }
         return model.getViewAttr(name);
     }
 
-    // FILTER
-
-    async resolveFilter () {
-        if (!Array.isArray(this.request.filter)) {
-            return false;
+    renderModelRelation (name, model) {
+        const id = model.get(name);
+        const text = model.getRelatedTitle(name);
+        if (!Array.isArray(id)) {
+            return {id, text};
         }
-        const filter = this.createFilter({
-            items: this.request.filter,
-            query: this.query
-        });
-        this.query.and(await filter.resolve());
-    }
-
-    createFilter (params) {
-        return this.spawn(this.ListFilterCondition, {grid: this, ...params});
-    }
-
-    getConditionByType (type, attr, value) {
-        switch (type) {
-            case 'number':
-            case 'integer':
-            case 'float': {
-                value = Number(value);
-                return isNaN(value) ? null : {[attr]: value};
-            }
-            case 'date':
-            case 'datetime':
-            case 'timestamp': {
-                value = this.parseDateInterval(value);
-                return value ? ['AND', ['>=', attr, value[0]], ['<', attr, value[1]]] : null;
-            }
-            case 'id': {
-                value = this.query.getDb().normalizeId(value);
-                return value ? {[attr]: value} : null;
-            }
+        const result = [];
+        for (let i = 0; i < id.length; ++i) {
+            result.push({
+                id: id[i],
+                text: text[i]
+            });
         }
-        return ['LIKE', attr, new RegExp(value, 'i')];
-    }
-
-    parseDateInterval (value) {
-        // value.split('-');
+        return result;
     }
 };
 module.exports.init();
 
 const BadRequest = require('areto/error/BadRequestHttpException');
-const ListFilterCondition = require('./ListFilterCondition');
+const CommonSearch = require('./CommonSearch');
+const ListFilter = require('./ListFilter');
 const ModelHelper = require('../helper/ModelHelper');
-const ObjectHelper = require('areto/helper/ObjectHelper');

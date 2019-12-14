@@ -232,10 +232,10 @@ Jam.DataGrid = class DataGrid {
     }
 };
 
-Jam.TreeDataGrid = class TreeDataGrid extends Jam.DataGrid {
+Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
 
     constructor (container, params) {
-        super(container, $.extend(true, {}, Jam.TreeDataGrid.defaults, params));
+        super(container, $.extend(true, {}, Jam.TreeGrid.defaults, params));
     }
 
     init () {
@@ -248,7 +248,7 @@ Jam.TreeDataGrid = class TreeDataGrid extends Jam.DataGrid {
     }
 
     getNodeByRow ($row) {
-        return Jam.TreeDataGridNode.get({grid: this, $row});
+        return Jam.TreeGridNode.get({grid: this, $row});
     }
 
     onToggleNode (event) {
@@ -271,7 +271,7 @@ Jam.TreeDataGrid = class TreeDataGrid extends Jam.DataGrid {
     }
 };
 
-Jam.TreeDataGridNode = class TreeDataGridNode {
+Jam.TreeGridNode = class TreeGridNode {
 
     static get ({$row}) {
         return $row.data('node') || Reflect.construct(this, arguments);

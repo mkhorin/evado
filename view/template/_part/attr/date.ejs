@@ -2,7 +2,7 @@
 <%
 const p = {
     handler: 'Date',
-    utc: typeof utc === 'undefined' || utc ? 'true' : '',
+    utc: typeof utc === 'undefined' ? true : utc,
     options: typeof options === 'undefined' ? '' : JSON.stringify(options)
 };
 %>
@@ -13,15 +13,15 @@ const p = {
      data-action-binder='<%= p.actionBinder %>'
      data-utc="<%- p.utc %>"
      data-params="<%= p.options %>">
-    <label for="<%- p.id %>" class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="hidden" value="<%- p.value %>">
         <div class="input-group">
-            <input id="<%- p.id %>" type="text" class="form-control datepicker">
+            <input type="text" <%- p.required %> class="datepicker form-control">
             <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
         </div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>
 </div>

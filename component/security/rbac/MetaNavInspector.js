@@ -25,7 +25,7 @@ module.exports = class MetaNavInspector extends Base {
         if (!this.rbac.metaNavMap) {
             return {};
         }
-        const data = this.filterMetaData(this.rbac.metaNavMap);
+        const data = this.filterMeta(this.rbac.metaNavMap);
         if (!data) {
             return {};
         }
@@ -44,7 +44,7 @@ module.exports = class MetaNavInspector extends Base {
         return forbiddenAccess;
     }
 
-    filterMetaData (data) {
+    filterMeta (data) {
         let result;
         for (const role of this.assignments) {
             if (!Object.prototype.hasOwnProperty.call(data, role)) {

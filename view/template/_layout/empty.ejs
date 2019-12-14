@@ -12,17 +12,17 @@
             <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button"></a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <%- include(_view.get('_part/nav/user-toggle')) %>
+                    <%- include(_view.get('_part/nav/userToggle')) %>
                 </ul>
             </div>
-            <%- include(_view.get('_part/nav/common-menu-toggle')) %>
-            <%- include(_view.get('_part/tool/modal-back')) %>
+            <%- include(_view.get('_part/nav/commonMenuToggle')) %>
+            <%- include(_view.get('_part/tool/modalBack')) %>
         </nav>
     </header>
 
     <div id="content-wrapper" class="content-wrapper">
         <section class="content">
-            <%- include(_view.get('_part/misc/flash-alert')) %>
+            <%- include(_view.get('_part/misc/flashAlert')) %>
             <%- body %>
         </section>
     </div>

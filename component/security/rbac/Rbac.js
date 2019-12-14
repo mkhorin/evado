@@ -59,7 +59,11 @@ module.exports = class Rbac extends Base {
         return type === this.ALLOW || type === this.DENY;
     }
 
-    static isMetaItemTargetType (type) {
+    static isMetaItemAction (action) {
+        return action === this.ALL || this.ALL_ACTIONS.includes(action);
+    }
+
+    static isMetaTargetType (type) {
         return type === this.ALL
             || type === this.TARGET_CLASS
             || type === this.TARGET_VIEW
@@ -96,67 +100,67 @@ module.exports = class Rbac extends Base {
     }
 
     static indexMetaItemsByAction (items) {
-        const result = {};
+        const data = {};
         for (const item of items) {
             const actions = Array.isArray(item.actions) ? item.actions : [];
             for (const action of actions) {
-                if (Array.isArray(result[action])) {
-                    result[action].push(item);
+                if (Array.isArray(data[action])) {
+                    data[action].push(item);
                 } else {
-                    result[action] = [item];
+                    data[action] = [item];
                 }
             }
         }
-        return result;
+        return data;
     }
 
     static indexMetaItemsByTarget (items) {
-        const map = this.indexMetaItems(items, 'targetType');
-        for (const target of Object.keys(map)) {
+        const data = this.indexMetaItems(items, 'targetType');
+        for (const target of Object.keys(data)) {
             if (target !== this.ALL) {
-                map[target] = this.indexMetaItems(map[target], 'key');
+                data[target] = this.indexMetaItems(data[target], 'key');
             }
         }
-        return map;
+        return data;
     }
 
     static indexMetaItemsByState (items) {
-        const map = {};
+        const data = {};
         for (const item of items) {
             if (item.view) {
-                ObjectHelper.push(item, `${item.view}.${item.class}`, map);
+                ObjectHelper.push(item, `${item.view}.${item.class}`, data);
             } else if (item.class) {
-                ObjectHelper.push(item, `${item.class}`, map);
+                ObjectHelper.push(item, `${item.class}`, data);
             }
         }
         for (const item of items) {
             if (!item.state && !item.view && item.class) {
-                this.concatFirstArrayItems(`${item.class}`, map);
+                this.concatFirstArrayItems(`${item.class}`, data);
             }
         }
         for (const item of items) {
             if (!item.state && item.view) {
                 const classKey = `${item.class}`;
-                this.concatFirstArrayItems(`${item.view}.${classKey}`, map, classKey);
+                this.concatFirstArrayItems(`${item.view}.${classKey}`, data, classKey);
             }
         }
-        return map;
+        return data;
     }
 
-    static concatFirstArrayItems (targetKey, map, ...keys) {
+    static concatFirstArrayItems (targetKey, data, ...keys) {
         for (const key of keys) {
-            if (Array.isArray(map[key])) {
-                return map[targetKey] = map[targetKey].concat(map[key]);
+            if (Array.isArray(data[key])) {
+                return data[targetKey] = data[targetKey].concat(data[key]);
             }
         }
     }
 
     static indexMetaItems (items, key) {
-        const result = {};
+        const data = {};
         for (const item of items) {
-            ObjectHelper.push(item, item[key], result);
+            ObjectHelper.push(item, item[key], data);
         }
-        return result;
+        return data;
     }
 
     static expandAllAction (items) {
@@ -168,8 +172,9 @@ module.exports = class Rbac extends Base {
     }
 
     static getItemRuleData (item, rule) {
-        const name = `${rule.name}.${item.key}`;
-        return {...rule, name, item};
+        const sourceName = rule.name;
+        const name = `${sourceName}.${item.key}`;
+        return {...rule, name, sourceName, item};
     }
 
     constructor (config) {
@@ -186,8 +191,8 @@ module.exports = class Rbac extends Base {
     }
 
     async init () {
-        this.meta = this.module.getMetaHub();
-        this.meta.onAfterLoad(this.prepareMetaDependencies.bind(this));
+        this.metaHub = this.module.getMetaHub();
+        this.metaHub.onAfterLoad(this.prepareMetaDependencies.bind(this));
         await super.init();
     }
 
@@ -207,8 +212,8 @@ module.exports = class Rbac extends Base {
     }
 
     prepareMetaDependencies () {
-        this.docMeta = this.meta.get('document');
-        this.navMeta = this.meta.get('navigation');
+        this.docMeta = this.metaHub.get('document');
+        this.navMeta = this.metaHub.get('navigation');
         this.metaObjectFilters.map(filter => filter.prepare());
     }
 
@@ -224,10 +229,8 @@ module.exports = class Rbac extends Base {
         for (const name of roles) {
             const item = this.itemMap[name];
             if (item instanceof this.Item && item.isRole() && Array.isArray(item.parents)) {
-                roles = roles.concat(item.parents
-                    .filter(item => item.isRole())
-                    .map(item => item.name)
-                );
+                const parents = item.parents.filter(item => item.isRole()).map(item => item.name);
+                roles = roles.concat(parents);
             }
         }
         return ArrayHelper.unique(roles);
@@ -246,67 +249,74 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaMap () {
-        const items = this.metaItems.filter(item => {
-            return item.targetType !== this.TARGET_TRANSITION && item.targetType !== this.TARGET_ATTR
+        const items = this.metaItems.filter(({targetType}) => {
+            return targetType !== this.TARGET_TRANSITION && targetType !== this.TARGET_ATTR
         });
         this.constructor.expandAllAction(items);
-        const map = this.indexMetaItemsByRole(items);
-        for (const role of Object.keys(map)) {
-            map[role] = this.constructor.splitMetaItemsByType(map[role]);
-            for (const type of Object.keys(map[role])) {
-                const items = this.constructor.indexMetaItemsByAction(map[role][type]);
+        const data = this.indexMetaItemsByRole(items);
+        for (const role of Object.keys(data)) {
+            data[role] = this.constructor.splitMetaItemsByType(data[role]);
+            for (const type of Object.keys(data[role])) {
+                const items = this.constructor.indexMetaItemsByAction(data[role][type]);
                 for (const action of Object.keys(items)) {
                     items[action] = this.constructor.indexMetaItemsByTarget(items[action]);
                 }
-                map[role][type] = items;
+                data[role][type] = items;
             }
         }
-        this.metaMap = map;
+        this.metaMap = data;
     }
 
     setMetaAttrMap () {
-        const items = this.metaItems.filter(item => item.type === this.DENY && item.targetType === this.TARGET_ATTR);
+        let items = this.metaItems.filter(item => {
+            return item.type === this.DENY && item.targetType === this.TARGET_ATTR;
+        });
         this.constructor.expandAllAction(items);
-        let map = this.indexMetaItemsByRoleAction(items);
+        let data = this.indexMetaItemsByRoleAction(items);
         this.metaAttrMap = this.targetMetaAttrMap = this.objectTargetMetaAttrMap = null;
-        if (Object.values(map).length) {
-            this.metaAttrMap = map;
+        if (Object.values(data).length) {
+            this.metaAttrMap = data;
             this.targetMetaAttrMap = this.MetaAttrInspector.concatHierarchyItems(items);
-            map = this.indexMetaItemsByRoleAction(items.filter(item => item.state || item.object));
-            this.objectTargetMetaAttrMap = Object.values(map).length ? map : null;
+            items = items.filter(item => item.state || item.object);
+            data = this.indexMetaItemsByRoleAction(items);
+            this.objectTargetMetaAttrMap = Object.values(data).length ? data : null;
         }
     }
 
     setMetaObjectFilterMap () {
-        const items = this.metaItems.filter(item => {
-            return item.type === this.DENY
-                && (item.targetType === this.TARGET_STATE || item.targetType === this.TARGET_OBJECT)
-                && (item.actions.includes(Rbac.ALL) || item.actions.includes(Rbac.READ));
+        const items = this.metaItems.filter(({targetType, actions, rule}) => {
+            return (actions.includes(Rbac.ALL) || actions.includes(Rbac.READ))
+                && ((rule && (targetType === this.TARGET_CLASS || targetType === this.TARGET_VIEW))
+                    || (targetType === this.TARGET_STATE || targetType === this.TARGET_OBJECT));
         });
-        const map = this.indexMetaItemsByRole(items);
+        const data = this.indexMetaItemsByRole(items);
         this.metaObjectFilters = [];
-        for (const role of Object.keys(map)) {
-            map[role] = this.constructor.indexMetaItemsByState(map[role]);
-            for (const key of Object.keys(map[role])) {
-                map[role][key] = new MetaObjectFilter({
-                    rbac: this,
-                    items: map[role][key]
-                });
-                this.metaObjectFilters.push(map[role][key]);
-            }
+        for (const role of Object.keys(data)) {
+            data[role] = this.constructor.indexMetaItemsByState(data[role]);
+            this.setRoleMetaObjectFilterMap(data[role]);
         }
-        this.metaObjectFilterMap = map;
+        this.metaObjectFilterMap = data;
+    }
+
+    setRoleMetaObjectFilterMap (data) {
+        for (const key of Object.keys(data)) {
+            data[key] = new MetaObjectFilter({
+                rbac: this,
+                items: data[key]
+            });
+            this.metaObjectFilters.push(data[key]);
+        }
     }
 
     setMetaTransitionMap () {
         const items = this.metaItems.filter(item => {
             return item.type === this.DENY && item.targetType === this.TARGET_TRANSITION;
         });
-        const map = this.indexMetaItemsByRoleKey(items);
-        if (map){
-            this.MetaTransitionInspector.concatHierarchyItems(items, map);
+        const data = this.indexMetaItemsByRoleKey(items);
+        if (data){
+            this.MetaTransitionInspector.concatHierarchyItems(items, data);
         }
-        this.metaTransitionMap = map;
+        this.metaTransitionMap = data;
     }
 
     setMetaNavMap () {
@@ -339,46 +349,48 @@ module.exports = class Rbac extends Base {
     }
 
     createAssignmentRuleMap (items) {
-        const result = {};
-        for (const item of items) {
+        const data = {};
+        for (const {_id, config} of items) {
             try {
-                result[item._id] = ClassHelper.resolveSpawn(item.config, this.module);
-                item.config.module = this.module;
+                data[_id] = ClassHelper.resolveSpawn(config, this.module);
+                config.module = this.module;
             } catch (err) {
-                this.log('error', `Invalid assignment rule: ${item._id}`, err);
+                this.log('error', `Invalid assignment rule: ${_id}`, err);
             }
         }
-        return result;
+        return data;
     }
 
     indexMetaItemsByRoleAction (items) {
-        const map = this.indexMetaItemsByRole(items);
-        for (const role of Object.keys(map)) {
-            map[role] = this.constructor.indexMetaItemsByAction(map[role]);
+        const data = this.indexMetaItemsByRole(items);
+        for (const role of Object.keys(data)) {
+            data[role] = this.constructor.indexMetaItemsByAction(data[role]);
         }
-        return map;
+        return data;
     }
 
     indexMetaItemsByRoleKey (items) {
-        const map = this.indexMetaItemsByRole(items);
-        for (const role of Object.keys(map)) {
-            map[role] = this.constructor.indexMetaItems(map[role], 'key');
+        const data = this.indexMetaItemsByRole(items);
+        for (const role of Object.keys(data)) {
+            data[role] = this.constructor.indexMetaItems(data[role], 'key');
         }
-        return Object.values(map).length ? map : null;
+        return Object.values(data).length ? data : null;
     }
 
     indexMetaItemsByRole (items) {
-        const map = {};
-        for (const item of (items || [])) {
-            if (Array.isArray(item.roles)) {
-                for (const role of item.roles) {
-                    if (Object.prototype.hasOwnProperty.call(this.itemMap, role)) {
-                        ObjectHelper.push(item, role, map);
+        const data = {};
+        if (Array.isArray(items)) {
+            for (const item of items) {
+                if (Array.isArray(item.roles)) {
+                    for (const role of item.roles) {
+                        if (Object.prototype.hasOwnProperty.call(this.itemMap, role)) {
+                            ObjectHelper.push(item, role, data);
+                        }
                     }
                 }
-            }
-        }
-        return map;
+            }    
+        }        
+        return data;
     }
 
     async getUserAssignments (userId) {
@@ -390,10 +402,8 @@ module.exports = class Rbac extends Base {
         if (!items) {
             return ruleItems;
         }
-        if (ruleItems.length) {
-            items.push(...ruleItems);
-        }
-        return items;
+        return ruleItems.length ? items.concat(ruleItems) : items;
+
     }
 
     async getUserAssignmentsByRules (userId) {
@@ -406,19 +416,19 @@ module.exports = class Rbac extends Base {
         return items;
     }
 
-    getAccess (assignments, data, params) {
+    resolveAccess (assignments, data, params) {
         return (new this.MetaInspector({rbac: this, assignments, params, ...data})).execute();
     }
 
-    getAttrAccess (assignments, data, params) {
+    resolveAttrAccess (assignments, data, params) {
         return (new this.MetaAttrInspector({rbac: this, assignments, params, ...data})).execute();
     }
 
-    getTransitionAccess (assignments, data, params) {
+    resolveTransitionAccess (assignments, data, params) {
         return (new this.MetaTransitionInspector({rbac: this, assignments, params, ...data})).execute();
     }
 
-    getNavAccess (assignments, data) {
+    resolveNavAccess (assignments, data) {
         return (new this.MetaNavInspector({rbac: this, assignments, ...data})).execute();
     }
 

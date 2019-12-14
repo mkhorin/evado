@@ -8,19 +8,14 @@ const Base = require('./DataConsole');
 module.exports = class DataImportConsole extends Base {
 
     async execute () {
-        let files = [];
-        try {
-            files = await fs.promises.readdir(this.directory);
-        } catch (err) {
-            return this.log('warn', `Invalid import directory: ${this.directory}`);
-        }
+        const files = await fs.promises.readdir(this.directory);
         for (const file of files) {
             if (FileHelper.isJsonExtension(file)) {
                 await this.importFile(path.join(this.directory, file));
             }
         }
         await this.app.getMetaHub().afterDataImport();
-        this.log('info', `Data imported from ${this.directory}`);
+        this.log('info', `Data imported: ${this.directory}`);
     }
 
     async importFile (file) {

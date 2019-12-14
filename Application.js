@@ -34,7 +34,7 @@ module.exports = class Evado extends Base {
     // EVENTS
 
     async afterModuleInit () {
-        await this.loadMetaData();
+        await this.loadMeta();
         return super.afterModuleInit();
     }
 
@@ -48,7 +48,7 @@ module.exports = class Evado extends Base {
         return this.components.get('metaHub');
     }
     
-    async loadMetaData () {
+    async loadMeta () {
         const hub = this.getMetaHub();
         hub.models.add(this.getConfig('metaModels'));
         await hub.load();

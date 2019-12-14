@@ -16,6 +16,8 @@ module.exports = class Console extends Base {
             DataExportConsole: require('./DataExportConsole'),
             IndexingConsole: require('./IndexingConsole'),
             SecurityConsole: require('./SecurityConsole'),
+            SecurityExportConsole: require('./SecurityExportConsole'),
+            SecurityImportConsole: require('./SecurityImportConsole'),
             TaskConsole: require('./TaskConsole'),
             ...config
         });
@@ -49,16 +51,16 @@ module.exports = class Console extends Base {
 
     // DATA
 
-    dropData (params) {
-        return this.execute('drop', this.DataConsole, params);
-    }
-
-    importData (params) {
-        return this.execute('execute', this.DataImportConsole, params);
+    clearData (params) {
+        return this.execute('clear', this.DataConsole, params);
     }
 
     exportData (params) {
         return this.execute('execute', this.DataExportConsole, params);
+    }
+
+    importData (params) {
+        return this.execute('execute', this.DataImportConsole, params);
     }
 
     // INDEXES
@@ -87,6 +89,14 @@ module.exports = class Console extends Base {
 
     assignRole (params) {
         return this.execute('assignRole', this.SecurityConsole, params);
+    }
+
+    exportSecurity (params) {
+        return this.execute('execute', this.SecurityExportConsole, params);
+    }
+
+    importSecurity (params) {
+        return this.execute('execute', this.SecurityImportConsole, params);
     }
 
     // TASKS

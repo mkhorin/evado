@@ -26,7 +26,7 @@ module.exports = class UserFilter extends Base {
         users = Array.isArray(users) ? users: [];
         users.push(...await this.resolveConfig());
         users.push(...await this.resolveRbacItems());
-        users = MongoHelper.diff(users, this.get('excludes'));
+        users = MongoHelper.exclude(this.get('excludes'), users);
         return users;
     }
 

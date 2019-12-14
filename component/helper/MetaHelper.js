@@ -128,7 +128,7 @@ module.exports = class MetaHelper {
         return values;
     }
 
-    static orderDocsByMap (docs, map, key) {
+    static sortDocsByMap (docs, map, key) {
         if (map && Array.isArray(docs)) {
             docs.sort((a, b)=> {
                 a = map[a[key]];
@@ -140,7 +140,7 @@ module.exports = class MetaHelper {
         }
     }
 
-    static orderModelsByMap (models, map) {
+    static sortModelsByMap (models, map) {
         if (map && Array.isArray(models)) {
             models.sort((a, b)=> {
                 a = map[a.getId()];

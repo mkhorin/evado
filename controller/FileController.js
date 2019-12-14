@@ -47,8 +47,14 @@ module.exports = class FileController extends Base {
 
     async actionDownload () {
         const model = await this.getModel();
+        const file = model.getPath();
+        const stat = await FileHelper.getStat(file);
+        if (!stat) {
+            model.log('error', 'File not found');
+            return this.sendStatus(404);
+        }
         this.setHttpHeader(model.getFileHeaders());
-        this.sendFile(model.getPath());
+        this.sendFile(file);
     }
 
     async actionPreview () {
@@ -62,3 +68,5 @@ module.exports = class FileController extends Base {
     }
 };
 module.exports.init(module);
+
+const FileHelper = require('areto/helper/FileHelper');

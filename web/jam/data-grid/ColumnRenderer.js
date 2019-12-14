@@ -5,28 +5,29 @@
 
 Jam.ColumnRenderer = class ColumnRenderer {
 
-    static getRenderMethod (format) {
+    getRenderMethod (format) {
         const name = typeof format === 'string' ? format : format ? format.name : null;
         const method = this.getFormatMethod(name);
         return this.render.bind(this, method);
     }
 
-    static getFormatMethod (name) {
+    getFormatMethod (name) {
         switch (name) {
             case 'boolean': return this.asBoolean;
+            case 'bytes': return this.asBytes;
             case 'date': return this.asDate;
             case 'datetime': return this.asDatetime;
             case 'timestamp': return this.asTimestamp;
             case 'escaped': return this.asEscaped;
-            case 'json': return this.asJson;
             case 'link': return this.asLink;
+            case 'relation': return this.asLink;
             case 'select': return this.asSelect;
-            case 'thumb': return this.asThumb;
+            case 'preview': return this.asPreview;
         }
         return this.asDefault;
     }
 
-    static prepareFormat (data) {
+    prepareFormat (data) {
         if (data) {
             switch (data.name) {
                 case 'select': return this.prepareSelect(data);
@@ -35,14 +36,14 @@ Jam.ColumnRenderer = class ColumnRenderer {
         return data;
     }
 
-    static prepareSelect (data) {
+    prepareSelect (data) {
         if (data && Array.isArray(data.items)) {
             data.itemIndex = Jam.ArrayHelper.index('value', data.items);
         }
         return data;
     }
 
-    static render (method, data, column) {
+    render (method, data, column) {
         if (data === undefined) {
             return this.asNotSet();
         }
@@ -50,16 +51,18 @@ Jam.ColumnRenderer = class ColumnRenderer {
             return this.asNull();
         }
         const result = method.call(this, data, column);
-        if (typeof result === 'object') {
-            return JSON.stringify(result, null, 1);
-        }
-        if (typeof column.translate === 'string') {
-            return Jam.i18n.translate(result, column.translate);
-        }
-        return result;
+        return typeof result === 'object'
+            ? JSON.stringify(result, null, 1)
+            : result;
     }
 
-    static join (data, column, handler) {
+    translate (data, column) {
+        return typeof column.translate === 'string'
+            ? Jam.i18n.translate(data, column.translate)
+            : data;
+    }
+
+    join (data, column, handler) {
         if (!Array.isArray(data)) {
             return handler(data, column);
         }
@@ -72,63 +75,70 @@ Jam.ColumnRenderer = class ColumnRenderer {
         return data.map(data => handler(data, column)).join(separator);
     }
 
-    static asDefault () {
-        return this.join(...arguments, data => data);
+    asDefault (data, column) {
+        return this.join(...arguments, this.translate.bind(this));
     }
 
-    static asBoolean () {
+    asBoolean () {
         return this.join(...arguments, Jam.FormatHelper.asBoolean);
     }
 
-    static asDate () {
-        return this.join(...arguments, Jam.FormatHelper.asDate);
+    asBytes () {
+        return this.join(...arguments, Jam.FormatHelper.asBytes);
     }
 
-    static asDatetime () {
-        return this.join(...arguments, Jam.FormatHelper.asDatetime);
+    asDate () {
+        return this.join(...arguments, (data, {momentFormat, utc})=> {
+            return Jam.FormatHelper.asDate(Jam.DateHelper.formatByUtc(data, utc), momentFormat);
+        });
     }
 
-    static asTimestamp () {
-        return this.join(...arguments, Jam.FormatHelper.asTimestamp);
+    asDatetime () {
+        return this.join(...arguments, (data, {momentFormat, utc})=> {
+            return Jam.FormatHelper.asDatetime(Jam.DateHelper.formatByUtc(data, utc), momentFormat);
+        });
     }
 
-    static asEscaped () {
+    asTimestamp () {
+        return this.join(...arguments, (data, {momentFormat, utc})=> {
+            return Jam.FormatHelper.asTimestamp(Jam.DateHelper.formatByUtc(data, utc), momentFormat);
+        });
+    }
+
+    asEscaped () {
         return this.join(...arguments, Jam.Helper.escapeHtml);
     }
 
-    static asJson (data) {
-        return data ? JSON.stringify(data, null, 1) : '';
-    }
-
-    static asLink () {
+    asLink (data, column) {
         return this.join(...arguments, (data, {format}) => {
             let text = data.hasOwnProperty('text') ? data.text : data;
             let url = data.url || format.url || '';
-            if (!url) {
-                return text;
+            if (!url || text === null || text === undefined) {
+                return this.render(this.asDefault, text, column);
             }
             let params = data.id || data.params 
                 ? {id: data.id, ...data.params} 
                 : {id: text};
             params = $.param({...format.params, ...params});
             url += (url.includes('?') ? '&' : '?') + params;
+            text = this.translate(text, column);
             return `<a href="${url}" class="modal-link">${text}</a>`;
         });
     }
 
-    static asNotSet () {
+    asNotSet () {
         return `<span class="not-set">[${Jam.i18n.translate('not set')}]</span>`;
     }
 
-    static asNull () {
+    asNull () {
         return '<span class="not-set">null</span>';
     }
 
-    static asSelect (data, {format}) {
+    asSelect (data, {format}) {
         return format.itemIndex[data].label;
     }
 
-    static asThumb () {
-        return this.join(...arguments, Jam.FormatHelper.asThumb);
+    asPreview () {
+        return this.join(...arguments, Jam.FormatHelper.asPreview);
     }
 };

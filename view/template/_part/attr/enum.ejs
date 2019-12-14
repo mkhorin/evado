@@ -17,9 +17,8 @@ const p = {
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <select id="<%- p.id %>" name="<%- p.name %>" <%- p.disabled %> class="form-control">
-        </select>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+        <select id="<%- p.id %>" name="<%- p.name %>" <%- p.disabled %> class="form-control"></select>
         <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>
 </div>

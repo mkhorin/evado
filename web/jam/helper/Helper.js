@@ -13,7 +13,7 @@ Jam.Helper = class Helper {
         if (typeof data === 'string') {
             try {
                 return JSON.parse(data);
-            } catch (err) {}
+            } catch {}
         }
         return data;
     }
@@ -28,13 +28,21 @@ Jam.Helper = class Helper {
 
     static renderSelectOptions (data) {
         let result = data.hasEmpty ? `<option value="">${data.emptyText || ''}</option>` : '';
-        if (Array.isArray(data.items)) {
-            for (const item of data.items) {
-                const selected = data.defaultValue === item.value ? ' selected' : '';
-                result += `<option value="${item.value}" ${selected}>${item.text}</option>`;
-            }
+        for (const item of this.formatSelectItems(data.items)) {
+            const selected = data.defaultValue === item.value ? ' selected' : '';
+            const text = data.translate !== false
+                ? Jam.i18n.translate(item.text, data.translate)
+                : item.text;
+            result += `<option value="${item.value}" ${selected}>${text}</option>`;
         }
         return result;
+    }
+
+    static formatSelectItems (items) {
+        if (Array.isArray(items)) {
+            return items;
+        }
+        return items ? Object.keys(items).map(value => ({value, text: items[value]})) : [];
     }
 
     static resetFormElement ($element) {
@@ -105,6 +113,26 @@ Jam.Helper = class Helper {
         data = typeof data === 'string' ? `csrf=${csrf}&${data}` : {csrf, ...data};
         return $.post(url, data);
     }
+
+    static createSerialImageLoading ($container = $(document.body)) {
+        $container.find('img').each((index, image)=> {
+            if (!image.getAttribute('data-src')) {
+                image.setAttribute('data-src', image.getAttribute('src'));
+                image.removeAttribute('src');
+            }
+        });
+    }
+
+    static executeSerialImageLoading ($container = $(document.body)) {
+        const $images = $container.find('img').filter('[data-src]');
+        $images.slice(0, -1).each((index, image)=> {
+            image.addEventListener('load', ()=> {
+                const $next = $images.eq(index + 1);
+                $next.prop('src', $next.data('src'));
+            });
+        });
+        $images.first().prop('src', $images.first().data('src'));
+    }
 };
 
 Jam.ArrayHelper = class ArrayHelper {
@@ -121,18 +149,18 @@ Jam.ArrayHelper = class ArrayHelper {
         return true;
     }
 
-    static diff (items, excluded) {
-        return items.filter(item => !excluded.includes(item));
+    static exclude (targets, sources) {
+        return sources.filter(item => !targets.includes(item));
     }
 
     static flip (items) {
-        const map = {};
+        const data = {};
         if (Array.isArray(items)) {
             for (let i = 0; i < items.length; ++i) {
-                map[items[i]] = i;
+                data[items[i]] = i;
             }
         }
-        return map;
+        return data;
     }
 
     static getRandom (items) {
@@ -140,15 +168,15 @@ Jam.ArrayHelper = class ArrayHelper {
     }
 
     static index (key, items) {
-        const map = {};
+        const data = {};
         if (Array.isArray(items)) {
             for (const item of items) {
                 if (item) {
-                    map[item[key]] = item;
+                    data[item[key]] = item;
                 }
             }
         }
-        return map;
+        return data;
     }
 
     static intersect (items, targets) {
@@ -166,11 +194,11 @@ Jam.ArrayHelper = class ArrayHelper {
 
     // get [ { key: value }, ... ] from object array
     static mapValueByKey (key, items, value) {
-        const maps = [];
+        const values = [];
         for (const item of items) {
-            maps.push({[item[key]]: value !== undefined ? item[value] : item});
+            values.push({[item[key]]: value !== undefined ? item[value] : item});
         }
-        return maps;
+        return values;
     }
 
     static removeValue (value, items) {
@@ -215,13 +243,13 @@ Jam.ArrayHelper = class ArrayHelper {
     }
 
     static uniqueByKey (key, items) {
-        const map = {};
+        const data = {};
         for (const item of items) {
-            if (!Object.prototype.hasOwnProperty.call(map, item[key])) {
-                map[item[key]] = item;
+            if (!Object.prototype.hasOwnProperty.call(data, item[key])) {
+                data[item[key]] = item;
             }
         }
-        return Object.values(map);
+        return Object.values(data);
     }
 
     static getByNestedValue (value, key, items) {
@@ -294,17 +322,29 @@ Jam.DateHelper = class DateHelper {
         return (absolute ? moment(date).utcOffset(0, true) : moment.utc(date)).format();
     }
 
+    static formatByUtc (isoDate, utc) {
+        return utc ? isoDate.slice(0, -1) : isoDate; // remove Z suffix
+    }
+
     static resolveClientDate ($container) {
         for (const item of $container.find('time[data-format]')) {
             const $item = $(item);
-            const format = $item.attr('data-format');
+            const format = this.getMomentFormat($item.attr('data-format'));
             if (format) {
-                let date = $item.attr('datetime');
-                date = $item.data('utc') ? date.slice(0, -1) : date;
+                const date = this.formatByUtc($item.attr('datetime'), $item.data('utc'));
                 $item.html(moment(date).format(format));
             }
             $item.removeAttr('data-format');
         }
+    }
+
+    static getMomentFormat (format) {
+        switch (format) {
+            case 'date': return 'L';
+            case 'datetime': return 'L LTS';
+            case 'timestamp': return 'L LTS';
+        }
+        return format;
     }
 
     static setTimeSelectAfterDay () {
@@ -332,36 +372,34 @@ Jam.FormatHelper = class FormatHelper {
             size /= 1073741824;
         }
         size = Math.round(size * 100) / 100;
-        return `${size} ${unit}`;
+        return `${size} ${Jam.i18n.translate(unit)}`;
     }
 
-    static asDate (data) {
-        const date = new Date(data);
-        return !data ? '' : Jam.DateHelper.isValid(date) ? date.toLocaleDateString() : data;
+    static asDate (data, format = 'L') {
+        const date = moment(data);
+        return !data ? '' : date.isValid() ? date.format(format) : data;
     }
     
-    static asDatetime (data) {
-        const date = new Date(data);
-        return !data ? '' : Jam.DateHelper.isValid(date) ? date.toLocaleString() : data;
+    static asDatetime (data, format = 'L LTS') {
+        return this.asDate(data, format);
     }
 
     static asTimestamp (data) {
-        const date = moment(data);
-        return !data ? '' : date.isValid() ? date.format('L LTS') : data;
+        return this.asDatetime(data);
     }
 
-    static asThumb (data) {
+    static asPreview (data) {
         return data ? `<img src="${data}" class="thumbnail" alt="">` : ''
     }
 };
 
 Jam.ObjectHelper = class ObjectHelper {
 
-    static push (value, key, map) {
-        if (Array.isArray(map[key])) {
-            map[key].push(value);
+    static push (value, key, data) {
+        if (Array.isArray(data[key])) {
+            data[key].push(value);
         } else {
-            map[key] = [value];
+            data[key] = [value];
         }
     }
 
@@ -424,8 +462,8 @@ Jam.StringHelper = class StringHelper {
     }
 
     static replaceParam (str, param, value) {
-        const re = new RegExp(`{${param}}`, 'g');
-        return str.replace(re, value);
+        const regex = new RegExp(`{${param}}`, 'g');
+        return str.replace(regex, value);
     }
 };
 
@@ -433,6 +471,10 @@ Jam.UrlHelper = class UrlHelper {
 
     static getNewPageUrl (modal) {
         return this.addUrlParams(location.href, {modal});
+    }
+
+    static openNewPageModal (url) {
+        this.openNewPage(this.getNewPageUrl(url));
     }
 
     static openNewPage (url) {

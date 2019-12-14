@@ -18,16 +18,16 @@ module.exports = class MetaAttrInspector extends Base {
      */
 
     static concatHierarchyItems (items) {
-        const  map = {};
+        const data = {};
         for (const item of items) {
             const key = `${item.object}.${item.state}.${item.view}.${item.class}`;
-            ObjectHelper.push(item, key, map);
+            ObjectHelper.push(item, key, data);
         }
         for (const item of items) {
             if (item.view ? (!item.state && !item.object) : (item.state ? !item.object : item.object)) {
                 const key = `${item.object}.${item.state}.${item.view}.${item.class}`;
                 const classKey = `...${item.class}`;
-                Rbac.concatFirstArrayItems(key, map, classKey);
+                Rbac.concatFirstArrayItems(key, data, classKey);
             }
         }
         for (const item of items) {
@@ -35,7 +35,7 @@ module.exports = class MetaAttrInspector extends Base {
                 const key = `${item.object}.${item.state}.${item.view}.${item.class}`;
                 const viewKey = `..${item.view}.${item.class}`;
                 const classKey = `...${item.class}`;
-                Rbac.concatFirstArrayItems(key, map, viewKey, classKey);
+                Rbac.concatFirstArrayItems(key, data, viewKey, classKey);
             }
         }
         for (const item of items) {
@@ -44,10 +44,10 @@ module.exports = class MetaAttrInspector extends Base {
                 const stateKey = `.${item.state}.${item.view}.${item.class}`;
                 const viewKey = `..${item.view}.${item.class}`;
                 const classKey = `...${item.class}`;
-                Rbac.concatFirstArrayItems(key, map, stateKey, viewKey, classKey);
+                Rbac.concatFirstArrayItems(key, data, stateKey, viewKey, classKey);
             }
         }
-        return map;
+        return data;
     }
 
     canRead (name) {
@@ -72,7 +72,7 @@ module.exports = class MetaAttrInspector extends Base {
             let items = this.getTargetAttrItems(this.rbac.targetMetaAttrMap);
             if (items) {
                 items = this.filterMetaAttrData(this.rbac.metaAttrMap, items);
-                this.forbiddenAttrMap = await this.resolveAttrs(items);
+                this.forbiddenAttrMap = items.length ? await this.resolveAttrs(items) : {};
             }
         }
         return this;
@@ -123,7 +123,7 @@ module.exports = class MetaAttrInspector extends Base {
         const result = [];
         for (let role of this.assignments) {
             if (!Object.prototype.hasOwnProperty.call(data, role)) {
-                return null; // no attr filter to role
+                return []; // no attributes filter to role
             }
             role = data[role];
             const resultValue = {};
@@ -147,7 +147,7 @@ module.exports = class MetaAttrInspector extends Base {
         for (const item of items) {
             for (const action of this.actions) {
                 if (forbiddenAttrMap[action] === null) {
-                    continue; // all action attrs is allowed (by other role)
+                    continue; // all action attributes is allowed (by other role)
                 }
                 if (!item.hasOwnProperty(action)) {
                     forbiddenAttrMap[action] = null;
@@ -225,15 +225,15 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     hasAnyObjectTargetData (className) {
-        const map = this.rbac.objectTargetMetaAttrMap;
-        if (!map) {
+        const data = this.rbac.objectTargetMetaAttrMap;
+        if (!data) {
             return false;
         }
         for (const role of this.assignments) {
-            if (map[role]) {
+            if (data[role]) {
                 for (const action of this.actions) {
-                    if (Array.isArray(map[role][action])) {
-                        for (const item of map[role][action]) {
+                    if (Array.isArray(data[role][action])) {
+                        for (const item of data[role][action]) {
                             if (item.class === className) {
                                 return true;
                             }

@@ -19,25 +19,27 @@ const d = {
 d.attr = attr;
 d.relName = d.relName || attr;
 
-const rel = model.getRelation(d.relName);
+const relation = model.getRelation(d.relName);
 const urlParams = {
     rel: d.relName,
     pid: model.getId()
 };
-d.multiple = rel.isMultiple();
+d.multiple = relation.isMultiple();
 
 if (d.showBottom === undefined) {
     d.showBottom = d.multiple && d.pageSize > 0;
 }
 if (d.list !== null) {
     if (d.list === undefined) {
-        d.list = ['list-rel', urlParams];
+        d.list = ['list-related', urlParams];
     } else if (typeof d.list === 'string') {
         d.list = [d.list, urlParams];
     }
     d.list = _url(d.list);
 }
-const relUrl = typeof relRoute === 'undefined' ? rel.model.getControllerClass().NAME : relRoute;
+const relUrl = typeof relRoute === 'undefined'
+        ? relation.model.getControllerClass().NAME
+        : relRoute;
 /*
 if (d.view !== null) {
     d.view = _url(d.view === undefined ? `${relUrl}/view` : d.view);
@@ -77,7 +79,7 @@ if (d.link !== null) {
 }
 if (d.modalSort) {
     if (d.modalSort === true) {
-        d.modalSort = _url('sort-rel', urlParams);
+        d.modalSort = _url('sort-related', urlParams);
     } else if (Array.isArray(d.modalSort)) {
         d.modalSort = _url(d.modalSort);
     }
@@ -85,7 +87,7 @@ if (d.modalSort) {
 let hasKeyColumn = false;
 for (const column of d.columns) {
     if (column.label === undefined) {
-        column.label = rel.model.getAttrLabel(column.name);
+        column.label = relation.model.getAttrLabel(column.name);
     }
     if (column.name === d.key) {
         hasKeyColumn = true;
@@ -111,43 +113,43 @@ if (d.filter && !d.filter.url) {
         <div class="box box-grid box-grid-field">
             <input name="<%- p.name %>" type="hidden">
             <div class="box-header">
-                <div class="list-controls" data-jam="IndexSorting">
+                <div class="list-commands" data-jam="IndexSorting">
                     <% if (d.link) { %>
-                    <button data-id="link" data-index="10" title="Link" class="btn btn-default" type="button">
+                    <button data-command="link" data-index="10" title="Link" class="btn btn-default" type="button">
                         <span class="fa fa-link"></span>
                     </button>
                     <% } if (d.unlink) { %>
-                    <button data-id="unlink" data-index="20" title="Unlink" class="btn btn-default mr10" type="button">
+                    <button data-command="unlink" data-index="20" title="Unlink" class="btn btn-default mr10" type="button">
                         <span class="fa fa-unlink text-danger"></span>
                     </button>
                     <% } if (d.create) { %>
-                    <button data-id="create" data-index="30" title="Create" class="btn btn-success btn-light" type="button">
+                    <button data-command="create" data-index="30" title="Create" class="btn btn-success btn-light" type="button">
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
                     <% } if (d.update) { %>
-                    <button data-id="update" data-index="40" title="Update" class="btn btn-warning btn-light" type="button">
+                    <button data-command="update" data-index="40" title="Update" class="btn btn-warning btn-light" type="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </button>
                     <% } if (d.remove) { %>
-                    <button data-id="remove" data-index="50" title="Remove" class="btn btn-white" type="button">
+                    <button data-command="remove" data-index="50" title="Remove" class="btn btn-white" type="button">
                         <span class="glyphicon glyphicon-trash text-danger"></span>
                     </button>
                     <% } %>
 
-                    <button data-id="reload" data-index="60" title="Reload" class="btn btn-default ml10" type="button">
+                    <button data-command="reload" data-index="60" title="Reload" class="btn btn-default ml10" type="button">
                         <span class="fa fa-redo-alt"></span>
                     </button>
 
                     <% if (d.modalSort) { %>
-                    <button data-id="sort" data-index="70" title="Sort" class="btn btn-white" type="button">
+                    <button data-command="sort" data-index="70" title="Sort" class="btn btn-white" type="button">
                         <span class="glyphicon glyphicon-sort"></span>
                     </button>
                     <% } if (d.clone) { %>
-                    <button data-id="clone" data-index="80" title="Clone" class="btn btn-success btn-light" type="button">
+                    <button data-command="clone" data-index="80" title="Clone" class="btn btn-success btn-light" type="button">
                         <span class="fa fa-copy"></span>
                     </button>
                     <% } if (d.createMultiple) { %>
-                    <button data-id="createMultiple" data-index="90" title="Create multiple" class="btn btn-success btn-light" type="button">
+                    <button data-command="createMultiple" data-index="90" title="Create multiple" class="btn btn-success btn-light" type="button">
                         <span class="glyphicon glyphicon-th"></span>
                     </button>
                     <% } if (typeof tools !== 'undefined') { %>
@@ -205,7 +207,7 @@ if (d.filter && !d.filter.url) {
             </div>
             <div class="list-loader overlay"><i class="fa fa-spinner fa-spin"></i></div>
         </div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>
 </div>

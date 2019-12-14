@@ -10,30 +10,48 @@ module.exports = class MetaSecurity extends Base {
     constructor (config) {
         super(config);
         this.rbac = this.controller.module.getRbac();
+        this.params = {
+            controller: this.controller,
+            user: this.controller.user
+        };
+    }
+
+    canReadAttr (attr) {
+        return this.attrAccess.canRead(attr.name)
+            && (!attr.relation || this.relationAccessMap[attr.name].canRead());
     }
 
     getForbiddenAttrs (action) {
         return this.attrAccess.forbiddenAttrMap[action];
     }
 
-    getAccess (data, params) {
-        return this.rbac.getAccess(this.controller.user.assignments, data, params);
+    resolveAccess (data, params) {
+        params = params ? this.params : {...this.params, ...params};
+        return this.rbac.resolveAccess(this.controller.user.assignments, data, params);
     }
 
-    getAccessOnDelete (model) {
-        return this.getAccess({
+    resolveAccessOnDelete (model) {
+        return this.resolveAccess({
             targetType: Rbac.TARGET_OBJECT,
             target: model,
             actions: [Rbac.DELETE]
         });
     }
 
-    resolveOnIndex (metaData) {
+    resolveOnTitle (model) {
+        return this.resolve({
+            targetType: Rbac.TARGET_OBJECT,
+            target: model,
+            actions: [Rbac.READ]
+        });
+    }
+
+    resolveOnIndex (data) {
         return this.resolve({
             targetType: Rbac.TARGET_NAV_NODE,
-            target: metaData.node,
-            targetClass: metaData.class,
-            targetView: metaData.view,
+            target: data.node,
+            targetClass: data.class,
+            targetView: data.view,
             actions: [Rbac.READ, Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]
         });
     }
@@ -46,17 +64,32 @@ module.exports = class MetaSecurity extends Base {
         });
     }
 
-    resolveOnList (view, params) {
-        return this.resolve({
+    async resolveOnList (view, params) {
+        const actions = [Rbac.READ];
+        const allowed = await this.resolve({
             targetType: Rbac.TARGET_VIEW,
             target: view,
-            actions: [Rbac.READ],
+            actions,
             ...params
         });
+        if (allowed) {
+            await this.resolveAttrs({
+                targetType: Rbac.TARGET_VIEW,
+                target: view,
+                actions
+            });
+            await this.resolveRelations(view, actions);
+        }
+        return allowed;
     }
 
-    resolveOnRead (model) {
-        return this.resolve({
+    async resolveOnRead (model) {
+        await this.resolve({
+            targetType: Rbac.TARGET_OBJECT,
+            target: model,
+            actions: [Rbac.READ]
+        });
+        return this.resolveAttrs({
             targetType: Rbac.TARGET_OBJECT,
             target: model,
             actions: [Rbac.READ]
@@ -69,7 +102,7 @@ module.exports = class MetaSecurity extends Base {
             target: view,
             actions: [Rbac.CREATE]
         });
-        await this.resolveAttrs({
+        return this.resolveAttrs({
             targetType: Rbac.TARGET_VIEW,
             target: view,
             actions: [Rbac.READ, Rbac.CREATE]
@@ -82,7 +115,7 @@ module.exports = class MetaSecurity extends Base {
             target: model,
             actions: [Rbac.READ, Rbac.UPDATE, Rbac.DELETE]
         });
-        await this.resolveAttrs({
+        return this.resolveAttrs({
             targetType: Rbac.TARGET_OBJECT,
             target: model,
             actions: [Rbac.READ, Rbac.UPDATE]
@@ -106,46 +139,57 @@ module.exports = class MetaSecurity extends Base {
     }
 
     async resolve (data) {
-        this.access = await this.getAccess(data);
-        this.noAccessMessage = this.controller.format(null, 'noAccess');
-        if (!this.access.can(data.actions[0])) {
-            throw new Forbidden;
+        this.access = await this.resolveAccess(data);
+        if (this.access.can(data.actions[0])) {
+            return true;
+        }
+        if (!data.skipAccessException) {
+            throw new Forbidden('Access denied', `${data.targetType}: ${data.target}`);
         }
     }
 
     resolveTransitions (data, params) {
-        return this.rbac.getTransitionAccess(this.controller.user.assignments, data, params);
+        return this.rbac.resolveTransitionAccess(this.controller.user.assignments, data, params);
     }
 
     async resolveAttrs (data, params) {
-        this.attrAccess = await this.rbac.getAttrAccess(this.controller.user.assignments, data, params);
+        this.attrAccess = await this.rbac.resolveAttrAccess(this.controller.user.assignments, data, params);
     }
 
-    async resolveRelations (view) {
+    async resolveRelations (view, actions = [Rbac.READ, Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]) {
         const data = {
             targetType: Rbac.TARGET_CLASS,
-            actions: [Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]
+            actions
         };
-        this.relAccess = {};
+        const assignments = this.controller.user.assignments;
+        this.relationAccessMap = {};
         for (const attr of view.relationAttrs) {
-            data.target = attr.rel.refClass;
-            this.relAccess[attr.name] = await this.rbac.getAccess(this.controller.user.assignments, data, null);
+            data.target = attr.relation.refClass;
+            this.relationAccessMap[attr.name] = await this.rbac.resolveAccess(assignments, data, null);
         }
     }
 
-    async resolveListForbiddenAttrs (models, view) {
-        await this.resolveAttrs({
-            targetType: Rbac.TARGET_VIEW,
-            target: view,
-            actions: [Rbac.READ]
-        });
-        if (!this.attrAccess.hasAnyObjectTargetData(view.class.name)) {
-            return false;
+    async resolveReadForbiddenAttrs (models, view) {
+        if (this.attrAccess.hasAnyObjectTargetData(view.class.name)) {
+            for (const model of models) {
+                if (!model.hasOwnProperty('readForbiddenAttrs')) {
+                    const data = await this.attrAccess.resolveObjectTarget(model);
+                    model.readForbiddenAttrs = data ? data[Rbac.READ] : false;
+                }
+            }
         }
-        for (const model of models) {
-            const data = await this.attrAccess.resolveObjectTarget(model);
-            model.readForbiddenAttrs = data && data[Rbac.READ];
+    }
+
+    getReadForbiddenAttrMap () {
+        return this.attrAccess.forbiddenAttrMap[Rbac.READ];
+    }
+
+    getReadForbiddenRelationMap (view) {
+        const result = {};
+        for (const {name} of view.relationAttrs) {
+            result[name] = !this.relationAccessMap[name].canRead();
         }
+        return result;
     }
 
     filterForbiddenAttrs (action, model) {

@@ -7,6 +7,10 @@ const Base = require('areto/base/Module');
 
 module.exports = class BaseModule extends Base {
 
+    getFileStorage () {
+        return this.getClass('model/RawFile').getStorage(this);
+    }
+
     getTitle () {
         return this.label || super.getTitle();
     }

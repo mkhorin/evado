@@ -1,7 +1,7 @@
 <!-- _part/attr/text -->
 <% 
 const p = {
-    rows: typeof rows === 'undefined' ? 2 : rows
+    rows: typeof rows === 'undefined' ? 3 : rows
 }; 
 %>
 <%- include('_params', {p}) %>
@@ -12,9 +12,9 @@ const p = {
     <label for="<%- p.id %>" class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <textarea id="<%- p.id %>" name="<%- p.name %>" class="form-control"
+        <textarea id="<%- p.id %>" name="<%- p.name %>" class="form-control" <%- p.required %>
                   rows="<%- p.rows %>"><%= p.value %></textarea>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>
 </div>

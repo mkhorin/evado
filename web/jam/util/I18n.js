@@ -72,9 +72,9 @@ Jam.I18n = class I18n {
     }
 
     getMessage (category, message) {
-        const map = category ? this._data[category] : this._data.defaults;
-        if (map && map.hasOwnProperty(message)) {
-            return map[message];
+        const data = category ? this._data[category] : this._data.defaults;
+        if (data && data.hasOwnProperty(message)) {
+            return data[message];
         }
         if (category) {
             const index = category.lastIndexOf('.');

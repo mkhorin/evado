@@ -1,0 +1,74 @@
+<!-- _layout/modal/modelForm -->
+<%
+const p = {
+    jam: 'Model',
+    url: _controller.getOriginalUrl(),
+    id: model.getId() || '',
+    key: model.PK,
+    className: model.NAME,
+    timestamp: _controller.timestamp,
+    remove: _url('remove'),
+    behaviors: block('behaviors').get()
+};
+if (typeof params !== 'undefined') {
+    Object.assign(p, params);
+}
+%>
+<div class="jmodal-scroll-container box-info box"
+     data-title="<%= blocks.title %>"
+     data-tab="<%= blocks.tab %>"
+     data-t-tab="<%- blocks.tabTranslation %>"
+     data-t-title="<%- blocks.titleTranslation %>">
+
+    <div class="box-header with-border scroll-header">
+        <div class="model-commands">
+            <button data-command="saveClose" class="btn btn-primary" type="button" title="Save and close">
+                <span class="glyphicon glyphicon-off"></span>
+            </button>
+            <button data-command="save" class="btn btn-info mr15" type="button" title="Save">
+                <span class="glyphicon glyphicon-save"></span>
+            </button>
+
+            <button data-command="reload" class="btn-warning btn-light btn mr15" type="button" title="Reload form">
+                <span class="fa fa-redo-alt"></span>
+            </button>
+
+            <% if (p.id) { %>
+                <button data-command="copyId" class="btn btn-white" type="button" title="Copy ID">ID</button>
+                <% if (p.clone) { %>
+                <button data-command="clone" class="btn btn-success btn-light" type="button" title="Clone">
+                    <span class="fa fa-copy"></span>
+                </button>
+            <% }} %>
+
+            <%- include(_view.get('_part/tool/modelHistory')) %>
+
+            <% if (blocks.commands) { %>
+            <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
+            <% } %>
+
+            <% if (p.help) { %>
+            <span class="model-help fa fa-question-circle" title="<%= p.help %>"></span>
+            <% } %>
+
+            <div class="pull-right">
+                <% if (p.id && p.remove) { %>
+                <button data-command="remove" class="btn btn-white" type="button" title="Delete">
+                    <span class="glyphicon glyphicon-trash text-danger"></span>
+                </button>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-body box-body">
+        <form class="model form-horizontal form" autocomplete="off" enctype="multipart/form-data"
+              data-jam="<%- p.jam %>"
+              data-params="<%= JSON.stringify(p) %>">
+            <%- body %>
+        </form>
+    </div>
+
+    <div class="model-loader overlay">
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+</div>

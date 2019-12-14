@@ -40,14 +40,14 @@ module.exports = class MetaInspector extends Base {
     }
 
     async execute () {
-        const metaData = [];
+        const items = [];
         for (const role of this.assignments) {
             if (Object.prototype.hasOwnProperty.call(this.rbac.metaMap, role)) {
-                metaData.push(this.rbac.metaMap[role]);
+                items.push(this.rbac.metaMap[role]);
             }
         }
         this.access = {};
-        if (!metaData.length) {
+        if (!items.length) {
             return this;
         }
         this._targets = [[this.checkAllTarget]];
@@ -57,10 +57,10 @@ module.exports = class MetaInspector extends Base {
             case Rbac.TARGET_CLASS: this.addClassTargets(); break;
             case Rbac.TARGET_OBJECT: this.addObjectTargets(); break;
         }
-        for (const data of metaData) {
+        for (const item of items) {
             for (const action of this.actions) {
                 if (this.access[action] !== true) {
-                    this.access[action] = await this.resolveActionAccess(action, data);
+                    this.access[action] = await this.resolveActionAccess(action, item);
                 }
             }
         }
@@ -136,13 +136,13 @@ module.exports = class MetaInspector extends Base {
         return data && data[item.id] ? this.checkItems(data[item.id]) : false;
     }
 
-    checkClassTarget (cls, data) {
-        data = data[Rbac.TARGET_CLASS] && data[Rbac.TARGET_CLASS][cls.getMetaId()];
+    checkClassTarget (metaClass, data) {
+        data = data[Rbac.TARGET_CLASS] && data[Rbac.TARGET_CLASS][metaClass.id];
         return data ? this.checkItems(data) : false;
     }
 
     checkViewTarget (view, data) {
-        data = data[Rbac.TARGET_VIEW] && data[Rbac.TARGET_VIEW][view.getMetaId()];
+        data = data[Rbac.TARGET_VIEW] && data[Rbac.TARGET_VIEW][view.id];
         return data ? this.checkItems(data) : false;
     }
 
@@ -224,20 +224,21 @@ module.exports = class MetaInspector extends Base {
         }
     }
 
-    // FILTER OBJECTS
+    // OBJECT FILTER
 
-    async filterObjects (query) {
+    async assignObjectFilter (query) {
         if (Object.values(this.rbac.metaObjectFilterMap).length) {
             this._objectConditions = [];
             this._metaObjectRuleCache = {};
-            if (!await this.filterObjectAssignments() && this._objectConditions.length) {
-                query.and(['OR', ...this._objectConditions]);
+            if (!await this.resolveObjectFilterAssignments() && this._objectConditions.length) {
+                this._objectConditions.unshift('NOR');
+                query.and(this._objectConditions);
             }
-            await PromiseHelper.setImmediate();
+            return PromiseHelper.setImmediate();
         }
     }
 
-    async filterObjectAssignments () {
+    async resolveObjectFilterAssignments () {
         for (const role of this.assignments) {
             const data = this.rbac.metaObjectFilterMap[role];
             if (!data) {
@@ -247,43 +248,47 @@ module.exports = class MetaInspector extends Base {
             if (!filter) {
                 return true; // no filter to role
             }
-            if (await this.filterRoleObjects(filter)) {
+            if (await this.resolveRoleObjectFilter(filter)) {
                 return true;
             }
         }
     }
 
-    filterRoleObjects ({rules, condition}) {
-        const roleConditions = Array.isArray(rules) ? this.getRuleFilterConditions(rules) : [];
+    async resolveRoleObjectFilter ({rules, condition}) {
+        const roleConditions = Array.isArray(rules) ? await this.getRuleObjectFilters(rules) : [];
         if (condition) {
             roleConditions.push(condition);
         }
         if (!roleConditions.length) {
             return true; // no filter to role
         }
-        roleConditions.unshift('NOR');
+        roleConditions.unshift('AND');
         this._objectConditions.push(roleConditions);
         return PromiseHelper.setImmediate();
     }
 
-    async getRuleFilterConditions (rules) {
+    async getRuleObjectFilters (rules) {
         const conditions = [];
+        const cache = this._metaObjectRuleCache;
         for (const config of rules) {
-            if (Object.prototype.hasOwnProperty.call(this._metaObjectRuleCache, config.name)) {
-                if (this._metaObjectRuleCache[config.name]) {
-                    conditions.push(this._metaObjectRuleCache[config.name]);
-                }
-            } else {
-                const rule = new config.Class(config);
-                rule.params = config.params ? {...config.params, ...this.params} : this.params;
-                const data = await rule.getObjectCondition();
-                if (data) {
-                    conditions.push(data);
-                }
-                this._metaObjectRuleCache[config.name] = data;
+            const condition = Object.prototype.hasOwnProperty.call(cache, config.name)
+                ? cache[config.name]
+                : await this.getRuleObjectFilter(config);
+            if (condition) {
+                conditions.push(condition);
             }
+            cache[config.name] = condition;
         }
         return conditions;
+    }
+
+    getRuleObjectFilter (config) {
+        const rule = new config.Class({
+            ...config,
+            params: config.params ? {...config.params, ...this.params} : this.params,
+            inspector: this
+        });
+        return rule.getObjectFilter();
     }
 };
 

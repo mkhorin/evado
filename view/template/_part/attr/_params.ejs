@@ -14,7 +14,7 @@
     p.labelCss = typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss;
     p.valueCss = typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss;
     p.translate = typeof translate === 'undefined' ? '' : translate;
-    p.handler = typeof handler === 'undefined' ? p.handler || '' : JSON.stringify(handler);
+    p.handler = typeof handler === 'undefined' ? p.handler || '' : handler;
 
     p.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
     if (p.sourceValue === undefined && typeof defaultValue !== 'undefined') {

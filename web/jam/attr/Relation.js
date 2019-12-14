@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelAttrRelation = class ModelAttrRelation extends Jam.ModelAttr {
+Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
 
     activate () {
         if (!this.canActivate()) {
@@ -61,17 +61,17 @@ Jam.AttrList = class AttrList extends Jam.List {
         this.attr.$value.val(value).change();
     }
 
-    getControlMethod (id) {
-        switch (id) {
+    getCommandMethod (name) {
+        switch (name) {
             case 'link': return this.onLink;
             case 'unlink': return this.onUnlink;
         }
-        return super.getControlMethod(id);
+        return super.getCommandMethod(name);
     }
 
-    beforeControl () {
-        super.beforeControl();
-        this.model.beforeControl();
+    beforeCommand () {
+        super.beforeCommand();
+        this.model.beforeCommand();
     }
 
     onAfterCloseModal (event, data) {
@@ -207,21 +207,21 @@ Jam.AttrListChanges = class AttrListChanges {
     }
 
     linkMultiple (ids) {
-        this.data.links = this.data.links.concat(Jam.ArrayHelper.diff(ids, this.data.links));
-        this.data.unlinks = Jam.ArrayHelper.diff(this.data.unlinks, ids);
-        this.data.removes = Jam.ArrayHelper.diff(this.data.removes, ids);
+        this.data.links = this.data.links.concat(Jam.ArrayHelper.exclude(this.data.links, ids));
+        this.data.unlinks = Jam.ArrayHelper.exclude(ids, this.data.unlinks);
+        this.data.removes = Jam.ArrayHelper.exclude(ids, this.data.removes);
     }
 
     unlinkObjects (ids) {
-        this.data.links = Jam.ArrayHelper.diff(this.data.links, ids);
-        this.data.unlinks = this.data.unlinks.concat(Jam.ArrayHelper.diff(ids, this.data.unlinks));
-        this.data.removes = Jam.ArrayHelper.diff(this.data.removes, ids);
+        this.data.links = Jam.ArrayHelper.exclude(ids, this.data.links);
+        this.data.unlinks = this.data.unlinks.concat(Jam.ArrayHelper.exclude(this.data.unlinks, ids));
+        this.data.removes = Jam.ArrayHelper.exclude(ids, this.data.removes);
     }
 
     removeObjects (ids) {
-        this.data.links = Jam.ArrayHelper.diff(this.data.links, ids);
-        this.data.unlinks = Jam.ArrayHelper.diff(this.data.unlinks, ids);
-        this.data.removes = this.data.removes.concat(Jam.ArrayHelper.diff(ids, this.data.removes));
+        this.data.links = Jam.ArrayHelper.exclude(ids, this.data.links);
+        this.data.unlinks = Jam.ArrayHelper.exclude(ids, this.data.unlinks);
+        this.data.removes = this.data.removes.concat(Jam.ArrayHelper.exclude(this.data.removes, ids));
     }
 
     revert (ids) {

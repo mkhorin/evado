@@ -66,10 +66,10 @@ if (data.jam === undefined) {
     <div class="box-header with-border scroll-header">
 
         <% if (typeof title !== 'undefined' && title) { %>
-            <h4 class="box-title"><%= title %></h4>
+            <h4 class="box-title"><%- title %></h4>
         <% } %>
 
-        <%- include(_view.get('_part/list/controls')) %>
+        <%- include(_view.get('_part/list/commands')) %>
     </div>
 
     <div class="scroll-body box-body">

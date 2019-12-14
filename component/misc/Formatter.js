@@ -14,24 +14,30 @@ module.exports = class Formatter extends Base {
         });
     }
 
-    asDownload (value, params = {}) {
-        return `<a href="${value}" class="download-link" target="_blank">${params.text || value}</a>`;
+    asDownload (value, {text} = {}) {
+        return `<a href="${value}" class="download-link" target="_blank">${text || value}</a>`;
     }
 
-    asInherited (value) {
-        return `<span class="inherited-value" title="Inherited value">${this.format(value)}</span>`
+    asInherited (value, {translate} = {}) {
+        translate = typeof translate === 'string' ? `data-t="${translate}"` : '';
+        return `<span class="inherited-value" ${translate} title="Inherited value">${this.format(value)}</span>`
     }
 
-    asModalLink (value, params = {}) {
-        return `<a href="${value}" class="modal-link">${params.text || value}</a>`;
+    asModalLink (value, {text} = {}) {
+        return `<a href="${value}" class="modal-link">${text || value}</a>`;
     }
 
-    asNoAccess (value, params = {}) {
-        return this.translate(this.noAccessFormat, I18n.APP_SOURCE, params.language);
+    asNoAccess (value, {language} = {}) {
+        return this.translate(this.noAccessFormat, I18n.APP_SOURCE, language);
     }
 
-    asPreview (value, params = {}) {
-        return `<a href="${params.download}" class="download-link" target="_blank"><img src="${value}" alt="${params.text}"></a>`;
+    asPreview (value, {text} = {}) {
+        return `<img src="${value}" title="${text}" alt="${text}" loading="lazy">`;
+    }
+
+    asPreviewDownload (value, {download, text} = {}) {
+        value = `<img src="${value}" alt="${text}" loading="lazy">`;
+        return `<a href="${download}" class="download-link" title="${text}" target="_blank">${value}</a>`;
     }
 
     asTranslatable (value, category = '') {

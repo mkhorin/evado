@@ -1,0 +1,58 @@
+<%
+const success = _controller.getFlash('success').join();
+const title = _t('Sign in');
+
+layout(_view.get('_layout/auth'));
+block('title', title);
+%>
+
+<% if (success) { %>
+<div class="alert alert-success"><%- success %></div>
+<% } %>
+
+<p class="login-box-msg">
+    <%- _t('Sign in to start your session') %>
+</p>
+
+<form method="post" class="form">
+
+    <%- include('./_input', {
+        attr: 'email',
+        type: 'email',
+        iconClass: 'glyphicon glyphicon-envelope',
+        autocomplete: 'on'
+    }) %>
+
+    <%- include('./_input', {
+        attr: 'password',
+        type: 'password',
+        iconClass: 'glyphicon glyphicon-lock',
+        value: ''
+    }) %>
+
+    <% if (model.isCaptchaRequired()) { %>
+    <%- include('./_captcha', {
+        attr: 'captchaCode',
+        iconClass: 'glyphicon glyphicon-check',
+        url: 'auth/captcha'
+    }) %>
+    <% } %>
+
+    <% if (_controller.user.auth.enableAutoLogin) { %>
+    <%- include('./_checkbox', {attr: 'rememberMe'}) %>
+    <% } %>
+
+    <div class="form-attr form-group mt20">
+        <button type="submit" class="btn btn-primary btn-block btn-flat">
+            <%- title %>
+        </button>
+    </div>
+</form>
+
+<div class="login-box-footer">
+<% if (_controller.canSignUp()) { %>
+    <a href="auth/sign-up" class="btn-link btn"><%- _t('Sign up') %></a>
+<% } if (_controller.canResetPassword()) { %>
+    <a href="auth/request-reset" class="btn-link btn"><%- _t('Forgot password') %></a>
+<% } %>
+</div>

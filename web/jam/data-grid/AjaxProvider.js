@@ -77,7 +77,7 @@ Jam.DataGridAjaxProvider = class DataGridAjaxProvider {
     }
 };
 
-Jam.TreeDataGridAjaxProvider = class TreeDataGridAjaxProvider extends Jam.DataGridAjaxProvider {
+Jam.TreeGridAjaxProvider = class TreeGridAjaxProvider extends Jam.DataGridAjaxProvider {
 
     load ({node}) {
         this.node = node;

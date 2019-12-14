@@ -10,7 +10,7 @@ module.exports = class CrudController extends Base {
     static getConstants () {
         return {
             ACTIONS: {
-                'sort-rel': require('../action/SortRelationAction'),
+                'sort-related': require('../action/SortRelatedAction'),
             },
             METHODS: {
                 'select': 'GET',
@@ -55,7 +55,7 @@ module.exports = class CrudController extends Base {
         };
         return this.render(params.template, {
             model: await this.getModel(params),
-            _layout: this.isAjax() ? '_layout/modal/model-view' : '_layout/empty',
+            _layout: this.isAjax() ? '_layout/modal/modelView' : '_layout/empty',
             ...params.templateData
         });
     }
@@ -164,8 +164,7 @@ module.exports = class CrudController extends Base {
 
     actionList (query, params) {
         query = query || this.createModel().find();
-        return this.sendDataGridList(query, {
-            formatRules: [[['createdAt', 'updatedAt'], 'timestamp']],
+        return this.sendGridList(query, {
             viewModel: 'list',
             ...params
         });
@@ -175,47 +174,43 @@ module.exports = class CrudController extends Base {
         return this.sendSelectList(this.createModel().find(), params);
     }
 
-    async actionListRel (params) {
+    async actionListRelated (params) {
         params = {
             pid: this.getQueryParam('pid'),
-            rel: this.getQueryParam('rel'),
+            relation: this.getQueryParam('rel'),
             viewModel: this.getQueryParam('rel'),
-            formatRules: [[['createdAt', 'updatedAt'], 'timestamp']],
             with: null,
             ...params
         };
-        let rel = null;
-        if (params.pid) {
-            const model = await this.getModel({id: params.pid});
-            rel = model.getRelation(params.rel).with(params.with);
-        } else { // new model            
-            rel = this.createModel().getRelation(params.rel).model.find(['FALSE']);
+        const model = params.pid
+            ? await this.getModel({id: params.pid})
+            : this.createModel();
+        const query = model.getRelation(params.relation);
+        if (!query) {
+            throw new BadRequest('Relation not found');
         }
-        if (!rel) {
-            throw new NotFound;
-        }
-        return this.sendDataGridList(rel, params);
+        params.pid ? query.with(params.with) : query.where(['FALSE']);
+        return this.sendGridList(query, params);
     }
 
-    actionListRelSelect (params) {
+    actionListRelatedSelect (params) {
         params = {
             pid: this.getQueryParam('pid'),
-            rel: this.getQueryParam('rel'),
+            relation: this.getQueryParam('rel'),
             ...params
         };
-        const model = this.createModel();
-        const rel = model.getRelation(params.rel).with(params.with);
-        if (rel) {
-            return this.sendSelectList(rel.model.find(), params);
+        const query = this.createModel().getRelation(params.relation);
+        if (!query) {
+            throw new BadRequest('Relation not found');
         }
-        throw new NotFound;
+        return this.sendSelectList(query.with(params.with), params);
     }
 
     // METHOD
 
     getViewLayout () {
         return this.isAjax()
-            ? '_layout/modal/model-form'
+            ? '_layout/modal/modelForm'
             : '_layout/empty';
     }
 

@@ -7,10 +7,21 @@ const Base = require('areto/base/Base');
 
 module.exports = class SecurityConsole extends Base {
 
+    getUserItems () {
+        return this.app.getConfig('users') || [];
+    }
+
+    findUserByParams () {
+        return this.spawnUser().findSame(this.params.name, this.params.email);
+    }
+
+    spawnUser (config) {
+        return this.spawn('model/User', config);
+    }
+
     async createUsers () {
         this.log('info', 'Create users...');
-        const items = this.app.getConfig('users') || [];
-        for (const data of items) {
+        for (const data of this.getUserItems()) {
             await this.createUser(data);
         }
         this.log('info', 'Users ready');
@@ -25,14 +36,6 @@ module.exports = class SecurityConsole extends Base {
         } catch (err) {
             this.log('error', err);
         }
-    }
-
-    findUserByParams () {
-        return this.spawnUser().findSame(this.params.name, this.params.email);
-    }
-
-    spawnUser (config) {
-        return this.spawn('model/User', config);
     }
 
     async createSecurity () {

@@ -1,5 +1,8 @@
 <!-- _part/list/sort -->
 <%
+block('tab', 'Sort');
+block('title', 'Sorting');
+
 if (!data.id) {
     data.id = data.list;
 }
@@ -43,28 +46,28 @@ if (data.jam === undefined) {
 %>
 <div class="jmodal-scroll-container box-grid box" data-title="<%= blocks.title %>">
     <div class="box-header with-border scroll-header">
-        <div class="list-controls clearfix">
+        <div class="list-commands clearfix">
 
-            <button data-id="saveClose" class="btn btn-primary mr20" type="button" title="Save and close">
+            <button data-command="saveClose" class="btn btn-primary mr20" type="button" title="Save and close">
                 <span class="glyphicon glyphicon-off"></span>
             </button>
 
             <div class="btn-group mr10">
-                <button data-id="up" class="btn btn-default" type="button">
+                <button data-command="up" class="btn btn-default" type="button">
                     <span class="glyphicon glyphicon-arrow-up"></span>
                 </button>
-                <button data-id="down" class="btn btn-default" type="button">
+                <button data-command="down" class="btn btn-default" type="button">
                     <span class="glyphicon glyphicon-arrow-down"></span>
                 </button>
             </div>
 
             <% if (data.update) { %>
-            <button data-id="update" class="btn btn-warning btn-light" type="button" title="Update">
+            <button data-command="update" class="btn btn-warning btn-light" type="button" title="Update">
                 <span class="glyphicon glyphicon-pencil"></span>
             </button>
             <% } %>
 
-            <button data-id="reload" class="btn btn-default ml10" type="button" title="Reload">
+            <button data-command="reload" class="btn btn-default ml10" type="button" title="Reload">
                 <span class="fa fa-redo-alt"></span>
             </button>
 

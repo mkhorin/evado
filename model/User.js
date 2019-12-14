@@ -24,7 +24,7 @@ module.exports = class User extends Base {
             INDEXES: [[{email: 1}, {unique: true}]],
             RULES: [
                 [['name', 'email'], 'required'],
-                ['name', 'regex', {pattern: /^[а-яa-z0-9\s-]+$/i}],
+                ['name', 'regex', {pattern: /^[a-z0-9а-я\s-]+$/i}],
                 ['email', 'email'],
                 [['blocked', 'verified', 'expiredPassword'], 'checkbox'],
                 ['unlockAt', 'date'],
@@ -75,16 +75,19 @@ module.exports = class User extends Base {
         return this.assignments;        
     }
 
-    toJSON () {
-        return this.getTitle();
-    }
-
     unlock () {
         return this.directUpdate({blocked: false});
     }
 
     verify () {
         return this.directUpdate({verified: true});
+    }
+
+    output () {
+        return {
+            _id: this.getId(),
+            _title: this.getTitle()
+        };
     }
 
     // EVENTS

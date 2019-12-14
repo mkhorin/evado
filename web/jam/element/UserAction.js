@@ -105,7 +105,7 @@ Jam.ModalUserAction = class ModalUserAction extends Jam.UserAction {
     }
 };
 
-Jam.PostUserAction = class extends Jam.UserAction {
+Jam.PostUserAction = class PostUserAction extends Jam.UserAction {
 
     execute () {
         Jam.ContentNotice.clear();

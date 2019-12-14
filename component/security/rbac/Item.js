@@ -62,149 +62,222 @@ module.exports = class Item extends Base {
             return result.assignmentRules = [];
         }
         result.assignmentRules = await this.store.findAssignmentRuleByName(data).column(this.store.key);
-        if (ids.length !== data.length) {
+        if (result.assignmentRules.length !== data.length) {
             throw new Error(`Assignment rule not found for item: ${this.name}`);
         }
     }
 
     async createMeta () {        
-        await this.validateMetaData();
-        const [roles, rule] = await this.prepareMetaData();
-        const items = await this.store.findMetaItem().and(this.getMetaCondition()).all();
+        await this.validateMeta();
+        this.skipExistingTargets();
+        if (!this.data.targets.length) {
+            return false;
+        }
+        const item = await this.store.findMetaItem().insert({
+            type: this.data.type,
+            actions: this.data.actions,
+            rule: this._meta.rule,
+            roles: this._meta.roles
+        });
+        const targets = [];
+        for (const target of this.data.targets) {
+            target.item = item;
+            targets.push(target);
+        }
+        return this.store.findMetaTarget().insert(targets);
+    }
+
+    // MATCHES
+
+    skipExistingTargets () {
+        const items = this.store.rbac.metaItems;
         for (const item of items) {
-            if (this.compareMeta(item)) {
-                return this.store.log('warn', this.getMetaDataError('Meta item already exists'));
+            if (this.checkItemMatch(item)) {
+                this.data.targets = this.filterTargets(item);
             }
         }
-        if (this.data.rule && !rule) {
-            throw new Error(this.getMetaDataError('Rule not found for meta item'));
-        }
-        const doc = {...this.data};
-        doc.roles = roles;
-        doc.rule = rule ? rule[this.store.key] : null;
-        return this.store.findMetaItem().insert(doc);
     }
 
-    getMetaCondition () {
-        const condition = {...this.data};
-        for (const key of Object.keys(condition)) {
-            condition[key] = condition[key] || '';
-        }
-        ObjectHelper.deleteProperties(['rule', 'actions', 'roles'], condition);
-        return condition;
+    checkItemMatch (item) {
+        return item.type === this.data.type
+            && this.isEqualActions(item.actions)
+            && this.isEqualRoles(item.roles)
+            && this.isEqualRule(item.rule);
     }
 
-    async prepareMetaData () {
-        this.data.actions = Array.isArray(this.data.actions) ? this.data.actions : [];
-        this.data.roles = Array.isArray(this.data.roles) ? this.data.roles : [];
-        this.data.rule = this.data.rule || null;
-        let roles = [], rule = null;
-        if (this.data.rule) {
-            rule = await this.store.findRuleByName(this.data.rule).one();
-            if (!rule) {
-                throw new Error(this.getMetaDataError('Meta item rule not found'));
+    isEqualActions (actions) {
+        return (actions.length === 4 && this.data.actions[0] === this.store.rbac.ALL)
+            || !ArrayHelper.hasDiff(actions, this.data.actions);
+    }
+
+    isEqualRoles (roles) {
+        return !ArrayHelper.hasDiff(roles, this.data.roles).length;
+    }
+
+    isEqualRule (rule) {
+        return rule ? rule.sourceName === this.data.rule : !this.data.rule;
+    }
+
+    filterTargets (item) {
+        const result = [];
+        for (const target of this.data.targets) {
+            if (this.isItemTarget(target, item)) {
+                this.store.log('warn', this.getMetaError(`Target already exists: ${JSON.stringify(target)}`));
+            } else {
+                result.push(target);
             }
         }
-        for (const name of this.data.roles) {
-            const role = await this.store.findRoleItem().and({name}).one();
-            if (!role) {
-                throw new Error(this.getMetaDataError(`Role not found: ${name}`));
-            }
-            roles.push(role[this.store.key]);
-        }
-        return [roles, rule];
+        return result;
+    }
+
+    isItemTarget (target, item) {
+        return item.targetType === target.type && item.key === this.store.getItemKey(target);
     }
 
     // VALIDATION
 
-    validateMetaData () {
-        const rbac = this.store.rbac;
-        if (!rbac.constructor.isMetaItemType(this.data.type)) {
-            throw new Error(this.getMetaDataError('Invalid meta item type'));
+    async validateMeta () {
+        if (!this.store.rbac.constructor.isMetaItemType(this.data.type)) {
+            throw new Error(this.getMetaError('Invalid type'));
         }
-        if (!rbac.constructor.isMetaItemTargetType(this.data.targetType)) {
-            throw new Error(this.getMetaDataError('Invalid meta item target type'));
+        this._meta = {};
+        await this.validateMetaActions();
+        await this.validateMetaRoles();
+        await this.validateMetaTargets();
+        await this.validateMetaRule();
+    }
+
+    validateMetaActions () {
+        if (!Array.isArray(this.data.actions)) {
+            throw new Error(this.getMetaError('Actions must be array'));
         }
-        this.validation = {};
-        this.validationError = null;
-        switch (this.data.targetType) {
-            case rbac.TARGET_CLASS: this.validateMetaClass(); break;
-            case rbac.TARGET_VIEW: this.validateMetaView(); break;
-            case rbac.TARGET_STATE: this.validateMetaState(); break;
-            case rbac.TARGET_OBJECT: this.validateMetaObject(); break;
-            case rbac.TARGET_TRANSITION: this.validateMetaTransition(); break;
-            case rbac.TARGET_ATTR: this.validateMetaAttr(); break;
-            case rbac.TARGET_NAV_SECTION: this.validateMetaNavSection(); break;
-            case rbac.TARGET_NAV_NODE: this.validateMetaNavNode(); break;
-        }
-        if (this.validationError) {
-            throw new Error(this.getMetaDataError(this.validationError));
+        for (const action of this.data.actions) {
+            if (!this.store.rbac.constructor.isMetaItemAction(action)) {
+                throw new Error(this.getMetaError(`Invalid meta action: ${action}`));
+            }
         }
     }
 
-    validateMetaClass () {
-        this.validation.class = this.getDocMeta().getClass(this.data.class);
-        if (this.validation.class) {
+    async validateMetaRoles () {
+        const roles = this.data.roles;
+        if (!Array.isArray(roles)) {
+            throw new Error(this.getMetaError('Roles must be array'));
+        }
+        this._meta.roles = [];
+        if (!roles.length) {
+            return false;
+        }
+        const roleMap = await this.store.findRoleItem().and({name: roles}).index('name').all();
+        for (const name of roles) {
+            if (!roleMap.hasOwnProperty(name)) {
+                throw new Error(this.getMetaError(`Role not found: ${name}`));
+            }
+            this._meta.roles.push(roleMap[name][this.store.key]);
+        }
+    }
+
+    async validateMetaRule () {
+        if (!this.data.rule) {
+            return this._meta.rule = null;
+        }
+        this._meta.rule = await this.store.findRuleByName(this.data.rule).scalar(this.store.key);
+        if (!this._meta.rule) {
+            throw new Error(this.getMetaError('Rule not found'));
+        }
+    }
+
+    validateMetaTargets () {
+        if (!Array.isArray(this.data.targets) || !this.data.targets.length) {
+            throw new Error(this.getMetaError('Targets must be array'));
+        }
+        for (const target of this.data.targets) {
+            this.validateMetaTarget(target);
+        }
+    }
+
+    validateMetaTarget (data) {
+        if (!data) {
+            throw new Error(this.getMetaError('Invalid target data'));
+        }
+        const rbac = this.store.rbac.constructor;
+        if (!rbac.isMetaTargetType(data.type)) {
+            throw new Error(this.getMetaError(`Invalid target type: ${data.type}`));
+        }
+        this._target = {};
+        this._targetError = null;
+        switch (data.type) {
+            case rbac.TARGET_CLASS: this.validateMetaClass(data); break;
+            case rbac.TARGET_VIEW: this.validateMetaView(data); break;
+            case rbac.TARGET_STATE: this.validateMetaState(data); break;
+            case rbac.TARGET_OBJECT: this.validateMetaObject(data); break;
+            case rbac.TARGET_TRANSITION: this.validateMetaTransition(data); break;
+            case rbac.TARGET_ATTR: this.validateMetaAttr(data); break;
+            case rbac.TARGET_NAV_SECTION: this.validateMetaNavSection(data); break;
+            case rbac.TARGET_NAV_NODE: this.validateMetaNavNode(data); break;
+        }
+        if (this._targetError) {
+            throw new Error(this.getMetaError(this._targetError));
+        }
+    }
+
+    validateMetaClass (data) {
+        this._target.class = this.getDocMeta().getClass(data.class);
+        if (this._target.class) {
             return true;
         }
-        this.validationError = 'Invalid meta item class';
+        this._targetError = 'Invalid class';
     }
 
-    validateMetaView () {
-        if (this.validateMetaClass()) {
-            this.validation.view = this.validation.class.getView(this.data.view);
-            if (this.validation.view) {
+    validateMetaView (data) {
+        if (this.validateMetaClass(data)) {
+            this._target.view = this._target.class.getView(data.view);
+            if (this._target.view) {
                 return true;
             }
-            this.validationError = 'Invalid meta item view';
+            this._targetError = 'Invalid view';
         }
     }
 
-    validateMetaState () {
-        if (this.validateMetaClass() && !this.validation.class.getState(this.data.state)) {
-            this.validationError = 'Invalid meta item state';
+    validateMetaState (data) {
+        if (this.validateMetaClass(data) && !this._target.class.getState(data.state)) {
+            this._targetError = 'Invalid state';
         }
     }
 
     validateMetaObject () {
     }
 
-    validateMetaTransition () {
-        if (this.validateMetaClass() && !this.validation.class.getTransition(this.data.transition)) {
-            this.validationError = 'Invalid meta item transition';
+    validateMetaTransition (data) {
+        if (this.validateMetaClass(data) && !this._target.class.getTransition(data.transition)) {
+            this._targetError = 'Invalid transition';
         }
     }
 
-    validateMetaAttr () {
-        if (this.data.view ? this.validateMetaView() : this.validateMetaClass()) {
-            if (!(this.validation.view || this.validation.class).getAttr(this.data.attr)) {
-                this.validationError = 'Invalid meta item attr';
+    validateMetaAttr (data) {
+        if (data.view ? this.validateMetaView(data) : this.validateMetaClass(data)) {
+            if (!(this._target.view || this._target.class).getAttr(data.attr)) {
+                this._targetError = 'Invalid attribute';
             }
         }
     }
 
-    validateMetaNavSection () {
-        this.validation.navSection = this.getNavMeta().getSection(this.data.navSection);
-        if (this.validation.navSection) {
+    validateMetaNavSection (data) {
+        this._target.navSection = this.getNavMeta().getSection(data.navSection);
+        if (this._target.navSection) {
             return true;
         }
-        this.validationError = 'Invalid meta item navigation section';
+        this._targetError = 'Invalid navigation section';
     }
 
-    validateMetaNavNode () {
-        if (this.validateMetaNavSection() && !this.validation.navSection.getNode(this.data.navNode)) {
-            this.validationError = 'Invalid meta item navigation node';
+    validateMetaNavNode (data) {
+        if (this.validateMetaNavSection(data) && !this._target.navSection.getNode(data.navNode)) {
+            this._targetError = 'Invalid navigation node';
         }
     }
 
-    getMetaDataError (message) {
-        return `RBAC: ${message}: ${JSON.stringify(this.data)}`;
-    }
-
-    compareMeta (item) {
-        return ArrayHelper.diff(item.actions, this.data.actions).length;
+    getMetaError (message) {
+        return `RBAC: Meta: ${message}: ${JSON.stringify(this.data)}`;
     }
 };
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
-const ObjectHelper = require('areto/helper/ObjectHelper');

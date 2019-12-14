@@ -31,14 +31,14 @@ if (typeof items !== 'undefined' && items) {
 } else if (p.value !== '') {
     content += `<option selected value="${p.value}">${p.displayValue}</option>`;
 }
-content = `<select name="${p.name}" ${p.disabled} class="form-control">${content}</select>`;
+content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-control">${content}</select>`;
 %>
 <div class="form-attr form-group<%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-select2="<%= p.select2 %>"
      data-masters="<%= p.masters %>"
      data-action-binder='<%= p.actionBinder %>'>
-    <label for="<%- p.id %>" data-t="<%- p.translate %>" title="<%= p.extHint %>"
+    <label data-t="<%- p.translate %>" title="<%= p.extHint %>"
            class="control-label <%- p.labelCss %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <% if (p.update) { %>
@@ -53,7 +53,7 @@ content = `<select name="${p.name}" ${p.disabled} class="form-control">${content
         <% } else { %>
         <%- content %>
         <% } %>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>
 </div>

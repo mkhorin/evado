@@ -4,12 +4,11 @@ const p = {handler: 'Json'};
 %>
 <%- include('_params', {p}) %>
 <%
-if (p.value) {
-    p.value = JSON.stringify(p.value, null, p.jsonSpace);
-    p.value = p.value.replace(/,/g, ', ').replace(/":/g, '": ');
+if (typeof p.value === 'string') {
+    //p.value = p.value.replace(/,/g, ', ').replace(/":/g, '": ');
 }
 %>
-<div class="<%- p.required %> <%- p.css %> form-attr form-group"
+<div class="form-attr form-group <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-action-binder='<%= p.actionBinder %>'>
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
@@ -23,8 +22,8 @@ if (p.value) {
                 </button>
             </span>
         </div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>
 
     <div class="json-editor modal" tabindex="-1" role="dialog">

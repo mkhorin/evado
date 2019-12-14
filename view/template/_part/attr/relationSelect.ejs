@@ -17,23 +17,23 @@ const d = {
 d.attr = attr;
 d.relName = d.relName || attr;
 
-const rel = model.getRelation(d.relName);
+const relation = model.getRelation(d.relName);
 const urlParams = {
     rel: d.relName,
     pid: model.getId()
 };
-d.multiple = rel.isMultiple();
+d.multiple = relation.isMultiple();
 if (d.list !== null) {
     if (d.list === undefined) {
-        d.list = ['list-rel-select', urlParams];
+        d.list = ['list-related-select', urlParams];
     } else if (typeof d.list === 'string') {
         d.list = [d.list, urlParams];
     }
     d.list = _url(d.list);
 }
-const relUrl = typeof relRoute === 'undefined' ? rel.model.getControllerClass().NAME : relRoute;
+const relUrl = typeof relRoute === 'undefined' ? relation.model.getControllerClass().NAME : relRoute;
 if (d.viewTitle !== null) {
-    d.viewTitle = _url(d.viewTitle === undefined ? `${relUrl}/view-title` : d.viewTitle);
+    d.viewTitle = _url(d.viewTitle === undefined ? `${relUrl}/title` : d.viewTitle);
 }
 if (d.create !== null) {
     if (d.create === undefined) {
@@ -66,7 +66,7 @@ if (d.link !== null) {
 }
 if (d.modalSort) {
     if (d.modalSort === true) {
-        d.modalSort = _url('sort-rel', urlParams);
+        d.modalSort = _url('sort-related', urlParams);
     } else if (Array.isArray(d.modalSort)) {
         d.modalSort = _url(d.modalSort);
     }
@@ -80,32 +80,32 @@ const related = model.rel(attr);
         <div class="box relation-select-box">
             <input name="<%- p.name %>" type="hidden">
             <div class="box-body">
-                <div class="list-controls">
+                <div class="list-commands">
                     <% if (d.unlink) { %>
-                    <button data-id="unlink" data-index="10" title="Unlink" class="btn btn-default mr10" type="button">
+                    <button data-command="unlink" data-index="10" title="Unlink" class="btn btn-default mr10" type="button">
                         <span class="fa fa-unlink text-danger"></span>
                     </button>
                     <% } if (d.create) { %>
-                    <button data-id="create" data-index="20" title="Create" class="btn btn-success btn-light" type="button">
+                    <button data-command="create" data-index="20" title="Create" class="btn btn-success btn-light" type="button">
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
                     <% } if (d.update) { %>
-                    <button data-id="update" data-index="30" title="Update" class="btn btn-warning btn-light" type="button">
+                    <button data-command="update" data-index="30" title="Update" class="btn btn-warning btn-light" type="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </button>
                     <% } if (d.remove) { %>
-                    <button data-id="remove" data-index="40" title="Delete" class="btn btn-white" type="button">
+                    <button data-command="remove" data-index="40" title="Delete" class="btn btn-white" type="button">
                         <span class="glyphicon glyphicon-trash text-danger"></span>
                     </button>
                     <% } if (d.modalSort) { %>
-                    <button data-id="sort" data-index="50" title="Sort" class="btn btn-white" type="button">
+                    <button data-command="sort" data-index="50" title="Sort" class="btn btn-white" type="button">
                         <span class="glyphicon glyphicon-sort"></span>
                     </button>
                     <% } if (typeof tools !== 'undefined') { %>
                     <%- include(_view.get('_part/misc/render'), {data: tools}) %>
                     <% } %>
                 </div>
-                <select id="<%- p.id %>" class="form-control" <% if (d.multiple) { %>multiple<% } %>
+                <select class="form-control" <% if (d.multiple) { %>multiple<% } %>
                         data-params="<%= JSON.stringify(d) %>">
                     <% if (Array.isArray(related)) {
                        for (const item of related) { %>
@@ -116,7 +116,7 @@ const related = model.rel(attr);
                 </select>
             </div>
         </div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>
 </div>

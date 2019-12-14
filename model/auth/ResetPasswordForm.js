@@ -19,7 +19,7 @@ module.exports = class ResetPasswordForm extends Base {
                 ['captchaCode', require('areto/security/captcha/CaptchaValidator')]                
             ],
             ATTR_LABELS: {
-                captchaCode: 'Verification code'
+                'captchaCode': 'Verification code'
             }
         };
     }
@@ -35,7 +35,7 @@ module.exports = class ResetPasswordForm extends Base {
             try {
                 await service.changePassword(this.get('newPassword'), user);
                 await verification.execute();
-                await this.user.log('reset-password', undefined, user);
+                await this.user.log('resetPassword', undefined, user);
                 return true;
             } catch (err) {
                 this.addError('newPassword', err);

@@ -17,7 +17,7 @@ module.exports = class UserPassword extends Base {
             ],
             INDEXES: [[{user: 1}, {unique: false}]],
             RULES: [
-                ['password', (attr, model)=> model.spawn('security/PasswordValidator').validateAttr(attr, model)]
+                ['password', 'validatePassword']
             ]
         };
     }
@@ -31,11 +31,16 @@ module.exports = class UserPassword extends Base {
     }
 
     isExpired (duration) {
-        return DateHelper.isExpired(this.get('createdAt'), duration);
+        const date = this.get('createdAt');
+        return date instanceof Date ? DateHelper.isExpired(date, duration) : true;
     }
 
     findByUser (id) {
         return this.find({user: id}).order({[this.PK]: -1});
+    }
+
+    validatePassword (attr) {
+        return this.spawn('security/PasswordValidator').validateAttr(attr, this);
     }
 
     check (password, hash) {
@@ -44,6 +49,11 @@ module.exports = class UserPassword extends Base {
 
     hash (password) {
         return SecurityHelper.hashPassword(password);
+    }
+
+    async beforeInsert () {
+        await super.beforeSave(insert);
+        this.set('createdAt', new Date);
     }
 
     async beforeSave (insert) {

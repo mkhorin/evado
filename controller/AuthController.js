@@ -44,11 +44,11 @@ module.exports = class AuthController extends Base {
             return this.blockByRateLimit(model.rateLimitModel);
         }
         if (this.isGet()) {
-            return this.render('sign-in', {model});
+            return this.render('signIn', {model});
         }
         model.captchaAction = this.createAction('captcha');
         if (!await model.load(this.getPostParams()).login()) {
-            return this.render('sign-in', {model});
+            return this.render('signIn', {model});
         }
         if (this.user.getIdentity().isVerified()) {
             return this.goBack();
@@ -65,11 +65,11 @@ module.exports = class AuthController extends Base {
     async actionSignUp () {
         const model = this.spawn('model/auth/SignUpForm', {user: this.user});
         if (this.isGet()) {
-            return this.render('sign-up', {model});
+            return this.render('signUp', {model});
         }
         model.captchaAction = this.createAction('captcha');
         if (!await model.load(this.getPostParams()).register()) {
-            return this.render('sign-up', {model});
+            return this.render('signUp', {model});
         }
         this.setFlash('info', `${this.translate('Verification key sent to')} ${model.get('email')}`);
         this.goHome();
@@ -78,11 +78,11 @@ module.exports = class AuthController extends Base {
     async actionChangePassword () {
         const model = this.spawn('model/auth/ChangePasswordForm', {user: this.user});
         if (this.isGet()) {
-            return this.render('change-password', {model});
+            return this.render('changePassword', {model});
         }
         model.captchaAction = this.createAction('captcha');
         if (!await model.load(this.getPostParams()).changePassword()) {
-            return this.render('change-password', {model});
+            return this.render('changePassword', {model});
         }
         this.setFlash('success', 'Password changed');
         this.reload();
@@ -91,11 +91,11 @@ module.exports = class AuthController extends Base {
     async actionRequestReset () {
         const model = this.spawn('model/auth/RequestResetForm', {user: this.user});
         if (this.isGet()) {
-            return this.render('request-reset', {model});
+            return this.render('requestReset', {model});
         }
         model.captchaAction = this.createAction('captcha');
         if (!await model.load(this.getPostParams()).request()) {
-            return this.render('request-reset', {model});
+            return this.render('requestReset', {model});
         }
         this.setFlash('success', `${this.translate('Reset key sent to')} ${model.get('email')}`);
         this.reload();
@@ -104,13 +104,13 @@ module.exports = class AuthController extends Base {
     async actionResetPassword () {
         const model = this.spawn('model/auth/ResetPasswordForm', {user: this.user});
         if (this.isGet()) {
-            return this.render('reset-password', {model});
+            return this.render('resetPassword', {model});
         }
         await model.load(this.getPostParams());
         model.set('key', this.getQueryParam('key'));
         model.captchaAction = this.createAction('captcha');
         if (!await model.resetPassword()) {
-            return this.render('reset-password', {model});
+            return this.render('resetPassword', {model});
         }
         this.setFlash('success', 'New password set');
         this.goLogin();
@@ -119,11 +119,11 @@ module.exports = class AuthController extends Base {
     async actionRequestVerification () {
         const model = this.spawn('model/auth/RequestVerificationForm', {user: this.user});
         if (this.isGet()) {
-            return this.render('request-verification', {model});
+            return this.render('requestVerification', {model});
         }
         model.captchaAction = this.createAction('captcha');
         if (!await model.load(this.getPostParams()).request()) {
-            return this.render('request-verification', {model});
+            return this.render('requestVerification', {model});
         }
         this.setFlash('success', `${this.translate('Verification key sent to')} ${model.get('email')}`);
         this.reload();

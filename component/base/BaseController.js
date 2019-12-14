@@ -20,11 +20,11 @@ module.exports = class BaseController extends Base {
 
     getLabelSelectItems (attrName, model) {
         const data = model.constructor.getAttrValueLabels(attrName);
-        return SelectHelper.getMapItems(this.translateMessageMap(data));
+        return SelectHelper.getMapItems(data);
     }
 
     getMapSelectItems (map) {
-        return SelectHelper.getMapItems(this.translateMessageMap(map));
+        return SelectHelper.getMapItems(map);
     }
 
     resolveFilterColumns (columns, model) {
@@ -39,6 +39,13 @@ module.exports = class BaseController extends Base {
                 this.resolveFilterColumns(column.columns, model.getRelation(column.name).model);
             }
         }
+    }
+
+    getSpawnConfig () {
+        return {
+            module: this.module,
+            user: this.user
+        };
     }
 
     // MODEL
@@ -65,7 +72,7 @@ module.exports = class BaseController extends Base {
         if (file) {
             try {
                 params.Class = this.module.require(file) || require(file);
-            } catch (err) {
+            } catch {
                 throw new NotFound(`Model class not found: ${file}`);
             }
         }
@@ -100,12 +107,22 @@ module.exports = class BaseController extends Base {
 
     // LIST
 
-    sendDataGridList (query, params) {
-        return this.spawn({Class: DataGrid, controller: this, query, params}).sendList();
+    sendGridList (query, params) {
+        return this.spawn({
+            Class: DataGrid,
+            controller: this,
+            query,
+            params
+        }).sendList();
     }
 
-    sendTreeDataGridList (query, params) {
-        return this.spawn({Class: TreeDataGrid, controller: this, query, params}).sendList();
+    sendTreeGridList (query, params) {
+        return this.spawn({
+            Class: TreeGrid,
+            controller: this,
+            query,
+            params
+        }).sendList();
     }
 
     async sendSelectList (query, params) {
@@ -124,5 +141,5 @@ const BadRequest = require('areto/error/BadRequestHttpException');
 const NotFound = require('areto/error/NotFoundHttpException');
 const SelectHelper = require('../helper/SelectHelper');
 const DataGrid = require('../misc/DataGrid');
-const TreeDataGrid = require('../misc/TreeDataGrid');
+const TreeGrid = require('../misc/TreeGrid');
 const Select2 = require('../misc/Select2');

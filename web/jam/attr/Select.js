@@ -3,13 +3,14 @@
  */
 'use strict';
 
-Jam.ModelAttrSelect = class ModelAttrSelect extends Jam.ModelAttr {
+Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
         this.select2 = this.$attr.data('select2');
         this.masters = this.$attr.data('masters');
-        this.findByData('action', 'update').click(this.onClickUpdate.bind(this));
+        this.$update = this.findByData('action', 'update');
+        this.$update.click(this.onUpdate.bind(this));
         this.cache = new Map;
     }
 
@@ -30,10 +31,15 @@ Jam.ModelAttrSelect = class ModelAttrSelect extends Jam.ModelAttr {
         this.$value.val(value).trigger('change.select2');
     }
 
-    onClickUpdate () {
-        if (this.hasValue()) {
-           Jam.Modal.load(this.childModal, $(event.currentTarget).data('url'), {id: this.getValue()});
+    onUpdate () {
+        if (!this.hasValue()) {
+           return false;
         }
+        const id = this.getValue();
+        const url = this.$update.data('url');
+        this.$update.data('blank')
+            ? Jam.UrlHelper.openNewPage(url + id)
+            : Jam.Modal.load(this.childModal, url, {id});
     }
 
     createDependencies () {
@@ -62,6 +68,9 @@ Jam.ModelAttrSelect = class ModelAttrSelect extends Jam.ModelAttr {
         };
         if (params.ajax) {
             params.ajax = this.getAjaxParams(params.ajax);
+        }
+        if (params.hasOwnProperty('translate')) {
+            params.placeholder = Jam.i18n.translate(params.placeholder, params.translate);
         }
         this.select2 = params;
         this.$value.select2(params);
@@ -92,8 +101,8 @@ Jam.ModelAttrSelect = class ModelAttrSelect extends Jam.ModelAttr {
     getMasterData () {
         const data = {};
         if (Array.isArray(this.masters)) {
-            for (const master of this.masters) {
-                data[master.param || master.name] = master.attr.getValue();
+            for (const {attr, name, param} of this.masters) {
+                data[param || name] = attr.getValue();
             }
         }
         return data;

@@ -9,6 +9,7 @@ module.exports = class ErrorAction extends Base {
 
     constructor (config) {
         super({
+            ajax: config.controller.isAjax(),
             serverErrorMessage: 'Something went wrong. We will work on fixing that right away',
             ...config
         })
@@ -24,7 +25,7 @@ module.exports = class ErrorAction extends Base {
         const status = err.status;
         controller.setHttpStatus(status);
         const message = err.isServerError() ? this.serverErrorMessage : err.message;
-        if (controller.isAjax()) {
+        if (this.ajax) {
             return this.sendText(message);
         }
         if (status === 403 && this.isAuthRedirect()) {

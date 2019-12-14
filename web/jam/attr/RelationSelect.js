@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelAttrRelationSelect = class ModelAttrRelationSelect extends Jam.ModelAttr {
+Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAttr {
 
     activate () {
         if (!this.canActivate()) {
@@ -28,7 +28,7 @@ Jam.ModelAttrRelationSelect = class ModelAttrRelationSelect extends Jam.ModelAtt
         };
         this.$container = this.$value.closest('.box');
         this.$content = this.$container.children('.box-body');
-        this.$controls = this.$content.children('.list-controls');
+        this.$commands = this.$content.children('.list-commands');
         this.notice = new Jam.Notice({container: $notice => this.$content.prepend($notice)});
         this.select2ChoiceClass = '.select2-selection__choice';
         this.$container.mouseenter(this.showMouseEnter.bind(this));
@@ -36,7 +36,7 @@ Jam.ModelAttrRelationSelect = class ModelAttrRelationSelect extends Jam.ModelAtt
         this.$container.on('click', this.select2ChoiceClass, this.onClickSelect2Choice.bind(this));
         this.$container.on('dblclick', this.select2ChoiceClass, this.onDoubleClickSelect2Choice.bind(this));
         this.$select.change(this.changeSelect.bind(this));
-        this.$controls.on('click', '[data-id]', this.onControl.bind(this));
+        this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
     }
 
     initChanges () {
@@ -78,17 +78,17 @@ Jam.ModelAttrRelationSelect = class ModelAttrRelationSelect extends Jam.ModelAtt
         });
     }
 
-    getControl (id) {
-        return this.$controls.find(`[data-id="${id}"]`);
+    getCommand (name) {
+        return this.$commands.find(`[data-command="${name}"]`);
     }
 
-    onControl (event) {
-        this.beforeControl(event);
-        this.getControlMethod(event.currentTarget.dataset.id).call(this, event);
+    onCommand (event) {
+        this.beforeCommand(event);
+        this.getCommandMethod(event.currentTarget.dataset.command).call(this, event);
     }
 
-    getControlMethod (id) {
-        switch (id) {
+    getCommandMethod (name) {
+        switch (name) {
             case 'unlink': return this.onUnlink;
             case 'view': return this.onView;
             case 'create': return this.onCreate;
@@ -98,9 +98,9 @@ Jam.ModelAttrRelationSelect = class ModelAttrRelationSelect extends Jam.ModelAtt
         }
     }
 
-    beforeControl () {
+    beforeCommand () {
         this.notice.hide();
-        this.model.beforeControl();
+        this.model.beforeCommand();
     }
 
     getQueryParams (data) {
@@ -154,7 +154,7 @@ Jam.ModelAttrRelationSelect = class ModelAttrRelationSelect extends Jam.ModelAtt
 
     onDoubleClickSelect2Choice (event) {
         $(event.currentTarget).addClass('active');
-        this.getControl('update').click();
+        this.getCommand('update').click();
     }
 
     hasChanges () {
@@ -294,7 +294,7 @@ Jam.ModelAttrRelationSelect = class ModelAttrRelationSelect extends Jam.ModelAtt
     }
 
     sortByIdList (ids) {
-        const map = Jam.ArrayHelper.flip(ids);
-        this.$select.children().sort((a, b)=> map[a.value] - map[b.value]).appendTo(this.$select);
+        const data = Jam.ArrayHelper.flip(ids);
+        this.$select.children().sort((a, b)=> data[a.value] - data[b.value]).appendTo(this.$select);
     }
 };

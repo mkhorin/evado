@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelAttrJson = class ModelAttrJson extends Jam.ModelAttr {
+Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
 
     init () {
         super.init();

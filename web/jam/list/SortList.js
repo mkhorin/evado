@@ -7,16 +7,21 @@ Jam.SortList = class SortList extends Jam.List {
 
     init () {
         super.init();
-
         this.saved = false;
         this.beforeCloseMethod = this.beforeClose.bind(this);
         this.modal.onClose(this.beforeCloseMethod);
-        // this.getControl('reload').hide();
-        this.getControl('up').click(this.up.bind(this));
-        this.getControl('down').click(this.down.bind(this));
-        this.getControl('saveClose').click(this.onSaveClose.bind(this));
-        this.getControl('cancel').click(this.cancel.bind(this));
+        //this.getCommand('reload').hide();
+        //this.getCommand('cancel').click(this.cancel.bind(this));
         //this.$tbody.on('mousewheel', this.onMouseWheel.bind(this));
+    }
+
+    getCommandMethod (name) {
+        switch (name) {
+            case 'down': return this.onDown;
+            case 'up': return this.onUp;
+            case 'saveClose': return this.onSaveClose;
+        }
+        return super.getCommandMethod(name);
     }
 
     afterDrawPage (event) {
@@ -55,17 +60,7 @@ Jam.SortList = class SortList extends Jam.List {
         event.data = {saved: this.saved};
     }
 
-    up () {
-        const $rows = this.getSelectedRows();
-        if ($rows && this.swapRows($rows.eq(0), $rows.eq(0).prev())) {
-            for (let i = 1; i < $rows.length; ++i) {
-                this.swapRows($rows.eq(i), $rows.eq(i).prev());
-            }
-        }
-        this.changed = this.getChangedOrder();
-    }
-
-    down () {
+    onDown () {
         const $rows = this.getSelectedRows();
         if ($rows && this.swapRows($rows.eq(-1).next(), $rows.eq(-1))) {
             for (let i = $rows.length - 2; i >= 0; --i) {
@@ -75,13 +70,23 @@ Jam.SortList = class SortList extends Jam.List {
         this.changed = this.getChangedOrder();
     }
 
+    onUp () {
+        const $rows = this.getSelectedRows();
+        if ($rows && this.swapRows($rows.eq(0), $rows.eq(0).prev())) {
+            for (let i = 1; i < $rows.length; ++i) {
+                this.swapRows($rows.eq(i), $rows.eq(i).prev());
+            }
+        }
+        this.changed = this.getChangedOrder();
+    }
+
     onMouseWheel (event) {
         if (this.findSelectedRows().length) {
             if (event.originalEvent.deltaY < 0) {
-                return this.up();
+                return this.onUp();
             }
             if (event.originalEvent.deltaY > 0) {
-                return this.down();
+                return this.onDown();
             }
         }
     }

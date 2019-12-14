@@ -46,7 +46,7 @@ module.exports = class MetaTransitionInspector extends Base {
         if (!this.transitions || !this.transitions.length || !this.rbac.metaTransitionMap) {
             return false;
         }
-        this.itemMap = this.filterMetaData(this.rbac.metaTransitionMap);
+        this.itemMap = this.filterMeta(this.rbac.metaTransitionMap);
         if (!this.itemMap) {
             return false;
         }
@@ -63,7 +63,7 @@ module.exports = class MetaTransitionInspector extends Base {
         }
     }
 
-    filterMetaData (data) {
+    filterMeta (data) {
         let result;
         for (const role of this.assignments) {
             if (!Object.prototype.hasOwnProperty.call(data, role)) {

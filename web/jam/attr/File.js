@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelAttrFile = class ModelAttrFile extends Jam.ModelAttr {
+Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
@@ -62,8 +62,8 @@ Jam.ModelAttrFile = class ModelAttrFile extends Jam.ModelAttr {
 
     onValidatedFile (event, data) {
         if (data.image) {
-            data.$item.addClass('thumb');
-            data.$item.find('.uploader-thumb').css('background-image', `url(${data.image.src})`);
+            data.$item.addClass('preview');
+            data.$item.find('.uploader-preview').css('background-image', `url(${data.image.src})`);
         }
     }
 
@@ -95,9 +95,8 @@ Jam.ModelAttrFile = class ModelAttrFile extends Jam.ModelAttr {
 
     onConfirmFileRemove (event, data) {
         const message = this.$uploader.data('removeConfirm');
-        if (message) {
-            Jam.dialog.confirmRemove(message).then(()=> data.remove());    
-        }
+        const deferred = message ? Jam.dialog.confirmRemove(message) : $.Deferred().resolve();
+        deferred.then(() => data.remove());
     }
 
     onRemoveFile (event, {info}) {
@@ -120,8 +119,8 @@ Jam.ModelAttrFile = class ModelAttrFile extends Jam.ModelAttr {
         data.$item.find(this.fileMessageSelector).html(data.file.message);
         const preview = this.uploader.options.preview;
         if (data.file.isImage && preview) {
-            data.$item.addClass('thumb');
-            data.$item.find('.uploader-thumb').css('background-image', `url(${preview}${data.file.id})`);
+            data.$item.addClass('preview');
+            data.$item.find('.uploader-preview').css('background-image', `url(${preview}${data.file.id})`);
         }
     }
 };

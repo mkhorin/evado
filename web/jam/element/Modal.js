@@ -87,7 +87,7 @@ Jam.Modal = class Modal extends Jam.Element {
         }
         $modal = $(this.template);
         this.$pool.append($modal);
-        $modal.on('click', '.jmodal-close', event => item.close());
+        $modal.on('click', '.jmodal-stack .close', event => item.close());
         $modal.click(event => {
             if (!$modal.hasClass('loading') && event.target === $modal.get(0)) {
                 item.close();
@@ -101,13 +101,14 @@ Jam.Modal = class Modal extends Jam.Element {
     }
 
     afterLoad (item) {
+        Jam.ContentNotice.clear();
         this.setActive(item);
         this.stackToggle.attach(item);
         for (const handler of this.handlers) {
             handler(item);
         }
         this.handlers = [];
-        this.stackToggle.$close.focus();
+        //this.stackToggle.$close.focus();
     }
 
     afterClose (item) {
@@ -130,7 +131,10 @@ Jam.Modal = class Modal extends Jam.Element {
     onModalLink (event) {
         event.preventDefault();
         const link = event.currentTarget;
-        Jam.modal.create().load(link.href || link.dataset.url);
+        const url = link.getAttribute('href') || link.dataset.url;
+        event.ctrlKey
+            ? Jam.UrlHelper.openNewPageModal(url)
+            : Jam.modal.create().load(url);
     }
 
     onKeyUp (event) {
@@ -230,19 +234,26 @@ Jam.ModalItem = class ModalItem {
             this.$body.empty().append(result);
             const $container = this.$body.children().first();
             Jam.i18n.translateContainer($container);
-
-            this.title = Jam.i18n.translate($container.data('title')) || '';
-            this.tabTitle = $container.data('tab');
-            this.tabTitle = this.tabTitle ? Jam.i18n.translate(this.tabTitle) : this.title;
-
-            const url = Jam.UrlHelper.getNewPageUrl($container.data('url') || this.getLoadUrl());
-            this.$title.html(`<a href="${url}" target="_blank">${this.title}</a>`);
-
+            this.createTitle($container);
+            this.createTabTitle($container);
             Jam.DateHelper.resolveClientDate(this.$body);
             Jam.createElements($container);
             this.resize();
             this.modal.afterLoad(this);
         });
+    }
+
+    createTitle ($container) {
+        this.title = Jam.i18n.translate($container.data('title'), $container.data('t-title')) || '';
+        const url = $container.data('url') || this.getLoadUrl();
+        this.$title.html(`<a href="${Jam.UrlHelper.getNewPageUrl(url)}" target="_blank">${this.title}</a>`);
+    }
+
+    createTabTitle ($container) {
+        this.tabTitle = $container.data('tab');
+        this.tabTitle = this.tabTitle
+            ? Jam.i18n.translate(this.tabTitle, $container.data('t-tab'))
+            : this.title;
     }
 
     onFail (xhr) {
@@ -344,7 +355,6 @@ Jam.ModalStackToggle = class ModalStackToggle {
         this.$root = this.$stack.find('.root');
         this.$pool = this.$stack.find('.jmodal-stack-pool');
         this.template = Jam.Helper.getTemplate('stack', modal.$container);
-        this.$close = this.$stack.children('.jmodal-close');
         this.init();
     }
 
@@ -386,19 +396,33 @@ Jam.ModalStackToggle = class ModalStackToggle {
         $children.filter('.active').removeClass('active');
         $children.filter((index, element)=> $(element).data('modal') === modal).addClass('active');
         modal.$modal.prepend(this.$stack);
-
         if (this.$stack.css('position') === 'fixed') {
-            const left = modal.$container.offset().left;
-            this.$stack.offset({left});
+            this.resolveMaxWidth(modal, $children);
+        }
+    }
 
-            const poolWidth = modal.$container.width() - this.$root.outerWidth();
-            this.$pool.width(poolWidth);
+    resolveMaxWidth (modal, $children) {
+        const left = modal.$container.offset().left;
+        this.$stack.offset({left});
 
-            const maxItemWidth = Math.round(poolWidth / $children.length);
-            $children.css('max-width', maxItemWidth);
+        const poolWidth = modal.$container.width() - this.$root.outerWidth();
+        this.$pool.width(poolWidth);
 
-            const reminder = poolWidth - maxItemWidth * $children.length;
-            $children.last().css('max-width', maxItemWidth + reminder);
+        //$children.css('width', 'auto'');
+        $children.outerWidth('auto');
+        let childWidth = 0;
+        for (const child of $children) {
+            childWidth += $(child).outerWidth();
+        }
+        const overflow = childWidth - poolWidth;
+        if (overflow <= 0) {
+            return;
+        }
+        for (const child of $children) {
+            const $child = $(child);
+            const width = $child.outerWidth();
+            const delta = width * overflow / childWidth;
+            $child.outerWidth(width - delta);
         }
     }
 };

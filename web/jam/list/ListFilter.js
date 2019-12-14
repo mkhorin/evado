@@ -53,10 +53,10 @@ Jam.ListFilter = class ListFilter {
         this.$content = this.$container.children('.filter-content');
         this.group = new Jam.ListFilterGroup(this, this.params.columns);
         this.$content.append(this.group.$container);
-        this.$controls = this.$container.children('.filter-controls');
-        this.$controls.find('.add').click(this.onAddCondition.bind(this));
-        this.$apply = this.$controls.find('.apply').click(this.onApply.bind(this));
-        this.$controls.find('.reset').click(this.onReset.bind(this));
+        this.$commands = this.$container.children('.filter-commands');
+        this.$commands.find('.add').click(this.onAddCondition.bind(this));
+        this.$apply = this.$commands.find('.apply').click(this.onApply.bind(this));
+        this.$commands.find('.reset').click(this.onReset.bind(this));
         this.onAddCondition();
         this.store = new Jam.ListFilterStore(this);
         this.events.trigger('afterBuild');
@@ -309,6 +309,10 @@ Jam.ListFilterType = class ListFilterType {
         this.append();
     }
 
+    getSelect2 () {
+        return this.getValueItem().data('select2');
+    }
+
     getValue () {
         return $.trim(this.getValueItem().val());
     }
@@ -476,6 +480,7 @@ Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
             minInputLength: 1,
             maxInputLength: 24,
             placeholder: '',
+            valueType: 'id',
             ...this.params
         };
         this.getValueItem().select2({
@@ -509,9 +514,8 @@ Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
 
     focus () {
         //super.focus();
-        const $value = this.getValueItem();
-        if ($value.data('select2')) {
-            $value.select2('open');
+        if (this.getSelect2()) {
+            this.getValueItem().select2('open');
         }
     }
 
@@ -555,7 +559,9 @@ Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
         } else {
             this.setValue(value).change();
         }
-        this.getValueItem().select2('close');
+        if (this.getSelect2()) {
+            this.getValueItem().select2('close');
+        }
     }
 
     changeAjaxValue (value, text) {

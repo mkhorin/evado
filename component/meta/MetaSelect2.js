@@ -9,7 +9,7 @@ module.exports = class MetaSelect2 extends Base {
 
     constructor (config) {
         super({
-            searchAttrs: config.metaData.view.selectSearchAttrs,
+            searchAttrs: config.query.view.selectSearchAttrs,
             ...config
         });
     }

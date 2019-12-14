@@ -1,0 +1,36 @@
+<!-- _part/list/commands -->
+
+<div class="list-commands clearfix">
+
+    <% if (data.multiple) { %>
+    <button data-command="selectAll" class="btn btn-white mr10" type="button" title="Select all">
+        <span class="glyphicon glyphicon-list"></span>
+    </button>
+    <% } if (data.create) { %>
+    <button data-command="create" class="btn btn-success btn-light" type="button" title="Create">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+    <% }  if (data.update) { %>
+    <button data-command="update" class="btn btn-warning btn-light" type="button" title="Update">
+        <span class="glyphicon glyphicon-pencil"></span>
+    </button>
+    <% } if (data.remove) { %>
+    <button data-command="remove" class="btn btn-white" type="button" title="Delete">
+        <span class="glyphicon glyphicon-trash text-danger"></span>
+    </button>
+    <% } %>
+    <button data-command="reload" class="btn btn-default ml10 mr10" type="button" title="Reload">
+        <span class="fa fa-redo-alt"></span>
+    </button>
+    <% if (data.createMultiple) { %>
+    <button data-command="createMultiple" class="btn btn-success btn-light ml10" type="button" title="Create multiple">
+        <span class="glyphicon glyphicon-th"></span>
+    </button>
+    <% } if (data.clone) { %>
+    <button data-command="clone" class="btn btn-success btn-light" type="button" title="Clone">
+        <span class="fa fa-copy"></span>
+    </button>
+    <% } if (typeof tools !== 'undefined') { %>
+    <%- include(_view.get('_part/misc/render'), {data: tools}) %>
+    <% } %>
+</div>

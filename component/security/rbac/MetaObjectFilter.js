@@ -13,7 +13,9 @@ module.exports = class MetaObjectFilter extends Base {
         let ids = [], objectClass;
         for (const item of this.items) {
             if (item.rule) {
-                this.appendRule(item);
+                if (item.rule.Class.prototype.getObjectFilter) {
+                    ObjectHelper.push(item.rule, 'rules', this);
+                }
             } else if (item.state) {
                 this.appendStateCondition(item);
             } else if (item.object) {
@@ -38,13 +40,6 @@ module.exports = class MetaObjectFilter extends Base {
         }
     }
 
-    appendRule (item) {
-        if (!(item.rule.Class.prototype.getObjectCondition)) {
-            return this.log('error', `getObjectCondition not found in rule: ${item.key}`);
-        }
-        ObjectHelper.push(item.rule, 'rules', this);
-    }
-
     appendStateCondition (item) {
         const itemClass = this.getClass(item);
         if (!itemClass) {
@@ -61,9 +56,9 @@ module.exports = class MetaObjectFilter extends Base {
         if (!this.rbac.docMeta) {
             return null;
         }
-        const cls = this.rbac.docMeta.getClass(item.class);
-        if (cls) {
-            return cls;
+        const metaClass = this.rbac.docMeta.getClass(item.class);
+        if (metaClass) {
+            return metaClass;
         }
         this.log('error', `Item class not found: ${item.key}`);
     }

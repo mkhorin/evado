@@ -3,11 +3,11 @@
  */
 'use strict';
 
-Jam.ModelAttrEnum = class ModelAttrEnum extends Jam.ModelAttr {
+Jam.EnumModelAttr = class ModelAttrEnum extends Jam.ModelAttr {
 
     init () {
         super.init();
-        this.sets = Jam.ModelAttrEnumSet.createSets(this.$attr.data('sets'), this);
+        this.sets = Jam.EnumSet.createSets(this.$attr.data('sets'), this);
         this.select2 = this.$attr.data('select2');
         this.$select = this.$attr.find('select');
         this.$select.change(this.changeValue.bind(this));
@@ -47,25 +47,27 @@ Jam.ModelAttrEnum = class ModelAttrEnum extends Jam.ModelAttr {
     }
 
     updateItems () {
-        const items = Jam.ModelAttrEnumSet.filterItems(this.sets);
+        const items = Jam.EnumSet.filterItems(this.sets);
         this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
         return this.items === items;
     }
 
     build () {
+        const category = this.$attr.data('t-sets');
         let content = '<option value></option>';
         for (const item of this.items) {
-            content += `<option value="${item.value}">${item.text}</option>`;
+            const text = Jam.i18n.translate(item.text, category);
+            content += `<option value="${item.value}">${text}</option>`;
         }
         return content;
     }
 };
 
-Jam.ModelAttrRadioEnum = class ModelAttrRadioEnum extends Jam.ModelAttr {
+Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
 
     init () {
         super.init();
-        this.sets = Jam.ModelAttrEnumSet.createSets(this.$attr.data('sets'), this);
+        this.sets = Jam.EnumSet.createSets(this.$attr.data('sets'), this);
         this.$list = this.$attr.find('.radio-items');
         this.$list.on('change', '[type="radio"]', this.changeValue.bind(this));
         this.model.events.on('change', this.onUpdate.bind(this));
@@ -110,19 +112,23 @@ Jam.ModelAttrRadioEnum = class ModelAttrRadioEnum extends Jam.ModelAttr {
     }
 
     updateItems () {
-        const items = Jam.ModelAttrEnumSet.filterItems(this.sets);
+        const items = Jam.EnumSet.filterItems(this.sets);
         this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
         return this.items === items;
     }
 
     build () {
-        return this.items.map(item => {
-            return `<label class="radio radio-inline"><input type="radio" value="${item.value}">${item.text}</label>`;
-        }).join('');
+        const category = this.$attr.data('t-sets');
+        let result = '';
+        for (const item of this.items) {
+            const text = Jam.i18n.translate(item.text, category);
+            result += `<label class="radio radio-inline"><input type="radio" value="${item.value}">${text}</label>`;
+        }
+        return result;
     }
 };
 
-Jam.ModelAttrEnumSet = class ModelAttrEnumSet {
+Jam.EnumSet = class EnumSet {
 
     static createSets (data, owner) {
         const sets = [];

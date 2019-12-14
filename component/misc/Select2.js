@@ -62,11 +62,9 @@ module.exports = class Select2 extends Base {
     }
 
     resolveKeyCondition (text, conditions) {
-        if (this.query.model) {
-            const id = this.query.model.getDb().normalizeId(text);
-            if (id) {
-                conditions.push({[this.query.model.PK]: id});
-            }
+        const id = this.query.getDb().normalizeId(text);
+        if (id) {
+            conditions.push({[this.query.model.PK]: id});
         }
     }
 

@@ -6,12 +6,12 @@
 <div class="form-attr form-group<%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-action-binder='<%= p.actionBinder %>'>
-    <label for="<%- p.id %>" title="<%= p.extHint %>"
-           class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
+    <label for="<%- p.id %>" class="control-label <%- p.labelCss %>"
+           title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input id="<%- p.id %>" name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
-               value="<%= p.value %>" class="form-control"/>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+               value="<%= p.value %>" class="form-control" <%- p.required %>/>
         <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>
 </div>

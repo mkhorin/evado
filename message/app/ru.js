@@ -52,6 +52,7 @@ module.exports = {
 
     'Try again {time}': 'Повторите попытку {time}',
 
+    'User is not verified': 'Пользователь не подтвержден',
     'User not found': 'Пользователь не найден',
 
     'Verification code': 'Проверочный код',

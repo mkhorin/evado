@@ -111,7 +111,8 @@ module.exports = {
             engine: require('areto-ejs'),
             extension: 'ejs'
         },
-        'serverAddress': 'http://localhost'
+        'serverAddress': 'http://localhost',
+        'userUpdateUrl': `/admin/user?modal=${encodeURIComponent('admin/user/update?id=')}`
     },
     metaModels: {
         'document': {

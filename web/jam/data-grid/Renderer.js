@@ -79,6 +79,9 @@ Jam.DataGridRenderer = class DataGridRenderer {
     drawBody (data) {
         this.$tbody.html(this.renderBody(data));
         Jam.DateHelper.resolveClientDate(this.$tbody);
+        Jam.i18n.translateContainer(this.$tbody);
+        Jam.Helper.createSerialImageLoading(this.$tbody);
+        Jam.Helper.executeSerialImageLoading(this.$tbody);
     }
 
     renderBody (data) {
@@ -154,20 +157,20 @@ Jam.DataGridRenderer = class DataGridRenderer {
         return this.createHeadByMatrix(this.createHeadMatrix(this.columns));
     }
 
-    renderHeadColumn ({name, label}, colSpan, rowSpan) {
+    renderHeadColumn ({name, label, translate}, columns, rows) {
         let cssClass = 'column';
         if (this.grid.isSortableColumn(name)) {
             cssClass += ' sortable '+ this.getDirectionName(this.grid.getOrderDirection(name));
         }
-        label = this.grid.translate(label || name);
-        return '<th class="'+ cssClass +'" rowspan="'+ rowSpan +'" data-name="'+ name +'">'
+        label = this.grid.translate(label || name, translate);
+        return '<th class="'+ cssClass +'" rowspan="'+ rows +'" data-name="'+ name +'">'
             + '<span class="column-label search-toggle" title="'+ name +'">'+ label +'</span>'
             + '<span class="order-toggle fa" title="'+ this.locale.orderToggle +'"></span></th>';
     }
 
-    renderHeadGroup ({name, label}, colSpan, rowSpan) {
-        label = this.grid.translate(label || name);
-        return `<th class="group" colspan="${colSpan}" rowspan="${rowSpan}" data-name="${name}">${label}</th>`;
+    renderHeadGroup ({name, label, translate}, columns, rows) {
+        label = this.grid.translate(label || name, translate);
+        return `<th class="group" colspan="${columns}" rowspan="${rows}" data-name="${name}">${label}</th>`;
     }
 
     createHeadMatrix (columns) {
@@ -254,7 +257,7 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 };
 
-Jam.TreeDataGridRenderer = class TreeDataGridRenderer extends Jam.DataGridRenderer {
+Jam.TreeGridRenderer = class TreeGridRenderer extends Jam.DataGridRenderer {
 
     drawNode ($row, items) {
         const depth = parseInt($row.data('depth')) + 1;

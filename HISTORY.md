@@ -1,6 +1,40 @@
+## 0.3.0
+
+* component/meta/rbac
+    - add multiple targets to metadata permission
+* component/misc/DataGrid
+    - extract common search as separate entity
+* component/misc/ListFilter
+    - filter by nested values via intermediate relation
+* component/security
+    - fix permission restriction by rule
+* controller/FileController
+    - check file availability before downloading
+* web/jam/element/Modal
+    - fix resize modal tabs
+* web/jam/util/Uploader
+    - translate and format validation messages
+
+## 0.2.0
+
+* component/helper/MetaHelper
+    - move common helper from modules
+* component/misc/Formatter
+    - add translatable format
+* console/SecurityConsole 
+    - fix user creation        
+* view/template/default
+    - translate error pages    
+* web/jam/data-grid/ColumnRenderer
+    - separate null and undefined view
+* web/jam/element/LoadableContent
+    - add resource solver and translation
+* web/jam/element/Modal
+    - fix tab templates
+                        
 ## 0.1.12
 
-* component/meta/MetaDataGrid
+* component/meta/MetaGrid
     - fix file attribute render
 * module/api
     - add API module

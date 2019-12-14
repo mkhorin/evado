@@ -130,7 +130,7 @@ Jam.Dialog = class Dialog {
         this.params = {
             container: '#main-dialog',
             header: 'Dialog',
-            submitText: 'Submit',
+            submitText: 'OK',
             cancelText: 'Cancel',
             returnCancel: false,
             strictCancel: false,
@@ -157,7 +157,6 @@ Jam.Dialog = class Dialog {
     confirm (message, data) {
         return this.show(message, {
             header: 'Confirmation',
-            submitText: 'Confirm',
             cssClass: 'warning',
             ...data
         });

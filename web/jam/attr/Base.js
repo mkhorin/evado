@@ -10,13 +10,13 @@ Jam.ModelAttr = class ModelAttr {
         if (!name) {
             return new this($attr, model);
         }
-        const config = Jam.ClassHelper.normalizeSpawn(this.name + name, this);
+        const config = Jam.ClassHelper.normalizeSpawn(`${name}ModelAttr`, this);
         return new config.Class($attr, model, config);
     }
 
     static getSpawnByType (type) {
-        const map = this.getClassMap();
-        return map.hasOwnProperty(type) ? {Class: map[type]} : null;
+        const data = this.getClassMap();
+        return map.hasOwnProperty(type) ? {Class: data[type]} : null;
     }
 
     static get ($elem) {
@@ -65,6 +65,10 @@ Jam.ModelAttr = class ModelAttr {
         this.$attr.toggleClass('disabled', !state);
     }
 
+    clear () {
+        this.setValue('');
+    }
+
     getType () {
         return this.$attr.data('type');
     }
@@ -97,7 +101,7 @@ Jam.ModelAttr = class ModelAttr {
     }
 };
 
-Jam.ModelAttrCheckbox = class ModelAttrCheckbox extends Jam.ModelAttr {
+Jam.CheckboxModelAttr = class CheckboxModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
@@ -124,7 +128,7 @@ Jam.ModelAttrCheckbox = class ModelAttrCheckbox extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttrCheckboxList = class ModelAttrCheckboxList extends Jam.ModelAttr {
+Jam.CheckboxListModelAttr = class CheckboxListModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
@@ -171,7 +175,7 @@ Jam.ModelAttrCheckboxList = class ModelAttrCheckboxList extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttrDate = class ModelAttrDate extends Jam.ModelAttr {
+Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
@@ -187,19 +191,23 @@ Jam.ModelAttrDate = class ModelAttrDate extends Jam.ModelAttr {
     }
 
     createPicker () {
-        const options = this.params.datepicker || {};
-        if (options.minDate) {
-            options.minDate = new Date(options.minDate);
+        try {
+            const options = this.params.datepicker || {};
+            if (options.minDate) {
+                options.minDate = new Date(options.minDate);
+            }
+            if (options.maxDate) {
+                options.maxDate = new Date(options.maxDate);
+            }
+            options.defaultDate = this.getDefaultDate(this.$value.val());
+            options.format = Jam.DateHelper.getMomentFormat(options.format || this.params.format) || 'L';
+            options.widgetParent = this.$picker.parent();
+            this.$picker.datetimepicker({...$.fn.datetimepicker.defaultOptions, ...options});
+            this.picker = this.$picker.data('DateTimePicker');
+            this.$picker.on('dp.change', this.onChangeDate.bind(this));
+        } catch (err) {
+            console.error(err);
         }
-        if (options.maxDate) {
-            options.maxDate = new Date(options.maxDate);
-        }
-        options.defaultDate = this.getDefaultDate(this.$value.val());
-        options.format = options.format || this.params.format || 'L';
-        options.widgetParent = this.$picker.parent();
-        this.$picker.datetimepicker({...$.fn.datetimepicker.defaultOptions, ...options});
-        this.picker = this.$picker.data('DateTimePicker');
-        this.$picker.on('dp.change', this.onChangeDate.bind(this));
     }
 
     getDefaultDate (value) {
@@ -222,7 +230,7 @@ Jam.ModelAttrDate = class ModelAttrDate extends Jam.ModelAttr {
     }
 };
 
-Jam.ModelAttrRadioList = class ModelAttrRadioList extends Jam.ModelAttr {
+Jam.RadioListModelAttr = class RadioListModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);

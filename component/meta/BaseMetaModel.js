@@ -43,7 +43,7 @@ module.exports = class BaseMetaModel extends Base {
 
     exportData () {}
 
-    dropData () {}
+    clearData () {}
 
     log () {
         CommonHelper.log(this.hub, this.constructor.name, ...arguments);

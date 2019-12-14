@@ -29,7 +29,7 @@ module.exports = class RequestResetForm extends Base {
             const user = await this.getUser(service);
             const verification = await service.createVerification(user);
             await this.module.getMailer().sendPasswordReset(verification, user);
-            await this.user.log('request-reset', undefined, user);
+            await this.user.log('requestReset', undefined, user);
             return true;
         } catch (err) {
             this.addError('email', err);

@@ -19,7 +19,7 @@ module.exports = class DataConsole extends Base {
         return {};
     }
 
-    async drop () {
+    async clear () {
         const models = this.getMetaModels(this.params.meta);
         for (const model of models) {
             await model.dropData();

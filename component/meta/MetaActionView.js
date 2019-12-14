@@ -8,7 +8,7 @@ const Base = require('areto/view/ActionView');
 module.exports = class MetaActionView extends Base {
 
     getViewModelClass (name) {
-        const view = this.controller.metaData.view;
+        const view = this.controller.meta.view;
         if (!view) {
             return super.getViewModelClass(name);
         }
@@ -20,7 +20,7 @@ module.exports = class MetaActionView extends Base {
     }
 
     get (name) {
-        const view = this.controller.metaData.view;
+        const view = this.controller.meta.view;
         if (!view) {
             return super.get(name);
         }

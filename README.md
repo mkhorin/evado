@@ -1,3 +1,3 @@
 # Evado
 
-## Abstract Metadata App built on Areto Framework
+## Software kit for instant building and operating business applications

@@ -37,19 +37,19 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     async getAttrMap () {
-        const map = {};
+        const data = {};
         const states = this.getStates();
         const origin = this.owner.rel(this.originAttr);
         const namePrefix = `${this.owner.constructor.name}[${this.stateAttr}]`;
         for (const name of this.attrs) {
-            map[name] = {
+            data[name] = {
                 attr: this.attrPrefix + name,
                 name: `${namePrefix}[${name}]`,
                 overridden: states[name]
             };
-            map[name].inheritValue = await this.getOriginValue(name, origin);
+            data[name].inheritValue = await this.getOriginValue(name, origin);
         }
-        return map;
+        return data;
     }
 
     async beforeSave () {
@@ -114,7 +114,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     setStatesByData (data) {
         const states = {};
         for (const name of this.attrs) {
-            states[name] = data.hasOwnProperty(name);
+            states[name] = data[name] !== undefined && data.hasOwnProperty(name);
         }
         this.setStates(states);
     }

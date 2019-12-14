@@ -75,7 +75,10 @@ module.exports = class PasswordAuthService extends Base {
             throw identity.getFirstError();
         }
         const password = this.spawnPassword();
-        password.assignAttrs(data);
+        password.assignAttrs({
+            hash: data.passwordHash,
+            password: data.password
+        });
         if (!await password.validate()) {
             throw identity.getFirstError();
         }

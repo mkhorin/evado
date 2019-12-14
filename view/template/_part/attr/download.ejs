@@ -2,9 +2,9 @@
 <%
 const p = {
     fileUrl: `file/download?id=${model.getId()}`,
-    preview: typeof previewSizeKey === 'undefined' ? 'large' : previewSizeKey
+    preview: typeof preview === 'undefined' ? 'large' : preview
 };
-const preview = model.isImage()
+const src = model.isImage()
     ? `file/preview?id=${model.getId()}&s=${p.preview}&t=${_controller.timestamp}`
     : null;
 %>
@@ -14,16 +14,15 @@ const preview = model.isImage()
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <% if (preview) { %>
         <p class="form-control-static">
-            <a href="<%- p.fileUrl %>" target="_blank">
-                <img src="<%- preview %>" alt="<%= model.getTitle() %>">
+            <a href="<%- p.fileUrl %>" target="_blank" title="Download">
+                <%- model.getTitle() %>
             </a>
         </p>
-        <% } else { %>
-        <p class="form-control-static">
-            <a href="<%- p.fileUrl %>" target="_blank"><%- model.getTitle() %></a>
-        </p>
+        <% if (src) { %>
+         <div class="mt10">
+            <img src="<%- src %>" class="img-responsive" alt="<%= model.getTitle() %>">
+         </div>
         <% } %>
     </div>
 </div>

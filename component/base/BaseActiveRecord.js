@@ -22,7 +22,7 @@ module.exports = class BaseActiveRecord extends Base {
     getFullTitle () {
         const label = this.get('label');
         const name = this.get('name') || this.getId();
-        return label ? `${label} (${name})` : name ;
+        return label ? `${label} (${name})` : name;
     }
 
     findForSelect () {

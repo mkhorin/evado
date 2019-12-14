@@ -56,8 +56,8 @@ Jam.DataGrid.defaults = {
     Tuner: Jam.DataGridTuner
 };
 
-Jam.TreeDataGrid.defaults = {
+Jam.TreeGrid.defaults = {
     nodeToggle: '<div class="node-toggle"><span class="glyphicon"></span></div>',
-    Renderer: Jam.TreeDataGridRenderer,
-    AjaxProvider: Jam.TreeDataGridAjaxProvider
+    Renderer: Jam.TreeGridRenderer,
+    AjaxProvider: Jam.TreeGridAjaxProvider
 };

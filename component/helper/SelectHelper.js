@@ -8,8 +8,6 @@ const DEFAULT_TEXT_KEY = 'name';
 
 module.exports = class SelectHelper {
 
-    // MAP
-
     static getMapItems (map) {
         const items = [];
         if (map) {

@@ -15,7 +15,7 @@
 // uploader:file:started - start upload
 // uploader:file:progress - progress upload - percents
 // uploader:file:uploaded - file uploaded
-// uploader:file:confirmRemove - remove file after user confirm
+// uploader:file:confirmRemove - remove file after user confirmation
 // uploader:file:removed - remove file
 
 Jam.Uploader = class Uploader {
@@ -31,10 +31,10 @@ Jam.Uploader = class Uploader {
             maxSize: null,
             extensions: null,
             mimeTypes: null,
-            tooSmall: 'File size cannot be smaller than {limit} bytes',
-            tooBig: 'File size cannot exceed {limit} bytes',
-            wrongExtension: 'Only these extensions are allowed: {extensions}',
-            wrongMimeType: 'Only these MIME types are allowed: {mimeTypes}',
+            tooSmall: 'File size cannot be smaller than {limit}',
+            tooBig: 'File size cannot exceed {limit}',
+            wrongExtension: 'Only these file extensions are allowed: {extensions}',
+            wrongMimeType: 'Only these file MIME types are allowed: {mimeTypes}',
             imageOnly: false,
             maxHeight: null,
             maxWidth: null,
@@ -189,13 +189,13 @@ Jam.Uploader = class Uploader {
 
     processNext () {
         setTimeout(()=> {
-            const map = this.getFirstFilesByStatus();
-            if (map.hasOwnProperty('pending')) {
-                map.pending.append();
-            } else if (map.hasOwnProperty('appended')) {
-                map.appended.validate();
-            } else if (map.hasOwnProperty('validated') && !map.hasOwnProperty('uploading')) {
-                map.validated.upload();
+            const data = this.getFirstFilesByStatus();
+            if (data.hasOwnProperty('pending')) {
+                data.pending.append();
+            } else if (data.hasOwnProperty('appended')) {
+                data.appended.validate();
+            } else if (data.hasOwnProperty('validated') && !data.hasOwnProperty('uploading')) {
+                data.validated.upload();
             }
         }, 100);
     }
@@ -318,32 +318,40 @@ Jam.UploaderFile = class UploaderFile {
         const options = this.uploader.options;
         const file = this.file;
         if (this.isMatchFile()) {
-            return options.alreadyExists;
+            return this.createMessage(options.alreadyExists);
         }
         if (options.extensions) {
             const index = file.name.lastIndexOf('.');
-            const ext = index > - 1 ? file.name.substr(index + 1, file.name.length).toLowerCase() : '';
+            const ext = index > -1 ? file.name.substr(index + 1, file.name.length).toLowerCase() : '';
             if (!options.extensions.includes(ext)) {
-                return options.wrongExtension.replace(/{extensions}/g, options.extensions.join(', '));
+                return this.createMessage(options.wrongExtension, {
+                    extensions: options.extensions.join(', ')
+                });
             }
         }
         if (options.mimeTypes && !options.mimeTypes.includes(file.type)) {
-            return options.wrongMimeType.replace(/{mimeTypes}/g, options.mimeTypes.join(', '));
+            return this.createMessage(options.wrongMimeType, {
+                mimeTypes: options.mimeTypes.join(', ')
+            });
         }
         if (options.maxSize && options.maxSize < file.size) {
-            return options.tooBig.replace(/{limit}/g, options.maxSize);
+            return this.createMessage(options.tooBig, {
+                limit: Jam.FormatHelper.asBytes(options.maxSize)
+            });
         }
         if (options.minSize && options.minSize > file.size) {
-            return options.tooSmall.replace(/{limit}/g, options.minSize);
+            return this.createMessage(options.tooSmall, {
+                limit: Jam.FormatHelper.asBytes(options.tooSmall)
+            });
         }
         if (options.imageOnly) {
-            return this.image ? this.validateImage() : options.notImage;
+            return this.image  ? this.validateImage() : this.createMessage(options.notImage);
         }
         if (this.image) {
             return this.validateImage();
         }
         if (options.imageOnly) {
-            return options.notImage;
+            return this.createMessage(options.notImage);
         }
         return false;
     }
@@ -367,18 +375,26 @@ Jam.UploaderFile = class UploaderFile {
     validateImage () {
         const options = this.uploader.options;
         if (options.maxHeight && options.maxHeight < this.image.height) {
-            return options.overHeight.replace(/{limit}/g, options.maxHeight);
+            return this.createMessage(options.overHeight, {limit: options.maxHeight});
         }
         if (options.maxWidth && options.maxWidth < this.image.width) {
-            return options.overWidth.replace(/{limit}/g, options.maxWidth);
+            return this.createMessage(options.overWidth, {limit: options.maxWidth});
         }
         if (options.minHeight && options.minHeight > this.image.height) {
-            return options.underHeight.replace(/{limit}/g, options.minHeight);
+            return this.createMessage(options.underHeight, {limit: options.minHeight});
         }
         if (options.minWidth && options.minWidth > this.image.width) {
-            return options.underWidth.replace(/{limit}/g, options.minWidth);
+            return this.createMessage(options.underWidth, {limit: options.minWidth});
         }
         return false;
+    }
+
+    createMessage (message, params = {}) {
+        message = Jam.i18n.translate(message);
+        for (const key of Object.keys(params)) {
+            message = message.replace(new RegExp(`{${key}}`, 'g'), params[key]);
+        }
+        return message;
     }
 
     // UPLOAD

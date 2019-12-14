@@ -14,7 +14,7 @@ Jam.ListFilterStore = class Store {
         this.$save.click(this.onSave.bind(this));
         this.$name = this.$saveModal.find('[name="name"]');
 
-        this.$inputToggle = filter.$controls.find('.save');
+        this.$inputToggle = filter.$commands.find('.save');
         this.$inputToggle.click(this.onToggleSave.bind(this));
 
         this.$selectModal = filter.$container.find('.select-modal');
@@ -32,7 +32,7 @@ Jam.ListFilterStore = class Store {
         this.$list.on('click', '.list-group-item', this.onItem.bind(this));
         this.$list.on('dblclick', '.list-group-item', this.onApply.bind(this));
 
-        this.$selectToggle = filter.$controls.find('.select');
+        this.$selectToggle = filter.$commands.find('.select');
         this.$selectToggle.click(this.onToggleSelect.bind(this));
 
         this.load();

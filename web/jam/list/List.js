@@ -13,12 +13,12 @@ Jam.List = class List extends Jam.Element {
         this.$container = $grid.closest('.box');
         this.$header = this.$container.children('.box-header');
         this.$content = this.$container.children('.box-body');
-        this.$controls = this.$header.children('.list-controls');
+        this.$commands = this.$header.children('.list-commands');
         this.$modal = this.$container.closest('.jmodal');
         this.modal = this.$modal.data('modal');
         this.childModal = Jam.modal.create();
-        this.$controls.prepend(this.$modal.find('.before-list-controls'));
-        this.$controls.append(this.$modal.find('.after-list-controls'));
+        this.$commands.prepend(this.$modal.find('.before-list-commands'));
+        this.$commands.append(this.$modal.find('.after-list-commands'));
         this.events = new Jam.Events('List');
         this.notice = this.createNotice();
         this.params = {
@@ -28,7 +28,8 @@ Jam.List = class List extends Jam.Element {
     }
 
     init () {
-        this.$controls.on('click', '[data-id]', this.onControl.bind(this));
+        this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
+        this.createColumnRenderer();
         this.setDataGridParams();
         this.createDataGrid();
         this.initDataGrid();
@@ -37,6 +38,10 @@ Jam.List = class List extends Jam.Element {
         this.$tbody = this.grid.renderer.$tbody;
         this.$tbody.on('click', 'tr.item', this.onClickRow.bind(this));
         this.$tbody.on('dblclick', 'tr.item', this.onDoubleClickRow.bind(this));
+    }
+
+    createColumnRenderer () {
+        this.columnRenderer = new Jam.ColumnRenderer;
     }
 
     createDataGrid () {
@@ -76,13 +81,13 @@ Jam.List = class List extends Jam.Element {
         });
     }
 
-    onControl (event) {
-        this.beforeControl(event);
-        this.getControlMethod(event.currentTarget.dataset.id).call(this, event);
+    onCommand (event) {
+        this.beforeCommand(event);
+        this.getCommandMethod(event.currentTarget.dataset.command).call(this, event);
     }
 
-    getControlMethod (id) {
-        switch (id) {
+    getCommandMethod (name) {
+        switch (name) {
             case 'view': return this.onView;
             case 'create': return this.onCreate;
             case 'clone': return this.onClone;
@@ -114,8 +119,8 @@ Jam.List = class List extends Jam.Element {
     }
 
     prepareColumnData (data) {
-        data.render = Jam.ColumnRenderer.getRenderMethod(data.format);
-        data.format = Jam.ColumnRenderer.prepareFormat(data.format);
+        data.render = this.columnRenderer.getRenderMethod(data.format);
+        data.format = this.columnRenderer.prepareFormat(data.format);
     }
 
     createNotice () {
@@ -181,7 +186,7 @@ Jam.List = class List extends Jam.Element {
         this.toggleRowSelect($(event.currentTarget), true);
         event.ctrlKey
             ? this.openNewPage()
-            : this.getControl('update').click();
+            : this.getCommand('update').click();
     }
 
     openNewPage () {
@@ -272,13 +277,13 @@ Jam.List = class List extends Jam.Element {
         this.grid.load(resetPage);
     }
 
-    // CONTROLS
+    // COMMANDS
 
-    getControl (id) {
-        return this.$controls.find(`[data-id="${id}"]`);
+    getCommand (name) {
+        return this.$commands.find(`[data-command="${name}"]`);
     }
 
-    beforeControl () {
+    beforeCommand () {
         this.notice.hide();
     }
 
@@ -343,7 +348,7 @@ Jam.MainList = class MainList extends Jam.List {
 
     init () {
         super.init();
-        this.utilManager = new Jam.UtilManager(this.$controls, this);
+        this.utilManager = new Jam.UtilManager(this.$commands, this);
     }
 };
 
@@ -362,11 +367,11 @@ Jam.SelectList = class SelectList extends Jam.List {
             : this.onSelect();
     }
 
-    getControlMethod (id) {
-        switch (id) {
+    getCommandMethod (name) {
+        switch (name) {
             case 'select': return this.onSelect;
         }
-        return super.getControlMethod(id);
+        return super.getCommandMethod(name);
     }
 
     onSelect () {
@@ -403,7 +408,7 @@ Jam.SelectList = class SelectList extends Jam.List {
 Jam.TreeList = class TreeList extends Jam.List {
 
     createDataGrid () {
-        this.grid = new Jam.TreeDataGrid(this.$grid, this.params);
+        this.grid = new Jam.TreeGrid(this.$grid, this.params);
     }
 };
 
@@ -411,7 +416,7 @@ Jam.MainTreeList = class MainTreeList extends Jam.TreeList {
 
     init () {
         super.init();
-        this.utilManager = new Jam.UtilManager(this.$controls, this);
+        this.utilManager = new Jam.UtilManager(this.$commands, this);
     }
 
     onCreate (event) {

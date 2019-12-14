@@ -3,7 +3,7 @@
  */
 'use strict';
 
-Jam.ModelAttrValueMap = class ModelAttrValueMap extends Jam.ModelAttr {
+Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
 
     init () {
         this.$list = this.$attr.find('.value-map-items');

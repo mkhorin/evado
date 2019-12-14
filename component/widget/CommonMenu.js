@@ -10,7 +10,7 @@ module.exports = class CommonMenu extends Base {
     run () {
         const items = this.items || this.getDefaultItems();
         const active = this.getActiveItem(items, this.controller.getQueryParam('url'));
-        return this.renderTemplate('_widget/common-menu', {items, active});
+        return this.renderTemplate('_widget/commonMenu', {items, active});
     }
 
     getActiveItem (items, sourceUrl) {
@@ -25,12 +25,18 @@ module.exports = class CommonMenu extends Base {
     }
 
     getDefaultItems () {
-        const app = this.module.app;
-        const items = [];
+        let app = this.module.app;
+        let items = [];
+        let previous = null;
         for (const module of app.modules) {
-            if (!module.hidden) {
-                items.push(this.getModuleItem(module));
+            if (module.hidden) {
+                continue;
             }
+            if (previous && previous.getParam('separateNextCommonMenuItem')) {
+                items.push(this.getSeparatorItem());
+            }
+            items.push(this.getModuleItem(module));
+            previous = module;
         }
         items.push(this.getSeparatorItem());
         items.push(this.getModuleItem(app));

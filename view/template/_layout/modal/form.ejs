@@ -15,25 +15,23 @@ if (typeof params !== 'undefined') {
      data-title="<%= blocks.title %>"
      data-tab="<%= blocks.tab %>">
     <div class="box-header with-border scroll-header">
-        <div class="model-controls">
+        <div class="model-commands">
             <% if (p.save) { %>
-            <button data-id="saveClose" class="btn btn-primary mr20" type="button" title="Save and close">
+            <button data-command="saveClose" class="btn btn-primary mr20" type="button" title="Save and close">
                 <span class="glyphicon glyphicon-off"></span>
             </button>
             <% } %>
-            <button data-id="reload" class="reload btn btn-default mr15" type="button" title="Reload">
+            <button data-command="reload" class="btn-warning btn-light btn mr15" type="button" title="Reload">
                 <span class="fa fa-redo-alt"></span>
             </button>
-
-            <% if (blocks.controls) { %>
-            <%- include(_view.get('_part/misc/render'), {data: blocks.controls.get()}) %>
+            <% if (blocks.commands) { %>
+            <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
             <% } %>
         </div>
     </div>
     <div class="scroll-body box-body">
         <form class="model form-horizontal form" autocomplete="off" enctype="multipart/form-data"
-              data-jam="<%- p.jam %>"
-              data-params="<%= JSON.stringify(p) %>">
+              data-jam="<%- p.jam %>" data-params="<%= JSON.stringify(p) %>">
             <%- body %>
         </form>
     </div>

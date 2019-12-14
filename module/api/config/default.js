@@ -6,7 +6,8 @@
 module.exports = {
 
     components: {
-    },
-    params: {
+        'router': {
+            errors: {Controller: require('../controller/DefaultController')}
+        }
     }
 };

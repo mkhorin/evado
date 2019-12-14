@@ -8,6 +8,6 @@ const Base = require('areto/view/Widget');
 module.exports = class SideMenu extends Base {
 
     run () {        
-        return this.renderTemplate('_part/nav/sidebar-menu', {});
+        return this.renderTemplate('_part/nav/sidebarMenu', {});
     }
 };

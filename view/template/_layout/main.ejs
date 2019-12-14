@@ -10,10 +10,9 @@
 
     <%- include(_view.get('_part/asset/style/defaults'), {skin: 'black'}) %>
 
-    <link rel="stylesheet" href="css/module.css">
+    <link rel="stylesheet" href="style/module.css">
 </head>
-<body class="hold-transition skin-black sidebar-mini"
-      data-csrf="<%- _controller.getCsrfToken() %>">
+<body class="hold-transition skin-black sidebar-mini" data-csrf="<%- _controller.getCsrfToken() %>">
 
     <%- body %>
 
@@ -23,7 +22,7 @@
     <%- include(_view.get('_part/asset/script/messages')) %>
     <%- include(_view.get('_part/asset/script/defaults')) %>
 
-    <script src="js/init.js"></script>
+    <script src="script/init.js"></script>
 
 </body>
 </html>

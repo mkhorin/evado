@@ -74,6 +74,7 @@ Jam.ActionBinderBase = class ActionBinderBase {
 
     constructor (element, data) {
         this.element = element;
+        this.attr = this.element.attr;
         this.data = data;
         this.init();
     }
@@ -94,8 +95,11 @@ Jam.ActionBinderBase = class ActionBinderBase {
 Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderBase {
 
     update () {
-        const group = this.element.$item.data('group');
         const visible = this.isValid();
+        if (this.attr && !visible) {
+            this.attr.clear();
+        }
+        const group = this.element.$item.data('group');
         group ? group.toggle(visible)
               : this.element.$item.toggleClass('hidden', !visible);
     }
@@ -111,22 +115,19 @@ Jam.ActionBinderRequire = class ActionBinderRequire extends Jam.ActionBinderBase
 Jam.ActionBinderEnable = class ActionBinderEnabled extends Jam.ActionBinderBase {
 
     update () {
-        if (this.element.attr) {
-            this.element.attr.enable(this.isValid());
-        } else {
-            this.element.$item.toggleClass('disabled', !this.isValid());
-        }
+        this.attr
+            ? this.attr.enable(this.isValid())
+            : this.element.$item.toggleClass('disabled', !this.isValid());
     }
 };
-
 
 Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderBase {
 
     init () {
-        if (!this.element.attr) {
+        if (!this.attr) {
             return console.error('Action binder value without model attribute');
         }
-        this.value = this.element.attr.normalizeValue(this.data[0]);
+        this.value = this.attr.normalizeValue(this.data[0]);
         this.condition = new Jam.ModelCondition(this.data[1], this.element.binder.model);
     }
 
@@ -137,8 +138,8 @@ Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderBase {
     }
 
     update () {
-        if (this.element.attr && this.isValid()) {
-            this.element.attr.setValue(this.getValue());
+        if (this.attr && this.isValid()) {
+            this.attr.setValue(this.getValue());
         }
     }
 };

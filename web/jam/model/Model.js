@@ -12,7 +12,7 @@ Jam.Model = class Model extends Jam.Element {
         this.$attrs = $form.find('.form-attr');
         this.$container = $form.closest('.box');
         this.$header = this.$container.children('.box-header');
-        this.$controls = this.$header.children('.model-controls');
+        this.$commands = this.$header.children('.model-commands');
         this.$content = this.$container.children('.box-body');
         this.$loader = this.$container.children('.model-loader');
         this.events = new Jam.Events('Model');
@@ -26,7 +26,7 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     init () {
-        this.$controls.on('click', '[data-id]', this.onControl.bind(this));
+        this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
         this.beforeCloseMethod = this.beforeClose.bind(this);
         this.modal.onClose(this.beforeCloseMethod);
         this.grouping = new Jam.ModelGrouping(this);
@@ -39,7 +39,7 @@ Jam.Model = class Model extends Jam.Element {
         }
         this.changeTracker = new Jam.ModelChangeTracker(this);
         this.error = new Jam.ModelError(this);
-        this.utilManager = new Jam.UtilManager(this.$controls, this);
+        this.utilManager = new Jam.UtilManager(this.$commands, this);
         this.changeTracker.start();
         this.behaviors = Jam.ClassHelper.spawnInstances(this.params.behaviors, {owner: this});
         this.behaviors.forEach(item => item.init());
@@ -70,12 +70,12 @@ Jam.Model = class Model extends Jam.Element {
         return !this.id;
     }
 
-    getControl (id) {
-        return this.$controls.find(`[data-id="${id}"]`);
+    getCommand (name) {
+        return this.$commands.find(`[data-command="${name}"]`);
     }
 
-    getAction (id) {
-        return this.$controls.find(`[data-action="${id}"]`);
+    getAction (name) {
+        return this.$commands.find(`[data-action="${name}"]`);
     }
 
     getAttr (name, className) {
@@ -121,20 +121,20 @@ Jam.Model = class Model extends Jam.Element {
         return Jam.ObjectHelper.getValueLabel(message, this.params.messages);
     }
 
-    // CONTROLS
+    // COMMANDS
 
-    onControl (event) {
-        this.beforeControl(event);
-        const method = this.getControlMethod(event.currentTarget.dataset.id);
+    onCommand (event) {
+        this.beforeCommand(event);
+        const method = this.getCommandMethod(event.currentTarget.dataset.command);
         method && method.call(this, event);
     }
 
-    beforeControl () {
+    beforeCommand () {
         this.notice.hide();
     }
 
-    getControlMethod (id) {
-        switch (id) {
+    getCommandMethod (name) {
+        switch (name) {
             case 'saveClose': return this.onSaveClose;
             case 'save': return this.onSave;
             case 'cancel': return this.onCancel;
@@ -187,7 +187,7 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     onShowHistory () {
-        this.childModal.load(this.getControl('history').data('url'));
+        this.childModal.load(this.getCommand('history').data('url'));
     }
 
     // VALIDATE

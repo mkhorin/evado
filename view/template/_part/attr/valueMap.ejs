@@ -11,8 +11,8 @@
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="hidden" value="<%= p.value ? JSON.stringify(p.value) : '' %>">
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
         <div class="value-map-items">
             <div class="value-map-item">
                 <div class="row">
@@ -23,18 +23,18 @@
                         <input type="text" class="form-control param text-param" placeholder="Text">
                     </div>
                 </div>
-                <div class="value-map-item-controls btn-group">
-                    <button data-id="add" type="button" class="btn btn-white btn-light" title="Add">
+                <div class="value-map-item-control btn-group">
+                    <button data-id="add" type="button" class="btn btn-success btn-light" title="Add">
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
-                    <button data-id="down" type="button" class="btn btn-warning btn-light" title="Down">
+                    <button data-id="down" type="button" class="btn btn-white btn-light" title="Down">
                         <span class="glyphicon glyphicon-menu-down"></span>
                     </button>
-                    <button data-id="up" type="button" class="btn btn-warning btn-light" title="Up">
+                    <button data-id="up" type="button" class="btn btn-white btn-light" title="Up">
                         <span class="glyphicon glyphicon-menu-up"></span>
                     </button>
                     <button data-id="remove" type="button" class="btn btn-default" title="Remove">
-                        <span class="glyphicon glyphicon-remove"></span>
+                        <span class="text-danger glyphicon-remove glyphicon"></span>
                     </button>
                 </div>
             </div>

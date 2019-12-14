@@ -51,13 +51,14 @@ Jam.ModelError = class ModelError {
         $errorAttrs.parents('.form-base-group').addClass('has-group-error');
         for (const pane of this.$form.find('.tab-pane.has-group-error')) {
             $(pane).closest('.form-tabs')
-                .find(`> .nav-tabs [data-id="${pane.dataset.id}"]`)
+                .children('.nav-tabs').find(`[data-id="${pane.dataset.id}"]`)
                 .addClass('has-group-error');
         }
         return $errorAttrs;
     }
 
     processOne (className, attrName, message, errors) {
+        message = Jam.i18n.translate(message);
         errors.all += `<p>${attrName}: ${message}</p>`;
         const attr = this.model.getAttr(attrName, className);
         if (attr) {

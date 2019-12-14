@@ -33,11 +33,11 @@ Jam.DataGridTuner = class DataGridTuner {
         return $(`<div class="data-grid-tuner-menu ${grouping}">${items}</div>`);
     }
 
-    createItem ({label, name, hidden, grouping}) {
+    createItem ({label, name, hidden, grouping, translate}) {
         const show = this.createInput(name, 'Show', 'show', !hidden);
         const checked = this._groupName === name;
         const group = grouping ? this.createInput(name, 'Group', 'group', checked) : '';
-        label = this.grid.translate(label || name);
+        label = this.grid.translate(label || name, translate);
         return `<label class="item-label" title="${name}">${show}${group}${label}</label>`;
     }
 
@@ -103,10 +103,11 @@ Jam.DataGridTuner = class DataGridTuner {
 
     load () {
         const {items, grouping} = store.get(this.getStoreKey()) || {};
-        if (this.checkStoreData(items)) {
-            items.forEach((item, index)=> this.columns[index].hidden = item.hidden);
-            this.grid.grouping = grouping;
+        if (!this.checkStoreData(items)) {
+            return this.save();
         }
+        items.forEach((item, index)=> this.columns[index].hidden = item.hidden);
+        this.grid.grouping = grouping;
     }
 
     checkStoreData (items) {

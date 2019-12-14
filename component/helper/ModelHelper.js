@@ -6,7 +6,6 @@
 module.exports = class ModelHelper {
 
     // rules: [[['createdAt', 'updatedAt'], 'timestamp']]
-    // rules: [['user', 'relation', {url: 'user/update?id='}]]
 
     static formatByRules (rules, models, controller) {
         if (!Array.isArray(rules)) {
@@ -30,21 +29,7 @@ module.exports = class ModelHelper {
 
     static getFormatMap () {
         return {
-            relation: this.formatRelationRule
         };
-    }
-
-    static formatRelationRule (attr, model, formatter, type, {url} = {}) {
-        const related = model.rel(attr);
-        if (!related) {
-            return model.setViewAttr(attr, model.get(attr));
-        }
-        if (!url) {
-            return model.setViewAttr(attr, related.getTitle());
-        }
-        model.setViewAttr(attr, formatter.asModalLink(url + related.getId(), {
-            text: related.getTitle()
-        }));
     }
 
     static formatDefaultRule (attr, model, formatter, type, params) {

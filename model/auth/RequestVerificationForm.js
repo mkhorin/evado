@@ -15,7 +15,7 @@ module.exports = class RequestVerificationForm extends Base {
                 [['captchaCode'], require('areto/security/captcha/CaptchaValidator')]
             ],
             ATTR_LABELS: {
-                captchaCode: 'Verification code'
+                'captchaCode': 'Verification code'
             }
         };
     }
@@ -29,7 +29,7 @@ module.exports = class RequestVerificationForm extends Base {
             const user = await this.getUser(service);
             const verification = await service.createVerification(user);
             await this.module.getMailer().sendVerification(verification, user);
-            await this.user.log('request-verification', undefined, user);
+            await this.user.log('requestVerification', undefined, user);
             return true;
         } catch (err) {
             this.addError('email', err);
