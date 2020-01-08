@@ -3,7 +3,7 @@
  */
 'use strict';
 
-// web/jam/util/I18n.js
+// web/jam/misc/I18n.js
 
 // extend default translation category
 // use: <span data-t="">Some text</span>
@@ -32,6 +32,7 @@ Jam.I18n.defaults = {
     'Add condition': 'Добавить условие',
     'Add condition before saving': 'Добавьте условие перед сохранением',
     'Advanced search': 'Расширенный поиск',
+    'Application metadata reloaded': 'Метаданные приложения перезагружены',
     'Apply': 'Применить',
 
     'Back to modal form': 'Вернуться к модальной форме',
@@ -59,7 +60,7 @@ Jam.I18n.defaults = {
     'Delete': 'Удалить',
     'Delete absolutely all metadata?': 'Удалить абсолютно все мета-данные?',
     'Delete permanently?': 'Удалить безвозвратно?',
-    'Delete selected items?': 'Удалить выбранные объекты?',
+    'Delete permanently selected objects?': 'Удалить безвозвратно выбранные объекты?',
     'Description': 'Описание',
     'Download': 'Скачать',
     'Drop or select file here': 'Выберите или бросьте файл здесь',
@@ -96,7 +97,6 @@ Jam.I18n.defaults = {
 
     'Main': 'Главная',
     'Metadata': 'Метаданные',
-    'Metadata reloaded': 'Метаданные перезагружены',
     'Modification date': 'Дата изменения',
 
     'Name': 'Название',
@@ -118,8 +118,8 @@ Jam.I18n.defaults = {
     'Radio list': 'Радио-кнопки',
     'Rebuild': 'Перестроить',
     'Reload': 'Обновить',
-    'Reload form': 'Перезагрузить форму',
-    'Remove': 'Удалить',
+    'Reload form': 'Перезагрузить форму',    
+    'Remove': 'Убрать',
     'Reset filter': 'Сбросить фильтр',
     'Restore selected values?': 'Востановить выбранные значения?',
     'Role': 'Роль',
@@ -151,14 +151,13 @@ Jam.I18n.defaults = {
     'Too many files': 'Слишком много файлов',
     'Type': 'Тип',
 
-    'Unlink': 'Убрать',
-    'Unlink selected items?': 'Убрать выбранные объекты?',
     'Update': 'Изменить',
     'Updated at': 'Изменено',
     'Update previously saved filter?': 'Обновить ранее сохраненный фильтр?',
     'Upload completed': 'Загрузка завершена',
     'User': 'Пользователь',
     'Users': 'Пользователи',
+    'Utilities': 'Утилиты',
 
     'Value': 'Значение',
     'View': 'Просмотр',

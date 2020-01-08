@@ -24,7 +24,7 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     static getAttrs ($container) {
-        return $container.find('.form-attr').map((index, element)=> $(element).data('model-attr')).get();
+        return $container.find('.form-attr').map((index, element) => $(element).data('model-attr')).get();
     }
 
     constructor ($attr, model) {
@@ -47,6 +47,10 @@ Jam.ModelAttr = class ModelAttr {
         return this.$attr.hasClass('disabled');
     }
 
+    isRequired () {
+        return this.$attr.hasClass('required');
+    }
+
     isVisible () {
         return !this.$attr.hasClass('hidden');
     }
@@ -63,6 +67,12 @@ Jam.ModelAttr = class ModelAttr {
         this.$value.attr('readonly', !state);
         this.$value.toggleClass('disabled', !state);
         this.$attr.toggleClass('disabled', !state);
+    }
+
+    require (state) {
+        this.$attr.toggleClass('required', state);
+        state ? this.$value.attr('required', true)
+              : this.$value.removeAttr('required');
     }
 
     clear () {
@@ -91,7 +101,9 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     findByData (key, value) {
-        return this.$attr.find(value === undefined ? `[data-${key}="${value}"]` : `[data-${key}]`);
+        return this.$attr.find(value === undefined
+            ? `[data-${key}="${value}"]`
+            : `[data-${key}]`);
     }
 
     onBeforeCloseModal () {
@@ -111,15 +123,19 @@ Jam.CheckboxModelAttr = class CheckboxModelAttr extends Jam.ModelAttr {
         this.$checkbox.change(this.onChangeCheckbox.bind(this));
     }
 
-    enable (state) {
-        this.$value.attr('readonly', !state);
-        this.$checkbox.attr('readonly', !state);
-        this.$value.closest('.checkbox').toggleClass('disabled', !state);
+    getValue () {
+        return !!this.$value.val();
     }
 
     setValue (value) {
         this.$value.val(value ? 'on' : '');
         this.$checkbox.prop('checked', value);
+    }
+
+    enable (state) {
+        this.$value.attr('readonly', !state);
+        this.$checkbox.attr('readonly', !state);
+        this.$value.closest('.checkbox').toggleClass('disabled', !state);
     }
 
     onChangeCheckbox (event) {

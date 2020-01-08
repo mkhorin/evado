@@ -103,7 +103,7 @@ module.exports = class Mailer extends Base {
                 text: this.translate(`${name}.text`, {name: user.getTitle(), link, time})
             });
         } catch (err) {
-            await verification.remove();
+            await verification.delete();
             throw err;
         }
     }

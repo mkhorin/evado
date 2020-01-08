@@ -9,8 +9,8 @@
     <title data-text="<%= blocks.title %>"><%- _module.getTitle() %></title>
 
     <%- include(_view.get('_part/asset/style/defaults'), {skin: 'black'}) %>
-
     <link rel="stylesheet" href="style/module.css">
+    <%- include(_view.get('_part/asset/style/custom')) %>
 </head>
 <body class="hold-transition skin-black sidebar-mini" data-csrf="<%- _controller.getCsrfToken() %>">
 
@@ -21,6 +21,7 @@
     <%- include(_view.get('_part/asset/script/jam')) %>
     <%- include(_view.get('_part/asset/script/messages')) %>
     <%- include(_view.get('_part/asset/script/defaults')) %>
+    <%- include(_view.get('_part/asset/script/custom')) %>
 
     <script src="script/init.js"></script>
 

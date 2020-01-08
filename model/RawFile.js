@@ -96,16 +96,16 @@ module.exports = class RawFile extends Base {
     async afterValidate () {
         this.set('file', this.get('file').filename);
         if (this.hasError()) {
-            await this.getStorage().remove(this.getFilename());
+            await this.getStorage().delete(this.getFilename());
         }
-        await super.afterValidate();
+        return super.afterValidate();
     }
 
-    async afterRemove () {
+    async afterDelete () {
         if (!this.get('owner')) {
-            await this.getStorage().remove(this.getFilename());
+            await this.getStorage().delete(this.getFilename());
         }
-        await super.afterRemove();
+        return super.afterDelete();
     }
 };
 module.exports.init(module);

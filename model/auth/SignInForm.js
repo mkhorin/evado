@@ -14,7 +14,7 @@ module.exports = class SignInForm extends Base {
                 [['email', 'password'], 'required'],
                 ['email', 'email'],
                 ['rememberMe', 'checkbox'],
-                ['password', (attr, model)=> model.spawn('security/PasswordValidator').validateAttr(attr, model)],
+                ['password', (attr, model) => model.spawn('security/PasswordValidator').validateAttr(attr, model)],
                 ['captchaCode', 'required', {on: [CAPTCHA_SCENARIO]}],
                 ['captchaCode', require('areto/security/captcha/CaptchaValidator'), {on: [CAPTCHA_SCENARIO]}]
             ],

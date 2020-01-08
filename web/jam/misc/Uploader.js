@@ -6,17 +6,17 @@
 // EVENTS
 
 // uploader:error
-// uploader:selected - select new files
+// uploader:select - select new files
 // uploader:overflow - select too many files
-// uploader:finished - all files uploaded
+// uploader:finish - all files uploaded
 
-// uploader:file:appended - new uploader item cloned
-// uploader:file:validated - item validated
-// uploader:file:started - start upload
+// uploader:file:append - new uploader item cloned
+// uploader:file:validate - item validate
+// uploader:file:start - start upload
 // uploader:file:progress - progress upload - percents
-// uploader:file:uploaded - file uploaded
-// uploader:file:confirmRemove - remove file after user confirmation
-// uploader:file:removed - remove file
+// uploader:file:upload - file uploaded
+// uploader:file:confirmDeletion - delete file after user confirmation
+// uploader:file:delete - delete file
 
 Jam.Uploader = class Uploader {
 
@@ -47,10 +47,10 @@ Jam.Uploader = class Uploader {
             underWidth: 'Width cannot be smaller than {limit} px',
             tooMany: 'Too many files',
             alreadyExists: 'This file has already been selected',
-            confirmRemoveStatus: ['done', 'uploading'],
+            deletionConfirmStatuses: ['done', 'uploading'],
             attrName: 'file',
             upload: 'file/upload',
-            remove: 'file/remove',
+            delete: 'file/delete',
             doneMessage: 'Upload done',
             failedMessage: 'Upload failed'
 
@@ -153,7 +153,7 @@ Jam.Uploader = class Uploader {
             this.hideDropZone(counter.total);
             this.$input.wrap('<form>').closest('form').get(0).reset();
             this.$input.unwrap();
-            this.trigger('selected', counter);
+            this.trigger('select', counter);
             this.processNext();
         }
     }
@@ -175,7 +175,7 @@ Jam.Uploader = class Uploader {
             done: 0
         };
         for (const file of this.files) {
-            if (!file.removed) {
+            if (!file.deleted) {
                 if (file.failed) {
                     ++counter.failed;
                 } else if (file.isDone()) {
@@ -203,7 +203,7 @@ Jam.Uploader = class Uploader {
     getFirstFilesByStatus () {
         const result = {};
         for (const file of this.files) {
-            if (!file.removed && !file.failed && !result.hasOwnProperty(file.status)) {
+            if (!file.deleted && !file.failed && !result.hasOwnProperty(file.status)) {
                 result[file.status] = file;
             }
         }
@@ -223,7 +223,7 @@ Jam.UploaderFile = class UploaderFile {
 
     constructor (file, uploader) {
         this.failed = false;
-        this.removed = false;
+        this.deleted = false;
         this.status = 'pending';
         this.file = file;
         this.uploader = uploader;
@@ -238,15 +238,15 @@ Jam.UploaderFile = class UploaderFile {
     }
 
     isProcessing () {
-        return !this.removed && !this.failed && !this.isDone();
+        return !this.deleted && !this.failed && !this.isDone();
     }
 
     setSaved () {
         this.status = 'done';
         this.info = this.file;
         this.buildItem();
-        this.trigger('appended');
-        this.trigger('saved');
+        this.trigger('append');
+        this.trigger('save');
     }
 
     setError (error) {
@@ -263,14 +263,14 @@ Jam.UploaderFile = class UploaderFile {
         }
     }
 
-    remove () {
-        this.removed = true;
+    delete () {
+        this.deleted = true;
         if (this.$item) {
             this.$item.remove();
         }
         this.abort();
         this.uploader.toggleDropZone(true);
-        this.trigger('remove');
+        this.trigger('delete');
     }
 
     // APPEND
@@ -278,19 +278,19 @@ Jam.UploaderFile = class UploaderFile {
     buildItem () {
         this.$item = this.uploader.$uploader.find('.sample').clone().removeClass('sample').show();
         this.uploader.$uploader.find('.uploader-list').prepend(this.$item);
-        this.$item.data('file', this).find('.uploader-remove').click(this.onRemoveFile.bind(this));
+        this.$item.data('file', this).find('.uploader-delete').click(this.onDeleteFile.bind(this));
     }
 
-    onRemoveFile () {
-        this.failed || !this.uploader.options.confirmRemoveStatus.includes(this.status)
-            ? this.remove()
-            : this.trigger('confirmRemove');
+    onDeleteFile () {
+        this.failed || !this.uploader.options.deletionConfirmStatuses.includes(this.status)
+            ? this.delete()
+            : this.trigger('confirmDeletion');
     }
 
     append () {
         this.buildItem();
         this.status = 'appended';
-        this.trigger('appended');
+        this.trigger('append');
         this.uploader.processNext();
     }
 
@@ -309,7 +309,7 @@ Jam.UploaderFile = class UploaderFile {
     startValidate () {
         const error = this.validateFile();
         this.status = 'validated';
-        this.trigger('validated');
+        this.trigger('validate');
         this.setError(error);
         this.uploader.processNext();
     }
@@ -360,7 +360,7 @@ Jam.UploaderFile = class UploaderFile {
         const files = this.uploader.files;
         for (let i = 0; i < files.length; ++i) { // 'of' not work
             const file = files[i];
-            if (!file.removed) {
+            if (!file.deleted) {
                 if (file === this) { // match with previous files only
                     return false;
                 }
@@ -410,7 +410,7 @@ Jam.UploaderFile = class UploaderFile {
         data.append(this.uploader.options.attrName, this.file.name);
         data.append(this.uploader.options.attrName, this.file);
         this.status = 'uploading';
-        this.trigger('started');
+        this.trigger('start');
         this.xhr.send(data);
     }
 
@@ -428,7 +428,7 @@ Jam.UploaderFile = class UploaderFile {
             if (this.xhr.status === 200) {
                 this.status = 'done';
                 this.info = message || this.uploader.doneMessage;
-                this.trigger('uploaded');
+                this.trigger('upload');
             } else {
                 this.setError(message || this.uploader.failedMessage);
             }

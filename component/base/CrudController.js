@@ -14,8 +14,8 @@ module.exports = class CrudController extends Base {
             },
             METHODS: {
                 'select': 'GET',
-                'remove': 'POST',
-                'remove-list': 'POST',
+                'delete': 'POST',
+                'delete-list': 'POST',
                 'export': 'POST'
             },
 
@@ -141,22 +141,22 @@ module.exports = class CrudController extends Base {
         });
     }
 
-    // REMOVE
+    // DELETE
 
-    async actionRemove () {
+    async actionDelete () {
         const model = await this.getModel();
-        await model.remove();
+        await model.delete();
         this.sendText(model.getId());
     }
 
-    async actionRemoveList () {
+    async actionDeleteList () {
         const ids = this.getPostParam('ids');
         if (!ids) {
             throw new BadRequest;
         }
         const Class = this.getModelClass();
         const models = await this.spawn(Class).findById(ids.split(',')).all();
-        await Class.remove(models);
+        await Class.delete(models);
         this.sendStatus(200);
     }
 

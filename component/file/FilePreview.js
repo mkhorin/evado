@@ -23,6 +23,11 @@ module.exports = class FilePreview extends Base {
         await this.createSizes();
     }
 
+    hasSizes () {
+
+    }
+
+
     async createSizes () {
         this.sizes = this.sizes || {};
         for (const key of Object.keys(this.sizes)) {
@@ -78,9 +83,10 @@ module.exports = class FilePreview extends Base {
     }
 
     async processSize (key, filename, source) {
+        let sharp = require('sharp');
         let image = sharp(source);
-        const size = this.getSize(key);
-        const file = this.getSizePath(key, filename);
+        let size = this.getSize(key);
+        let file = this.getSizePath(key, filename);
         try {
             image = await size.process(image);
             await FileHelper.createDirectory(path.dirname(file));
@@ -91,9 +97,9 @@ module.exports = class FilePreview extends Base {
         }
     }
 
-    async remove (filename) {
+    async delete (filename) {
         for (const key of Object.keys(this.sizes)) {
-            await FileHelper.remove(this.getSizePath(key, filename));
+            await FileHelper.delete(this.getSizePath(key, filename));
         }
     }
 
@@ -103,6 +109,5 @@ module.exports = class FilePreview extends Base {
 };
 
 const path = require('path');
-const sharp = require('sharp');
 const CommonHelper = require('areto/helper/CommonHelper');
 const FileHelper = require('areto/helper/FileHelper');

@@ -39,7 +39,7 @@ Jam.ListSort = class ListSort {
     }
 
     load (url) {
-        this.owner.loadModal(url, null, (event, data)=> {
+        this.owner.loadModal(url, null, (event, data) => {
             data && data.saved && this.owner.reload();
         });
     }

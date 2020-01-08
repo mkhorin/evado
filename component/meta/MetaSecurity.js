@@ -56,7 +56,7 @@ module.exports = class MetaSecurity extends Base {
         });
     }
 
-    resolveOnOrder (view) {
+    resolveOnSort (view) {
         return this.resolve({
             targetType: Rbac.TARGET_VIEW,
             target: view,

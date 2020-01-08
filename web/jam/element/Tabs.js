@@ -81,7 +81,7 @@ Jam.Tabs = class Tabs extends Jam.Element {
         const data = {id, close: true};
         this.events.trigger('close', data);
         if (data.close) {
-            this.removeTab(id);
+            this.deleteTab(id);
             this.setActiveFirst();
         }
     }
@@ -107,9 +107,9 @@ Jam.Tabs = class Tabs extends Jam.Element {
         this.events.trigger('create', {id});
     }
     
-    removeTab (id) {
+    deleteTab (id) {
         this.getNav(id).remove();
         this.getPane(id).remove();
-        this.events.trigger('remove', {id});
+        this.events.trigger('delete', {id});
     }
 };

@@ -123,14 +123,14 @@ module.exports = class File extends Base {
 
     async afterUpdate () {
         if (this.rawFile) {
-            await this.getStorage().remove(this.getOldAttr('file'));
+            await this.getStorage().delete(this.getOldAttr('file'));
         }
         return super.afterUpdate();
     }
 
-    async afterRemove () {
-        await this.getStorage().remove(this.getFilename());
-        return super.afterRemove();
+    async afterDelete () {
+        await this.getStorage().delete(this.getFilename());
+        return super.afterDelete();
     }
 
     // RELATIONS

@@ -13,7 +13,7 @@ Jam.Modal = class Modal extends Jam.Element {
     static load (modal, url, params, afterClose) {
         modal = modal || Jam.modal.create();
         modal.load(url, params).done(()=> {
-            modal.one('afterClose', (event, data)=> {
+            modal.one('afterClose', (event, data) => {
                 if (data && data.reopen) {
                     this.load(modal, url, params, afterClose);
                 }
@@ -119,7 +119,7 @@ Jam.Modal = class Modal extends Jam.Element {
     }
 
     onResize () {
-        this.$pool.children().each((index, element)=> $(element).data('modal').resize());
+        this.$pool.children().each((index, element) => $(element).data('modal').resize());
         this.stackToggle.resize();
     }
 
@@ -233,7 +233,7 @@ Jam.ModalItem = class ModalItem {
         Jam.resource.resolve(content, result => {
             this.$body.empty().append(result);
             const $container = this.$body.children().first();
-            Jam.i18n.translateContainer($container);
+            Jam.i18n.translateContainer(this.$body);
             this.createTitle($container);
             this.createTabTitle($container);
             Jam.DateHelper.resolveClientDate(this.$body);
@@ -318,6 +318,10 @@ Jam.ModalItem = class ModalItem {
         Jam.dialog.alert('Close the last modal tab');
     }
 
+    findInstanceByClass (instanceClass) {
+        return Jam.Element.findInstanceByClass(instanceClass, this.$container);
+    }
+
     ensure () {
         if (!this.$modal) {
             this.$modal = this.modal.createModal(this);
@@ -366,7 +370,7 @@ Jam.ModalStackToggle = class ModalStackToggle {
     }
 
     getItem (modal) {
-        return this.$pool.children().filter((index, element)=> $(element).data('modal') === modal);
+        return this.$pool.children().filter((index, element) => $(element).data('modal') === modal);
     }
 
     attach (modal) {
@@ -394,7 +398,7 @@ Jam.ModalStackToggle = class ModalStackToggle {
         }
         const $children = this.$pool.children();
         $children.filter('.active').removeClass('active');
-        $children.filter((index, element)=> $(element).data('modal') === modal).addClass('active');
+        $children.filter((index, element) => $(element).data('modal') === modal).addClass('active');
         modal.$modal.prepend(this.$stack);
         if (this.$stack.css('position') === 'fixed') {
             this.resolveMaxWidth(modal, $children);

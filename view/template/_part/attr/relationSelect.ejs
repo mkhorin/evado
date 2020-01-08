@@ -10,7 +10,7 @@ const d = {
     relName: attr,
     order: {[model.PK]: -1},
     key: model.PK,
-    remove: false,
+    delete: false,
     unlink: true,
     ...data
 };
@@ -82,9 +82,12 @@ const related = model.rel(attr);
             <div class="box-body">
                 <div class="list-commands">
                     <% if (d.unlink) { %>
-                    <button data-command="unlink" data-index="10" title="Unlink" class="btn btn-default mr10" type="button">
-                        <span class="fa fa-unlink text-danger"></span>
-                    </button>
+                    <div class="btn-set">
+                        <button data-command="unlink" data-index="10" title="Remove" class="btn btn-default mr10"
+                                type="button">
+                            <span class="fa fa-unlink text-danger"></span>
+                        </button>
+                    </div>
                     <% } if (d.create) { %>
                     <button data-command="create" data-index="20" title="Create" class="btn btn-success btn-light" type="button">
                         <span class="glyphicon glyphicon-plus"></span>
@@ -93,8 +96,8 @@ const related = model.rel(attr);
                     <button data-command="update" data-index="30" title="Update" class="btn btn-warning btn-light" type="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </button>
-                    <% } if (d.remove) { %>
-                    <button data-command="remove" data-index="40" title="Delete" class="btn btn-white" type="button">
+                    <% } if (d.delete) { %>
+                    <button data-command="delete" data-index="40" title="Delete" class="btn btn-white" type="button">
                         <span class="glyphicon glyphicon-trash text-danger"></span>
                     </button>
                     <% } if (d.modalSort) { %>

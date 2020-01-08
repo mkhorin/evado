@@ -1,0 +1,27 @@
+<!-- _part/tool/utilities -->
+<%
+if (typeof hasUtility !== 'undefined' && hasUtility) {
+    const res = {
+        action: _controller.action.name
+    };
+    if (typeof params !== 'undefined') {
+        Object.assign(res, params);
+    }
+%>
+<div class="utility-container btn-set" data-command="utilities"
+     data-url="<%- _url('default/utility') %>"
+     data-params="<%= JSON.stringify(res) %>">
+    <div class="utility-menu btn-group">
+        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
+            <span data-t="">Utilities</span>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li class="text-center">
+                <span class="fa fa-spinner fa-spin"></span>
+            </li>
+        </ul>
+    </div>
+    <div class="utility-pool"></div>
+</div>
+<% } %>

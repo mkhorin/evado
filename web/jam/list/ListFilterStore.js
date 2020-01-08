@@ -19,14 +19,14 @@ Jam.ListFilterStore = class Store {
 
         this.$selectModal = filter.$container.find('.select-modal');
 
-        this.$apply = this.$selectModal.find('.apply');
+        this.$apply = this.$selectModal.find('[data-id="apply"]');
         this.$apply.click(this.onApply.bind(this));
 
-        this.$update = this.$selectModal.find('.update');
+        this.$update = this.$selectModal.find('[data-id="update"]');
         this.$update.click(this.onUpdateName.bind(this));
 
-        this.$remove = this.$selectModal.find('.remove');
-        this.$remove.click(this.onRemove.bind(this));
+        this.$delete = this.$selectModal.find('[data-id="delete"]');
+        this.$delete.click(this.onDelete.bind(this));
 
         this.$list = this.$selectModal.find('.list-group');
         this.$list.on('click', '.list-group-item', this.onItem.bind(this));
@@ -151,9 +151,9 @@ Jam.ListFilterStore = class Store {
         }
     }
 
-    onRemove () {
+    onDelete () {
         if (this.getSelectedItem()) {
-            Jam.dialog.confirmRemove().then(this.removeItem.bind(this));
+            Jam.dialog.confirmDeletion().then(this.deleteItem.bind(this));
         }
     }
 
@@ -184,7 +184,7 @@ Jam.ListFilterStore = class Store {
         });
     }
 
-    removeItem () {
+    deleteItem () {
         const $item = this.getSelectedElement();
         this.items.splice($item.index(), 1);
         $item.remove();

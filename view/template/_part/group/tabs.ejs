@@ -8,8 +8,8 @@ const p = {
 <div class="tabs form-tabs" data-action-binder="<%= p.actionBinder %>">
     <ul class="nav nav-tabs" role="tablist">
     <% for (const item of items) { %>
-    <li class="nav-tab <%- item.active ? 'active' : '' %>" title="<%= item.hint || '' %>" data-id="<%- item.id %>">
-        <a href="#" data-t="<%- p.translate %>"><%- item.label || item.id %></a>
+    <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
+        <a href="#" data-t="<%- p.translate %>" title="<%= item.hint || '' %>"><%- item.label || item.id %></a>
     </li>
     <% } %>
     </ul>
@@ -18,6 +18,7 @@ const p = {
         <div class="form-base-group tab-pane <%- item.active ? 'active' : '' %>"
              data-id="<%- item.id %>"
              data-action-binder="<%= item.actionBinder === undefined ? '' : JSON.stringify(item.actionBinder) %>">
+            <div class="tab-pane-title" data-t="<%- p.translate %>"><%- item.label || item.id %></div>
             <div class="form-base-group-body">
             <% if (typeof item.content === 'string') { %>
                 <%- include(item.content) %>

@@ -19,9 +19,20 @@
         </nav>
     </header>
 
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <div>
+                <%- _view.placeWidget('sideMenu') %>
+            </div>
+        </section>
+    </aside>
+
     <div id="content-wrapper" class="content-wrapper">
-        <section class="content">
+        <section class="content-header">
             <%- include(_view.get('_part/misc/flashAlert')) %>
+            <h1 data-t=""><%- blocks.title %></h1>
+        </section>
+        <section class="content">
             <%- body %>
         </section>
     </div>

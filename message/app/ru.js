@@ -47,7 +47,7 @@ module.exports = {
     'Signed in as': 'В системе как',
     'Sign in to start your session': 'Войдите, чтобы начать работу',
     'Sign out': 'Выйти',
-    'Sign up': 'Зарегистрировать',
+    'Sign up': 'Регистрация',
     'Something went wrong': 'Что-то пошло не так',
 
     'Try again {time}': 'Повторите попытку {time}',

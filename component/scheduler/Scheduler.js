@@ -13,7 +13,7 @@ module.exports = class Scheduler extends Base {
     }
 
     async load () {
-        this.removeAllTasks();
+        this.deleteAllTasks();
         const models = await this.spawnTask().find().all();
         for (const model of models) {
             this.addTask(model);
@@ -37,7 +37,7 @@ module.exports = class Scheduler extends Base {
 
     updateTask (model) {
         if (this.getTask(model.getId())) {
-            this.removeTask(model.getId());
+            this.deleteTask(model.getId());
         }
         this.addTask(model);
     }

@@ -25,11 +25,8 @@ module.exports = {
         'eonasdan-bootstrap-datetimepicker': ['build'],
         'jquery': ['dist'],
         'inputmask': ['dist/min/jquery.inputmask.bundle.min.js'],
-        // 'ionicons-min': ['css','fonts'],
         'moment': ['locale','min'],
         'select2': ['dist'],
-        'store-js': [
-            'dist/store.modern.min.js'
-        ]
+        'store-js': ['dist/store.modern.min.js']
     }
 };

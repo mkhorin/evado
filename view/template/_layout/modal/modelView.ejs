@@ -15,11 +15,11 @@ if (typeof params !== 'undefined') {
 
     <div class="box-header with-border scroll-header">
         <div class="model-commands">
-
-            <button data-command="reload" class="btn-warning btn-light btn mr15" type="button" title="Reload">
-                <span class="fa fa-redo-alt"></span>
-            </button>
-
+            <div class="btn-set">
+                <button data-command="reload" class="btn-warning btn-light btn" type="button" title="Reload">
+                    <span class="fa fa-redo-alt"></span>
+                </button>
+            </div>
             <button data-command="copyId" class="btn btn-white" type="button" title="Copy ID">ID</button>
 
             <%- include(_view.get('_part/tool/modelHistory')) %>

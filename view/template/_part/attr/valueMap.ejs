@@ -10,17 +10,17 @@
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" type="hidden" value="<%= p.value ? JSON.stringify(p.value) : '' %>">
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+        <input name="<%- p.name %>" type="hidden" value="<%= p.value || '' %>">
         <div class="value-map-items">
             <div class="value-map-item">
                 <div class="row">
                     <div class="col-xs-6">
-                        <input type="text" class="form-control text-right param value-param" placeholder="Value">
+                        <input type="text" <%- p.required %>
+                               class="form-control text-right param value-param" placeholder="Value">
                     </div>
                     <div class="col-xs-6">
-                        <input type="text" class="form-control param text-param" placeholder="Text">
+                        <input type="text" <%- p.required %>
+                               class="form-control param text-param" placeholder="Text">
                     </div>
                 </div>
                 <div class="value-map-item-control btn-group">
@@ -33,11 +33,13 @@
                     <button data-id="up" type="button" class="btn btn-white btn-light" title="Up">
                         <span class="glyphicon glyphicon-menu-up"></span>
                     </button>
-                    <button data-id="remove" type="button" class="btn btn-default" title="Remove">
+                    <button data-id="delete" type="button" class="btn btn-default" title="Delete">
                         <span class="text-danger glyphicon-remove glyphicon"></span>
                     </button>
                 </div>
             </div>
         </div>
+        <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>
 </div>

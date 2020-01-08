@@ -6,15 +6,7 @@
 module.exports = class MetaHelper {
 
     static isSystemName (name) {
-        return name.indexOf('_') === 0;
-    }
-
-    static sortByOrderNumber (items) {
-        return items.sort((a, b)=> a.orderNumber - b.orderNumber);
-    }
-    
-    static sortDataByOrderNumber (items) {
-        return items.sort((a, b)=> a.data.orderNumber - b.data.orderNumber);
+        return name.charAt(0) === '_';
     }
 
     static createTitle ({data}) {
@@ -23,6 +15,14 @@ module.exports = class MetaHelper {
 
     static addClosingChar (text, char) {
         return typeof text === 'string' && text.length && text.slice(-1) !== char ? (text + char) : text;
+    }
+
+    static sortByOrderNumber (items) {
+        return items.sort((a, b) => a.orderNumber - b.orderNumber);
+    }
+
+    static sortByDataOrderNumber (items) {
+        return items.sort((a, b) => a.data.orderNumber - b.data.orderNumber);
     }
 
     static splitByPrefix (name, separator, prefixes) {
@@ -110,7 +110,9 @@ module.exports = class MetaHelper {
         }
         for (const name of Object.keys(result)) {
             for (const doc of docs[name]) {
-                doc[docKey] = Array.isArray(doc[docKey]) ? doc[docKey].concat(result[name]) : result[name];
+                doc[docKey] = Array.isArray(doc[docKey])
+                    ? doc[docKey].concat(result[name])
+                    : result[name];
             }
         }
     }
@@ -130,7 +132,7 @@ module.exports = class MetaHelper {
 
     static sortDocsByMap (docs, map, key) {
         if (map && Array.isArray(docs)) {
-            docs.sort((a, b)=> {
+            docs.sort((a, b) => {
                 a = map[a[key]];
                 b = map[b[key]];
                 return a === undefined
@@ -142,7 +144,7 @@ module.exports = class MetaHelper {
 
     static sortModelsByMap (models, map) {
         if (map && Array.isArray(models)) {
-            models.sort((a, b)=> {
+            models.sort((a, b) => {
                 a = map[a.getId()];
                 b = map[b.getId()];
                 return a === undefined

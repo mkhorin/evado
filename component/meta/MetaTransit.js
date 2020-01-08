@@ -15,11 +15,8 @@ module.exports = class MetaTransit extends Base {
     }
 
     async execute (model, name) {
-        if (!name) {
-            return;
-        }
         if (model.isTransiting()) {
-            throw new BadRequest(this.controller.translate('Transition in progress...'));
+            throw new Forbidden('Transition in progress...');
         }
         await this.resolve(model);
         const transition = ArrayHelper.searchByProperty(name, 'name', model.transitions);
@@ -32,4 +29,5 @@ module.exports = class MetaTransit extends Base {
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
 const BadRequest = require('areto/error/BadRequestHttpException');
+const Forbidden = require('areto/error/ForbiddenHttpException');
 const Transition = require('evado-meta-document/workflow/Transition');

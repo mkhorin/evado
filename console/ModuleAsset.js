@@ -25,7 +25,7 @@ module.exports = class ModuleAsset extends Base {
         if (source && await FileHelper.getStat(path.join(source, 'package.json'))) {
             this.log('info', `Source vendor folder: ${source}`);
             this.log('info', `Clear folder...`);
-            await FileHelper.remove(path.join(source, 'node_modules'));
+            await FileHelper.delete(path.join(source, 'node_modules'));
             this.log('info', `Install vendors...`);
             await SystemHelper.spawnProcess(source, 'npm', ['install']);
             await PromiseHelper.setImmediate();

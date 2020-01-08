@@ -98,7 +98,7 @@ module.exports = {
             max: 24
         },
         'oldUserPasswords': 0,
-        'minUserPasswordLifetime': 'P10D', // ISO_8601#Duration
+        'minUserPasswordLifetime': 'P10D', // see ISO_8601#Duration
         'maxUserPasswordLifetime': 'P30D',
         'verificationLifetime': 'P1D',
         'repeatVerificationTimeout': 'P1D',
@@ -106,7 +106,8 @@ module.exports = {
             minLength: 4,
             maxLength: 5
         },
-        'static': {},
+        'static': {
+        },
         'template': {
             engine: require('areto-ejs'),
             extension: 'ejs'
@@ -131,6 +132,9 @@ module.exports = {
     widgets: {
         'commonMenu': {
             Class: require('../component/widget/CommonMenu')
+        },
+        'sideMenu': {
+            Class: require('evado/component/widget/SideMenu')
         },
         'notifications': {
             Class: require('../component/widget/Notifications')

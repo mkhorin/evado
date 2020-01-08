@@ -23,7 +23,7 @@ Jam.Helper = class Helper {
     }
 
     static resolveTemplate (text, data = {}) {
-        return text.replace(/{{(\w+)}}/gm, (match, key)=> data.hasOwnProperty(key) ? data[key] : '');
+        return text.replace(/{{(\w+)}}/gm, (match, key) => data.hasOwnProperty(key) ? data[key] : '');
     }
 
     static renderSelectOptions (data) {
@@ -99,8 +99,8 @@ Jam.Helper = class Helper {
     }
 
     static promise (callback) {
-        return new Promise((resolve, reject)=> {
-            callback((err, result)=> err ? reject(err) : resolve(result));
+        return new Promise((resolve, reject) => {
+            callback((err, result) => err ? reject(err) : resolve(result));
         });
     }
 
@@ -115,7 +115,7 @@ Jam.Helper = class Helper {
     }
 
     static createSerialImageLoading ($container = $(document.body)) {
-        $container.find('img').each((index, image)=> {
+        $container.find('img').each((index, image) => {
             if (!image.getAttribute('data-src')) {
                 image.setAttribute('data-src', image.getAttribute('src'));
                 image.removeAttribute('src');
@@ -125,7 +125,7 @@ Jam.Helper = class Helper {
 
     static executeSerialImageLoading ($container = $(document.body)) {
         const $images = $container.find('img').filter('[data-src]');
-        $images.slice(0, -1).each((index, image)=> {
+        $images.slice(0, -1).each((index, image) => {
             image.addEventListener('load', ()=> {
                 const $next = $images.eq(index + 1);
                 $next.prop('src', $next.data('src'));
@@ -239,7 +239,7 @@ Jam.ArrayHelper = class ArrayHelper {
     }
 
     static unique (items) {
-        return items.filter((item, index)=> items.indexOf(item) === index);
+        return items.filter((item, index) => items.indexOf(item) === index);
     }
 
     static uniqueByKey (key, items) {
@@ -323,7 +323,7 @@ Jam.DateHelper = class DateHelper {
     }
 
     static formatByUtc (isoDate, utc) {
-        return utc ? isoDate.slice(0, -1) : isoDate; // remove Z suffix
+        return utc ? isoDate.slice(0, -1) : isoDate; // delete Z suffix
     }
 
     static resolveClientDate ($container) {
@@ -477,16 +477,16 @@ Jam.UrlHelper = class UrlHelper {
         this.openNewPage(this.getNewPageUrl(url));
     }
 
-    static openNewPage (url) {
+    static openNewPage (url, data) {
         Object.assign(document.createElement('a'), {
             target: '_blank',
-            href: url
+            href: this.addUrlParams(url, data)
         }).click();
     }
 
     static addUrlParams (url, data) {
         data = typeof data === 'string' ? data : $.param(data);
-        return `${url}${url.includes('?') ? '&' : '?'}${data}`;
+        return  data ? `${url}${url.includes('?') ? '&' : '?'}${data}` : url;
     }
 
     static getUrlParams (url) {

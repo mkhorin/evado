@@ -74,7 +74,7 @@ Jam.DataGrid = class DataGrid {
     }
 
     getRowData ($rows, column) {
-        return $rows.map((index, row)=> this.getData(row.dataset.id, column)).get();
+        return $rows.map((index, row) => this.getData(row.dataset.id, column)).get();
     }
 
     getData (id, column) {
@@ -227,7 +227,7 @@ Jam.DataGrid = class DataGrid {
         return data === undefined ? defaults : data;
     }
 
-    removeStoreData (key) {
+    clearStoreData (key) {
         store.remove(this.getStoreKey(key));
     }
 };
@@ -299,7 +299,10 @@ Jam.TreeGridNode = class TreeGridNode {
     }
 
     getNested () {
-        return this.$row.nextUntil(`[data-depth="${this.getDepth()}"]`);
+        const depth = this.getDepth();
+        return this.$row.nextUntil(`[data-depth="${depth}"]`).filter((index, element) => {
+            return element.dataset.depth > depth;
+        });
     }
 
     toggle (state) {

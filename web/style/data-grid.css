@@ -324,3 +324,27 @@
         line-height: 35px;
     }
 }
+
+@media print {
+    .data-grid-table > thead {
+        border-color: #888 !important;
+    }
+    .data-grid-table,
+    .data-grid-table > thead > tr > th,
+    .data-grid-table > tbody > tr > td {
+        border-top-width: 1px !important;
+        border-bottom-width: 1px !important;
+        border-left-width: 0 !important;
+        border-right-width: 0 !important;
+        border-color: #ccc !important;
+    }
+    .data-grid .list-filter,
+    .data-grid .row-top,
+    .data-grid .column .order-toggle,
+    .data-grid-pages {
+        display: none !important;
+    }
+    .data-grid-table > thead > tr > .column.sortable {
+        padding-right: 5px;
+    }
+}

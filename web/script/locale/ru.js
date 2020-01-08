@@ -57,7 +57,7 @@ if (typeof moment === "function" && $.fn.daterangepicker) {
         },
         startdate: moment().subtract(29, 'days'),
         enddate: moment()
-    }, (start, end)=> {
+    }, (start, end) => {
         //console.log("Select: " + start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
     });
 }

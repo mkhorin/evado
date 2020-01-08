@@ -75,6 +75,7 @@ Jam.ActionBinderBase = class ActionBinderBase {
     constructor (element, data) {
         this.element = element;
         this.attr = this.element.attr;
+        this.$item = this.element.$item;
         this.data = data;
         this.init();
     }
@@ -99,25 +100,27 @@ Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderBase {
         if (this.attr && !visible) {
             this.attr.clear();
         }
-        const group = this.element.$item.data('group');
+        const group = this.$item.data('group');
         group ? group.toggle(visible)
-              : this.element.$item.toggleClass('hidden', !visible);
+              : this.$item.toggleClass('hidden', !visible);
     }
 };
 
 Jam.ActionBinderRequire = class ActionBinderRequire extends Jam.ActionBinderBase {
 
     update () {
-        //this.element.$item.toggleClass('hidden', !this.isValid());
+        const valid = this.isValid();
+        this.attr ? this.attr.require(valid)
+                  : this.$item.toggleClass('required', valid);
     }
 };
 
 Jam.ActionBinderEnable = class ActionBinderEnabled extends Jam.ActionBinderBase {
 
     update () {
-        this.attr
-            ? this.attr.enable(this.isValid())
-            : this.element.$item.toggleClass('disabled', !this.isValid());
+        const valid = this.isValid();
+        this.attr ? this.attr.enable(valid)
+                  : this.$item.toggleClass('disabled', !this.isValid());
     }
 };
 

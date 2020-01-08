@@ -147,6 +147,10 @@ module.exports = class MetaGrid extends Base {
             if (attr.isFile()) {
                 return this.renderFileAttr(attr, model);
             }
+            if (attr.isState()) {
+                const state = model.class.getState(value);
+                return state ? state.title : value;
+            }
         }
         return this.controller.format(value, attr.getFormat());
     }

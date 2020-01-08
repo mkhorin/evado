@@ -57,7 +57,7 @@ Jam.LoadableTreeMenu = class LoadableTreeMenu extends Jam.TreeMenu {
         $.get(this.$menu.data('url'), {
             id: $item.data('id')
         }).done(data => {
-            $item.find('.treeview-menu').html(data);
+            Jam.i18n.translateContainer($item.find('.treeview-menu').html(data));
         }).always(()=> {
             $item.removeClass('loading').addClass('loaded');
         });

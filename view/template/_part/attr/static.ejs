@@ -3,11 +3,11 @@
 <% const p = {}; %>
 <%- include('_params', {p}) %>
 <%
-if (p.displayValue && typeof url !== 'undefined') {
+if (p.value && typeof url !== 'undefined') {
     p.displayValue = `<a href="${_url(url)}" class="modal-link">${p.displayValue}</a>`;
 }
 %>
-<div class="form-attr form-group">
+<div class="form-attr-static form-attr form-group">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

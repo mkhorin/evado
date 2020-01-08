@@ -39,7 +39,7 @@ Jam.Model = class Model extends Jam.Element {
         }
         this.changeTracker = new Jam.ModelChangeTracker(this);
         this.error = new Jam.ModelError(this);
-        this.utilManager = new Jam.UtilManager(this.$commands, this);
+        this.utilityManager = new Jam.UtilityManager(this.$commands, this);
         this.changeTracker.start();
         this.behaviors = Jam.ClassHelper.spawnInstances(this.params.behaviors, {owner: this});
         this.behaviors.forEach(item => item.init());
@@ -140,7 +140,7 @@ Jam.Model = class Model extends Jam.Element {
             case 'cancel': return this.onCancel;
             case 'view': return this.onView;
             case 'update': return this.onUpdate;
-            case 'remove': return this.onRemove;
+            case 'delete': return this.onDelete;
             case 'reload': return this.onReload;
             case 'sort': return this.onSort;
             case 'copyId': return this.onCopyId;
@@ -173,8 +173,8 @@ Jam.Model = class Model extends Jam.Element {
         this.childModal.load(this.params.update, {id: this.id});
     }
 
-    onRemove () {
-        Jam.dialog.confirmRemove().then(this.removeModel.bind(this));
+    onDelete () {
+        Jam.dialog.confirmDeletion().then(this.deleteModel.bind(this));
     }
 
     onReload () {
@@ -216,9 +216,9 @@ Jam.Model = class Model extends Jam.Element {
         });
     }
 
-    removeModel () {
+    deleteModel () {
         this.$loader.show();
-        Jam.Helper.post(this.$form, this.params.remove, {id: this.id}).done(()=> {
+        Jam.Helper.post(this.$form, this.params.delete, {id: this.id}).done(()=> {
             this.saved = true;
             this.changeTracker.reset();
             this.modal.close();

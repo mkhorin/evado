@@ -16,14 +16,15 @@ module.exports = class MetaTreeGrid extends Base {
 
     constructor () {
         super(...arguments);
-        this.level = this.depth === undefined ? 0 : (this.depth + 1);
-        this.level = this.meta.treeView.getLevel(this.level);
+        const depth = this.depth === undefined ? 0 : (this.depth + 1);
+        this.level = this.meta.treeView.getLevel(depth);
     }
 
     async renderModel (model) {
         const data = {[this.CLASS_KEY]: model.class.id};
         if (this.level) {
-            const query = this.level.refView.find(this.module);
+            const view = this.level.refView || this.level.refClass;
+            const query = view.find(this.module);
             await this.level.refAttr.relation.setQueryByModel(query, model);
             // await this.security.access.assignObjectFilter(query);
             data[this.HAS_CHILDREN_KEY] = !!await query.order(null).id();

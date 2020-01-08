@@ -1,3 +1,3 @@
-# Evado
+# Evado Kit
 
-## Software kit for instant building and operating business applications
+## Software kit for creating and operating reliable business applications

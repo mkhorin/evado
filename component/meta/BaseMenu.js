@@ -13,12 +13,12 @@ module.exports = class BaseMenu extends Base {
         const activeItem = this.controller.meta && this.controller.meta.node;
         const openedItems = activeItem ? activeItem.getParents() : [];
         const items = openedItems.slice(0).concat(section.children);
-        const forbiddenAccess = await this.resolveAccess({section, items}) || {};
-        return this.renderTemplate('_part/nav/sidebarMenu', {
+        const forbiddenAccess = await this.resolveAccess({section, items});
+        return this.renderTemplate('_part/nav/sideMenu', {
             section,
-            forbiddenAccess,
             activeItem,            
-            openedItems
+            openedItems,
+            forbiddenAccess
         });
     }
 
@@ -38,11 +38,11 @@ module.exports = class BaseMenu extends Base {
         return this.module.getRbac().resolveNavAccess(this.controller.user.assignments, data);
     }
 
-    async renderItems (items) {
-        return this.renderTemplate('_part/nav/sidebarMenuItems', {
+    async renderItems (items, section) {
+        return this.renderTemplate('_part/nav/sideMenuItems', {
             activeItem: null,
             openedItems: [],
-            forbiddenAccess: await this.resolveAccess({items}) || {},
+            forbiddenAccess: await this.resolveAccess({section, items}),
             items
         });
     }

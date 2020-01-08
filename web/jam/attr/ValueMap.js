@@ -10,7 +10,7 @@ Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
         this.$list.on('click', '[data-id="add"]', this.onAddItem.bind(this));
         this.$list.on('click', '[data-id="down"]', this.onDownItem.bind(this));
         this.$list.on('click', '[data-id="up"]', this.onUpItem.bind(this));
-        this.$list.on('click', '[data-id="remove"]', this.onRemoveItem.bind(this));
+        this.$list.on('click', '[data-id="delete"]', this.onDeleteItem.bind(this));
         this.$list.on('keyup', '.param', this.onUpdate.bind(this));
         this.createItems(Jam.Helper.parseJson(this.$value.val()) || []);
     }
@@ -33,7 +33,7 @@ Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
             for (let i = 1; i < items.length; ++i) {
                 $item.after($item.clone());
             }
-            this.getItems().each((index, element)=> {
+            this.getItems().each((index, element) => {
                 this.setItemData($(element), items[index]);
             });
         }
@@ -88,7 +88,7 @@ Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
         }
     }
 
-    onRemoveItem (event) {
+    onDeleteItem (event) {
         const $items = this.getItems();
         if ($items.length > 1) {
             this.getItem(event.target).remove();

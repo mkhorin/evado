@@ -56,7 +56,7 @@ module.exports = class Task extends Base {
         }
         const result = new Promise(done => {
             task.once(task.EVENT_DONE, done);
-            task.once(task.EVENT_FAIL, ({error})=> done(this.addError('error', error)));
+            task.once(task.EVENT_FAIL, ({error}) => done(this.addError('error', error)));
         });
         await task.execute();
         return result;

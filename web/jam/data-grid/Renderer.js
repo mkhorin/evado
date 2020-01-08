@@ -95,13 +95,13 @@ Jam.DataGridRenderer = class DataGridRenderer {
         if (!data) {
             return '';
         }
-        let cells = '';
+        let content = '';
         this._rowValueMap = {};
         for (let i = 0; i < this.columns.length; ++i) {
-            cells += this.renderBodyCell(data, this.columns[i], i);
+            content += this.renderBodyCell(data, this.columns[i], i);
         }
         const id = this.params.getRowId(data);
-        return this.renderBodyGroup(data) + this.renderBodyRowHtml(id, cells);
+        return this.renderBodyGroup(data) + this.renderBodyRowHtml(id, content, ...arguments);
     }
 
     renderBodyGroup (data) {
@@ -264,10 +264,10 @@ Jam.TreeGridRenderer = class TreeGridRenderer extends Jam.DataGridRenderer {
         $row.after(items.map(item => this.renderBodyRow(item, depth)).join(''));
     }
 
-    renderBodyRowHtml (id, content, data, depth) {
+    renderBodyRowHtml (id, content, data, depth = 0) {
         const css = data._node_hasChildren ? 'has-children' : '';
         const node = data._node_class || '';
-        return `<tr class="${css}" data-depth="${depth || 0}" data-id="${id}" data-class="${node}">${content}</tr>`;
+        return `<tr class="item ${css}" data-depth="${depth}" data-id="${id}" data-class="${node}">${content}</tr>`;
     }
 
     renderBodyCellHtml (value, column, index) {

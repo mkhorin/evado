@@ -40,7 +40,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     initChanges () {
-        this.changes = {links: [], unlinks: [], removes: []};
+        this.changes = {links: [], unlinks: [], deletes: []};
         this.startValues = [];
         for (const option of this.$select.children()) {
             this.startValues.push(option.getAttribute('value'));
@@ -93,7 +93,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             case 'view': return this.onView;
             case 'create': return this.onCreate;
             case 'update': return this.onUpdate;
-            case 'remove': return this.onRemove;
+            case 'delete': return this.onDelete;
             case 'sort': return this.onSort;
         }
     }
@@ -114,18 +114,20 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     processResults (data, params) {
         params.page = params.page || 1;
         return {
-            pagination: {more: (params.page * this.params.pageSize) < data.total},
+            pagination: {
+                more: (params.page * this.params.pageSize) < data.total
+            },
             results: data.items
         };
     }
 
     getSelectedValues () {
-        const values = this.$select.val();
-        if (!Array.isArray(values)) {
-            return [];
+        const data = this.$select.val();
+        if (!Array.isArray(data)) {
+            return data ? [data] : [];
         }
         const $items = this.getSelect2ChoiceItems();
-        return values.filter((value, index)=> {
+        return data.filter((value, index) => {
             return $items.eq(index).is('.active');
         });
     }
@@ -160,7 +162,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     hasChanges () {
         return this.changes.links.length
             || this.changes.unlinks.length
-            || this.changes.removes.length;
+            || this.changes.deletes.length;
     }
 
     changeSelect () {
@@ -173,7 +175,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
                 this.linkValue(value);
             }
             if (!this.startValues.includes(value) && this.startValues.length
-                && !this.changes.removes.includes(this.startValues[0])) {
+                && !this.changes.deletes.includes(this.startValues[0])) {
                 this.changes.unlinks = [this.startValues[0]];
             }
         }
@@ -188,7 +190,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             this.changes.links.push(value);
         }
         Jam.ArrayHelper.removeValue(value, this.changes.unlinks);
-        Jam.ArrayHelper.removeValue(value, this.changes.removes);
+        Jam.ArrayHelper.removeValue(value, this.changes.deletes);
     }
 
     showMouseEnter () {
@@ -222,11 +224,11 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         }
     }
 
-    onRemove () {
+    onDelete () {
         const values = this.getSelectedValues();
         if (values.length) {
-            Jam.dialog.confirmRemove('Delete selected items?')
-                .then(this.remove.bind(this, values));
+            Jam.dialog.confirmDeletion('Delete permanently selected objects?')
+                .then(this.delete.bind(this, values));
         }
     }
 
@@ -243,10 +245,10 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         }
     }
 
-    remove (values) {
+    delete (values) {
         for (const value of values) {
             if (this.startValues.includes(value)) {
-                this.changes.removes.push(value);
+                this.changes.deletes.push(value);
             }
             this.removeSelect2Value(value);
         }
@@ -295,6 +297,6 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     sortByIdList (ids) {
         const data = Jam.ArrayHelper.flip(ids);
-        this.$select.children().sort((a, b)=> data[a.value] - data[b.value]).appendTo(this.$select);
+        this.$select.children().sort((a, b) => data[a.value] - data[b.value]).appendTo(this.$select);
     }
 };

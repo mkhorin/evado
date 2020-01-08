@@ -11,7 +11,7 @@
             <span class="condition-logical-and text-success">AND</span>
             <span class="condition-logical-or text-warning">OR</span>
         </div>
-        <div class="remove-condition text-danger">
+        <div class="delete-condition text-danger">
             <span class="fa fa-times"></span>
         </div>
         <div class="condition-content row">
@@ -156,13 +156,13 @@
                 <div class="modal-body">
                     <div class="list-group-container">
                         <div class="controls">
-                            <button class="apply btn-primary btn" type="button" title="Apply">
+                            <button data-id="apply" class="btn-primary btn" type="button" title="Apply">
                                 <span class="fa fa-upload"></span>
                             </button>
-                            <button class="update btn-warning btn-light btn" type="button" title="Update">
+                            <button data-id="update" class="btn-warning btn-light btn" type="button" title="Update">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </button>
-                            <button type="button" class="remove btn-white btn" title="Remove">
+                            <button data-id="delete" type="button" class="btn-white btn" title="Delete">
                                 <span class="glyphicon glyphicon-trash text-danger"></span>
                             </button>
                         </div>

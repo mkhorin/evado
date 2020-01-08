@@ -44,7 +44,7 @@ Jam.UserAction = class UserAction extends Jam.Element {
 
     getModel () {
         const modal = Jam.modal.getLast();
-        return modal ? Jam.Element.findInstanceByParent(Jam.Model, modal.$container) : null;
+        return modal ? Jam.Element.findInstanceByClass(Jam.Model, modal.$container) : null;
     }
 
     getParam (name, defaults) {
@@ -94,7 +94,7 @@ Jam.ModalUserAction = class ModalUserAction extends Jam.UserAction {
         this.constructor.confirm(this.$element).then(()=> {
             const modal = Jam.modal.create();
             modal.load(this.getParam('url'), this.getParam('params'));
-            modal.one('afterClose', (event, data)=> this.onDone(data.result));
+            modal.one('afterClose', (event, data) => this.onDone(data.result));
         });
     }
 

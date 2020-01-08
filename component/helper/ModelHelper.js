@@ -42,9 +42,9 @@ module.exports = class ModelHelper {
             query.order({[model.PK]: -1}).offset(truncation);
             if (inBulk) {
                 const ids = await query.ids();
-                return query.order(null).where({[model.PK]: ids}).remove();
+                return query.order(null).where({[model.PK]: ids}).delete();
             }
-            return model.constructor.remove(await query.all());
+            return model.constructor.delete(await query.all());
         }
     }
 };

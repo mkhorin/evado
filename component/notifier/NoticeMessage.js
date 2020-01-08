@@ -21,7 +21,7 @@ module.exports = class NoticeMessage extends Base {
                 [['subject', 'text'], 'required'],
                 ['sentAt', 'default', {value: null}]
             ],
-            UNLINK_ON_REMOVE: [
+            UNLINK_ON_DELETE: [
                 'recipients'
             ],
             OVERFLOW: 10,
@@ -101,7 +101,7 @@ module.exports = class NoticeMessage extends Base {
 
     relRecipients () {
         const Class = this.getClass('notifier/Recipient');
-        return this.hasMany(Class, 'message', this.PK).removeOnUnlink();
+        return this.hasMany(Class, 'message', this.PK).deleteOnUnlink();
     }
 };
 module.exports.init(module);

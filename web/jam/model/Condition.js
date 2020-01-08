@@ -23,7 +23,9 @@ Jam.ModelCondition = class ModelCondition {
         if (!this.attrMap.hasOwnProperty(name)) {
             this.attrMap[name] = this.model.getAttr(name);
         }
-        return this.attrMap[name] && this.attrMap[name].getValue();
+        if (this.attrMap[name]) {
+            return this.attrMap[name].getValue();
+        }
     }
 
     validate (data) {
@@ -36,9 +38,10 @@ Jam.ModelCondition = class ModelCondition {
         } else {
             data = data.slice(1);
         }
-        return Jam.ModelCondition.OPERATORS.hasOwnProperty(operator)
-            ? this[Jam.ModelCondition.OPERATORS[operator]](operator, data)
-            : this.log('error', `Operator not found: ${operator}`);
+        if (Jam.ModelCondition.OPERATORS.hasOwnProperty(operator)) {
+            return this[Jam.ModelCondition.OPERATORS[operator]](operator, data);
+        }
+        this.log('error', `Operator not found: ${operator}`);
     }
 
     validateHash (data) {
@@ -85,8 +88,8 @@ Jam.ModelCondition = class ModelCondition {
             : this.isValueExists(this.getValue(operands[0]));
     }
 
-    validateNotExists (operator, operands) {
-        return !this.validateExists(operator, operands);
+    validateNotExists () {
+        return !this.validateExists(...arguments);
     }
 
     validateBetween (operator, operands) {
@@ -97,8 +100,8 @@ Jam.ModelCondition = class ModelCondition {
         return value >= operands[1] && value <= operands[2];
     }
 
-    validateNotBetween (operator, operands) {
-        return !this.validateBetween(operator, operands);
+    validateNotBetween () {
+        return !this.validateBetween(...arguments);
     }
 
     validateIn (operator, operands) {
@@ -107,11 +110,11 @@ Jam.ModelCondition = class ModelCondition {
             : operands[1].includes(this.getValue(operands[0]));
     }
 
-    validateNotIn (operator, operands) {
-        return !this.validateIn(operator, operands);
+    validateNotIn () {
+        return !this.validateIn(...arguments);
     }
 
-    validateRegExp (operator, operands) {
+    validateRegex (operator, operands) {
         return operands.length < 2
             ? this.logDataError(operator, operands)
             : (new RegExp(operands[1], operands[2])).test(this.getValue(operands[0]));
@@ -123,8 +126,8 @@ Jam.ModelCondition = class ModelCondition {
             : operands[1] === this.getValue(operands[0]);
     }
 
-    validateNotEqual (operator, operands) {
-        return !this.validateEqual(operator, operands);
+    validateNotEqual () {
+        return !this.validateEqual(...arguments);
     }
 
     validateGreater (operator, operands) {
@@ -156,8 +159,7 @@ Jam.ModelCondition = class ModelCondition {
     }
 
     log (type, message) {
-        console[type](this.wrapClassMessage(message));
-        return false;
+        console[type](message);
     }
 };
 
@@ -170,7 +172,7 @@ Jam.ModelCondition.OPERATORS = {
     'NOT BETWEEN':'validateNotBetween',
     'IN': 'validateIn',
     'NOT IN': 'validateNotIn',
-    'REGEXP': 'validateRegExp',
+    'REGEX': 'validateRegex',
     '=': 'validateEqual',
     '!=': 'validateNotEqual',
     '>': 'validateGreater',

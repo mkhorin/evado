@@ -19,7 +19,7 @@ module.exports = class Notice extends Base {
                 'userFilters',
                 'options'
             ],
-            UNLINK_ON_REMOVE: [
+            UNLINK_ON_DELETE: [
                 'noticeMessages'
             ]
         };
@@ -31,7 +31,7 @@ module.exports = class Notice extends Base {
 
     relNoticeMessages () {
         const Class = this.getClass('notifier/NoticeMessage');
-        return this.hasMany(Class, 'notice', this.PK).removeOnUnlink();
+        return this.hasMany(Class, 'notice', this.PK).deleteOnUnlink();
     }
 
     // EXECUTE

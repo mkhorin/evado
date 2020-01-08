@@ -6,9 +6,12 @@ const p = {
     translate: typeof translate === 'undefined' ? '' : translate
 };
 %>
-<fieldset class="form-base-group form-set <%- p.active %>" data-action-binder='<%- p.actionBinder %>'>
-    <legend><span class="form-set-toggle"><span class="fa fa-plus"></span>
-        <span data-t="<%- p.translate %>"><%- title %></span></span>
+<fieldset class="form-base-group form-set <%- p.active %>" data-action-binder="<%= p.actionBinder %>">
+    <legend>
+        <span class="form-set-toggle">
+            <span class="icon fas"></span>
+            <span data-t="<%- p.translate %>"><%- title %></span>
+        </span>
     </legend>
     <div class="form-set-body form-base-group-body">
     <% for (const item of items) {

@@ -163,7 +163,7 @@ Jam.ListFilterGroup = class ListFilterGroup {
         return result.length ? result : undefined;
     }
 
-    afterConditionRemove (condition) {
+    afterDeleteCondition (condition) {
         Jam.ArrayHelper.removeValue(condition, this.conditions);
     }
 };
@@ -197,7 +197,7 @@ Jam.ListFilterCondition = class ListFilterCondition {
         this.$attrContainer = this.$content.find('.condition-attr-container');
         this.$attrSelect = this.$attrContainer.find('.condition-attr');
         this.$attrSelect.change(this.onChangeAttr.bind(this));
-        this.$container.find('.remove-condition').click(this.onRemove.bind(this));
+        this.$container.find('.delete-condition').click(this.onDelete.bind(this));
         this.$container.find('.condition-logical').click(this.onToggleLogical.bind(this));
         this.$attrSelect.html(this.constructor.createAttrItems(this.group.columns)).select2();
     }
@@ -211,7 +211,7 @@ Jam.ListFilterCondition = class ListFilterCondition {
     }
 
     onChangeAttr () {
-        this.removeType();
+        this.deleteType();
         const params = this.group.getAttrParams(this.getAttr());
         if (params) {
             this.type = this.createType(params);
@@ -260,16 +260,16 @@ Jam.ListFilterCondition = class ListFilterCondition {
         this.$container.addClass(this.and ? 'and' : 'or');
     }
 
-    removeType () {
+    deleteType () {
         if (this.type) {
-            this.type.remove();
+            this.type.delete();
             this.type = null;
         }
     }
 
-    onRemove () {
+    onDelete () {
         this.$container.remove();
-        this.group.afterConditionRemove(this);
+        this.group.afterDeleteCondition(this);
     }
 
     serialize () {
@@ -338,8 +338,8 @@ Jam.ListFilterType = class ListFilterType {
         this.condition.$container.find('.default-focus').focus();
     }
 
-    remove () {
-        this.condition.$attrContainer.nextAll().remove();
+    delete () {
+        this.condition.$attrContainer.nextAll().delete();
     }
 
     getRequestData (data) {
@@ -411,7 +411,7 @@ Jam.ListFilterDateType = class ListFilterDateType extends Jam.ListFilterType {
     onChangeDate (event) {
         let date = event.date;
         let format = this.picker.options().format;
-        // reformat date to remove time on select day only
+        // reformat date to delete time on select day only
         date = date && moment(moment(date).format(format), format);
         this.setValue(date ? Jam.DateHelper.stringify(date, this.params.utc) : '');
         if (!date) {
@@ -437,9 +437,9 @@ Jam.ListFilterIdType = class ListFilterIdType extends Jam.ListFilterStringType {
         return this.nested.active() ? this.nested.getValue() : super.getValue();
     }
 
-    remove () {
-        super.remove();
-        this.nested.remove();
+    delete () {
+        super.delete();
+        this.nested.delete();
     }
 
     changeValue (value) {
@@ -458,7 +458,7 @@ Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
         } else if (this.isAjax()) {
             this.createAjax();
         } else {
-            this.removeEqualOptions();
+            this.deleteEqualOptions();
         }
         this.nested = new Jam.ListFilterNested(this);
     }
@@ -506,7 +506,7 @@ Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
         };
     }
 
-    removeEqualOptions () {
+    deleteEqualOptions () {
         const $select = this.condition.getOperationItem();
         $select.children().first().remove();
         $select.children().first().remove();
@@ -570,9 +570,9 @@ Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
         this.createAjax();
     }
 
-    remove () {
-        super.remove();
-        this.nested.remove();
+    delete () {
+        super.delete();
+        this.nested.delete();
     }
 };
 
@@ -597,7 +597,7 @@ Jam.ListFilterNested = class ListFilterNested {
     resolve () {
         const columns = this.params.columns;
         if (!Array.isArray(columns) || !columns.length) {
-            return this.condition.getOperationItem().children().last().remove(); // remove nested option
+            return this.condition.getOperationItem().children().last().remove(); // delete nested option
         }
         this.group = new Jam.ListFilterGroup(this.filter, columns);
         this.condition.$groupContainer.html(this.group.$container);
@@ -621,7 +621,7 @@ Jam.ListFilterNested = class ListFilterNested {
         return this.group.serialize();
     }
 
-    remove () {
+    delete () {
         this.condition.$groupContainer.html('');
     }
 

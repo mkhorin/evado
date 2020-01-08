@@ -38,13 +38,13 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     prepareRow (row, data, index) {
         if (this.changes.getLinks().includes(data[this.params.key])) {
-            $(row).addClass('inserted').attr('title', 'Inserted');
+            $(row).addClass('linked').attr('title', 'Add');
         }
         if (this.changes.getUnlinks().includes(data[this.params.key])) {
-            $(row).addClass('unlinked').attr('title', 'Unlink');
+            $(row).addClass('unlinked').attr('title', 'Remove');
         }
-        if (this.changes.getRemoves().includes(data[this.params.key])) {
-            $(row).addClass('removed').attr('title', 'Remove');
+        if (this.changes.getDeletes().includes(data[this.params.key])) {
+            $(row).addClass('deleted').attr('title', 'Delete');
         }
         super.prepareRow(row, data, index);
     }
@@ -89,16 +89,17 @@ Jam.AttrList = class AttrList extends Jam.List {
         }
     }
 
-    onRemove () {
+    onDelete () {
         const $rows = this.getSelectedRows();
         if ($rows) {
-            Jam.dialog.confirmRemove('Delete selected items?').then(()=> this.removeObjects($rows));
+            Jam.dialog.confirmDeletion('Delete permanently selected objects?')
+                .then(()=> this.deleteObjects($rows));
         }
     }
 
     onLink () {
         if (!this.revertChanges()) {
-            this.loadModal(this.params.link, null, (event, data)=> {
+            this.loadModal(this.params.link, null, (event, data) => {
                 if (data && data.result) {
                     this.linkObjects(data.result);
                 }
@@ -136,8 +137,8 @@ Jam.AttrList = class AttrList extends Jam.List {
         this.reload();
     }
 
-    removeObjects ($rows) {
-        this.changes.removeObjects(this.getObjectIds($rows));
+    deleteObjects ($rows) {
+        this.changes.deleteObjects(this.getObjectIds($rows));
         this.serializeValue();
         this.reload();
     }
@@ -173,11 +174,11 @@ Jam.AttrListChanges = class AttrListChanges {
     clear () {
         this.data.links = [];
         this.data.unlinks = [];
-        this.data.removes = [];
+        this.data.deletes = [];
     }
 
     isEmpty () {
-        return !this.data.links.length && !this.data.unlinks.length && !this.data.removes.length;
+        return !this.data.links.length && !this.data.unlinks.length && !this.data.deletes.length;
     }
 
     getLinks () {
@@ -188,8 +189,8 @@ Jam.AttrListChanges = class AttrListChanges {
         return this.data.unlinks;
     }
 
-    getRemoves () {
-        return this.data.removes;
+    getDeletes () {
+        return this.data.deletes;
     }
 
     linkSingle (ids, old) {
@@ -197,35 +198,35 @@ Jam.AttrListChanges = class AttrListChanges {
             return this.clear();
         }
         this.data.links = ids;
-        if (this.data.removes.length) {
+        if (this.data.deletes.length) {
             this.data.unlinks = [];
-            this.data.removes = old;
+            this.data.deletes = old;
         } else {
             this.data.unlinks = old;
-            this.data.removes = [];
+            this.data.deletes = [];
         }
     }
 
     linkMultiple (ids) {
         this.data.links = this.data.links.concat(Jam.ArrayHelper.exclude(this.data.links, ids));
         this.data.unlinks = Jam.ArrayHelper.exclude(ids, this.data.unlinks);
-        this.data.removes = Jam.ArrayHelper.exclude(ids, this.data.removes);
+        this.data.deletes = Jam.ArrayHelper.exclude(ids, this.data.deletes);
     }
 
     unlinkObjects (ids) {
         this.data.links = Jam.ArrayHelper.exclude(ids, this.data.links);
         this.data.unlinks = this.data.unlinks.concat(Jam.ArrayHelper.exclude(this.data.unlinks, ids));
-        this.data.removes = Jam.ArrayHelper.exclude(ids, this.data.removes);
+        this.data.deletes = Jam.ArrayHelper.exclude(ids, this.data.deletes);
     }
 
-    removeObjects (ids) {
+    deleteObjects (ids) {
         this.data.links = Jam.ArrayHelper.exclude(ids, this.data.links);
         this.data.unlinks = Jam.ArrayHelper.exclude(ids, this.data.unlinks);
-        this.data.removes = this.data.removes.concat(Jam.ArrayHelper.exclude(this.data.removes, ids));
+        this.data.deletes = this.data.deletes.concat(Jam.ArrayHelper.exclude(this.data.deletes, ids));
     }
 
     revert (ids) {
-        return ids.length && (this.revertList(this.data.unlinks, ids) || this.revertList(this.data.removes, ids));
+        return ids.length && (this.revertList(this.data.unlinks, ids) || this.revertList(this.data.deletes, ids));
     }
 
     revertList (list, ids) {

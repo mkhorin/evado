@@ -66,7 +66,7 @@ Jam.List = class List extends Jam.Element {
     }
 
     onBuildFilter () {
-        this.filter.events.on('toggleActive', (event, data)=>{
+        this.filter.events.on('toggleActive', (event, data) => {
             this.$grid.toggleClass('active-advanced-search', data);
         });
         this.$thead = this.grid.renderer.$thead;
@@ -92,11 +92,12 @@ Jam.List = class List extends Jam.Element {
             case 'create': return this.onCreate;
             case 'clone': return this.onClone;
             case 'update': return this.onUpdate;
-            case 'remove': return this.onRemove;
+            case 'delete': return this.onDelete;
             case 'reload': return this.onReload;
             case 'sort': return this.onSort;
-            case 'executeByUrl': return this.onExecuteByUrl;
+            case 'executeUrl': return this.onExecuteUrl;
             case 'selectAll': return this.onSelectAll;
+            case 'utilities': return this.onUtilities;
         }
     }
 
@@ -155,7 +156,7 @@ Jam.List = class List extends Jam.Element {
     }
 
     prepareRows () {
-        this.findRows().each((index, row)=> {
+        this.findRows().each((index, row) => {
             this.prepareRow(row, this.grid.getData(row.dataset.id), index);
         });
     }
@@ -223,12 +224,18 @@ Jam.List = class List extends Jam.Element {
 
     getSelectedRow (message = 'Select one item for action') {
         const $row = this.findSelectedRows();
-        return $row.length === 1 ? $row : this.notice.warning(message);
+        if ($row.length === 1) {
+            return $row;
+        }
+        this.notice.warning(message);
     }
 
     getSelectedRows (message = 'Select items for action') {
         const $rows = this.findSelectedRows();
-        return $rows.length ? $rows : this.notice.warning(message);
+        if ($rows.length) {
+            return $rows;
+        }
+        this.notice.warning(message);
     }
 
     findSelectedRows () {
@@ -239,18 +246,18 @@ Jam.List = class List extends Jam.Element {
         return this.grid.findRows(selector);
     }
 
-    removeObjects ($rows) {
+    deleteObjects ($rows) {
         let ids = this.serializeObjectIds($rows);
-        this.post(this.params.remove, {ids}).done(()=> {
+        this.post(this.params.delete, {ids}).done(()=> {
             ids = ids.split(',');
-            this.events.trigger('afterRemove', {ids});
+            this.events.trigger('afterDelete', {ids});
             this.reload();
         });
     }
 
     loadModal (url, params, afterClose, modalParams) {
         afterClose = afterClose || this.defaultModalAfterClose;
-        this.childModal.load(url, params, modalParams).done(()=>{
+        this.childModal.load(url, params, modalParams).done(()=> {
             this.childModal.one('afterClose', afterClose.bind(this));
         });
     }
@@ -268,7 +275,7 @@ Jam.List = class List extends Jam.Element {
     post (url, data) {
         this.toggleLoader(true);
         this.xhr = Jam.Helper.post(this.$container, url, data)
-            .always(()=> this.toggleLoader(false))
+            .always(() => this.toggleLoader(false))
             .fail(xhr => this.notice.danger(xhr.responseText || xhr.statusText));
         return this.xhr;
     }
@@ -316,10 +323,10 @@ Jam.List = class List extends Jam.Element {
         }
     }
 
-    onRemove () {
+    onDelete () {
         const $rows = this.getSelectedRows();
         if ($rows) {
-            Jam.dialog.confirmRemove().then(this.removeObjects.bind(this, $rows));
+            Jam.dialog.confirmDeletion().then(this.deleteObjects.bind(this, $rows));
         }
     }
 
@@ -328,19 +335,29 @@ Jam.List = class List extends Jam.Element {
         this.modalSort.execute();
     }
 
-    onExecuteByUrl (event) {
-        const $btn = $(event.currentTarget);
-        if (!$btn.data('select')) {
-            return this.loadModal($btn.data('url'));
+    onExecuteUrl (event) {
+        let $btn = $(event.currentTarget);
+        let selection = $btn.data('selection');
+        let params = null;
+        if (selection) {
+            let $row = this.getSelectedRow();
+            if (!$row) {
+                return false;
+            }
+            params = this.getObjectIdParam($row);
         }
-        const $row = this.getSelectedRow();
-        if ($row) {
-            this.loadModal($btn.data('url'), this.getObjectIdParam($row));
-        }
+        const url = $btn.data('url');
+        $btn.data('blank')
+            ? Jam.UrlHelper.openNewPage(url, params)
+            : this.loadModal(url, params);
     }
 
     onSelectAll () {
         this.toggleRowSelect(this.$tbody.children(), true);
+    }
+
+    onUtilities () {
+
     }
 };
 
@@ -348,7 +365,7 @@ Jam.MainList = class MainList extends Jam.List {
 
     init () {
         super.init();
-        this.utilManager = new Jam.UtilManager(this.$commands, this);
+        this.utilityManager = new Jam.UtilityManager(this.$commands, this);
     }
 };
 
@@ -416,7 +433,7 @@ Jam.MainTreeList = class MainTreeList extends Jam.TreeList {
 
     init () {
         super.init();
-        this.utilManager = new Jam.UtilManager(this.$commands, this);
+        this.utilityManager = new Jam.UtilityManager(this.$commands, this);
     }
 
     onCreate (event) {

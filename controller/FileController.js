@@ -13,14 +13,14 @@ module.exports = class FileController extends Base {
                 'access': {
                     Class: require('areto/filter/AccessControl'),
                     rules: [{
-                        actions: ['upload', 'remove'],
+                        actions: ['upload', 'delete'],
                         permissions: ['upload']
                     }]
                 }
             },
             METHODS: {
                 'upload': 'post',
-                'remove': 'post'
+                'delete': 'post'
             }
         };
     }
@@ -32,15 +32,15 @@ module.exports = class FileController extends Base {
         }
         this.sendJson({
             id: model.getId(),
-            size: this.format(model.get('size'), 'bytes')
+            size: model.get('size')
         });
     }
 
-    async actionRemove () {
+    async actionDelete () {
         const query = this.spawn('model/RawFile').findById(this.getPostParam('id'));
         const model = await query.and({owner: null}).one();
         if (model) {
-            await model.remove();
+            await model.delete();
         }
         this.sendStatus(200);
     }

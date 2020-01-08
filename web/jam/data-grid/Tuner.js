@@ -18,7 +18,7 @@ Jam.DataGridTuner = class DataGridTuner {
     }
 
     createMenu () {
-        this.grouping = this.columns.filter(({grouping})=> grouping).length > 0;
+        this.grouping = this.columns.filter(({grouping}) => grouping).length > 0;
         this.$menu = this.renderMenu();
         const $body = this.$container.closest('.scroll-body');
         this.$menu.appendTo($body.length ? $body : document.body);
@@ -106,7 +106,7 @@ Jam.DataGridTuner = class DataGridTuner {
         if (!this.checkStoreData(items)) {
             return this.save();
         }
-        items.forEach((item, index)=> this.columns[index].hidden = item.hidden);
+        items.forEach((item, index) => this.columns[index].hidden = item.hidden);
         this.grid.grouping = grouping;
     }
 
@@ -124,7 +124,7 @@ Jam.DataGridTuner = class DataGridTuner {
 
     getStoreData () {
         return {
-            items: this.columns.map(({name, hidden})=>({name, hidden})),
+            items: this.columns.map(({name, hidden}) => ({name, hidden})),
             grouping: this.grid.grouping
         };
     }

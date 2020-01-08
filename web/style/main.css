@@ -53,7 +53,7 @@ body {
     --color-link-hover: #900;
     --color-hover-row: #fff8e8;
     --color-selected-row: #fff0d8;
-    --color-title-label: #689;
+    --color-title-label: #678;
 
     --color-light-primary: #3c8dbc;
     --color-dark-primary: #367fa9;
@@ -77,7 +77,9 @@ body {
     --back-light-danger: #feeaee;
     --border-light-danger: #edc0c0;
 }
-
+p:last-child {
+    margin: 0;
+}
 label {
     font-weight: normal;
     color: #666;
@@ -283,6 +285,10 @@ a:focus, button:focus {
 .navbar-tools {
     margin: 11px 0 0 10px;
 }
+.navbar-tools .btn + .btn {
+    margin-left: 5px;
+}
+
 .notice-list > li .fa {
     margin-right: 10px;
 }
@@ -429,6 +435,15 @@ body.loading {
     display:block;
 }
 
+.intro-header {
+    margin: 0 0 30px;
+    text-align: left;
+    font-size: 22px;
+}
+.intro-header .icon {
+    margin-right: 5px;
+}
+
 /* BUTTONS  */
 
 .btn {
@@ -533,10 +548,20 @@ body.loading {
 .btn .caret {
     margin-left: 3px;
 }
-
 .controls .btn,
 .controls .btn-group {
     margin: 0 2px 0 0;
+}
+
+.btn-set {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+.btn-set + .btn-set,
+.btn-set + .btn,
+.btn + .btn-set {
+    margin-left: 15px;
 }
 
 /* MENU */
@@ -553,7 +578,6 @@ body.loading {
     top: 3px;
     margin-right: 4px;
 }
-
 .menu-item-btn > span {
     display: inline-block;
     max-width: 190px;
@@ -615,12 +639,6 @@ body.loading {
 }
 .model-view .form-group {
     margin-bottom: 10px;
-}
-.model-commands .btn {
-    margin: 0 3px 0 0;
-}
-.model-commands .btn:last-child {
-    margin: 0;
 }
 .model-commands .static-text {
     display: inline-block;
@@ -776,14 +794,14 @@ body.loading {
     z-index: 0;
 }
 
-.form .row .col {
+.form .row .column {
     margin-bottom: 20px;
 }
 .form fieldset + fieldset {
     /*margin-top: 30px;*/
 }
 .form legend {
-    font-size: 16px;
+    font-size: 15px;
 }
 
 select.form-control {
@@ -800,18 +818,20 @@ textarea.form-control {
     padding-bottom: 5px;
 }
 .form-set {
-    margin: 20px 0 0 0;
+    margin: 30px 0 0 0;
 }
 .form-set:first-child {
     margin-top: 0;
 }
 .form-set-toggle {
-    font-weight: bold;
     cursor: pointer;
 }
-.form-set-toggle .fa {
+.form-set-toggle .icon {
     margin-right: 5px;
-    font-size: 14px;
+    font-size: 13px;
+}
+.form-set-toggle .icon:before {
+    content: "\f078"
 }
 .form-set-body {
     display: none;
@@ -828,18 +848,22 @@ textarea.form-control {
 .form-set.has-group-error > legend .form-set-toggle {
     color: var(--color-dark-danger);
 }
-.form-set.active {
-    margin-bottom: 10px;
+.form-set > legend {
+    margin-bottom: 30px;
 }
-.form-set.active > legend {
+.form-set.active {
     margin-bottom: 20px;
 }
 .form-set.active > legend .form-set-toggle {
     color: #888;
     font-weight: normal;
 }
-.form-set.active > legend .form-set-toggle .fa {
-    display: none;
+.form-set.active > legend .form-set-toggle .icon {
+    color: #aaa;
+}
+.form-set.active > legend .form-set-toggle .icon:before {
+    color: #aaa;
+    content: "\f077"
 }
 .form-set.active > .form-set-body {
     display: block;
@@ -852,12 +876,13 @@ textarea.form-control {
     margin-left: 0;
     margin-right: 0;
 }
-.inline-group-container .col {
+.inline-group-container .column {
     margin-right: 20px;
 }
-.inline-group-container .col,
+.inline-group-container .column,
 .inline-group-container .form-group {
     display: inline-block;
+    vertical-align: top;
 }
 .relation-select-box  {
     border: 0;
@@ -922,7 +947,8 @@ textarea.form-control {
 
 /* TABS */
 
-.tab-pane {
+.tab-pane,
+.tab-pane-title {
     display: none;
 }
 .tab-pane.active {
@@ -977,15 +1003,11 @@ textarea.form-control {
 
 /* LIST */
 
-.list-commands .btn,
-.list-commands .btn-group {
-    margin: 0 2px 0 0;
+.list-commands .btn + .btn {
+    margin-left: 2px;
 }
-.list-commands .btn-group .btn {
-    margin: 0;
-}
-.list-commands .btn-group .btn + .btn {
-    margin-left: -1px;;
+.list-commands .btn-group + .btn {
+    margin-left: 10px;
 }
 .list-commands .select {
     display: none;
@@ -1078,10 +1100,10 @@ textarea.form-control {
 .table tbody tr.selected .ordered {
     background-color: var(--color-selected-row);
 }
-.table tbody tr.inserted:nth-child(odd) td {
+.table tbody tr.linked:nth-child(odd) td {
     background-color: #e0ffe0 !important;
 }
-.table tbody tr.inserted:nth-child(even) td {
+.table tbody tr.linked:nth-child(even) td {
     background-color: #d0ffd0 !important;
 }
 .table tbody tr.unlinked:nth-child(odd) td {
@@ -1090,21 +1112,21 @@ textarea.form-control {
 .table tbody tr.unlinked:nth-child(even) td {
     background-color: #ffe8e8 !important;
 }
-.table tbody tr.removed:nth-child(odd) td {
+.table tbody tr.deleted:nth-child(odd) td {
     background-color: #ffd0d0 !important;
     text-decoration: line-through;
     color: #a00;
 }
-.table tbody tr.removed:nth-child(even) td {
+.table tbody tr.deleted:nth-child(even) td {
     background-color: #ffd8d8 !important;
     text-decoration: line-through;
     color: #a00;
 }
-.table tbody tr.inserted.selected td {
+.table tbody tr.linked.selected td {
     background-color: #f0ffd0 !important;
 }
 .table tbody tr.unlinked.selected td,
-.table tbody tr.removed.selected td {
+.table tbody tr.deleted.selected td {
     background-color: #ffd8e8 !important;
 }
 
@@ -1266,7 +1288,7 @@ textarea.form-control {
     display: block;
 }
 
-.remove-condition {
+.delete-condition {
     position: absolute;
     right: 1px;
     top: 2px;
@@ -1275,7 +1297,7 @@ textarea.form-control {
     cursor: pointer;
     opacity: 0.5;
 }
-.remove-condition:hover {
+.delete-condition:hover {
     opacity: 1.0;
 }
 .condition-attr + .condition-attr {
@@ -1658,13 +1680,13 @@ body.jmodal-root-active .jmodal-area {
 .uploader-item.done .uploader-message {
     color: var(--color-dark-success);
 }
-.uploader-remove {
+.uploader-delete {
     float: right;
     margin: 17px 0 0 0;
     font-size: 15px;
     color: #999;
 }
-.uploader-remove:hover {
+.uploader-delete:hover {
     cursor: pointer;
     color: var(--color-light-danger);
 }
@@ -1795,6 +1817,7 @@ body.jmodal-root-active .jmodal-area {
 
 /* SELECT2 */
 
+select[readonly],
 select[readonly].select2-hidden-accessible + .select2-container {
     pointer-events: none;
     touch-action: none;
@@ -1945,13 +1968,9 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
     background-color: var(--color-dark-danger)
 }
 
-/* UTIL */
+/* UTILITY */
 
-.util-container {
-    display: inline-block;
-    margin-left: 10px;
-}
-.util-container > .util-pool {
+.utility-container > .utility-pool {
     display: inline-block;
 }
 
@@ -2030,5 +2049,74 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 @media (min-width: 768px) {
     .form-horizontal .control-label, .form-horizontal .form-control-static {
         padding-top: 4px;
+    }
+}
+
+@media print {
+    body {
+        background: #fff;
+        font-size: 12px !important;
+    }
+    body.jmodal-active {
+        overflow: auto;
+    }
+    .box {
+        border: none;
+    }
+    .jmodal {
+        position: static;
+        height: auto;
+    }
+    .form-control {
+        border: none;
+        padding-left: 0;
+        padding-right: 0;
+        font-size: 12px;
+        height: 25px;
+    }
+    .not-set,
+    .no-access {
+        font-style: italic;
+        font-size: 9px;
+    }
+    .form .tabs .nav-tabs,
+    .form .uploader,
+    .input-group-btn,
+    .list-commands,
+    .jmodal-active > .wrapper,
+    .jmodal-stack,
+    .scroll-header {
+        display: none !important;
+    }
+    .jmodal-container {
+        margin: 0;
+        max-width: none;
+    }
+    .jmodal-body,
+    .scroll-body {
+        max-height: none !important;
+        overflow-x: visible;
+        overflow-y: visible;
+    }
+    .select2-container--default .select2-selection--single,
+    .select2-selection .select2-selection--single,
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        border: none;
+        padding: 0;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__clear,
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        display: none;
+    }
+    .form .tab-content > .tab-pane {
+        display: block;
+    }
+    .form .tab-content > .tab-pane + .tab-pane {
+        margin-top: 30px;
+    }
+    .form .tab-pane-title {
+        display: block;
+        margin: 20px 0;
+        border-bottom: 1px dashed #ccc;
     }
 }

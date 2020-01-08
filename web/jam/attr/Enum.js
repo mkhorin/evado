@@ -120,9 +120,10 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
     build () {
         const category = this.$attr.data('t-sets');
         let result = '';
-        for (const item of this.items) {
-            const text = Jam.i18n.translate(item.text, category);
-            result += `<label class="radio radio-inline"><input type="radio" value="${item.value}">${text}</label>`;
+        for (let {value, text, hint} of this.items) {
+            text = Jam.i18n.translate(text, category);
+            hint = Jam.i18n.translate(hint, category);
+            result += `<label class="radio radio-inline" title="${hint}"><input type="radio" value="${value}">${text}</label>`;
         }
         return result;
     }

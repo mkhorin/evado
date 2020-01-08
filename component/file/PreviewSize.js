@@ -54,6 +54,7 @@ module.exports = class PreviewSize extends Base {
         if (typeof item.input !== 'string') {
             return null;
         }
+        const sharp = require('sharp');
         item.input = this.module.getPath(item.input);
         const {width, height} = await sharp(item.input).metadata();
         if (width > this.width || height > this.height) {
@@ -80,7 +81,8 @@ module.exports = class PreviewSize extends Base {
             return image[this.output](this.outputParams);
         }
         const {data, info} = await image.raw().toBuffer({resolveWithObject: true});
-        image = sharp(data, {raw: info}); // already resized
+        const sharp = require('sharp');
+        image = sharp(data, {raw: info}); // already resize
         image[this.output](this.outputParams);
         if (info.width < this._minCompositeWidth || info.height < this._minCompositeHeight) {
             this.log('warn', 'Composite skipped: Overlay is larger than background');
@@ -112,5 +114,4 @@ module.exports = class PreviewSize extends Base {
     }
 };
 
-const sharp = require('sharp');
 const CommonHelper = require('areto/helper/CommonHelper');

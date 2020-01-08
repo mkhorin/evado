@@ -44,11 +44,9 @@ module.exports = class CommonMenu extends Base {
     }
 
     getModuleItem (module, config) {
-        return {
-            url: module.get('urlManager').resolve(''),
-            text: module.getTitle(),
-            ...config
-        };
+        const url = module.get('urlManager').resolve('');
+        const text = module.getParam('commonMenuTitle') || module.getTitle();
+        return {url, text, ...config};
     }
 
     getSeparatorItem () {

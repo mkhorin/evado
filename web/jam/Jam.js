@@ -69,10 +69,10 @@ Jam.Element = class Element {
         return $element.data(`jammed`);
     }
 
-    static findInstanceByParent(parent, $container) {
+    static findInstanceByClass (instanceClass, $container) {
         for (const element of $container.find('[data-jam]')) {
             const instance = this.getInstance($(element));
-            if (instance instanceof parent) {
+            if (instance instanceof instanceClass) {
                 return instance;
             }
         }
@@ -86,8 +86,8 @@ Jam.Element = class Element {
     init () {
     }
 
-    findInstanceByParent (parent) {
-        return this.constructor.findInstanceByParent(parent, this.$element);
+    findInstanceByClass (instanceClass) {
+        return this.constructor.findInstanceByClass(instanceClass, this.$element);
     }
 
     setInstance ($element) {
@@ -146,7 +146,7 @@ Jam.Dialog = class Dialog {
         this.$container.keyup(this.onKeyUp.bind(this));
     }
 
-    confirmRemove (message, data) {
+    confirmDeletion (message, data) {
         return this.confirm(message || 'Delete permanently?', {
             submitText: 'Delete',
             cssClass: 'danger',
@@ -266,7 +266,7 @@ Jam.Resource = class Resource {
         const elements = [];
         this.resolveElements('link', 'href', result, elements);
         this.resolveElements('script', 'src', result, elements);
-        Jam.AsyncHelper.each(elements, (element, cb)=> {
+        Jam.AsyncHelper.each(elements, (element, cb) => {
             element.addEventListener('load', event => cb(), {once: true});
         }, ()=> done(result));
     }
@@ -346,7 +346,7 @@ Jam.IndexSorting = class IndexSorting extends Jam.Element {
     }
 
     sort () {
-        this.$element.children().sort((a, b)=> a.dataset.index - b.dataset.index).appendTo(this.$element);
+        this.$element.children().sort((a, b) => a.dataset.index - b.dataset.index).appendTo(this.$element);
     }
 };
 

@@ -15,14 +15,14 @@ module.exports = class FileStorage extends Base {
             ...config
         });
         this.basePath = this.resolvePath(this.basePath);
-        this.preview = this.spawn({
-            Class: require('./FilePreview'),
-            ...this.preview
-        });
         this.uploader = this.spawn({
             Class: require('./Uploader'),
             basePath: this.basePath,
             ...this.uploader
+        });
+        this.preview = this.spawn({
+            Class: require('./FilePreview'),
+            ...this.preview
         });
     }
 
@@ -34,6 +34,10 @@ module.exports = class FileStorage extends Base {
         return FileHelper.getStat(this.getPath(filename));
     }
 
+    hasPreview () {
+        return Object.values(this.preview.sizes).length > 0;
+    }
+
     getPath (filename) {
         return path.join(this.basePath, filename);
     }
@@ -42,10 +46,10 @@ module.exports = class FileStorage extends Base {
         return this.preview.ensureSize(key, filename, this.getPath(filename));
     }
 
-    async remove (filename) {
+    async delete (filename) {
         if (filename && typeof filename === 'string') {
-            await FileHelper.remove(this.getPath(filename));
-            await this.preview.remove(filename);
+            await FileHelper.delete(this.getPath(filename));
+            await this.preview.delete(filename);
         }
     }
 };

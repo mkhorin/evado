@@ -104,7 +104,7 @@ module.exports = class PasswordAuthService extends Base {
         if (!old || !min || !current.isExpired(min)) {
             return this.executeUpdate(newPassword, current, user, expired); // update current
         }
-        await model.constructor.remove(passwords.slice(old));
+        await model.constructor.delete(passwords.slice(old));
         return this.executeUpdate(newPassword, model, user, expired); // append new
     }
 

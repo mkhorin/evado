@@ -12,7 +12,7 @@ const d = {
     relName: attr,
     order: {[model.PK]: -1},
     pageSize: 10,
-    remove: true,
+    delete: true,
     unlink: true,
     ...data
 };
@@ -105,6 +105,7 @@ if (!hasKeyColumn) {
 if (d.filter && !d.filter.url) {
     d.filter.url = _url(`${relUrl}/filter`);
 }
+d.id = attr + _controller.getCurrentRoute();
 %>
 <div class="form-attr form-group<%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint%>"
@@ -115,13 +116,17 @@ if (d.filter && !d.filter.url) {
             <div class="box-header">
                 <div class="list-commands" data-jam="IndexSorting">
                     <% if (d.link) { %>
-                    <button data-command="link" data-index="10" title="Link" class="btn btn-default" type="button">
-                        <span class="fa fa-link"></span>
-                    </button>
-                    <% } if (d.unlink) { %>
-                    <button data-command="unlink" data-index="20" title="Unlink" class="btn btn-default mr10" type="button">
-                        <span class="fa fa-unlink text-danger"></span>
-                    </button>
+                    <div class="btn-set">
+                        <button data-command="link" data-index="10" title="Add" class="btn btn-default" type="button">
+                            <span class="fa fa-link"></span>
+                        </button>
+                        <% if (d.unlink) { %>
+                        <button data-command="unlink" data-index="20" title="Remove" class="btn btn-default"
+                                type="button">
+                            <span class="fa fa-unlink text-danger"></span>
+                        </button>
+                        <% } %>
+                    </div>
                     <% } if (d.create) { %>
                     <button data-command="create" data-index="30" title="Create" class="btn btn-success btn-light" type="button">
                         <span class="glyphicon glyphicon-plus"></span>
@@ -130,16 +135,16 @@ if (d.filter && !d.filter.url) {
                     <button data-command="update" data-index="40" title="Update" class="btn btn-warning btn-light" type="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </button>
-                    <% } if (d.remove) { %>
-                    <button data-command="remove" data-index="50" title="Remove" class="btn btn-white" type="button">
+                    <% } if (d.delete) { %>
+                    <button data-command="delete" data-index="50" title="Delete" class="btn btn-white" type="button">
                         <span class="glyphicon glyphicon-trash text-danger"></span>
                     </button>
                     <% } %>
-
-                    <button data-command="reload" data-index="60" title="Reload" class="btn btn-default ml10" type="button">
-                        <span class="fa fa-redo-alt"></span>
-                    </button>
-
+                    <div class="btn-set">
+                        <button data-command="reload" data-index="60" title="Reload" class="btn btn-default" type="button">
+                            <span class="fa fa-redo-alt"></span>
+                        </button>
+                    </div>
                     <% if (d.modalSort) { %>
                     <button data-command="sort" data-index="70" title="Sort" class="btn btn-white" type="button">
                         <span class="glyphicon glyphicon-sort"></span>
@@ -164,7 +169,7 @@ if (d.filter && !d.filter.url) {
                         <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
                     </div>
                     <% } if (d.showTop) { %>
-                    <div class="row">
+                    <div class="row-top row">
                         <div class="col-sm-6 col-md-4 col-lg-3">
                             <div class="data-grid-common-search">
                                 <input type="text" class="form-control" placeholder="Search...">
@@ -191,7 +196,7 @@ if (d.filter && !d.filter.url) {
                         </table>
                     </div>
                     <% if (d.showBottom) { %>
-                    <div class="row">
+                    <div class="row-bottom row">
                         <div class="col-md-5">
                             <div class="data-grid-info"></div>
                         </div>

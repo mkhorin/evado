@@ -7,7 +7,7 @@ const p = {
     key: model.PK,
     className: model.NAME,
     timestamp: _controller.timestamp,
-    remove: _url('remove'),
+    delete: _url('delete'),
     behaviors: block('behaviors').get()
 };
 if (typeof params !== 'undefined') {
@@ -22,17 +22,19 @@ if (typeof params !== 'undefined') {
 
     <div class="box-header with-border scroll-header">
         <div class="model-commands">
-            <button data-command="saveClose" class="btn btn-primary" type="button" title="Save and close">
-                <span class="glyphicon glyphicon-off"></span>
-            </button>
-            <button data-command="save" class="btn btn-info mr15" type="button" title="Save">
-                <span class="glyphicon glyphicon-save"></span>
-            </button>
-
-            <button data-command="reload" class="btn-warning btn-light btn mr15" type="button" title="Reload form">
-                <span class="fa fa-redo-alt"></span>
-            </button>
-
+            <div class="btn-set">
+                <button data-command="saveClose" class="btn btn-primary" type="button" title="Save and close">
+                    <span class="glyphicon glyphicon-off"></span>
+                </button>
+                <button data-command="save" class="btn btn-info" type="button" title="Save">
+                    <span class="glyphicon glyphicon-save"></span>
+                </button>
+            </div>
+            <div class="btn-set">
+                <button data-command="reload" class="btn-warning btn-light btn" type="button" title="Reload form">
+                    <span class="fa fa-redo-alt"></span>
+                </button>
+            </div>
             <% if (p.id) { %>
                 <button data-command="copyId" class="btn btn-white" type="button" title="Copy ID">ID</button>
                 <% if (p.clone) { %>
@@ -52,8 +54,8 @@ if (typeof params !== 'undefined') {
             <% } %>
 
             <div class="pull-right">
-                <% if (p.id && p.remove) { %>
-                <button data-command="remove" class="btn btn-white" type="button" title="Delete">
+                <% if (p.id && p.delete) { %>
+                <button data-command="delete" class="btn btn-white" type="button" title="Delete">
                     <span class="glyphicon glyphicon-trash text-danger"></span>
                 </button>
                 <% } %>

@@ -88,19 +88,19 @@ Jam.ColumnRenderer = class ColumnRenderer {
     }
 
     asDate () {
-        return this.join(...arguments, (data, {momentFormat, utc})=> {
+        return this.join(...arguments, (data, {momentFormat, utc}) => {
             return Jam.FormatHelper.asDate(Jam.DateHelper.formatByUtc(data, utc), momentFormat);
         });
     }
 
     asDatetime () {
-        return this.join(...arguments, (data, {momentFormat, utc})=> {
+        return this.join(...arguments, (data, {momentFormat, utc}) => {
             return Jam.FormatHelper.asDatetime(Jam.DateHelper.formatByUtc(data, utc), momentFormat);
         });
     }
 
     asTimestamp () {
-        return this.join(...arguments, (data, {momentFormat, utc})=> {
+        return this.join(...arguments, (data, {momentFormat, utc}) => {
             return Jam.FormatHelper.asTimestamp(Jam.DateHelper.formatByUtc(data, utc), momentFormat);
         });
     }

@@ -14,17 +14,17 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         this.$uploader = this.$attr.find('.uploader');
         this.fileMessageSelector = '.uploader-message';
         this.uploader = Jam.Uploader.create(this.$uploader);
-        this.uploader.on('selected', this.onSelectedFile.bind(this));
+        this.uploader.on('select', this.onSelectFile.bind(this));
         this.uploader.on('overflow', this.onOverflowFile.bind(this));
-        this.uploader.on('file:appended', this.onAppendedFile.bind(this));
-        this.uploader.on('file:validated', this.onValidatedFile.bind(this));
-        this.uploader.on('file:started', this.onStartedFile.bind(this));
+        this.uploader.on('file:append', this.onAppendFile.bind(this));
+        this.uploader.on('file:validate', this.onValidateFile.bind(this));
+        this.uploader.on('file:start', this.onStartFile.bind(this));
         this.uploader.on('file:progress', this.onProgressFile.bind(this));
-        this.uploader.on('file:uploaded', this.onUploadedFile.bind(this));
+        this.uploader.on('file:upload', this.onUploadFile.bind(this));
         this.uploader.on('file:error', this.onErrorFile.bind(this));
-        this.uploader.on('file:confirmRemove', this.onConfirmFileRemove.bind(this));
-        this.uploader.on('file:remove', this.onRemoveFile.bind(this));
-        this.uploader.on('file:saved', this.onSavedFile.bind(this));
+        this.uploader.on('file:confirmDeletion', this.onConfirmFileDeletion.bind(this));
+        this.uploader.on('file:delete', this.onDeleteFile.bind(this));
+        this.uploader.on('file:save', this.onSaveFile.bind(this));
         this.model.modal.one('afterClose', this.afterModalClose.bind(this));
         this.initValue();
     }
@@ -47,7 +47,7 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         this.uploader.abort();
     }
 
-    onSelectedFile () {
+    onSelectFile () {
         this.$uploader.find('.uploader-overflow').hide();
     }
 
@@ -55,19 +55,19 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         this.$uploader.find('.uploader-overflow').text(data).show();
     }
 
-    onAppendedFile (event, data) {
+    onAppendFile (event, data) {
         data.$item.find('.uploader-filename').text(`${data.file.name} (${Jam.FormatHelper.asBytes(data.file.size)})`);
-        this.events.trigger('appended', data);
+        this.events.trigger('append', data);
     }
 
-    onValidatedFile (event, data) {
+    onValidateFile (event, data) {
         if (data.image) {
             data.$item.addClass('preview');
             data.$item.find('.uploader-preview').css('background-image', `url(${data.image.src})`);
         }
     }
 
-    onStartedFile (event, data) {
+    onStartFile (event, data) {
         data.$item.removeClass('pending').addClass('processing');
         data.$item.find(this.fileMessageSelector).text('Uploading...');
     }
@@ -76,7 +76,7 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         data.$item.find('.progress-bar').css('width', `${data.percent}%`);
     }
 
-    onUploadedFile (event, data) {
+    onUploadFile (event, data) {
         data.info = Jam.Helper.parseJson(data.info) || {};
         data.$item.removeClass('pending processing').addClass('done');
         const message = Jam.i18n.translate(data.info.message || 'Upload completed');
@@ -93,25 +93,25 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         data.$item.find(this.fileMessageSelector).text((msg && msg.file) || data.error);
     }
 
-    onConfirmFileRemove (event, data) {
-        const message = this.$uploader.data('removeConfirm');
-        const deferred = message ? Jam.dialog.confirmRemove(message) : $.Deferred().resolve();
-        deferred.then(() => data.remove());
+    onConfirmFileDeletion (event, data) {
+        const message = this.$uploader.data('deletionConfirm');
+        const deferred = message ? Jam.dialog.confirmDeletion(message) : $.Deferred().resolve();
+        deferred.then(() => data.delete());
     }
 
-    onRemoveFile (event, {info}) {
+    onDeleteFile (event, {info}) {
         if (info) {
             this.$value.val(Jam.Helper.removeCommaValue(info.id, this.$value.val()));
-            if (this.uploader.options.remove) {
-                $.post(this.uploader.options.remove, {id: info.id});
+            if (this.uploader.options.delete) {
+                $.post(this.uploader.options.delete, {id: info.id});
             }
         }
     }
 
-    onSavedFile (event, data) {
+    onSaveFile (event, data) {
         data.$item.removeClass('pending').addClass('saved');
         let name = data.file.name;
-        let download = this.uploader.options.remove;
+        let download = this.uploader.options.download;
         if (download) {
             name = `<a href="${download}${data.file.id}" target="_blank">${data.file.name}</a>`;
         }

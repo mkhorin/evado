@@ -9,11 +9,15 @@ const DEFAULT_TEXT_KEY = 'name';
 module.exports = class SelectHelper {
 
     static getMapItems (map) {
+        if (!map) {
+            return [];
+        }
         const items = [];
-        if (map) {
-            for (const value of Object.keys(map)) {
-                items.push({text: map[value], value});
-            }
+        for (const key of Object.keys(map)) {
+            items.push({
+                text: map[key],
+                value: key
+            });
         }
         return items;
     }
