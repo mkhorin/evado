@@ -1,3 +1,19 @@
+## 0.4.0
+
+* add some tests
+* component/meta/MetaGrid
+    - add state view type
+* component/meta/MetaTreeGrid
+    - fix render model
+* component/utility/Utility
+    - refactor utilities          
+* component/widget/CommonMenu
+    - configure common menu title
+* controller/FileController
+    - return raw file size
+* fix CSS
+* update dependencies
+
 ## 0.3.0
 
 * component/meta/rbac

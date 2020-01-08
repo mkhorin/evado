@@ -26,9 +26,6 @@ coverage
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons
-build/Release
-
 # Dependency directories
 node_modules
 jspm_packages
