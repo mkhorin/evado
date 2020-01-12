@@ -339,7 +339,7 @@ Jam.ListFilterType = class ListFilterType {
     }
 
     delete () {
-        this.condition.$attrContainer.nextAll().delete();
+        this.condition.$attrContainer.nextAll().remove();
     }
 
     getRequestData (data) {

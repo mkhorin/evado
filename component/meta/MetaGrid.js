@@ -172,17 +172,17 @@ module.exports = class MetaGrid extends Base {
         if (!Array.isArray(related)) {
             return {
                 id: related.getId(),
-                text: title
+                text: ModelHelper.escapeValue(title)
             };
         }
         if (!Array.isArray(title)) {
-            return title;
+            return ModelHelper.escapeValue(title);
         }
         const result = [];
         for (let i = 0; i < related.length; ++i) {
             result.push({
                 id: related[i].getId(),
-                text: title[i]
+                text: ModelHelper.escapeValue(title[i])
             });
         }
         return result;
@@ -191,16 +191,16 @@ module.exports = class MetaGrid extends Base {
     renderRelated (related, title) {
         if (!Array.isArray(related)) {
             const result = related.output();
-            result._title = title;
+            result._title = ModelHelper.escapeValue(title);
             return result;
         }
         if (!Array.isArray(title)) {
-            return title;
+            return ModelHelper.escapeValue(title);
         }
         const result = [];
         for (let i = 0; i < related.length; ++i) {
             const data = related[i].output();
-            result._title = title[i];
+            result._title = ModelHelper.escapeValue(title[i]);
             result.push(data);
         }
         return result;

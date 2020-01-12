@@ -7,6 +7,12 @@ const Base = require('areto/view/ActionView');
 
 module.exports = class MetaActionView extends Base {
 
+    static getConstants () {
+        return {
+            ModelHelper: require('../helper/ModelHelper')
+        };
+    }
+
     getViewModelClass (name) {
         const view = this.controller.meta.view;
         if (!view) {
@@ -54,3 +60,4 @@ module.exports = class MetaActionView extends Base {
         }
     }
 };
+module.exports.init();
