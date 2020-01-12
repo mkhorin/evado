@@ -23,11 +23,7 @@ module.exports = {
             },
             'large': {
                 width: 1024,
-                height: 1024,
-                composite: [{
-                    input: 'asset/watermark/file-large.png',
-                    gravity: 'southeast'
-                }]
+                height: 1024
             }
         }
     }

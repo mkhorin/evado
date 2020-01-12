@@ -71,8 +71,10 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).register()) {
             return this.render('signUp', {model});
         }
-        this.setFlash('info', `${this.translate('Verification key sent to')} ${model.get('email')}`);
-        this.goHome();
+        return this.render('alert', {
+            type: 'info',
+            message: `${this.translate('Verification key sent to')} ${model.get('email')}`
+        });
     }
 
     async actionChangePassword () {
@@ -136,8 +138,10 @@ module.exports = class AuthController extends Base {
             this.setFlash('error', model.getFirstError());
             return this.redirect('request-verification');
         }
-        this.setFlash('success', 'User verified');
-        this.goHome();
+        return this.render('alert', {
+            type: 'success',
+            message: 'User verified'
+        });
     }
 
     canSignUp () {

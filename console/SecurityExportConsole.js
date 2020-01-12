@@ -31,7 +31,7 @@ module.exports = class SecurityExportConsole extends Base {
         this.deleteProperties(data.roles, 'type');
         const file = this.getDataFile();
         await this.saveData(data, file);
-        this.log('info', `Security exported: ${file}`);
+        this.log('info', `Security exported to ${file}`);
     }
 
     async saveData (data, file) {

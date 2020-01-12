@@ -63,7 +63,7 @@ module.exports = class DataGrid extends Base {
 
     setLimit () {
         // in mongodb limit 0 (null) or -N means no limit
-        this.limit = parseInt(this.request.length || 10);
+        this.limit = parseInt(this.request.length) || 10;
         if (isNaN(this.limit) || this.limit < 0 || this.limit > this.MAX_ITEMS) {
             throw new BadRequest(`Invalid length param`);
         }

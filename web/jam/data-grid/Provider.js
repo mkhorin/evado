@@ -111,7 +111,7 @@ Jam.DataGridProvider = class DataGridProvider {
         return key;
     }
 
-    formatFilterValue (value, column) {
+    formatFilterValue (value) {
         return value;
     }
 };

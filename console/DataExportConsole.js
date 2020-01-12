@@ -15,7 +15,7 @@ module.exports = class DataImportConsole extends Base {
         await FileHelper.createDirectory(this.directory);
         await this.exportMeta();
         await this.exportTables(this.includes);
-        this.log('info', `Data exported: ${this.directory}`);
+        this.log('info', `Data exported to ${this.directory}`);
     }
 
     async exportMeta () {

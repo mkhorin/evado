@@ -1,0 +1,11 @@
+<%
+layout(_view.get('_layout/auth'));
+block('title', 'Alert');
+%>
+<div class="alert-<%- type %> alert">
+    <%- message %>
+</div>
+
+<div class="text-center">
+    <a href="/"><%- _t('Back to main') %></a>
+</div>

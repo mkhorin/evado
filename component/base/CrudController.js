@@ -226,4 +226,3 @@ module.exports = class CrudController extends Base {
 };
 
 const BadRequest = require('areto/error/BadRequestHttpException');
-const NotFound = require('areto/error/NotFoundHttpException');

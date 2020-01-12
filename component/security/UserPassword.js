@@ -52,7 +52,7 @@ module.exports = class UserPassword extends Base {
     }
 
     async beforeInsert () {
-        await super.beforeSave(insert);
+        await super.beforeInsert();
         this.set('createdAt', new Date);
     }
 

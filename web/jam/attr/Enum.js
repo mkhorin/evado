@@ -6,13 +6,13 @@
 Jam.EnumModelAttr = class ModelAttrEnum extends Jam.ModelAttr {
 
     init () {
-        super.init();
         this.sets = Jam.EnumSet.createSets(this.$attr.data('sets'), this);
         this.select2 = this.$attr.data('select2');
         this.$select = this.$attr.find('select');
         this.$select.change(this.changeValue.bind(this));
         this.model.events.on('change', this.onUpdate.bind(this));
         setTimeout(this.onUpdate.bind(this), 0);
+        super.init();
     }
 
     activate () {

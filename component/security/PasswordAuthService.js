@@ -123,7 +123,8 @@ module.exports = class PasswordAuthService extends Base {
             const timeout = this.module.getParam('repeatVerificationTimeout');
             const rest = DateHelper.parseDuration(timeout) - model.getElapsedTime();
             if (rest > 0) {
-                throw ['Try again {time}', 'app', {time: [rest, 'duration', {suffix: true}]}];
+                const message = 'Request has already been sent. Try again {time}';
+                throw [message, 'app', {time: [rest, 'duration', {suffix: true}]}];
             }
         } else {
             model = verification;

@@ -115,17 +115,6 @@ module.exports = {
         'serverAddress': 'http://localhost',
         'userUpdateUrl': `/admin/user?modal=${encodeURIComponent('admin/user/update?id=')}`
     },
-    metaModels: {
-        'document': {
-            Class: require('evado-meta-document/base/DocMeta')
-        },
-        'navigation': {
-            Class: require('evado-meta-navigation/base/NavMeta')
-        },
-        'report': {
-            Class: require('evado-meta-report/base/ReportMeta')
-        }
-    },
     assets: require('./default-assets'),
     classes: require('./default-classes'),
     tasks: require('./default-tasks'),

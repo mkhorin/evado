@@ -5,6 +5,12 @@
 
 module.exports = class ModelHelper {
 
+    static escapeValue (value) {
+        return typeof value === 'string'
+            ? value.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            : value;
+    }
+
     // rules: [[['createdAt', 'updatedAt'], 'timestamp']]
 
     static formatByRules (rules, models, controller) {

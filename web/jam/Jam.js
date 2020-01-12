@@ -99,7 +99,7 @@ Jam.Events = class Events {
 
     constructor (prefix, params) {
         this.prefix = prefix;
-        this.$target = $('<div/>');
+        this.$target = $('<div></div>');
         this.params = params || {};
     }
 
@@ -267,7 +267,7 @@ Jam.Resource = class Resource {
         this.resolveElements('link', 'href', result, elements);
         this.resolveElements('script', 'src', result, elements);
         Jam.AsyncHelper.each(elements, (element, cb) => {
-            element.addEventListener('load', event => cb(), {once: true});
+            element.addEventListener('load', ()=> cb(), {once: true});
         }, ()=> done(result));
     }
 

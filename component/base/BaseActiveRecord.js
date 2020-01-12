@@ -30,5 +30,3 @@ module.exports = class BaseActiveRecord extends Base {
     }
 };
 module.exports.init();
-
-const StringHelper = require('areto/helper/StringHelper');

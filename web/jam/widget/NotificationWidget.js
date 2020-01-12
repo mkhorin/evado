@@ -28,7 +28,7 @@ Jam.NotificationWidget = class NotificationWidget extends Jam.Element {
         return this.$element.hasClass('has-unread');
     }
 
-    onShowDropdown (event) {
+    onShowDropdown () {
         if (!this._loaded && this.hasUnread()) {
             this._refresh.execute();
         }

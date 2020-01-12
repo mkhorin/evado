@@ -87,7 +87,7 @@ Jam.Modal = class Modal extends Jam.Element {
         }
         $modal = $(this.template);
         this.$pool.append($modal);
-        $modal.on('click', '.jmodal-stack .close', event => item.close());
+        $modal.on('click', '.jmodal-stack .close', ()=> item.close());
         $modal.click(event => {
             if (!$modal.hasClass('loading') && event.target === $modal.get(0)) {
                 item.close();

@@ -50,7 +50,7 @@ module.exports = {
     'Sign up': 'Регистрация',
     'Something went wrong': 'Что-то пошло не так',
 
-    'Try again {time}': 'Повторите попытку {time}',
+    'Request has already been sent. Try again {time}': 'Запрос уже был отправлен. Повторите попытку {time}',
 
     'User is not verified': 'Пользователь не подтвержден',
     'User not found': 'Пользователь не найден',

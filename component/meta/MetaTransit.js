@@ -28,6 +28,5 @@ module.exports = class MetaTransit extends Base {
 };
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
-const BadRequest = require('areto/error/BadRequestHttpException');
 const Forbidden = require('areto/error/ForbiddenHttpException');
 const Transition = require('evado-meta-document/workflow/Transition');

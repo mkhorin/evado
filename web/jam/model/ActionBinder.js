@@ -24,7 +24,7 @@ Jam.ActionBinder = class ActionBinder {
         this.update();
     }
 
-    update (event, target) {
+    update () {
         for (const element of this.elements) {
             element.update();
         }

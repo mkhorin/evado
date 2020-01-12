@@ -18,7 +18,7 @@ Jam.ModelGrouping = class ModelGrouping {
         this.initHandlers();
     }
 
-    getTabGroups (Class) {
+    getTabGroups () {
         return this.filterGroups(Jam.ModelTabGroup);
     }
 

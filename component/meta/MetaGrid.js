@@ -151,6 +151,9 @@ module.exports = class MetaGrid extends Base {
                 const state = model.class.getState(value);
                 return state ? state.title : value;
             }
+            if (attr.escaping) {
+                return ModelHelper.escapeValue(value);
+            }
         }
         return this.controller.format(value, attr.getFormat());
     }
@@ -218,3 +221,4 @@ const PromiseHelper = require('areto/helper/PromiseHelper');
 const BadRequest = require('areto/error/BadRequestHttpException');
 const MetaCommonSearch = require('./MetaCommonSearch');
 const MetaListFilter = require('./MetaListFilter');
+const ModelHelper = require('../helper/ModelHelper');
