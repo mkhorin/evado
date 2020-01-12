@@ -354,7 +354,8 @@ Jam.DateHelper = class DateHelper {
 Jam.FormatHelper = class FormatHelper {
 
     static asBoolean (data) {
-        return Jam.i18n.translate(Number(data) === 0 ? 'No' : 'Yes');
+        const num = Number(data);
+        return isNaN(num) ? data : Jam.i18n.translate(num === 0 ? 'No' : 'Yes');
     }
     
     static asBytes (size) {

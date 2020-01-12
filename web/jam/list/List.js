@@ -437,12 +437,12 @@ Jam.MainTreeList = class MainTreeList extends Jam.TreeList {
     }
 
     onCreate (event) {
-        const $row = this.getSelectedRow();
-        if (!$row) {
-            return super.create();
+        const $row = this.findSelectedRows();
+        if ($row.length !== 1) {
+            return super.onCreate(event);
         }
         const node = this.grid.getNodeByRow($row);
-        super.create(event, {
+        super.onCreate(event, {
             node: node.getId(),
             depth: node.getDepth()
         });
