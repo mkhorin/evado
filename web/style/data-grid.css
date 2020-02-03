@@ -70,10 +70,10 @@
 }
 .data-grid-table > tbody > tr.group > th {
     position: relative;
-    color: #7080a0;
-    background: #e8f0ff;
-    font-weight: normal;
-    border-top: 2px solid #c0d0e0;
+    padding: 10px;
+    color: #666;
+    background: #eee;
+    border-top: 2px solid #ddd;
 }
 
 /* SEARCH */

@@ -1,13 +1,14 @@
 <!-- _part/group/columns -->
 <%
 const p = {
+    actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
     css: typeof css === 'undefined' ? '' : css,
     columnCss: typeof columnCss === 'undefined' ? 'col-md-6' : columnCss,
     labelCss: typeof labelCss === 'undefined' ? 'col-sm-4' : labelCss,
     valueCss: typeof valueCss === 'undefined' ? 'col-sm-8' : valueCss
 };
 %>
-<div class="columns form-columns row <%- p.css %>">
+<div class="columns form-columns row <%- p.css %>" data-action-binder="<%= p.actionBinder %>">
     <% for (const item of items) {
         item.params = item.params || {};
         item.params.labelCss = item.params.labelCss === undefined ? p.labelCss : item.params.labelCss;

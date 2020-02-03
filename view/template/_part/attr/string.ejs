@@ -3,14 +3,15 @@
 <% const p = {}; %>
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group<%- p.required %> <%- p.css %>"
+<div class="form-attr form-group <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
-     data-action-binder='<%= p.actionBinder %>'>
+     data-behaviors="<%= p.behaviors %>"
+     data-action-binder="<%= p.actionBinder %>">
     <label for="<%- p.id %>" class="control-label <%- p.labelCss %>"
            title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input id="<%- p.id %>" name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
-               value="<%= p.value %>" class="form-control" <%- p.required %>/>
+               value="<%= p.value %>" <%- p.required %> class="form-control form-value">
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>

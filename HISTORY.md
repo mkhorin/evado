@@ -1,3 +1,22 @@
+## 0.6.0
+
+* component/file/FileStorage
+    - add copy methods
+* component/scheduler
+    - add job to delete expired files
+* config/default
+    - replace common menu title
+* console/DataConsole
+    - add file export/import          
+* parse JSON configuration
+* update dependencies
+
+## 0.5.0
+
+* fix CSS
+* fix templates
+* update dependencies
+
 ## 0.4.0
 
 * add some tests
@@ -18,9 +37,9 @@
 
 * component/meta/rbac
     - add multiple targets to metadata permission
-* component/misc/DataGrid
+* component/other/DataGrid
     - extract common search as separate entity
-* component/misc/ListFilter
+* component/other/ListFilter
     - filter by nested values via intermediate relation
 * component/security
     - fix permission restriction by rule
@@ -35,7 +54,7 @@
 
 * component/helper/MetaHelper
     - move common helper from modules
-* component/misc/Formatter
+* component/other/Formatter
     - add translatable format
 * console/SecurityConsole 
     - fix user creation        
@@ -67,9 +86,9 @@
 
 * component/base/BaseController
     - add filter column resolver
-* component/misc/DataGrid
+* component/other/DataGrid
     - make ListFilterCondition configurable
-* component/misc/ListFilterCondition
+* component/other/ListFilterCondition
     - add nested value parser
     - add inline value parser
     - add relation parser

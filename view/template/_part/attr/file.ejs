@@ -1,14 +1,19 @@
 <!-- _part/attr/file -->
-
-<% const p = {handler: 'File'}; %>
-
+<%
+const p = {
+    handler: 'File',
+    nameAttr: typeof nameAttr === 'undefined' ? '' : nameAttr
+};
+%>
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group<%- p.required %>" data-handler="<%= p.handler %>">
+<div class="form-attr form-group <%- p.required %>"
+     data-handler="<%= p.handler %>"
+     data-name-attr="<%= p.nameAttr %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input type="hidden" name="<%- p.name %>" value="<%= p.value %>">
+        <input type="hidden" name="<%- p.name %>" value="<%= p.value %>" class="form-value">
         <div class="uploader show-dropzone" data-options="<%= JSON.stringify(options)%>">
             <div class="uploader-input">
                 <input type="file" class="uploader-input-file">
@@ -19,7 +24,7 @@
             <div class="uploader-overflow" data-t="">Too many files</div>
             <div class="uploader-list clearfix">
                 <div class="uploader-item pending sample">
-                    <div class="uploader-preview"></div>
+                    <div class="uploader-thumbnail"></div>
                     <div class="uploader-signs">
                         <div class="uploader-sign-pending fa fa-spinner fa-spin"></div>
                         <div class="uploader-sign-processing fa fa-spinner fa-spin"></div>

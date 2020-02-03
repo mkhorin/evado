@@ -30,13 +30,14 @@ Jam.ModelAttr = class ModelAttr {
     constructor ($attr, model) {
         this.$attr = $attr;
         this.model = model;
-        this.$value = model.getValueFieldByAttr(this.$attr);
-        this.$attr.data('model-attr', this);        
-        this.params = this.$attr.data('params') || {};
+        this.$value = model.findAttrValue(this.$attr);
+        this.$attr.data('model-attr', this);
+        this.params = this.getData('params') || {};
     }
 
     init () {
         this.activate();
+        Jam.Behavior.createAll(this.getData('behaviors'), this);
     }
 
     inProgress () {
@@ -79,8 +80,16 @@ Jam.ModelAttr = class ModelAttr {
         this.setValue('');
     }
 
+    getName () {
+        return this.$value.attr('name');
+    }
+
+    getData (name) {
+        return this.$attr.data(name);
+    }
+
     getType () {
-        return this.$attr.data('type');
+        return this.getData('type');
     }
 
     hasValue () {
@@ -96,8 +105,8 @@ Jam.ModelAttr = class ModelAttr {
         this.$value.val(value);
     }
 
-    normalizeValue (value) {
-        return value;
+    triggerChange () {
+        this.$value.change();
     }
 
     findByData (key, value) {
@@ -106,10 +115,8 @@ Jam.ModelAttr = class ModelAttr {
             : `[data-${key}]`);
     }
 
-    onBeforeCloseModal () {
-        if (this.model.saved) {
-            store.set(name, this.$value.val());
-        }
+    serialize () {
+        return this.getValue();
     }
 };
 
@@ -117,30 +124,28 @@ Jam.CheckboxModelAttr = class CheckboxModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.trueValue = this.$attr.data('true') || 'on';
-        this.falseValue = this.$attr.data('false') || '';
         this.$checkbox = this.$attr.find('[type="checkbox"]');
         this.$checkbox.change(this.onChangeCheckbox.bind(this));
     }
 
     getValue () {
-        return !!this.$value.val();
+        return this.$value.val() === 'true';
     }
 
     setValue (value) {
-        this.$value.val(value ? 'on' : '');
+        this.$value.val(value ? 'true' : 'false');
         this.$checkbox.prop('checked', value);
     }
 
     enable (state) {
         this.$value.attr('readonly', !state);
-        this.$checkbox.attr('readonly', !state);
+        this.$checkbox.attr('disabled', !state);
         this.$value.closest('.checkbox').toggleClass('disabled', !state);
     }
 
     onChangeCheckbox (event) {
-        this.$value.val(event.target.checked ? this.trueValue : this.falseValue);
-        this.$value.change();
+        this.$value.val(event.target.checked);
+        this.triggerChange();
     }
 };
 
@@ -150,7 +155,7 @@ Jam.CheckboxListModelAttr = class CheckboxListModelAttr extends Jam.ModelAttr {
         super(...arguments);
         this.$checks = this.$attr.find('[type="checkbox"]');
         this.$checks.change(this.onChangeCheckbox.bind(this));
-        this.allValue = this.$attr.data('all');
+        this.allValue = this.getData('all');
         this.allValue = this.allValue === true ? 'all' : this.allValue;
         this.setValue(this.$value.val());
     }
@@ -179,7 +184,8 @@ Jam.CheckboxListModelAttr = class CheckboxListModelAttr extends Jam.ModelAttr {
 
     onChangeCheckbox (event) {
         this.resolveAllValue($(event.currentTarget));
-        this.$value.val(this.extractValues()).change();
+        this.$value.val(this.extractValues());
+        this.triggerChange();
     }
 
     resolveAllValue ($target) {
@@ -195,7 +201,7 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.utc = this.$attr.data('utc');
+        this.utc = this.getData('utc');
     }
 
     activate () {
@@ -216,7 +222,7 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
                 options.maxDate = new Date(options.maxDate);
             }
             options.defaultDate = this.getDefaultDate(this.$value.val());
-            options.format = Jam.DateHelper.getMomentFormat(options.format || this.params.format) || 'L';
+            options.format = Jam.DateHelper.getMomentFormat(options.format || this.params.format || 'date');
             options.widgetParent = this.$picker.parent();
             this.$picker.datetimepicker({...$.fn.datetimepicker.defaultOptions, ...options});
             this.picker = this.$picker.data('DateTimePicker');
@@ -233,9 +239,10 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
     onChangeDate (event) {
         let date = event.date;
         let format = this.picker.options().format;
-        // reformat date to remove time on select day only
+        // if date format then remove time
         date = date && moment(moment(date).format(format), format);
-        this.$value.val(date ? Jam.DateHelper.stringify(date, this.utc) : '').change();
+        this.$value.val(date ? Jam.DateHelper.stringify(date, this.utc) : '');
+        this.triggerChange();
         if (!date) {
             this.picker.hide();
         }
@@ -269,7 +276,44 @@ Jam.RadioListModelAttr = class RadioListModelAttr extends Jam.ModelAttr {
     onChangeValue (event) {
         if (event.target.checked) {
             this.$radioItems.not(event.target).prop('checked', false);
-            this.$value.val($(event.target).val()).change();
+            this.$value.val($(event.target).val());
+            this.triggerChange();
+        }
+    }
+};
+
+// BEHAVIORS
+
+Jam.StoreLastSavedValueBehavior = class StoreLastSavedValueBehavior extends Jam.Behavior {
+
+    constructor () {
+        super(...arguments);
+        this.model = this.owner.model;
+        this.defaultValue = this.owner.getValue();
+        const selector = this.params.defaultValueSelector;
+        if (selector) {
+            this.owner.$attr.find(selector).click(this.onDefaultValue.bind(this));
+        }
+        this.setStoreValue();
+        this.model.events.one('afterSave', this.onSaveModel.bind(this));
+    }
+
+    getStoreKey () {
+        return this.model.params.url + this.owner.getName();
+    }
+
+    onDefaultValue () {
+        this.owner.setValue(this.defaultValue);
+    }
+
+    onSaveModel () {
+        Jam.store.set(this.getStoreKey(), this.owner.getValue());
+    }
+
+    setStoreValue () {
+        const value = Jam.store.get(this.getStoreKey());
+        if (value) {
+            this.owner.setValue(value);
         }
     }
 };

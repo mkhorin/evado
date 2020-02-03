@@ -13,28 +13,30 @@ module.exports = class MetaModels extends Base {
     }
 
     add (data) {
-        for (const id of Object.keys(data || {})) {
-            this.addModel(id, this.createModel(data[id]));
+        if (data) {
+            for (const id of Object.keys(data)) {
+                if (data[id]) {
+                    this.addModel(id, this.createModel(data[id]));
+                }
+            }
         }
     }
 
     addModel (id, model) {
         if (!model) {
-            return this.hub.log('info', `Meta model skipped: ${id}`);
+            return this.log('info', `Meta model skipped: ${id}`);
         }
         if (this.has(id)) {
-            return this.hub.log('error', `Meta model already exists: ${id}`);
+            return this.log('error', `Meta model already exists: ${id}`);
         }
         this.set(id, model);
     }
 
     createModel (data) {
-        if (data) {
-            return ClassHelper.spawn(data, {
-                hub: this.hub,
-                module: this.hub.module
-            });
-        }
+        return ClassHelper.spawn(data, {
+            hub: this.hub,
+            module: this.hub.module
+        });
     }
 
     async load () {
@@ -48,6 +50,10 @@ module.exports = class MetaModels extends Base {
         for (const model of this) {
             await model.afterLoad();
         }
+    }
+
+    log () {
+        this.hub.log(...arguments);
     }
 };
 

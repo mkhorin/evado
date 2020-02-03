@@ -49,13 +49,13 @@ module.exports = class UserFilter extends Base {
     }
 
     resolveConfig () {
-        const config = this.get('config');
-        if (!config) {
+        const data = this.get('config');
+        if (!data) {
             return [];
         }
         try {
-            const instance = this.spawn(ClassHelper.resolveSpawn(config, this.module));
-            return instance.getUsers();
+            const config = ClassHelper.resolveSpawn(CommonHelper.parseJson(data), this.module);
+            return this.spawn(config).getUsers();
         } catch (err) {
             this.log('error', 'Invalid configuration:', err);
             return [];
@@ -65,4 +65,5 @@ module.exports = class UserFilter extends Base {
 module.exports.init(module);
 
 const ClassHelper = require('areto/helper/ClassHelper');
+const CommonHelper = require('areto/helper/CommonHelper');
 const MongoHelper = require('areto/helper/MongoHelper');

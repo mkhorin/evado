@@ -1,11 +1,11 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
 const Base = require('areto/base/Application');
 
-module.exports = class Evado extends Base {
+module.exports = class EvadoApplication extends Base {
 
     getMailer () {
         return this.components.get('mailer');
@@ -48,10 +48,10 @@ module.exports = class Evado extends Base {
         return this.components.get('metaHub');
     }
     
-    async loadMeta () {
+    loadMeta () {
         const hub = this.getMetaHub();
         hub.models.add(this.getConfig('metaModels'));
-        await hub.load();
+        return hub.load();
     }
 };
 module.exports.init(module);

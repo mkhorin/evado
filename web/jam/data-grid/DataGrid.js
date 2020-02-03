@@ -183,9 +183,10 @@ Jam.DataGrid = class DataGrid {
         } else {
             info = this.locale.infoEmpty;
         }
-        return this.itemTotalSize !== this.itemMaxSize
-            ? `${info} ${this.locale.infoFiltered.replace('#{MAX}', this.itemMaxSize)}`
-            : info;
+        if (this.itemTotalSize !== this.itemMaxSize) {
+            info = `${info} ${this.locale.infoFiltered.replace('#{MAX}', this.itemMaxSize)}`;
+        }
+        return info;
     }
 
     onToggleOrder (event) {
@@ -219,16 +220,16 @@ Jam.DataGrid = class DataGrid {
     }
 
     setStoreData (key, data) {
-        store.set(this.getStoreKey(key), data);
+        Jam.store.set(this.getStoreKey(key), data);
     }
 
     getStoreData (key, defaults) {
-        const data = store.get(this.getStoreKey(key));
+        const data = Jam.store.get(this.getStoreKey(key));
         return data === undefined ? defaults : data;
     }
 
     clearStoreData (key) {
-        store.remove(this.getStoreKey(key));
+        Jam.store.remove(this.getStoreKey(key));
     }
 };
 
@@ -315,7 +316,12 @@ Jam.TreeGridNode = class TreeGridNode {
         for (const row of $children.filter('.opened')) {
             this.grid.getNodeByRow($(row)).toggle(false);
         }
-        this._detachedChildren = $children.detach();
+        if (this.grid.params.clearCollapsedNode) {
+            $children.remove();
+            this.loaded = false;
+        } else {
+            this._detachedChildren = $children.detach();
+        }
     }
 
     expand () {

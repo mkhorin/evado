@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -18,8 +18,7 @@ module.exports = class File extends Base {
                 'createdAt',
                 'creator',
                 'updatedAt',
-                'editor',
-                'hash'
+                'editor'
             ],
             RULES: [
                 [['name', 'file'], 'required'],
@@ -44,10 +43,6 @@ module.exports = class File extends Base {
         return this.get('mime').indexOf('image') === 0;
     }
 
-    getStorage () {
-        return this.module.get('fileStorage');
-    }
-
     getTitle () {
         return this.get('name');
     }
@@ -68,6 +63,10 @@ module.exports = class File extends Base {
         return this.get('mime');
     }
 
+    getStorage () {
+        return this.module.get('fileStorage');
+    }
+
     getPath () {
         return this.getStorage().getPath(this.getFilename());
     }
@@ -76,8 +75,33 @@ module.exports = class File extends Base {
         return this.getStorage().getHeaders(this.getName(), this.getMime());
     }
 
-    getPreviewHeaders () {
-        return this.getStorage().preview.getHeaders(this.getName());
+    getThumbnailHeaders () {
+        return this.getStorage().thumbnail.getHeaders(this.getName());
+    }
+
+    getRawFile () {
+        return this.getClass('model/RawFile');
+    }
+
+    assignRawData (rawFile) {
+        if (rawFile) {
+            this.setFromModel('file', rawFile);
+            this.setFromModel('mime', rawFile);
+            this.setFromModel('size', rawFile);
+            if (!this.get('name')) {
+                this.setFromModel('name', rawFile);
+            }
+        }
+    }
+
+    async deleteRawFile () {
+        const RawFile = this.getRawFile();
+        const models = await this.spawn(RawFile).find({owner: this.getId()}).all();
+        return RawFile.delete(models);
+    }
+
+    ensureThumbnail (key) {
+        return this.getStorage().ensureThumbnail(key, this.getFilename());
     }
 
     async validateFile (attr) {
@@ -85,14 +109,10 @@ module.exports = class File extends Base {
         if (value === this.getOldAttr(attr)) {
             return true;
         }
-        this.rawFile = await this.spawn('model/RawFile').findPending(value, this.user).one();
+        this.rawFile = await this.spawn(this.getRawFile()).findPending(value, this.user).one();
         if (!this.rawFile) {
             this.addError(attr, 'Raw file not found');
         }
-    }
-
-    ensurePreview (key) {
-        return this.getStorage().ensurePreview(key, this.getFilename());
     }
 
     // EVENTS
@@ -102,34 +122,23 @@ module.exports = class File extends Base {
         this.assignRawData(this.rawFile);
     }
 
-    assignRawData (rawFile) {
-        if (rawFile) {
-            this.setFromModel('file', rawFile);
-            this.setFromModel('mime', rawFile);
-            this.setFromModel('size', rawFile);
-            this.setFromModel('hash', rawFile);
-            if (!this.get('name')) {
-                this.setFromModel('name', rawFile);
-            }
-        }
-    }
-
-    async afterSave (insert) {
+    async afterInsert () {
         if (this.rawFile) {
             await this.rawFile.directUpdate({owner: this.getId()});
         }
-        return super.afterSave(insert);
+        return super.afterInsert();
     }
 
     async afterUpdate () {
         if (this.rawFile) {
-            await this.getStorage().delete(this.getOldAttr('file'));
+            await this.deleteRawFile(); // delete current raw
+            await this.rawFile.directUpdate({owner: this.getId()}); // bind a new one
         }
         return super.afterUpdate();
     }
 
     async afterDelete () {
-        await this.getStorage().delete(this.getFilename());
+        await this.deleteRawFile();
         return super.afterDelete();
     }
 

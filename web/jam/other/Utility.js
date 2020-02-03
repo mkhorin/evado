@@ -10,13 +10,13 @@ Jam.UtilityManager = class UtilityManager {
         this.$container = $container.find('.utility-container');
         this.$container.data('utilityManager', this);
         this.params = this.$container.data('params');
+        this.url = this.$container.data('url');
         this.$menu = this.$container.children('.utility-menu');
         this.$menu.find('.dropdown-toggle').one('click', this.loadMenu.bind(this));
     }
 
     loadMenu () {
-        return $.post(this.$container.data('url'), this.params)
-            .done(this.createMenu.bind(this));
+        return $.post(this.url, this.params).done(this.createMenu.bind(this));
     }
 
     createMenu (data) {
@@ -50,6 +50,10 @@ Jam.Utility = class Utility {
 
     getOwner () {
         return this.manager.owner;
+    }
+
+    getUrl () {
+        return this.manager.url;
     }
 
     getRequestData (data) {

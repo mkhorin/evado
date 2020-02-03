@@ -3,7 +3,8 @@
 const p = {
     jam: 'Model',
     id: model.getId(),
-    key: model.PK
+    key: model.PK,
+    className: model.NAME
 };
 if (typeof params !== 'undefined') {
     Object.assign(p, params);
@@ -25,7 +26,7 @@ if (typeof params !== 'undefined') {
             <%- include(_view.get('_part/tool/modelHistory')) %>
 
             <% if (blocks.commands) { %>
-            <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
+            <%- include(_view.get('_part/other/render'), {data: blocks.commands.get()}) %>
             <% } %>
 
             <% if (p.help) { %>

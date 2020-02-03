@@ -19,7 +19,8 @@ module.exports = class EventHandler extends Base {
 
     resolve () {
         try {
-            this._config = ClassHelper.resolveSpawn(this.get('config'), this.module);
+            const data = CommonHelper.parseJson(this.get('config'));
+            this._config = ClassHelper.resolveSpawn(data, this.module);
             return true;
         } catch (err) {
             this.log('error', 'Configuration failed:', err);
@@ -33,3 +34,4 @@ module.exports = class EventHandler extends Base {
 module.exports.init(module);
 
 const ClassHelper = require('areto/helper/ClassHelper');
+const CommonHelper = require('areto/helper/CommonHelper');

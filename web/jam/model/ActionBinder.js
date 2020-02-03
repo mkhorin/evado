@@ -21,14 +21,19 @@ Jam.ActionBinder = class ActionBinder {
             }
         }
         this.model.events.on('change', this.update.bind(this));
+        this.initial = true;
         this.update();
+        this.initial = false;
     }
 
     update () {
+        const value = this.model.serialize();
         for (const element of this.elements) {
             element.update();
         }
-        this.events.trigger('update');
+        value === this.model.serialize()
+            ? this.events.trigger('update')
+            : this.model.events.trigger('change');
     }
 };
 
@@ -45,16 +50,16 @@ Jam.ActionBinderElement = class ActionBinderElement {
 
     init () {
         for (const id of Object.keys(this.data)) {
-            const action = this.create(id, this.data[id]);
+            const action = this.createAction(id, this.data[id]);
             if (action) {
                 this.actions[id] = action;
             } else {
-                console.error(`Invalid action binder: ${id}`);
+                console.error(`${this.constructor.name}: Invalid action: ${id}`);
             }
         }
     }
 
-    create (id, data) {
+    createAction (id, data) {
         switch (id) {
             case 'show': return new Jam.ActionBinderShow(this, data);
             case 'require': return new Jam.ActionBinderRequire(this, data);
@@ -64,13 +69,13 @@ Jam.ActionBinderElement = class ActionBinderElement {
     }
 
     update () {
-        for (const id of Object.keys(this.actions)) {
-            this.actions[id].update();
+        for (const action of Object.values(this.actions)) {
+            action.update();
         }
     }
 };
 
-Jam.ActionBinderBase = class ActionBinderBase {
+Jam.ActionBinderAction = class ActionBinderAction {
 
     constructor (element, data) {
         this.element = element;
@@ -85,6 +90,7 @@ Jam.ActionBinderBase = class ActionBinderBase {
     }
 
     isValid () {
+        this.condition.initial = this.element.binder.initial;
         return this.condition.isValid();
     }
 
@@ -93,7 +99,7 @@ Jam.ActionBinderBase = class ActionBinderBase {
     }
 };
 
-Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderBase {
+Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderAction {
 
     update () {
         const visible = this.isValid();
@@ -106,7 +112,7 @@ Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderBase {
     }
 };
 
-Jam.ActionBinderRequire = class ActionBinderRequire extends Jam.ActionBinderBase {
+Jam.ActionBinderRequire = class ActionBinderRequire extends Jam.ActionBinderAction {
 
     update () {
         const valid = this.isValid();
@@ -115,7 +121,7 @@ Jam.ActionBinderRequire = class ActionBinderRequire extends Jam.ActionBinderBase
     }
 };
 
-Jam.ActionBinderEnable = class ActionBinderEnabled extends Jam.ActionBinderBase {
+Jam.ActionBinderEnable = class ActionBinderEnabled extends Jam.ActionBinderAction {
 
     update () {
         const valid = this.isValid();
@@ -124,25 +130,62 @@ Jam.ActionBinderEnable = class ActionBinderEnabled extends Jam.ActionBinderBase 
     }
 };
 
-Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderBase {
+// [value, condition]
+// [[value1, condition], [value2, condition], ...]
+// [[attrName], condition} - value from attribute
+
+Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderAction {
 
     init () {
         if (!this.attr) {
-            return console.error('Action binder value without model attribute');
+            return console.error(`${this.constructor.name}: Invalid model attribute`);
         }
-        this.value = this.attr.normalizeValue(this.data[0]);
-        this.condition = new Jam.ModelCondition(this.data[1], this.element.binder.model);
+        this.createItems(this.data);
     }
 
-    getValue () {
-        return Array.isArray(this.value)
-            ? this.element.binder.model.getAttr(this.value[0]).getValue()
-            : this.value;
+    createItems (data) {
+        this.items = [];
+        if (Array.isArray(data[0]) && data[0].length === 2) {
+            for (const item of data) {
+                this.items.push(this.createItem(item));
+            }
+        } else {
+            this.items.push(this.createItem(data));
+        }
+    }
+
+    createItem ([value, condition]) {
+        const attrName = Array.isArray(value) ? value[0] : null;
+        condition = new Jam.ModelCondition(condition, this.element.binder.model);
+        return {value, condition, attrName};
+    }
+
+    getValidItem () {
+        for (const item of this.items) {
+            if (item.condition.isValid()) {
+                return item;
+            }
+        }
+    }
+
+    getItemValue ({value, attrName}) {
+        if (!attrName) {
+            return value;
+        }
+        const attr = this.element.binder.model.getAttr(attrName);
+        if (attr) {
+            return attr.getValue();
+        }
+        console.error(`${this.constructor.name}: Attribute not found: ${attrName}`);
     }
 
     update () {
-        if (this.attr && this.isValid()) {
-            this.attr.setValue(this.getValue());
+        if (!this.attr) {
+            return false;
+        }
+        const item = this.getValidItem();
+        if (item) {
+            this.attr.setValue(this.getItemValue(item));
         }
     }
 };

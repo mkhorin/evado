@@ -33,18 +33,7 @@ module.exports = class HierarchySolver extends Base {
         }
         return this.model.find(['NOT IN', this.model.PK, descendants], ...arguments);
     }
-/*
-    getParentSelectItems (query, textKey) {
-        let descendants = [];
-        let id = this.model.getId();
-        if (id ) {
-            descendants = await this.getDescendantIds([id]);
-            descendants.push(id);
-        }
-        query = query.andNotIn(this.model.PK, descendants);
-        return this.model.constructor.getSelectItemsByQuery(query, this.model.PK, textKey);
-    }
-*/
+
     async getDescendantIds (parentIds) {
         const children = await this.model.find({[this.parentAttr]: parentIds}).column(this.model.PK);
         if (children.length === 0) {
@@ -72,6 +61,17 @@ module.exports = class HierarchySolver extends Base {
         const ancestors = await this.getAncestors(item);
         ancestors.push(item);
         return ancestors;
+    }
+
+    async getParentSelectItems (query, textKey) {
+        let descendants = [];
+        let id = this.model.getId();
+        if (id ) {
+            descendants = await this.getDescendantIds([id]);
+            descendants.push(id);
+        }
+        query = query.andNotIn(this.model.PK, descendants);
+        return this.model.constructor.getSelectItemsByQuery(query, this.model.PK, textKey);
     }
 };
 

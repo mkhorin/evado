@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -12,8 +12,8 @@ module.exports = class ModuleAsset extends Base {
         if (typeof dir !== 'string') {
             return false;
         }
-        if (this.module.origin) {
-            await this.installSource(this.module.origin.getPath(dir));
+        if (this.module.original) {
+            await this.installSource(this.module.original.getPath(dir));
         }
         await this.installSource(this.module.getPath(dir));
         for (const child of this.module.getModules()) {
@@ -71,7 +71,8 @@ module.exports = class ModuleAsset extends Base {
         }
         let deployed = false;
         for (const name of files) {
-            if (this.module.origin && await this.deployVendorFile(name, vendor, this.module.origin, params)) {
+            const original = this.module.origin;
+            if (original && await this.deployVendorFile(name, vendor, original, params)) {
                 deployed = true;
             }
             if (await this.deployVendorFile(name, vendor, this.module, params)) {

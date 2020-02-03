@@ -27,7 +27,7 @@ class Jam {
 
     static getClass (name) {
         if (typeof name !== 'string') {
-            return null;
+            return name ? this.getClass(name.name) : null;
         }
         const pos = name.indexOf('.');
         if (pos === -1) {
@@ -48,6 +48,20 @@ class Jam {
 }
 
 Jam.Behavior = class Behavior {
+
+    static createAll (items, owner, params) {
+        if (Array.isArray(items)) {
+            for (const item of items) {
+                this.create(item, owner, params);
+            }
+        }
+    }
+
+    static create (data, owner, params) {
+        const Class = Jam.getClass(data);
+        params = data.name ? Object.assign(data, params) : params;
+        return new Class(owner, params);
+    }
 
     constructor (owner, params) {
         this.owner = owner;

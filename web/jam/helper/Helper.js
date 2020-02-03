@@ -50,20 +50,27 @@ Jam.Helper = class Helper {
         $element.unwrap();
     }
 
-    static clearHtml (html) {
-        return String(html).replace(/(<([^>]+)>)/ig, '');
+    static clearTags (text) {
+        return typeof text === 'string' ? text.replace(/(<([^>]+)>)/ig, '') : text;
     }
 
-    static escapeHtml (html) {
-        return String(html).replace(/&(?!#?[a-zA-Z0-9]+;)/g, '&amp;')
+    static escapeTags (text) {
+        return typeof text === 'string' ? text.replace(/</g, '&lt;').replace(/>/g, '&gt;') : text;
+    }
+
+    static escapeHtml (text) {
+        if (typeof text !== 'string') {
+            return text;
+        }
+        return text.replace(/&(?!#?[a-zA-Z0-9]+;)/g, '&amp;')
             .replace(/</g, '&lt;').replace(/>/g, '&gt;')
             .replace(/'/g, '&#39;').replace(/"/g, '&quot;');
     }
 
-    static copyToClipboard (value, format) {
+    static copyToClipboard (value, format = 'text/plain') {
         $(document).one('copy', event => {
             event.preventDefault();
-            event.originalEvent.clipboardData.setData(format || 'text/plain', value);
+            event.originalEvent.clipboardData.setData(format, value);
         });
         document.execCommand('copy');
     }
@@ -71,12 +78,7 @@ Jam.Helper = class Helper {
     static hasDocumentScroll () {
         return $(document).height() > $(window).height();
     }
-/*
-    static scrollToTop (top, duration, complete) {
-        top = (top || 0) - $("header.main-header").outerHeight() + 30;
-        $('html, body').animate({scrollTop: top}, {duration}, complete);
-    }
-*/
+
     static addCommaValue (value, items) {
         if (typeof items !== 'string' || !items.length) {
             return value;
@@ -126,10 +128,12 @@ Jam.Helper = class Helper {
     static executeSerialImageLoading ($container = $(document.body)) {
         const $images = $container.find('img').filter('[data-src]');
         $images.slice(0, -1).each((index, image) => {
-            image.addEventListener('load', ()=> {
+            const processNext = () => {
                 const $next = $images.eq(index + 1);
                 $next.prop('src', $next.data('src'));
-            });
+            };
+            image.addEventListener('load', processNext);
+            image.addEventListener('error', processNext);
         });
         $images.first().prop('src', $images.first().data('src'));
     }
@@ -329,10 +333,10 @@ Jam.DateHelper = class DateHelper {
     static resolveClientDate ($container) {
         for (const item of $container.find('time[data-format]')) {
             const $item = $(item);
-            const format = this.getMomentFormat($item.attr('data-format'));
+            const format = $item.attr('data-format');
             if (format) {
                 const date = this.formatByUtc($item.attr('datetime'), $item.data('utc'));
-                $item.html(moment(date).format(format));
+                $item.html(moment(date).format(this.getMomentFormat(format)));
             }
             $item.removeAttr('data-format');
         }
@@ -385,12 +389,31 @@ Jam.FormatHelper = class FormatHelper {
         return this.asDate(data, format);
     }
 
+    static asInvalidData () {
+        return `<span class="not-set">[${Jam.i18n.translate('invalid data')}]</span>`;
+    }
+
+    static asNoAccess () {
+        return `<span class="no-access">[${Jam.i18n.translate('no access')}]</span>`;
+    }
+
+    static asNotSet () {
+        return `<span class="not-set">[${Jam.i18n.translate('not set')}]</span>`;
+    }
+
     static asTimestamp (data) {
         return this.asDatetime(data);
     }
 
-    static asPreview (data) {
-        return data ? `<img src="${data}" class="thumbnail" alt="">` : ''
+    static asThumbnail (data) {
+        if (!data || !data.thumbnail && !data.name) {
+            return data;
+        }
+        const name = Jam.Helper.escapeTags(data.name);
+        if (data.thumbnail) {
+            return `<img src="${data.thumbnail}" class="img-responsive" title="${name}" alt="">`;
+        }
+        return name;
     }
 };
 
@@ -471,7 +494,7 @@ Jam.StringHelper = class StringHelper {
 Jam.UrlHelper = class UrlHelper {
 
     static getNewPageUrl (modal) {
-        return this.addUrlParams(location.href, {modal});
+        return this.addParams(location.href, {modal});
     }
 
     static openNewPageModal (url) {
@@ -481,16 +504,19 @@ Jam.UrlHelper = class UrlHelper {
     static openNewPage (url, data) {
         Object.assign(document.createElement('a'), {
             target: '_blank',
-            href: this.addUrlParams(url, data)
+            href: this.addParams(url, data)
         }).click();
     }
 
-    static addUrlParams (url, data) {
-        data = typeof data === 'string' ? data : $.param(data);
-        return  data ? `${url}${url.includes('?') ? '&' : '?'}${data}` : url;
+    static addParams (url, data) {
+        if (typeof data === 'string') {
+            return data ? `${url}${url.includes('?') ? '&' : '?'}${data}` : url;
+        }
+        data = Object.assign(this.getParams(url), data);
+        return `${this.getPath(url)}?${$.param(data)}`;
     }
 
-    static getUrlParams (url) {
+    static getParams (url) {
         let data = String(url).split('?');
         data = data[1] || data[0];
         data = data.split('&');
@@ -502,6 +528,11 @@ Jam.UrlHelper = class UrlHelper {
             }
         }
         return params;
+    }
+
+    static getPath (url) {
+        const index = url.indexOf('?');
+        return index === -1 ? url : url.substring(0, index);
     }
 };
 

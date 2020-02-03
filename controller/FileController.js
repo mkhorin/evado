@@ -37,11 +37,14 @@ module.exports = class FileController extends Base {
     }
 
     async actionDelete () {
-        const query = this.spawn('model/RawFile').findById(this.getPostParam('id'));
-        const model = await query.and({owner: null}).one();
-        if (model) {
-            await model.delete();
+        const model = await this.spawn('model/RawFile').findById(this.getPostParam('id')).one();
+        if (!model) {
+            return this.sendStatus(404);
         }
+        if (model.getOwner()) {
+            return this.sendStatus(400);
+        }
+        await model.delete();
         this.sendStatus(200);
     }
 
@@ -57,13 +60,13 @@ module.exports = class FileController extends Base {
         this.sendFile(file);
     }
 
-    async actionPreview () {
+    async actionThumbnail () {
         const model = await this.getModel();
-        const file = await model.ensurePreview(this.getQueryParam('s'));
+        const file = await model.ensureThumbnail(this.getQueryParam('s'));
         if (!file) {
             return this.sendStatus(404);
         }
-        this.setHttpHeader(model.getPreviewHeaders());
+        this.setHttpHeader(model.getThumbnailHeaders());
         this.sendFile(file);
     }
 };

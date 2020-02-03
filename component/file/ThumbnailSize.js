@@ -1,11 +1,11 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
 const Base = require('areto/base/Base');
 
-module.exports = class PreviewSize extends Base {
+module.exports = class ThumbnailSize extends Base {
 
     // sharp.dimens.io/en/stable/api-resize
     // sharp.dimens.io/en/stable/api-output/#jpeg
@@ -20,7 +20,9 @@ module.exports = class PreviewSize extends Base {
                 withoutEnlargement: true
             },
             output: 'jpeg',
-            outputParams: {quality: 70},
+            outputParams: {
+                quality: 70
+            },
             flatten: '#ffffff', // merge alpha transparency channel
             // composite: [{
             //  input: 'asset/watermark/large.png',
@@ -58,7 +60,7 @@ module.exports = class PreviewSize extends Base {
         item.input = this.module.getPath(item.input);
         const {width, height} = await sharp(item.input).metadata();
         if (width > this.width || height > this.height) {
-            throw new Error(`Composite size exceeds preview: ${item.input}`);
+            throw new Error(`Composite size exceeds thumbnail: ${item.input}`);
         }
         if (width < this._minCompositeWidth) {
             this._minCompositeWidth = width;

@@ -37,6 +37,10 @@ module.exports = class NoticeMessage extends Base {
         return !this.isSent() && this.get('notice');
     }
 
+    getTitle () {
+        return this.get('subject');
+    }
+
     findPending () {
         return this.find({sentAt: null}, ['!=', 'notice', null]).order({[this.PK]: 1});
     }

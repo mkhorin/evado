@@ -2,22 +2,23 @@
 <%
 const p = {
     handler: 'Enum',
-    select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
+    select2: typeof select2 === 'undefined' ? '{}' : JSON.stringify(select2),
     sets: typeof sets === 'undefined' ? '' : JSON.stringify(sets)
 };
 %>
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group<%- p.required %> <%- p.css %>"
+<div class="form-attr form-group <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-value="<%= p.value %>"
      data-sets="<%= p.sets %>"
      data-select2="<%= p.select2 %>"
-     data-action-binder='<%= p.actionBinder %>'>
+     data-action-binder="<%= p.actionBinder %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <select id="<%- p.id %>" name="<%- p.name %>" <%- p.disabled %> class="form-control"></select>
+        <input type="hidden" name="<%- p.name %>" value="<%= p.value %>" class="form-value">
+        <select <%- p.disabled %> <%- p.required %> class="form-control"></select>
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>

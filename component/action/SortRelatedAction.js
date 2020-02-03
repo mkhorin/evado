@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -56,6 +56,7 @@ module.exports = class SortRelatedAction extends Base {
             'models': await this.relation.order({[this.sortOrderBehavior.orderAttr]: 1}).all(),
             'orderAttr': this.sortOrderBehavior.orderAttr
         };
+        await this.filterModels(data);
         data.relController = data.relModel.createController().assignSource(this.controller);
         const model = data.relController.createViewModel('sort', {data});
         if (model) {
@@ -63,6 +64,25 @@ module.exports = class SortRelatedAction extends Base {
             data = await model.getTemplateData();
         }
         this.send(await data.relController.renderTemplate('sort', data));
+    }
+
+    filterModels (data) {
+        data.models = this.filterOverriddenModels(data);
+    }
+
+    filterOverriddenModels ({models, orderAttr}) {
+        if (!this.sortOrderBehavior.overriddenBehavior) {
+            return models;
+        }
+        const result = [];
+        for (const model of models) {
+            const behavior = model.getBehavior(this.sortOrderBehavior.overriddenBehavior);
+            const states = behavior.getStates();
+            if (!behavior.hasOriginal() || states[orderAttr] === true) {
+                result.push(model);
+            }
+        }
+        return result;
     }
 };
 

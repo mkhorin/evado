@@ -8,7 +8,7 @@ const Base = require('areto/scheduler/Job');
 module.exports = class NoticeMessageJob extends Base {
 
     run () {
-       return this.runPending();
+        return this.runPending();
     }
 
     async runPending (prevId) {

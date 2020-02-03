@@ -15,7 +15,7 @@ module.exports = class MetaHub extends Base {
 
     constructor (config) {
         super({
-            basePath: 'meta',
+            basePath: 'meta/app',
             models: require('./MetaModels'),
             processing: {
                 Class: require('./SingleProcessing'),
@@ -84,11 +84,11 @@ module.exports = class MetaHub extends Base {
         return this.process(async ()=> {
             await this.load();
             await PromiseHelper.setImmediate();
-        });
+        }, 'reload');
     }
 
-    process (handler) {
-        return this.processing.execute(handler);
+    process () {
+        return this.processing.execute(...arguments);
     }
 
     // LOG

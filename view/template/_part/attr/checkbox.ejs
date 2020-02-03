@@ -1,17 +1,17 @@
 <!-- _part/attr/checkbox -->
-
-<% const p = {handler: 'Checkbox'}; %>
-
+<%
+const p = {handler: 'Checkbox'};
+%>
 <%- include('_params', {p}) %>
 
 <div class="form-attr form-group <%- p.css %>"
      data-handler="<%= p.handler %>"
-     data-action-binder='<%= p.actionBinder %>'>
+     data-action-binder="<%= p.actionBinder %>">
     <div class="<%- p.labelCss %>"></div>
     <div class="<%- p.valueCss %>">
         <div class="checkbox checkbox-init">
             <label data-t="<%- p.translate %>" title="<%= p.hint %>">
-                <input name="<%- p.name %>" type="hidden" value="<%- p.value ? 'on' : ''%>">
+                <input class="form-value" name="<%- p.name %>" type="hidden" value="<%- p.value %>">
                 <input<%- p.value ? ' checked' : '' %> type="checkbox">
                 <span data-t="<%- p.translate %>"><%- p.label %></span>
             </label>

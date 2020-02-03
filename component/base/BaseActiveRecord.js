@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -27,6 +27,10 @@ module.exports = class BaseActiveRecord extends Base {
 
     findForSelect () {
         return this.find(...arguments).select({name: 1, label: 1}).order({name: 1});
+    }
+
+    detachRelationChange () {
+        this.detachBehavior('relationChange');
     }
 };
 module.exports.init();

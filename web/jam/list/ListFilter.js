@@ -224,10 +224,11 @@ Jam.ListFilterCondition = class ListFilterCondition {
         switch (params.type) {
             case 'boolean': type = 'Boolean'; break;
             case 'date': type = 'Date'; break;
+            case 'datetime': type = 'Datetime'; break;
             case 'id': type = 'Id'; break;
             case 'selector': type = 'Selector'; break;
         }
-        return new Jam[`ListFilter${type}Type`](params, this);
+        return new Jam[`${type}ListFilterType`](params, this);
     }
 
     getOperation () {
@@ -353,7 +354,7 @@ Jam.ListFilterType = class ListFilterType {
 
 // STRING
 
-Jam.ListFilterStringType = class ListFilterStringType extends Jam.ListFilterType {
+Jam.StringListFilterType = class ListFilterStringType extends Jam.ListFilterType {
 
     constructor (params) {
         params.type = params.type || 'string';
@@ -374,7 +375,7 @@ Jam.ListFilterStringType = class ListFilterStringType extends Jam.ListFilterType
 
 // BOOLEAN
 
-Jam.ListFilterBooleanType = class ListFilterBooleanType extends Jam.ListFilterType {
+Jam.BooleanListFilterType = class ListFilterBooleanType extends Jam.ListFilterType {
 
     init () {
         super.init();
@@ -393,7 +394,7 @@ Jam.ListFilterBooleanType = class ListFilterBooleanType extends Jam.ListFilterTy
 
 // DATE
 
-Jam.ListFilterDateType = class ListFilterDateType extends Jam.ListFilterType {
+Jam.DateListFilterType = class DateListFilterType extends Jam.ListFilterType {
 
     init () {
         super.init();
@@ -401,17 +402,21 @@ Jam.ListFilterDateType = class ListFilterDateType extends Jam.ListFilterType {
         this.$picker.datetimepicker({
             ...$.fn.datetimepicker.defaultOptions,
             ...this.filter.params.datepicker,
-            format: this.params.format || 'L',
+            format: Jam.DateHelper.getMomentFormat(this.getFormat()),
             widgetParent: this.$picker.parent()
         });
         this.picker = this.$picker.data('DateTimePicker');
         this.$picker.on('dp.change', this.onChangeDate.bind(this));
     }
 
+    getFormat () {
+        return this.params.format || 'date';
+    }
+
     onChangeDate (event) {
         let date = event.date;
         let format = this.picker.options().format;
-        // reformat date to delete time on select day only
+        // if date format then remove time
         date = date && moment(moment(date).format(format), format);
         this.setValue(date ? Jam.DateHelper.stringify(date, this.params.utc) : '');
         if (!date) {
@@ -424,13 +429,22 @@ Jam.ListFilterDateType = class ListFilterDateType extends Jam.ListFilterType {
     }
 };
 
+// DATE
+
+Jam.DatetimeListFilterType = class DatetimeListFilterType extends Jam.DateListFilterType {
+
+    getFormat () {
+        return this.params.format || 'datetime';
+    }
+};
+
 // ID
 
-Jam.ListFilterIdType = class ListFilterIdType extends Jam.ListFilterStringType {
+Jam.IdListFilterType = class IdListFilterType extends Jam.StringListFilterType {
 
     init () {
         super.init();
-        this.nested = new Jam.ListFilterNested(this);
+        this.nested = new Jam.NestedListFilter(this);
     }
 
     getValue () {
@@ -449,7 +463,7 @@ Jam.ListFilterIdType = class ListFilterIdType extends Jam.ListFilterStringType {
 
 // SELECTOR
 
-Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
+Jam.SelectorListFilterType = class SelectorListFilterType extends Jam.ListFilterType {
 
     init () {
         super.init();
@@ -460,7 +474,7 @@ Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
         } else {
             this.deleteEqualOptions();
         }
-        this.nested = new Jam.ListFilterNested(this);
+        this.nested = new Jam.NestedListFilter(this);
     }
 
     isAjax () {
@@ -578,7 +592,7 @@ Jam.ListFilterSelectorType = class SelectorType extends Jam.ListFilterType {
 
 // NESTED
 
-Jam.ListFilterNested = class ListFilterNested {
+Jam.NestedListFilter = class NestedListFilter {
 
     constructor (type) {
         this.type = type;

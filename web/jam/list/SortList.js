@@ -10,8 +10,8 @@ Jam.SortList = class SortList extends Jam.List {
         this.saved = false;
         this.beforeCloseMethod = this.beforeClose.bind(this);
         this.modal.onClose(this.beforeCloseMethod);
-        //this.getCommand('reload').hide();
-        //this.getCommand('cancel').click(this.cancel.bind(this));
+        //this.findCommand('reload').hide();
+        //this.findCommand('cancel').click(this.cancel.bind(this));
         //this.$tbody.on('mousewheel', this.onMouseWheel.bind(this));
     }
 

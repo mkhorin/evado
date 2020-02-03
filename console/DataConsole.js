@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -10,13 +10,20 @@ module.exports = class DataConsole extends Base {
     constructor (config) {
         super(config);
         this.params = Object.assign(this.getDefaultParams(), this.params);
-        this.directory = this.app.getPath('data', this.params.dir || 'default');
+        this.directory = this.app.getPath('data', this.params.dir);
         this.includes = this.params.includes ? this.wrapArray(this.params.includes) : null;
         this.excludes = this.params.excludes ? this.wrapArray(this.params.excludes) : null;
     }
 
     getDefaultParams () {
-        return {};
+        return {
+            dir: 'default',
+            files: true
+        };
+    }
+
+    getFileStoragePath (storage) {
+        return path.join(this.directory, 'file', storage.id);
     }
 
     async clear () {
@@ -24,6 +31,25 @@ module.exports = class DataConsole extends Base {
         for (const model of models) {
             await model.dropData();
         }
+        if (this.params.files) {
+            await this.deleteFiles();
+        }
+        this.log('info', 'Data deleted');
+    }
+
+    async deleteFiles () {
+        const file = this.spawn('model/File');
+        const raw = this.spawn('model/RawFile');
+        await this.clearFileStorage(file, raw);
+        this.log('info', 'Files deleted');
+    }
+
+    async clearFileStorage (file, raw) {
+        const storage = file.getStorage();
+        this.log('info', `Clear file storage: ${storage.id}`);
+        await file.getDb().truncate(file.getTable());
+        await raw.getDb().truncate(raw.getTable());
+        await storage.deleteAll();
     }
 
     getMetaModels (names) {
@@ -47,6 +73,14 @@ module.exports = class DataConsole extends Base {
             || (Array.isArray(this.includes) && !this.includes.includes(table));
     }
 
+    excludeTable (table) {
+        this.excludes = this.excludes ? this.excludes.concat(table) : [table];
+    }
+
+    includeTable (table) {
+        this.includes = this.includes ? this.includes.concat(table) : [table];
+    }
+
     wrapArray (data) {
         return Array.isArray(data) ? data : [data];
     }
@@ -55,3 +89,5 @@ module.exports = class DataConsole extends Base {
         this.owner.log(...arguments);
     }
 };
+
+const path = require('path');

@@ -5,7 +5,7 @@
 
 module.exports = {
     parent: 'default',
-    port: 3000,
+
     components: {
         'logger': {
             level: 'info'
@@ -14,7 +14,7 @@ module.exports = {
     params: {
         'static': {
             options: {
-                maxAge: 10 * 60 * 1000
+                maxAge: 60 * 60 * 1000
             }
         },
     }

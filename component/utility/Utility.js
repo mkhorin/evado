@@ -28,30 +28,36 @@ module.exports = class Utility extends Base {
     }
 
     isIndexAction () {
-        return this.sourceAction === 'index';
+        return this.modelAction === 'index';
     }
 
     isCreateAction () {
-        return this.sourceAction === 'create';
+        return this.modelAction === 'create';
     }
 
     isUpdateAction () {
-        return this.sourceAction === 'update';
+        return this.modelAction === 'update';
     }
 
     isAction (...names) {
         for (const name of names) {
-            if (this.sourceAction === name) {
+            if (this.modelAction === name) {
                 return true;
             }
         }
     }
 
     canAccess () {
-        const permission = 'utility-'+ this.NAME;
-        return this.controller.user.auth.rbac.getItem(permission)
-            ? this.controller.user.can(permission)
-            : true;
+        const name = this.getPermissionName();
+        return this.controller.user.auth.rbac.getItem(name) ? this.controller.user.can(name) : true;
+    }
+
+    getPermissionName () {
+        return 'utility' + this.NAME;
+    }
+
+    getControlTemplate () {
+        return this.CONTROL_TEMPLATE;
     }
 
     getHint () {
@@ -62,8 +68,14 @@ module.exports = class Utility extends Base {
         return this.name || this.id;
     }
 
-    getUrl () {
-        return this.manager.url;
+    getJson (data) {
+        return {
+            id: this.id,
+            name: this.name,
+            hint: this.hint,
+            frontClass: this.frontClass,
+            ...data
+        };
     }
 
     execute () {
@@ -75,13 +87,8 @@ module.exports = class Utility extends Base {
     }
 
     renderControl (data) {
-        this.renderParams.data = {
-            id: this.id,
-            frontClass: this.frontClass,
-            url: this.getUrl(),
-            ...data
-        };
-        return this.renderExternal(`_utility/${this.CONTROL_TEMPLATE}`);
+        this.renderParams.data = this.getJson(data);
+        return this.renderExternal(`_utility/${this.getControlTemplate()}`);
     }
 
     renderExternal (template) {

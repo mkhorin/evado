@@ -3,7 +3,7 @@
  */
 'use strict';
 
-// web/jam/misc/I18n.js
+// web/jam/other/I18n.js
 
 // extend default translation category
 // use: <span data-t="">Some text</span>
@@ -176,6 +176,7 @@ Jam.I18n.defaults = {
     'equal': 'равно',
 
     'nested': 'вложенный',
+    'no access': 'нет доступа',
     'not equal': 'не равно',
     'not set': 'не задано'
 };

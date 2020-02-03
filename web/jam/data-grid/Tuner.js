@@ -98,24 +98,39 @@ Jam.DataGridTuner = class DataGridTuner {
     // STORE
 
     save () {
-        store.set(this.getStoreKey(), this.getStoreData());
+        Jam.store.set(this.getStoreKey(), this.getStoreData());
     }
 
     load () {
-        const {items, grouping} = store.get(this.getStoreKey()) || {};
-        if (!this.checkStoreData(items)) {
+        const {items, grouping} = Jam.store.get(this.getStoreKey()) || {};
+        if (!this.checkStoreItems(items)) {
             return this.save();
         }
+        if (items.length === 1) {
+            items[0].hidden = false;
+        }
         items.forEach((item, index) => this.columns[index].hidden = item.hidden);
-        this.grid.grouping = grouping;
+        if (grouping && this.checkStoreGrouping(grouping)) {
+            this.grid.grouping = grouping;
+        }
     }
 
-    checkStoreData (items) {
+    checkStoreItems (items) {
         if (Array.isArray(items)) {
             items = items.map(item => item.name);
             const columns = this.columns.map(item => item.name);
             return Jam.ArrayHelper.equals(items, columns);
         }
+    }
+
+    checkStoreGrouping (data) {
+        for (const name of Object.keys(data)) {
+            const column = this.grid.getColumn(name);
+            if (!column || !column.grouping) {
+                return false;
+            }
+        }
+        return true;
     }
 
     getStoreKey () {

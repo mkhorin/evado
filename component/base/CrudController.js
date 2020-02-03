@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -47,19 +47,7 @@ module.exports = class CrudController extends Base {
             ...params.templateData   
         });
     }
-/*
-    async actionView (params) {
-        params = {
-            template: 'view',
-            ...params
-        };
-        return this.render(params.template, {
-            model: await this.getModel(params),
-            _layout: this.isAjax() ? '_layout/modal/modelView' : '_layout/empty',
-            ...params.templateData
-        });
-    }
-*/
+
     async actionViewTitle (params) {
         const model = await this.getModel(params);
         this.sendJson(model.getTitle());
@@ -224,5 +212,6 @@ module.exports = class CrudController extends Base {
         this.sendText(model.getId());
     }
 };
+module.exports.init();
 
 const BadRequest = require('areto/error/BadRequestHttpException');

@@ -26,9 +26,9 @@ module.exports = class SingleProcessing extends Base {
         }
         this._busy = true;
         try {
-            this.log('info', `Start processing: ${name || util.inspect(handler)}`);
+            this.log('info', `Start: ${name}`);
             const result = await handler();
-            this.log('info', 'End processing');
+            this.log('info', `End: ${name}`);
             this._busy = false;
             return result;
         } catch (err) {
@@ -42,5 +42,4 @@ module.exports = class SingleProcessing extends Base {
     }
 };
 
-const util = require('util');
 const CommonHelper = require('areto/helper/CommonHelper');

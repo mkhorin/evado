@@ -63,12 +63,8 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
     }
 
     getTextHeight () {
-        let height = $(window).height() - 200;
+        let height = $(window).height() - 190;
         height = height < 100 ? 100 : height;
         return height;
-    }
-
-    normalizeValue (value) {
-        return value && typeof value === 'object' ? JSON.stringify(value) : ''
     }
 };

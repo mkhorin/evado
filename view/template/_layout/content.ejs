@@ -30,7 +30,7 @@
     <div id="content-wrapper" class="content-wrapper">
         <section class="content-header">
 
-            <%- include(_view.get('_part/misc/flashAlert')) %>
+            <%- include(_view.get('_part/other/flashAlert')) %>
 
             <h1 data-t=""><%- blocks.title %></h1>
         </section>
@@ -39,15 +39,9 @@
         </section>
     </div>
 
-    <footer class="main-footer"></footer>
+    <%- include(_view.get('_part/other/footer')) %>
 </div>
 
-<%- include(_view.get('_part/misc/dialog')) %>
-
-<template id="notice-template">
-    <div class="hidden">
-        <button type="button" class="close">&times;</button>
-        <p class="message"></p>
-    </div>
-</template>
+<%- include(_view.get('_part/other/dialog')) %>
+<%- include(_view.get('_part/other/notice')) %>
 

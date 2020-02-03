@@ -9,7 +9,6 @@ Jam.Model = class Model extends Jam.Element {
         super($form);
         $form.submit(event => event.preventDefault());
         this.$form = $form;
-        this.$attrs = $form.find('.form-attr');
         this.$container = $form.closest('.box');
         this.$header = this.$container.children('.box-header');
         this.$commands = this.$header.children('.model-commands');
@@ -45,6 +44,14 @@ Jam.Model = class Model extends Jam.Element {
         this.behaviors.forEach(item => item.init());
     }
 
+    isChanged () {
+        return this.changeTracker.isChanged();
+    }
+
+    isNew () {
+        return !this.id;
+    }
+
     createNotice () {
         return new Jam.Notice({
             container: this.$content,
@@ -54,7 +61,7 @@ Jam.Model = class Model extends Jam.Element {
 
     createAttrs () {
         this.attrs = [];
-        for (const attr of this.$attrs) {
+        for (const attr of this.$form.find('.form-attr')) {
             this.attrs.push(Jam.ModelAttr.create($(attr), this));
         }        
         for (const attr of this.attrs) {
@@ -62,45 +69,42 @@ Jam.Model = class Model extends Jam.Element {
         }
     }
 
-    isChanged () {
-        return this.changeTracker.isChanged();
-    }
-
-    isNew () {
-        return !this.id;
-    }
-
-    getCommand (name) {
-        return this.$commands.find(`[data-command="${name}"]`);
-    }
-
-    getAction (name) {
-        return this.$commands.find(`[data-action="${name}"]`);
-    }
-
     getAttr (name, className) {
-        return Jam.ModelAttr.get(this.getValueField(name, className));
+        return Jam.ModelAttr.get(this.findAttrValueByName(name, className));
     }
 
     getAttrByElement (element) {
+        return Jam.ModelAttr.get(this.findAttr(element));
+    }
+
+    findAttrValueByName (name, className) {
+        return this.$form.find('.form-value').filter(`[name="${this.formatAttrName(name, className)}"]`);
+    }
+
+    findAttrValue (element) {
+        return this.findAttr(element).find('.form-value');
+    }
+
+    findAttr (element) {
         return $(element).closest('.form-attr');
     }
 
-    getValueField (name, className) {
-        return this.$form.find(`[name="${this.formatAttrName(name, className)}"]`);
-    }
-
-    getValueFieldByAttr ($attr) {
-        return $attr.find('[name]');
-    }
-
     formatAttrName (name, className = this.params.className) {
-        return name.includes('[') ? name : `${className}[${name}]`;
+        return typeof name !== 'string' || name.includes('[') ? name : `${className}[${name}]`;
+    }
+
+    findAction (name) {
+        return this.$commands.find(`[data-action="${name}"]`);
+    }
+
+    findCommand (name) {
+        return this.$commands.find(`[data-command="${name}"]`);
     }
 
     beforeClose (event) {
-        if (this.isChanged()) {
-            event.deferred = Jam.dialog.confirm('Close without saving?');
+        let confirmation = this.params.closeConfirmation;
+        if (this.isChanged() && confirmation !== false) {
+            event.deferred = Jam.dialog.confirm(confirmation || 'Close without saving?');
         }
         const message = this.inProgress();
         if (message) {
@@ -115,6 +119,17 @@ Jam.Model = class Model extends Jam.Element {
 
     inProgress () {
         return this.attrs.map(attr => attr.inProgress()).filter(message => message)[0];
+    }
+
+    serialize () {
+        const data = {};
+        for (const attr of this.attrs) {
+            const value = attr.serialize();
+            if (value !== undefined && value !== null) {
+                data[attr.getName()] = value;
+            }
+        }
+        return $.param(data);
     }
 
     translate (message) {
@@ -187,7 +202,7 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     onShowHistory () {
-        this.childModal.load(this.getCommand('history').data('url'));
+        this.childModal.load(this.findCommand('history').data('url'));
     }
 
     // VALIDATE
@@ -203,11 +218,12 @@ Jam.Model = class Model extends Jam.Element {
     forceSave (reopen) {
         this.$loader.show();
         this.events.trigger('beforeSave');
-        Jam.Helper.post(this.$form, this.params.url, this.$form.serialize()).done(data => {
+        return Jam.Helper.post(this.$form, this.params.url, this.serialize()).done(data => {
             this.saved = true;
             this.reopen = reopen;
             this.id = data;
             this.changeTracker.reset();
+            this.events.trigger('afterSave');
             this.modal.close();
         }).fail(xhr => {
             this.error.parse(xhr.responseJSON || xhr.responseText);
@@ -218,53 +234,44 @@ Jam.Model = class Model extends Jam.Element {
 
     deleteModel () {
         this.$loader.show();
-        Jam.Helper.post(this.$form, this.params.delete, {id: this.id}).done(()=> {
+        return Jam.Helper.post(this.$form, this.params.delete, {id: this.id}).done(()=> {
             this.saved = true;
             this.changeTracker.reset();
+            this.events.trigger('afterDelete');
             this.modal.close();
         }).fail(xhr => {
             this.notice.danger(xhr.responseText || xhr.statusText);
             this.$loader.hide();
         });
     }
-
-    // ATTR UPDATE
-
-    isAttrUpdate () {
-        return this.$container.hasClass('attr-update');
-    }
-
-    initAttrUpdate () {
-        if (this.isAttrUpdate()) {
-            const $attr = this.$form.find('.form-attr');
-            const $title = this.modal.$modal.find('.jmodal-title');
-            $title.html($attr.data('label'));
-            if ($attr.hasClass('required')) {
-                $title.addClass('required');
-            }
-        }
-    }
 };
 
 Jam.ModelChangeTracker = class ModelChangeTracker {
 
-    constructor (form) {
-        this.form = form;
-        this.$form = form.$form;
+    constructor (model) {
+        this.model = model;
     }
 
     isChanged () {
-        return this._data !== this.$form.serialize();
+        return this._data !== this.model.serialize();
     }
 
     reset () {
-        this._data = this.$form.serialize();
+        this._data = this.model.serialize();
     }
 
     start () {
         this.reset();
-        this.$form.on('change keyup','[name]', event => {
-            this.form.events.trigger('change', event.target);
-        });
+        this.model.$form.on('change keyup', '.form-value', this.onChange.bind(this));
+    }
+
+    onChange (event) {
+        this.triggerAttr = this.model.getAttrByElement(event.target);
+        if (!this._skipTrigger) {
+            this.startTriggerAttr = this.triggerAttr;
+        }
+        this._skipTrigger = true;
+        this.model.events.trigger('change');
+        setTimeout(() => this._skipTrigger = false, 0);
     }
 };

@@ -3,7 +3,7 @@
 const p = {
     jam: 'Model',
     url: _controller.getOriginalUrl(),
-    id: model.getId() || '',
+    id: model.getId(),
     key: model.PK,
     className: model.NAME,
     timestamp: _controller.timestamp,
@@ -46,7 +46,7 @@ if (typeof params !== 'undefined') {
             <%- include(_view.get('_part/tool/modelHistory')) %>
 
             <% if (blocks.commands) { %>
-            <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
+            <%- include(_view.get('_part/other/render'), {data: blocks.commands.get()}) %>
             <% } %>
 
             <% if (p.help) { %>

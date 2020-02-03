@@ -9,11 +9,11 @@ const p = {
 
 <div class="form-attr <%- p.css %> <%- p.required %> form-group"
      data-handler="<%= p.handler %>"
-     data-action-binder='<%= p.actionBinder %>'
+     data-action-binder="<%= p.actionBinder %>"
      data-all="<%- p.allValue %>">
     <label class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" value="<%- p.value %>" type="hidden">
+        <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
         <div>
             <% for (const item of items) { %>
             <label class="checkbox checkbox-inline">

@@ -3,18 +3,19 @@
     p.name = typeof name === 'undefined' ? model.getFormAttrName(attr) : name;
     p.label = typeof label === 'undefined' ? model.getAttrLabel(attr) : label;
     p.hint = typeof hint === 'undefined' ? model.getAttrHint(attr) : hint;
-    p.extHint = typeof extHint === 'undefined' ? '' : extHint;
-    p.placeholder = typeof placeholder === 'undefined' ? '' : placeholder;
-    p.disabled = typeof disabled === 'undefined' ? '' : disabled;
+    p.extHint = typeof extHint === 'undefined' ? null : extHint;
+    p.placeholder = typeof placeholder === 'undefined' ? null : placeholder;
+    p.disabled = typeof disabled === 'undefined' ? null : disabled;
     p.required = typeof required === 'undefined' ? model.isAttrRequired(attr) : required;
-    p.required = p.required ? ' required' : '';
-    p.format = typeof format === 'undefined' ? '' : format;
-    p.actionBinder = typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder);
-    p.css = typeof css === 'undefined' ? '' : css;
+    p.required = p.required ? 'required' : null
+    p.format = typeof format === 'undefined' ? null : format;
+    p.actionBinder = typeof actionBinder === 'undefined' ? null : JSON.stringify(actionBinder);
+    p.css = typeof css === 'undefined' ? null : css;
     p.labelCss = typeof labelCss === 'undefined' ? 'col-sm-2' : labelCss;
     p.valueCss = typeof valueCss === 'undefined' ? 'col-sm-10' : valueCss;
-    p.translate = typeof translate === 'undefined' ? '' : translate;
-    p.handler = typeof handler === 'undefined' ? p.handler || '' : handler;
+    p.translate = typeof translate === 'undefined' ? null : translate;
+    p.handler = typeof handler === 'undefined' ? p.handler || null : handler;
+    p.behaviors = typeof behaviors === 'undefined' ? null : JSON.stringify(behaviors);
 
     p.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
     if (p.sourceValue === undefined && typeof defaultValue !== 'undefined') {

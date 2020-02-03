@@ -12,6 +12,7 @@ const d = {
     key: model.PK,
     delete: false,
     unlink: true,
+    confirmDeletion: true,
     ...data
 };
 d.attr = attr;
@@ -73,12 +74,12 @@ if (d.modalSort) {
 }
 const related = model.rel(attr);
 %>
-<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
+<div class="form-attr form-group <%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <div class="box relation-select-box">
-            <input name="<%- p.name %>" type="hidden">
+            <input name="<%- p.name %>" type="hidden" class="form-value">
             <div class="box-body">
                 <div class="list-commands">
                     <% if (d.unlink) { %>
@@ -105,7 +106,7 @@ const related = model.rel(attr);
                         <span class="glyphicon glyphicon-sort"></span>
                     </button>
                     <% } if (typeof tools !== 'undefined') { %>
-                    <%- include(_view.get('_part/misc/render'), {data: tools}) %>
+                    <%- include(_view.get('_part/other/render'), {data: tools}) %>
                     <% } %>
                 </div>
                 <select class="form-control" <% if (d.multiple) { %>multiple<% } %>

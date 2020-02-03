@@ -6,13 +6,13 @@ const p = {
 %>
 <%- include('_params', {p}) %>
 
-<div class="form-attr form-group<%- p.required %> <%- p.css %>"
+<div class="form-attr form-group <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
-     data-action-binder='<%= p.actionBinder %>'>
+     data-action-binder="<%= p.actionBinder %>">
     <label for="<%- p.id %>" class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <textarea id="<%- p.id %>" name="<%- p.name %>" class="form-control" <%- p.required %>
+        <textarea id="<%- p.id %>" name="<%- p.name %>" class="form-control form-value" <%- p.required %>
                   rows="<%- p.rows %>"><%= p.value %></textarea>
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>

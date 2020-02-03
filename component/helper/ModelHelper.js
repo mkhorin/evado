@@ -1,15 +1,9 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
 module.exports = class ModelHelper {
-
-    static escapeValue (value) {
-        return typeof value === 'string'
-            ? value.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            : value;
-    }
 
     // rules: [[['createdAt', 'updatedAt'], 'timestamp']]
 

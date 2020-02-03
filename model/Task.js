@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -18,7 +18,7 @@ module.exports = class Task extends Base {
                 'startDate', // Date
                 'startTime', // 00:00:00
                 'period', // duration
-                'repeats', // 0 - endless
+                'repeats', // 0 (endless)
                 'stopOnFail',
                 'job',
                 'lastDoneAt'
@@ -42,6 +42,7 @@ module.exports = class Task extends Base {
     resolve () {
         try {
             const data = {...this.getAttrMap()};
+            data.job = CommonHelper.parseJson(data.job);
             data.job = ClassHelper.resolveSpawn({...data.job}, this.module.app);
             return data;
         } catch (err) {
@@ -69,3 +70,4 @@ module.exports = class Task extends Base {
 module.exports.init(module);
 
 const ClassHelper = require('areto/helper/ClassHelper');
+const CommonHelper = require('areto/helper/CommonHelper');

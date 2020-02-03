@@ -39,6 +39,10 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         }
     }
 
+    getNameAttr () {
+        return this.model.getAttr(this.getData('nameAttr'));
+    }
+
     inProgress () {
         return this.uploader.isProcessing() ? 'Abort upload?' : false;
     }
@@ -57,13 +61,21 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
 
     onAppendFile (event, data) {
         data.$item.find('.uploader-filename').text(`${data.file.name} (${Jam.FormatHelper.asBytes(data.file.size)})`);
+        this.fillNameAttr(data.file.name);
         this.events.trigger('append', data);
+    }
+
+    fillNameAttr (value) {
+        const attr = this.getNameAttr();
+        if (attr) {
+            attr.setValue(value);
+        }
     }
 
     onValidateFile (event, data) {
         if (data.image) {
-            data.$item.addClass('preview');
-            data.$item.find('.uploader-preview').css('background-image', `url(${data.image.src})`);
+            data.$item.addClass('with-thumbnail');
+            data.$item.find('.uploader-thumbnail').css('background-image', `url(${data.image.src})`);
         }
     }
 
@@ -95,13 +107,14 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
 
     onConfirmFileDeletion (event, data) {
         const message = this.$uploader.data('deletionConfirm');
-        const deferred = message ? Jam.dialog.confirmDeletion(message) : $.Deferred().resolve();
+        const deferred = message ? Jam.dialog.confirmDeletion(message) : $.when();
         deferred.then(() => data.delete());
     }
 
     onDeleteFile (event, {info}) {
         if (info) {
-            this.$value.val(Jam.Helper.removeCommaValue(info.id, this.$value.val()));
+            const value = Jam.Helper.removeCommaValue(info.id, this.$value.val());
+            this.$value.val(value).change();
             if (this.uploader.options.delete) {
                 $.post(this.uploader.options.delete, {id: info.id});
             }
@@ -117,10 +130,10 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         }
         data.$item.find('.uploader-filename').html(`${name} (${data.file.size})`);
         data.$item.find(this.fileMessageSelector).html(data.file.message);
-        const preview = this.uploader.options.preview;
-        if (data.file.isImage && preview) {
-            data.$item.addClass('preview');
-            data.$item.find('.uploader-preview').css('background-image', `url(${preview}${data.file.id})`);
+        const thumbnail = this.uploader.options.thumbnail;
+        if (data.file.isImage && thumbnail) {
+            data.$item.addClass('with-thumbnail');
+            data.$item.find('.uploader-thumbnail').css('background-image', `url(${thumbnail}${data.file.id})`);
         }
     }
 };

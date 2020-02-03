@@ -6,9 +6,9 @@ const p = {
     emptyText: typeof emptyText === 'undefined' ? '' : emptyText,
     valueKey: typeof valueKey === 'undefined' ? 'value' : valueKey,
     textKey: typeof textKey === 'undefined' ? 'text' : textKey,
-    select2: typeof select2 === 'undefined' ? '' : JSON.stringify(select2),
+    select2: typeof select2 === 'undefined' ? '{}' : JSON.stringify(select2),
     update: typeof update === 'undefined' ? '' : update,
-    masters: typeof masters === 'undefined' ? '' : JSON.stringify(masters),
+    depends: typeof depends === 'undefined' ? '' : JSON.stringify(depends),
     itemTranslate: typeof itemTranslate === 'undefined' ? '' : itemTranslate
 };
 %>
@@ -31,13 +31,13 @@ if (typeof items !== 'undefined' && items) {
 } else if (p.value !== '') {
     content += `<option selected value="${p.value}">${p.displayValue}</option>`;
 }
-content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-control">${content}</select>`;
+content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-control form-value">${content}</select>`;
 %>
-<div class="form-attr form-group<%- p.required %> <%- p.css %>"
+<div class="form-attr form-group <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-select2="<%= p.select2 %>"
-     data-masters="<%= p.masters %>"
-     data-action-binder='<%= p.actionBinder %>'>
+     data-depends="<%= p.depends %>"
+     data-action-binder="<%= p.actionBinder %>">
     <label data-t="<%- p.translate %>" title="<%= p.extHint %>"
            class="control-label <%- p.labelCss %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">

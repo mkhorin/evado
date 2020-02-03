@@ -63,8 +63,15 @@ module.exports = class DatabaseStore extends Base {
         const result = super.prepare(data);
         this.prepareMeta(data);
         result.metaItems = data.metaItems;
+        this.prepareAssignmentRules(data.assignmentRules);
         result.assignmentRules = data.assignmentRules;
         return result;
+    }
+
+    prepareAssignmentRules (items) {
+        for (const item of items) {
+            item.config = CommonHelper.parseJson(item.config);
+        }
     }
 
     prepareMeta (data) {
@@ -166,3 +173,5 @@ module.exports = class DatabaseStore extends Base {
     }
 };
 module.exports.init();
+
+const CommonHelper = require('areto/helper/CommonHelper');

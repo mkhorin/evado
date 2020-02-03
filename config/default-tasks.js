@@ -5,8 +5,16 @@
 
 module.exports = {
 
+    'deleteExpiredFiles': {
+        job: {
+            Class: require('../component/scheduler/DeleteExpiredFilesJob')
+        },
+        period: 'PT2H'
+    },
     'sendNoticeMessage': {
-        job: {Class: require('../component/scheduler/NoticeMessageJob')},
+        job: {
+            Class: require('../component/scheduler/NoticeMessageJob')
+        },
         startup: true
     }
 };

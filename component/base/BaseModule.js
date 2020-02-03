@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -8,11 +8,7 @@ const Base = require('areto/base/Module');
 module.exports = class BaseModule extends Base {
 
     getFileStorage () {
-        return this.getClass('model/RawFile').getStorage(this);
-    }
-
-    getTitle () {
-        return this.label || super.getTitle();
+        return this.components.get('fileStorage');
     }
 
     getMailer () {
@@ -41,6 +37,10 @@ module.exports = class BaseModule extends Base {
 
     getScheduler () {
         return this.components.get('scheduler');
+    }
+
+    getTitle () {
+        return this.label || super.getTitle();
     }
 
     emitEvent (name, data) {

@@ -17,6 +17,9 @@ Jam.DataGridAjaxProvider = class DataGridAjaxProvider {
         if (request.dataType === 'json') {
             request.data = JSON.stringify(request.data);
         }
+        if (request.url.indexOf('/') !== 0) {
+            request.url = document.baseURI + request.url;
+        }
         this._xhr = $.ajax(request)
             .done(this.done.bind(this))
             .fail(this.fail.bind(this));

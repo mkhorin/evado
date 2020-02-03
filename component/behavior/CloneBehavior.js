@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin (maksimovichu@gmail.com)
+ * @copyright Copyright (c) 2020 Maxim Khorin (maksimovichu@gmail.com)
  */
 'use strict';
 
@@ -7,11 +7,12 @@ const Base = require('areto/base/Behavior');
 
 module.exports = class CloneBehavior extends Base {
 
-    // excludedAttrs: [],
-    // relations: []
-
     constructor (config) {
-        super(config);
+        super({
+            excludedAttrs: [],
+            // relations: [],
+            ...config
+        });
         this.setHandler(ActiveRecord.EVENT_AFTER_INSERT, this.afterInsert);
     }
 
@@ -25,22 +26,30 @@ module.exports = class CloneBehavior extends Base {
     }
 
     async afterInsert () {
-        if (this.original && Array.isArray(this.relations) && this.relations.length) {
-            await this.original.resolveRelations(this.relations);
+        if (!this.original) {
+            return false;
+        }
+        if (Array.isArray(this.relations)) {
             for (const name of this.relations) {
+                await this.original.resolveRelation(name);
                 await this.cloneRelation(name);
             }
+        }
+        if (this.owner.afterClone) {
+            await this.owner.afterClone(this.original);
         }
     }
 
     async cloneRelation (name) {
         const related = this.original.rel(name);
         this.log('trace', `Clone relation: ${name} from ${this.original.constructor.name}`);
-        if (!Array.isArray(related)) {
-            return related.clone(this.owner);
-        }
-        for (const model of related) {
-            await model.cloneFor(this.owner);
+        if (Array.isArray(related)) {
+            for (const model of related) {
+                await model.cloneFor(this.owner);
+            }
+
+        } else if (related) {
+            await related.cloneFor(this.owner);
         }
     }
 };

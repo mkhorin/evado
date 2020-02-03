@@ -13,7 +13,7 @@ Jam.ModelGrouping = class ModelGrouping {
     }
 
     init () {
-        this.groups = this.createGroups();
+        this.createGroups();
         this.loadStates();
         this.initHandlers();
     }
@@ -27,33 +27,37 @@ Jam.ModelGrouping = class ModelGrouping {
     }
 
     createGroups () {
-        const groups = [];
+        this.groups = [];
+        this.groupMap = {};
         this.$groups.each((index, element) => {
             const $element = $(element);
             const Class = $element.hasClass('form-set')
                 ? Jam.ModelGroup
                 : Jam.ModelTabGroup;
-            groups.push(new Class(index, $element, this));
+            const group = new Class($element, this);
+            this.groups.push(group);
+            this.groupMap[group.id] = group;
         });
-        return groups;
     }
 
     loadStates () {
-        const data = store.get(this.getStoreKey());
-        if (Array.isArray(data) && data.length === this.groups.length) {
-            for (let i = 0; i < data.length; ++i) {
-                this.groups[i].toggleActive(data[i]);
+        const data = Jam.store.get(this.getStoreKey());
+        if (data) {
+            for (const id of Object.keys(data)) {
+                if (this.groupMap.hasOwnProperty(id)) {
+                    this.groupMap[id].toggleActive(data[id]);
+                }
             }
         }
         this.getTabGroups().forEach(group => group.activeDefaults());
     }
 
     saveStates () {
-        const data = [];
+        const data = {};
         for (const group of this.groups) {
-            data.push(group.isActive());
+            data[group.id] = group.isActive();
         }
-        store.set(this.getStoreKey(), data);
+        Jam.store.set(this.getStoreKey(), data);
     }
 
     getStoreKey () {
@@ -104,9 +108,9 @@ Jam.ModelGrouping = class ModelGrouping {
 
 Jam.ModelGroup = class ModelGroup {
 
-    constructor (id, $group, grouping) {
-        this.id = grouping;
+    constructor ($group, grouping) {
         this.grouping = grouping;
+        this.id = $group.data('id');
         this.$group = $group;
         this.$group.data('group', this);
         this.$content = $group.children('.form-base-group-body');
@@ -190,7 +194,10 @@ Jam.ModelTabGroup = class ModelTabGroup extends Jam.ModelGroup {
 
     activeDefaults () {
         const groups = this.getGroups();
-        if (!groups.filter(group => group.isActive()).length) {
+        const actives = groups.filter(group => group.isActive());
+        if (actives.length > 1) {
+            actives.slice(1).forEach(group => group.toggleActive(false));
+        } else if (!actives.length) {
             groups[0].toggleActive(true);
         }
     }

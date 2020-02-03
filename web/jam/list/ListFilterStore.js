@@ -51,12 +51,12 @@ Jam.ListFilterStore = class Store {
     }
 
     load () {
-        const items = store.get(this.key);
+        const items = Jam.store.get(this.key);
         this.items = Array.isArray(items) ? items : [];
     }
 
     store () {
-        store.set(this.key, this.items);
+        Jam.store.set(this.key, this.items);
     }
 
     toggleSave (state) {

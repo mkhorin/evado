@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -21,7 +21,9 @@ module.exports = class User extends Base {
                 'updatedAt',
                 'authKey'
             ],
-            INDEXES: [[{email: 1}, {unique: true}]],
+            INDEXES: [
+                [{email: 1}, {unique: true}]
+            ],
             RULES: [
                 [['name', 'email'], 'required'],
                 ['name', 'regex', {pattern: /^[a-z0-9а-я\s-]+$/i}],

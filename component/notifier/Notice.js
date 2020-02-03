@@ -25,6 +25,10 @@ module.exports = class Notice extends Base {
         };
     }
 
+    getTitle () {
+        return this.get('subject');
+    }
+
     getOption (key, defaults) {
         return ObjectHelper.getValue(key, this.get('options'), defaults);
     }

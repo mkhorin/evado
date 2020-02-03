@@ -139,7 +139,13 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 
     renderValue (data, column) {
-        return column.render(data[column.name], column, data);
+        return this.isForbiddenValue(data, column)
+            ? Jam.FormatHelper.asNoAccess()
+            : column.render(data[column.name], column, data);
+    }
+
+    isForbiddenValue ({_forbidden}, {name}) {
+        return Array.isArray(_forbidden) && _forbidden.includes(name);
     }
 
     getBodyCellClass (value, column) {

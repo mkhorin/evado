@@ -8,6 +8,7 @@ Jam.i18n = new Jam.I18n;
 Jam.resource = new Jam.Resource;
 Jam.deferred = new Jam.Deferred;
 Jam.serverPolling = new Jam.ServerPolling;
+Jam.store = store;
 
 Jam.i18n.translateDocument();
 Jam.createElements();

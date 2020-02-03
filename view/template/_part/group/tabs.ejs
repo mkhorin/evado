@@ -9,7 +9,7 @@ const p = {
     <ul class="nav nav-tabs" role="tablist">
     <% for (const item of items) { %>
     <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
-        <a href="#" data-t="<%- p.translate %>" title="<%= item.hint || '' %>"><%- item.label || item.id %></a>
+        <a href="#" data-t="<%- p.translate %>" title="<%= item.hint %>"><%- item.label || item.id %></a>
     </li>
     <% } %>
     </ul>
@@ -25,10 +25,10 @@ const p = {
             <% } else if (Array.isArray(item.content)) {
                  for (const data of item.content) {
                    if (data.template) { %>
-                <%- include(data.template, data) %>
-                <% } else { %>
-                <%- data %>
-            <% }}} else { %>
+                    <%- include(data.template, data) %>
+                    <% } else { %>
+                    <%- data %>
+                <% }}} else { %>
                 <%- include(item.content.template, item.content) %>
             <% } %>
             </div>

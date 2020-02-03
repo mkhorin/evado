@@ -1,0 +1,31 @@
+<%
+let data = {
+    enable: {[overridden[attr].name]: true},
+    value: [overridden[attr].originalValue, {[overridden[attr].name]: false}]
+};
+if (typeof actionBinder !== 'undefined') {
+    Object.assign(data, actionBinder);
+}
+if (typeof params !== 'undefined') {
+    const binder = params.actionBinder;
+    if (binder) {
+        binder.enable = binder.enable ? ['AND', data.enable, binder.enable] : data.enable;
+        binder.value = data.value;
+    }
+}
+%>
+<div class="form-override">
+    <%- include(template, Object.assign({
+        css: 'form-override-target',
+        actionBinder: data
+    }, typeof params === 'undefined' ? null : params)) %>
+
+    <%- include(_view.get('_part/attr/checkbox'), {
+        attr: overridden[attr].attr,
+        label: null,
+        hint: 'Override',
+        name: overridden[attr].name,
+        value: overridden[attr].overridden,
+        css: 'form-override-toggle'
+    }) %>
+</div>

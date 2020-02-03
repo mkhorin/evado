@@ -5,8 +5,8 @@
 
 Jam.ColumnRenderer = class ColumnRenderer {
 
-    getRenderMethod (format) {
-        const name = typeof format === 'string' ? format : format ? format.name : null;
+    getRenderMethod (data) {
+        const name = typeof data === 'string' ? data : data ? data.name : null;
         const method = this.getFormatMethod(name);
         return this.render.bind(this, method);
     }
@@ -18,13 +18,16 @@ Jam.ColumnRenderer = class ColumnRenderer {
             case 'date': return this.asDate;
             case 'datetime': return this.asDatetime;
             case 'timestamp': return this.asTimestamp;
-            case 'escaped': return this.asEscaped;
             case 'link': return this.asLink;
             case 'relation': return this.asLink;
             case 'select': return this.asSelect;
-            case 'preview': return this.asPreview;
+            case 'thumbnail': return this.asThumbnail;
         }
         return this.asDefault;
+    }
+
+    escape (message, {escape}) {
+        return escape ? Jam.Helper.escapeTags(message) : message;
     }
 
     prepareFormat (data) {
@@ -44,15 +47,15 @@ Jam.ColumnRenderer = class ColumnRenderer {
     }
 
     render (method, data, column) {
-        if (data === undefined) {
-            return this.asNotSet();
+        if (data === undefined || data === null) {
+            return this.asNotSet(data, column);
         }
-        if (data === null) {
-            return this.asNull();
+        if (column.escape === undefined) {
+            column.escape = true;
         }
         const result = method.call(this, data, column);
         return typeof result === 'object'
-            ? JSON.stringify(result, null, 1)
+            ? this.escape(JSON.stringify(result, null, 1), column)
             : result;
     }
 
@@ -76,7 +79,9 @@ Jam.ColumnRenderer = class ColumnRenderer {
     }
 
     asDefault (data, column) {
-        return this.join(...arguments, this.translate.bind(this));
+        return this.join(...arguments, data => {
+            return this.escape(this.translate(data, column), column);
+        });
     }
 
     asBoolean () {
@@ -105,40 +110,45 @@ Jam.ColumnRenderer = class ColumnRenderer {
         });
     }
 
-    asEscaped () {
-        return this.join(...arguments, Jam.Helper.escapeHtml);
-    }
-
     asLink (data, column) {
         return this.join(...arguments, (data, {format}) => {
+            if (!data) {
+                return Jam.FormatHelper.asInvalidData();
+            }
             let text = data.hasOwnProperty('text') ? data.text : data;
-            let url = data.url || format.url || '';
+            let url = data.url || format.url;
             if (!url || text === null || text === undefined) {
                 return this.render(this.asDefault, text, column);
             }
-            let params = data.id || data.params 
-                ? {id: data.id, ...data.params} 
-                : {id: text};
-            params = $.param({...format.params, ...params});
-            url += (url.includes('?') ? '&' : '?') + params;
-            text = this.translate(text, column);
-            return `<a href="${url}" class="modal-link">${text}</a>`;
+            text = this.escape(this.translate(text, column), column);
+            return this.renderLink(url, text, data, format);
         });
     }
 
     asNotSet () {
-        return `<span class="not-set">[${Jam.i18n.translate('not set')}]</span>`;
+        return this.join(...arguments, Jam.FormatHelper.asNotSet);
     }
 
-    asNull () {
-        return '<span class="not-set">null</span>';
+    asSelect (data, column) {
+        return this.escape(column.format.itemIndex[data].label, column);
     }
 
-    asSelect (data, {format}) {
-        return format.itemIndex[data].label;
+    asThumbnail (data, column) {
+        return this.join(...arguments, (data, {format}) => {
+            if (!data) {
+                return Jam.FormatHelper.asInvalidData();
+            }
+            const thumbnail = Jam.FormatHelper.asThumbnail(data);
+            const url = data.url || format.url;
+            return url ? this.renderLink(url, thumbnail, data, format) : thumbnail;
+        });
     }
 
-    asPreview () {
-        return this.join(...arguments, Jam.FormatHelper.asPreview);
+    renderLink (url, content, data, format) {
+        const params = data.id || data.params
+            ? {id: data.id, ...data.params}
+            : {id: content};
+        url += (url.includes('?') ? '&' : '?') + $.param({...format.params, ...params});
+        return `<a href="${url}" class="modal-link">${content}</a>`;
     }
 };

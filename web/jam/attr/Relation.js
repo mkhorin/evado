@@ -5,6 +5,31 @@
 
 Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
 
+    constructor () {
+        super(...arguments);
+        this.initChanges();
+    }
+
+    initChanges () {
+        this.changes = new Jam.AttrListChanges(this);
+        this.changes.setDefaultValue(this.getValue());
+        this.setValueByChanges();
+    }
+
+    hasValue () {
+        const max = this.list ? this.list.grid.itemMaxSize : 0;
+        const removes = this.changes.getUnlinks().length + this.changes.getDeletes().length;
+        return this.changes.hasLinks() || max > removes;
+    }
+
+    setValueByChanges () {
+        const value = this.changes.serialize();
+        if (this.getValue() !== value) {
+            this.setValue(value);
+            return true;
+        }
+    }
+
     activate () {
         if (!this.canActivate()) {
             return false;
@@ -14,21 +39,25 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
     }
 
     createList (afterInit) {
-        (new Jam.AttrList(this.$attr.find('.data-grid'), {attr: this, afterInit})).init();
+        const $grid = this.$attr.find('.data-grid');
+        this.list = (new Jam.AttrList($grid, {
+            attr: this,
+            changes: this.changes,
+            model: this.model,
+            afterInit
+        }));
+        this.list.init();
     }
 };
 
 Jam.AttrList = class AttrList extends Jam.List {
 
     init () {
-        this.model = this.attr.model;
-        this.changes = new Jam.AttrListChanges(this);
-
         super.init();
-
+        this.multiple = this.params.multiple;
         this.$container.mouseenter(this.showMouseEnter.bind(this));
         this.$container.mouseleave(this.hideMouseEnter.bind(this));
-        this.grid.events.one('afterLoad', this.afterInit);
+        this.grid.events.one('afterLoad', this.onAfterLoad.bind(this));
         this.grid.events.one('afterFail', this.afterInit);
     }
 
@@ -56,9 +85,10 @@ Jam.AttrList = class AttrList extends Jam.List {
         }
     }
 
-    serializeValue () {
-        const value = this.changes.isEmpty() ? '' : JSON.stringify(this.changes.data);
-        this.attr.$value.val(value).change();
+    setValue () {
+        if (this.attr.setValueByChanges()) {
+            this.attr.triggerChange();
+        }
     }
 
     getCommandMethod (name) {
@@ -72,6 +102,11 @@ Jam.AttrList = class AttrList extends Jam.List {
     beforeCommand () {
         super.beforeCommand();
         this.model.beforeCommand();
+    }
+
+    onAfterLoad () {
+        this.attr.triggerChange();
+        this.afterInit();
     }
 
     onAfterCloseModal (event, data) {
@@ -92,8 +127,10 @@ Jam.AttrList = class AttrList extends Jam.List {
     onDelete () {
         const $rows = this.getSelectedRows();
         if ($rows) {
-            Jam.dialog.confirmDeletion('Delete permanently selected objects?')
-                .then(()=> this.deleteObjects($rows));
+            const deferred = this.params.confirmDeletion
+                ? Jam.dialog.confirmDeletion('Delete permanently selected objects?')
+                : $.when();
+            deferred.then(()=> this.deleteObjects($rows));
         }
     }
 
@@ -103,7 +140,7 @@ Jam.AttrList = class AttrList extends Jam.List {
                 if (data && data.result) {
                     this.linkObjects(data.result);
                 }
-            }, {multiple: this.params.multiple});
+            }, {multiple: this.multiple});
         }
     }
 
@@ -116,10 +153,8 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     linkObjects (ids) {
         ids = typeof ids === 'string' ? ids.split(',') : [];
-        this.params.multiple
-            ? this.linkMultiple(ids)
-            : this.linkSingle(ids);
-        this.serializeValue();
+        this.multiple ? this.linkMultiple(ids) : this.linkSingle(ids);
+        this.setValue();
         this.reload();
     }
 
@@ -133,23 +168,23 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     unlinkObjects ($rows) {
         this.changes.unlinkObjects(this.getObjectIds($rows));
-        this.serializeValue();
+        this.setValue();
         this.reload();
     }
 
     deleteObjects ($rows) {
         this.changes.deleteObjects(this.getObjectIds($rows));
-        this.serializeValue();
+        this.setValue();
         this.reload();
     }
 
-    revertChanges () {
-        if (!this.changes.revert(this.getObjectIds(this.findSelectedRows()))) {
-            return false;
+    revertChanges () { // revert unlinks or deletes
+        const ids = this.getObjectIds(this.findSelectedRows());
+        if (this.multiple ? this.changes.revertMultiple(ids) : this.changes.revertSingle(ids)) {
+            this.setValue();
+            this.reload();
+            return true;
         }
-        this.serializeValue();
-        this.reload();
-        return true;
     }
 
     showMouseEnter () {
@@ -164,21 +199,22 @@ Jam.AttrList = class AttrList extends Jam.List {
 
 Jam.AttrListChanges = class AttrListChanges {
 
-    constructor (list) {
-        this.data = {};
-        this.list = list;
-        this.clear();
-        Object.assign(this.data, Jam.Helper.parseJson(list.attr.getValue()));
-    }
-
-    clear () {
-        this.data.links = [];
-        this.data.unlinks = [];
-        this.data.deletes = [];
+    constructor () {
+        this.data = {links: [], unlinks: [], deletes: []};
     }
 
     isEmpty () {
         return !this.data.links.length && !this.data.unlinks.length && !this.data.deletes.length;
+    }
+
+    setDefaultValue (value) {
+        if (value) {
+            this.data.links = value.split(',');
+        }
+    }
+
+    hasLinks () {
+        return this.data.links.length > 0;
     }
 
     getLinks () {
@@ -193,18 +229,22 @@ Jam.AttrListChanges = class AttrListChanges {
         return this.data.deletes;
     }
 
-    linkSingle (ids, old) {
-        if (old[0] === ids[0]) {
+    serialize () {
+        return this.isEmpty() ? '' : JSON.stringify(this.data);
+    }
+
+    linkSingle (ids, currents) {
+        if (ids[0] === currents[0]) {
             return this.clear();
         }
-        this.data.links = ids;
         if (this.data.deletes.length) {
             this.data.unlinks = [];
-            this.data.deletes = old;
+            this.data.deletes = currents;
         } else {
-            this.data.unlinks = old;
+            this.data.unlinks = currents;
             this.data.deletes = [];
         }
+        this.data.links = ids;
     }
 
     linkMultiple (ids) {
@@ -225,16 +265,25 @@ Jam.AttrListChanges = class AttrListChanges {
         this.data.deletes = this.data.deletes.concat(Jam.ArrayHelper.exclude(this.data.deletes, ids));
     }
 
-    revert (ids) {
-        return ids.length && (this.revertList(this.data.unlinks, ids) || this.revertList(this.data.deletes, ids));
+    revertMultiple (ids) {
+        return this.revertItems('unlinks', ids) || this.revertItems('deletes', ids);
     }
 
-    revertList (list, ids) {
+    revertSingle (ids) {
+        const reverted = this.revertItems('unlinks', ids) || this.revertItems('deletes', ids);
+        if (reverted) {
+            this.data.unlinks = this.data.links;
+            this.data.links = [];
+        }
+        return reverted;
+    }
+
+    revertItems (key, ids) {
         let reverted = false;
         for (const id of ids) {
-            const index = list.indexOf(id);
+            const index = this.data[key].indexOf(id);
             if (index !== -1) {
-                list.splice(index, 1);
+                this.data[key].splice(index, 1);
                 reverted = true;
             }
         }

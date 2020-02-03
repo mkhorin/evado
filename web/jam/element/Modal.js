@@ -148,9 +148,9 @@ Jam.Modal = class Modal extends Jam.Element {
     }
 
     openFromUrl (url) {
-        const target = Jam.UrlHelper.getUrlParams(url).modal;
-        if (target) {
-            this.create().load(decodeURIComponent(target));
+        const {modal} = Jam.UrlHelper.getParams(url);
+        if (modal) {
+            this.create().load(decodeURIComponent(modal));
         }   
     }    
 };
@@ -244,7 +244,8 @@ Jam.ModalItem = class ModalItem {
     }
 
     createTitle ($container) {
-        this.title = Jam.i18n.translate($container.data('title'), $container.data('t-title')) || '';
+        this.title = Jam.i18n.translate($container.data('title'), $container.data('t-title'));
+        this.title = Jam.Helper.escapeTags(this.title);
         const url = $container.data('url') || this.getLoadUrl();
         this.$title.html(`<a href="${Jam.UrlHelper.getNewPageUrl(url)}" target="_blank">${this.title}</a>`);
     }
@@ -252,7 +253,7 @@ Jam.ModalItem = class ModalItem {
     createTabTitle ($container) {
         this.tabTitle = $container.data('tab');
         this.tabTitle = this.tabTitle
-            ? Jam.i18n.translate(this.tabTitle, $container.data('t-tab'))
+            ? Jam.Helper.escapeTags(Jam.i18n.translate(this.tabTitle, $container.data('t-tab')))
             : this.title;
     }
 
@@ -267,7 +268,7 @@ Jam.ModalItem = class ModalItem {
     }
 
     getLoadUrl () {
-        return Jam.UrlHelper.addUrlParams(this.url, this.loadParams || '');
+        return this.loadParams ? Jam.UrlHelper.addParams(this.url, this.loadParams) : this.url;
     }
 
     close (data) {
@@ -377,7 +378,7 @@ Jam.ModalStackToggle = class ModalStackToggle {
         let $item = this.getItem(modal);
         if (!$item.length) {
             $item = $(Jam.Helper.resolveTemplate(this.template, {
-                title: Jam.Helper.clearHtml(modal.title),
+                title: Jam.Helper.escapeTags(modal.title),
                 text: modal.tabTitle
             }));
             $item.data('modal', modal);

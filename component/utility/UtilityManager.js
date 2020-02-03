@@ -10,19 +10,22 @@ module.exports = class UtilityManager extends Base {
     constructor (config) {
         super({
             utilities: 'utilities',
-            url: `${config.module.NAME}/default/utility`,
             ...config
         });
     }
 
     async init () {
-        this._utilityMap = this.resolveUtilities(this.utilities);
+        this._utilityMap = this.resolveUtilityMap(this.utilities);
         this._utilities = Object.values(this._utilityMap);
         ObjectHelper.addKeyAsNestedValue('id', this._utilityMap);
     }
 
-    resolveUtilities (data) {
-        return (typeof data === 'string' ? this.module.getConfig(data) : data) || {};
+    resolveUtilityMap (data) {
+        return (typeof data === 'string' ? this.resolveFromConfig(data) : data) || {};
+    }
+
+    resolveFromConfig (key) {
+        return this.module.config.mergeWithParents(key);
     }
 
     async isActiveUtility (params) {
@@ -34,19 +37,19 @@ module.exports = class UtilityManager extends Base {
         return false;
     }
 
-    async renderControls (params) {
-        let result = '';
+    getUtilityConfig (id) {
+        return Object.prototype.hasOwnProperty.call(this._utilityMap, id) ? this._utilityMap[id] : null;
+    }
+
+    async createUtilities (params) {
+        const result = [];
         for (let config of this._utilities) {
             const utility = this.createUtility(config, params);
             if (await utility.isActive() && await utility.canAccess()) {
-                result += await utility.renderControl();
+                result.push(utility);
             }
         }
         return result;
-    }
-
-    getUtilityConfig (id) {
-        return Object.prototype.hasOwnProperty.call(this._utilityMap, id) ? this._utilityMap[id] : null;
     }
 
     createUtility (config, params) {

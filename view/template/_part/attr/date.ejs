@@ -10,13 +10,13 @@ const p = {
 
 <div class="form-attr form-group <%- p.required %>"
      data-handler="<%= p.handler %>"
-     data-action-binder='<%= p.actionBinder %>'
+     data-action-binder="<%= p.actionBinder %>"
      data-utc="<%- p.utc %>"
      data-params="<%= p.options %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" type="hidden" value="<%- p.value %>">
+        <input name="<%- p.name %>" type="hidden" value="<%- p.value %>" class="form-value">
         <div class="input-group">
             <input type="text" <%- p.required %> class="datepicker form-control">
             <div class="input-group-addon"><i class="fa fa-calendar"></i></div>

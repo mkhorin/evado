@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -17,8 +17,7 @@ module.exports = class RawFile extends Base {
                 'file',
                 'createdAt',
                 'creator', // [User]
-                'owner', // [File]
-                'hash'
+                'owner'
             ],
             RULES: [
                 ['file', 'required']
@@ -26,20 +25,15 @@ module.exports = class RawFile extends Base {
             BEHAVIORS: {
                 'timestamp': {Class: require('areto/behavior/TimestampBehavior')},
                 'userStamp': {Class: require('areto/behavior/UserStampBehavior')}
-            }
+            },
+            INDEXES: [
+                [{owner: 1}, {unique: false}]
+            ]
         };
-    }
-
-    static getStorage (module) {
-        return module.get('fileStorage');
     }
 
     isImage () {
         return this.get('mime').indexOf('image') === 0;
-    }
-
-    getStorage () {
-        return this.constructor.getStorage(this.module);
     }
 
     getName () {
@@ -58,11 +52,43 @@ module.exports = class RawFile extends Base {
         return this.get('mime');
     }
 
+    getOwner () {
+        return this.get('owner');
+    }
+
+    getTitle () {
+        return this.get('name');
+    }
+
+    getStorage () {
+        return this.module.get('fileStorage');
+    }
+
+    getPath () {
+        return this.getStorage().getPath(this.getFilename());
+    }
+
+    getFileHeaders () {
+        return this.getStorage().getHeaders(this.getName(), this.getMime());
+    }
+
+    getThumbnailHeaders () {
+        return this.getStorage().thumbnail.getHeaders(this.getName());
+    }
+
+    findExpired (date) {
+        return this.find().and({owner: null}, ['<', 'createdAt', date]);
+    }
+
     findPending (id, creator) {
         return this.findById(id).and({
             owner: null,
             creator: creator.getId()
         });
+    }
+
+    ensureThumbnail (key) {
+        return this.getStorage().ensureThumbnail(key, this.getFilename());
     }
 
     async upload (req, res) {
@@ -75,7 +101,7 @@ module.exports = class RawFile extends Base {
             path: this.getStorage().getPath(data.filename),
             filename: data.filename,
             size: data.size,
-            mime: data.mime || '',
+            mime: data.mime,
             extension: data.extension
         });
         return this.save();
@@ -102,10 +128,15 @@ module.exports = class RawFile extends Base {
     }
 
     async afterDelete () {
-        if (!this.get('owner')) {
-            await this.getStorage().delete(this.getFilename());
-        }
+        await this.getStorage().delete(this.getFilename());
         return super.afterDelete();
+    }
+
+    // RELATIONS
+
+    relCreator () {
+        const Class = this.getClass('model/User');
+        return this.hasOne(Class, Class.PK, 'creator');
     }
 };
 module.exports.init(module);

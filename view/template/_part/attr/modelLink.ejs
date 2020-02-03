@@ -1,8 +1,9 @@
 <!-- _part/attr/modelLink -->
 <%
 const relModel = model.rel(attr);
+const id = model.get(attr);
 %>
 <%- include('static', {
     displayValue: relModel ? relModel.getTitle() : undefined,
-    url: relModel ? [url, relModel] : undefined
+    url: id ? [url, {id}] : undefined
 }) %>

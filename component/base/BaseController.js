@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -140,6 +140,6 @@ module.exports.init();
 const BadRequest = require('areto/error/BadRequestHttpException');
 const NotFound = require('areto/error/NotFoundHttpException');
 const SelectHelper = require('../helper/SelectHelper');
-const DataGrid = require('../misc/DataGrid');
-const TreeGrid = require('../misc/TreeGrid');
-const Select2 = require('../misc/Select2');
+const DataGrid = require('../other/DataGrid');
+const TreeGrid = require('../other/TreeGrid');
+const Select2 = require('../other/Select2');

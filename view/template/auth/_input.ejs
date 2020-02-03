@@ -11,7 +11,7 @@ const p = {
     iconClass: typeof iconClass === 'undefined' ? '' : iconClass
 };
 %>
-<div class="form-attr form-group<%- p.required %><%- p.error ? ' has-error' : '' %><%- p.iconClass ? ' has-feedback' : '' %>">
+<div class="form-attr form-group <%- p.required %><%- p.error ? ' has-error' : '' %><%- p.iconClass ? ' has-feedback' : '' %>">
     <input id="<%- p.id %>" name="<%- p.name %>" type="<%- p.type %>" <%- p.required %>
            value="<%- p.value %>" class="form-control"
            placeholder="<%- _t(p.label) %>" autocomplete="<%- p.autocomplete %>">

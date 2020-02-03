@@ -24,7 +24,7 @@ module.exports = class Uploader extends Base {
             name: file.originalname,
             filename: path.join(dir, file.filename),
             size: file.size,
-            mime: file.mimetype,
+            mime: file.mimetype || '',
             extension: path.extname(file.originalname).substring(1).toLowerCase()
         } : null;
     }

@@ -5,8 +5,8 @@
 
 module.exports = {
 
-    //mountPath: '/test',
     port: 3000,
+    commonMenuTitle: 'Main',
 
     components: {
         'logger': {
@@ -29,8 +29,7 @@ module.exports = {
             secret: 'evado-app'
         },
         'session': {
-            secret: 'evado-app',
-            lifetime: 3600
+            secret: 'evado-app'
         },
         'i18n': {
             sources: {
@@ -38,7 +37,7 @@ module.exports = {
             }
         },
         'formatter': {
-            Class: require('../component/misc/Formatter')
+            Class: require('../component/other/Formatter')
         },
         'bodyParser': {
             limit: '10mb'
@@ -80,6 +79,9 @@ module.exports = {
         'mailer': {
             Class: require('../component/mailer/DummyMailer')
         },
+        'utility': {
+            Class: require('../component/utility/UtilityManager')
+        },
         'fileStorage': require('./default-fileStorage')
     },
     modules: {
@@ -117,7 +119,7 @@ module.exports = {
     },
     assets: require('./default-assets'),
     classes: require('./default-classes'),
-    tasks: require('./default-tasks'),
+    utilities: require('./default-utilities'),
     widgets: {
         'commonMenu': {
             Class: require('../component/widget/CommonMenu')
@@ -133,6 +135,7 @@ module.exports = {
         }
     },
     indexes: [
+        'model/RawFile',
         'model/User',
         'model/UserLog',
         'security/UserPassword',

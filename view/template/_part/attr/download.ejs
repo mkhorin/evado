@@ -1,11 +1,12 @@
 <!-- _part/attr/download -->
 <%
 const p = {
-    fileUrl: `file/download?id=${model.getId()}`,
-    preview: typeof preview === 'undefined' ? 'large' : preview
+    thumbnail: typeof thumbnail === 'undefined' ? 'large' : thumbnail,
+    thumbnailPath: typeof thumbnailPath === 'undefined' ? 'file/thumbnail' : thumbnailPath,
+    url: `${typeof downloadPath === 'undefined' ? 'file/download' : downloadPath}?id=${model.getId()}`
 };
 const src = model.isImage()
-    ? `file/preview?id=${model.getId()}&s=${p.preview}&t=${_controller.timestamp}`
+    ? `${p.thumbnailPath}?id=${model.getId()}&s=${p.thumbnail}&t=${_controller.timestamp}`
     : null;
 %>
 <%- include('_params', {p}) %>
@@ -15,14 +16,10 @@ const src = model.isImage()
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <p class="form-control-static">
-            <a href="<%- p.fileUrl %>" target="_blank" title="Download">
-                <%- model.getTitle() %>
-            </a>
+            <a href="<%- p.url %>" target="_blank" title="Download"><%= model.getTitle() %></a>
         </p>
         <% if (src) { %>
-         <div class="mt10">
-            <img src="<%- src %>" class="img-responsive" alt="<%= model.getTitle() %>">
-         </div>
+        <img src="<%- src %>" class="thumbnail img-responsive" alt="<%= model.getTitle() %>">
         <% } %>
     </div>
 </div>

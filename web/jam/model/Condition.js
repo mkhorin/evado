@@ -3,6 +3,29 @@
  */
 'use strict';
 
+Jam.ModelConditionOperators = {
+    'AND': 'validateAnd',
+    'OR': 'validateOr',
+    'EMPTY': 'validateEmpty',
+    'NOT EMPTY': 'validateNotEmpty',
+    'BETWEEN': 'validateBetween',
+    'NOT BETWEEN': 'validateNotBetween',
+    'IN': 'validateIn',
+    'NOT IN': 'validateNotIn',
+    'REGEX': 'validateRegex',
+    '=': 'validateEqual',
+    '!=': 'validateNotEqual',
+    '>': 'validateGreater',
+    '>=': 'validateGreaterOrEqual',
+    '<': 'validateLess',
+    '<=': 'validateLessOrEqual',
+    'FALSE': 'validateFalse',
+    'TRUE': 'validateTrue',
+    'INITIAL': 'validateInitial',
+    'START TRIGGER': 'validateStartTrigger',
+    'TRIGGER': 'validateTrigger'
+};
+
 Jam.ModelCondition = class ModelCondition {
 
     constructor (data, model) {
@@ -15,17 +38,24 @@ Jam.ModelCondition = class ModelCondition {
         return this.validate(this.data);
     }
 
-    isValueExists (value) {
-        return value !== '' && value !== null && value !== undefined;
+    hasValue (name) {
+        const attr = this.getAttr(name);
+        return attr ? attr.hasValue() : false;
     }
 
     getValue (name) {
+        const attr = this.getAttr(name);
+        return attr ? attr.getValue() : undefined;
+    }
+
+    getAttr (name) {
         if (!this.attrMap.hasOwnProperty(name)) {
             this.attrMap[name] = this.model.getAttr(name);
         }
         if (this.attrMap[name]) {
-            return this.attrMap[name].getValue();
+            return this.attrMap[name];
         }
+        this.log('error', `Model attribute not found: ${name}`);
     }
 
     validate (data) {
@@ -38,8 +68,8 @@ Jam.ModelCondition = class ModelCondition {
         } else {
             data = data.slice(1);
         }
-        if (Jam.ModelCondition.OPERATORS.hasOwnProperty(operator)) {
-            return this[Jam.ModelCondition.OPERATORS[operator]](operator, data);
+        if (Jam.ModelConditionOperators.hasOwnProperty(operator)) {
+            return this[Jam.ModelConditionOperators[operator]](operator, data);
         }
         this.log('error', `Operator not found: ${operator}`);
     }
@@ -82,14 +112,14 @@ Jam.ModelCondition = class ModelCondition {
         return false;
     }
 
-    validateExists (operator, operands) {
-        return operands.length !== 1
-            ? this.logDataError(operator, operands)
-            : this.isValueExists(this.getValue(operands[0]));
+    validateEmpty () {
+        return !this.validateNotEmpty(...arguments);
     }
 
-    validateNotExists () {
-        return !this.validateExists(...arguments);
+    validateNotEmpty (operator, operands) {
+        return operands.length !== 1
+            ? this.logDataError(operator, operands)
+            : this.hasValue(operands[0]);
     }
 
     validateBetween (operator, operands) {
@@ -154,29 +184,35 @@ Jam.ModelCondition = class ModelCondition {
             : this.getValue(operands[0]) <= operands[1];
     }
 
+    validateTrue () {
+        return true;
+    }
+
+    validateFalse () {
+        return false;
+    }
+
+    validateInitial () {
+        return this.initial;
+    }
+
+    validateStartTrigger (operator, operands) {
+        return this.validateTrigger(operator, operands, 'startTriggerAttr');
+    }
+
+    validateTrigger (operator, operands, key = 'triggerAttr') {
+        if (operands.length !== 1) {
+            return this.logDataError(operator, operands);
+        }
+        const tracker = this.model.changeTracker;
+        return tracker && tracker[key] === this.getAttr(operands[0]);
+    }
+
     logDataError (operator, operands) {
-        return this.log('error', `${operator}: operands invalid: ${JSON.stringify(operands)}`);
+        return this.log('error', `${operator}: Operands invalid: ${JSON.stringify(operands)}`);
     }
 
     log (type, message) {
-        console[type](message);
+        console[type](`${this.constructor.name}: ${message}`);
     }
-};
-
-Jam.ModelCondition.OPERATORS = {
-    'AND': 'validateAnd',
-    'OR': 'validateOr',
-    'EXISTS': 'validateExists',
-    'NOT EXISTS': 'validateNotExists',
-    'BETWEEN': 'validateBetween',
-    'NOT BETWEEN':'validateNotBetween',
-    'IN': 'validateIn',
-    'NOT IN': 'validateNotIn',
-    'REGEX': 'validateRegex',
-    '=': 'validateEqual',
-    '!=': 'validateNotEqual',
-    '>': 'validateGreater',
-    '>=': 'validateGreaterOrEqual',
-    '<': 'validateLess',
-    '<=': 'validateLessOrEqual'
 };

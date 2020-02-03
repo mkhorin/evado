@@ -5,19 +5,32 @@
 
 Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAttr {
 
+    constructor () {
+        super(...arguments);
+        this.initChanges();
+    }
+
+    initChanges () {
+        this.$select = this.$attr.find('select');
+        this.changes = {links: [], unlinks: [], deletes: []};
+        this.startValues = [];
+        const defaultValue = this.getValue();
+        if (defaultValue) {
+            this.changes.links = defaultValue.split(',');
+        } else {
+            for (const option of this.$select.children()) {
+                this.startValues.push(option.getAttribute('value'));
+            }
+        }
+        this.setValueByChanges();
+    }
+
     activate () {
         if (!this.canActivate()) {
             return false;
         }
         this.activated = true;
-        this.initBase();
-        this.initChanges();
-        this.createSelect2();
-    }
-
-    initBase () {
         this.childModal = Jam.modal.create();
-        this.$select = this.$attr.find('select');
         this.params = {
             pageSize: 10,
             inputDelay: 500,
@@ -37,24 +50,32 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.$container.on('dblclick', this.select2ChoiceClass, this.onDoubleClickSelect2Choice.bind(this));
         this.$select.change(this.changeSelect.bind(this));
         this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
+        this.createSelect2();
+        this.getDefaultTitles();
     }
 
-    initChanges () {
-        this.changes = {links: [], unlinks: [], deletes: []};
-        this.startValues = [];
-        for (const option of this.$select.children()) {
-            this.startValues.push(option.getAttribute('value'));
-        }
-        Object.assign(this.changes, Jam.Helper.parseJson(this.getValue()));
-        if (this.changes.links.length) {
-            this.selectValue(this.changes.links[0]).done(()=> {
-                this.model.setInitValue();
-            });
-        }
+    getDefaultTitles () {
+        let deferred = $.when();
+        this.changes.links.forEach(id => {
+            deferred = deferred.then(() => this.selectValue(id));
+        });
+    }
+
+    hasValue () {
+        const data = this.$select.val();
+        return Array.isArray(data) ? data.length > 0 : !!data;
     }
 
     setValue (value) {
         this.$value.val(value).trigger('change.select2');
+    }
+
+    setValueByChanges () {
+        const value = this.hasChanges() ? JSON.stringify(this.changes) : '';
+        if (this.$value.val() !== value) {
+            this.$value.val(value);
+            return true;
+        }
     }
 
     createSelect2 () {
@@ -78,7 +99,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         });
     }
 
-    getCommand (name) {
+    findCommand (name) {
         return this.$commands.find(`[data-command="${name}"]`);
     }
 
@@ -127,9 +148,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             return data ? [data] : [];
         }
         const $items = this.getSelect2ChoiceItems();
-        return data.filter((value, index) => {
-            return $items.eq(index).is('.active');
-        });
+        return data.filter((value, index) => $items.eq(index).is('.active'));
     }
 
     getOneSelectedValue () {
@@ -156,7 +175,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     onDoubleClickSelect2Choice (event) {
         $(event.currentTarget).addClass('active');
-        this.getCommand('update').click();
+        this.findCommand('update').click();
     }
 
     hasChanges () {
@@ -179,9 +198,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
                 this.changes.unlinks = [this.startValues[0]];
             }
         }
-        value = this.hasChanges() ? JSON.stringify(this.changes) : '';
-        if (this.$value.val() !== value) {
-            this.$value.val(value).change();
+        if (this.setValueByChanges()) {
+            this.triggerChange();
         }
     }
 
@@ -227,8 +245,10 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     onDelete () {
         const values = this.getSelectedValues();
         if (values.length) {
-            Jam.dialog.confirmDeletion('Delete permanently selected objects?')
-                .then(this.delete.bind(this, values));
+            const def = this.params.confirmDeletion
+                ? Jam.dialog.confirmDeletion('Delete permanently selected objects?')
+                : $.when();
+            def.then(this.delete.bind(this, values));
         }
     }
 

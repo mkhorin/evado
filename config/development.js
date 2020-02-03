@@ -5,7 +5,7 @@
 
 module.exports = {
     parent: 'default',
-    port: 3000,
+
     components: {
         'logger': {
             level: 'trace'
@@ -13,8 +13,6 @@ module.exports = {
         'metaHub': {
             // inspectionEnabled: false
         }
-    },
-    params: {
     },
     metaModels: {
         'navigation': {

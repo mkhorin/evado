@@ -21,12 +21,16 @@ module.exports = class Console extends Base {
             TaskConsole: require('./TaskConsole'),
             ...config
         });
-        this.app = ClassHelper.spawn(this.Application);
+        this.app = this.app || ClassHelper.spawn(this.Application);
         this.module = this.app;
     }
 
-    start () {
-        return this.execute(async ()=> await this.app.start());
+    clearDatabase () {
+        return this.app.getDb().dropAll();
+    }
+
+    startApp () {
+        return this.execute(() => this.app.start());
     }
 
     // ASSET
@@ -112,9 +116,14 @@ module.exports = class Console extends Base {
             if (typeof handler === 'string') {
                 handler = this.createHandler(...arguments);
             }
-            await this.app.init();
-            await handler();
-            await this.logTotal();
+            if (this._appReady) {
+                await handler();
+            } else {
+                await this.app.init();
+                this._appReady = true;
+                await handler();
+                await this.logResult();
+            }
         } catch (err) {
             this.log('error', err);
         }
@@ -135,12 +144,12 @@ module.exports = class Console extends Base {
         this.app.log(...arguments);
     }
 
-    async logTotal () {
+    async logResult () {
         await PromiseHelper.setTimeout(200); // skip previous console output
         const logger = this.app.get('logger');
         const counters = logger.getCounters(['error', 'warn']).map(item => `${item.type}: ${item.counter}`);
         if (counters.length) {
-            this.log('warn', `Log total: ${counters.join(', ')}`);
+            this.log('warn', `Logging result: ${counters.join(', ')}`);
         }
     }
 };

@@ -7,7 +7,6 @@ Jam.List = class List extends Jam.Element {
 
     constructor ($grid, data) {
         super($grid);
-
         Object.assign(this, data);
         this.$grid = $grid;
         this.$container = $grid.closest('.box');
@@ -187,13 +186,13 @@ Jam.List = class List extends Jam.Element {
         this.toggleRowSelect($(event.currentTarget), true);
         event.ctrlKey
             ? this.openNewPage()
-            : this.getCommand('update').click();
+            : this.findCommand('update').click();
     }
 
     openNewPage () {
         const $row = this.getSelectedRow();
         if ($row) {
-            const data = Jam.UrlHelper.addUrlParams(this.params.update, this.getObjectIdParam($row));
+            const data = Jam.UrlHelper.addParams(this.params.update, this.getObjectIdParam($row));
             Jam.UrlHelper.openNewPage(Jam.UrlHelper.getNewPageUrl(data));
         }
     }
@@ -242,13 +241,25 @@ Jam.List = class List extends Jam.Element {
         return this.findRows('.selected');
     }
 
+    findRowById (id) {
+        return this.grid.findRowById(id);
+    }
+
     findRows (selector) {
         return this.grid.findRows(selector);
     }
 
+    getCreateUrl () {
+        return this.params.create;
+    }
+
+    getDeleteUrl () {
+        return this.params.delete;
+    }
+
     deleteObjects ($rows) {
         let ids = this.serializeObjectIds($rows);
-        this.post(this.params.delete, {ids}).done(()=> {
+        this.post(this.getDeleteUrl($rows), {ids}).done(()=> {
             ids = ids.split(',');
             this.events.trigger('afterDelete', {ids});
             this.reload();
@@ -263,13 +274,21 @@ Jam.List = class List extends Jam.Element {
     }
 
     defaultModalAfterClose (event, data) {
-        if (data && data.saved) {
-            this.currentRowId = data.result;
-            this.reload();
-            if (data.reopen) {
-                this.loadModal(this.params.update, {id: data.result});
-            }
+        if (!data || !data.saved) {
+            return false;
         }
+        const id = data.result;
+        if (data.reopen && id) {
+            this.reopen(id);
+        }
+        this.reload();
+        this.grid.events.one('afterDrawPage', () => {
+            this.toggleRowSelect(this.findRowById(id), true);
+        });
+    }
+
+    reopen (id) {
+        this.loadModal(this.params.update, {id});
     }
 
     post (url, data) {
@@ -280,13 +299,13 @@ Jam.List = class List extends Jam.Element {
         return this.xhr;
     }
 
-    reload (resetPage) {
-        this.grid.load(resetPage);
+    reload () {
+        this.grid.load(...arguments);
     }
 
     // COMMANDS
 
-    getCommand (name) {
+    findCommand (name) {
         return this.$commands.find(`[data-command="${name}"]`);
     }
 
@@ -306,7 +325,7 @@ Jam.List = class List extends Jam.Element {
     }
 
     onCreate (event, params) {
-        this.loadModal(this.params.create, params);
+        this.loadModal(this.getCreateUrl(), params);
     }
 
     onClone () {
@@ -357,7 +376,6 @@ Jam.List = class List extends Jam.Element {
     }
 
     onUtilities () {
-
     }
 };
 

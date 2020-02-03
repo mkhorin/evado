@@ -18,7 +18,7 @@ Jam.DataGrid.defaults = {
         {'a': 'a2', 'b': 'b2', 'c': 'c2'},
         {'a': 'a3', 'b': 'b3', 'c': 'c3'},
         {'a': 'a4', 'b': 'b4', 'c': 'c4'},
-        {'a': 'a1', 'b': 'b1', 'c': 'c5'},   
+        {'a': 'a1', 'b': 'b1', 'c': 'c5'},
         {'a': 'a1', 'b': 'b1', 'c': 'c9'},
         {'a': 'a2', 'b': 'b2', 'c': 'c10'},
         {'a': 'a3', 'b': 'b3', 'c': 'c11'},
@@ -57,6 +57,7 @@ Jam.DataGrid.defaults = {
 };
 
 Jam.TreeGrid.defaults = {
+    clearCollapsedNode: true,
     nodeToggle: '<div class="node-toggle"><span class="glyphicon"></span></div>',
     Renderer: Jam.TreeGridRenderer,
     AjaxProvider: Jam.TreeGridAjaxProvider

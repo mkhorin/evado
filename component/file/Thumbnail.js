@@ -1,19 +1,19 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
 const Base = require('areto/base/Base');
 
-module.exports = class FilePreview extends Base {
+module.exports = class Thumbnail extends Base {
 
     constructor (config) {
         super({
-            basePath: 'upload/preview',
+            basePath: 'upload/thumbnail',
             defaultSizeKey: 'small',
             mime: 'image/png',
             extension: 'png',
-            PreviewSize: require('./PreviewSize'),
+            ThumbnailSize: require('./ThumbnailSize'),
             ...config
         });
         this.basePath = this.resolvePath(this.basePath);
@@ -21,26 +21,6 @@ module.exports = class FilePreview extends Base {
 
     async init () {
         await this.createSizes();
-    }
-
-    hasSizes () {
-
-    }
-
-
-    async createSizes () {
-        this.sizes = this.sizes || {};
-        for (const key of Object.keys(this.sizes)) {
-            this.sizes[key] = this.spawn({
-                Class: this.PreviewSize,
-                ...this.sizes[key]
-            });
-            await this.sizes[key].init();
-        }
-    }
-
-    getSize (key) {
-        return Object.prototype.hasOwnProperty.call(this.sizes, key) ? this.sizes[key] : null;
     }
 
     getHeaders (name) {
@@ -51,8 +31,23 @@ module.exports = class FilePreview extends Base {
         };
     }
 
+    getSize (key) {
+        return Object.prototype.hasOwnProperty.call(this.sizes, key) ? this.sizes[key] : null;
+    }
+
     getSizePath (key, filename) {
         return path.join(this.basePath, key, filename);
+    }
+
+    async createSizes () {
+        this.sizes = this.sizes || {};
+        for (const key of Object.keys(this.sizes)) {
+            this.sizes[key] = this.spawn({
+                Class: this.ThumbnailSize,
+                ...this.sizes[key]
+            });
+            await this.sizes[key].init();
+        }
     }
 
     resolvePath (target) {
@@ -101,6 +96,16 @@ module.exports = class FilePreview extends Base {
         for (const key of Object.keys(this.sizes)) {
             await FileHelper.delete(this.getSizePath(key, filename));
         }
+    }
+
+    deleteAll () {
+        return FileHelper.delete(this.basePath);
+    }
+
+    deleteSize (key) {
+        return this.getSize(key)
+            ? FileHelper.delete(path.join(this.basePath, key))
+            : false;
     }
 
     log () {

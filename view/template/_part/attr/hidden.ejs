@@ -1,9 +1,8 @@
 <!-- _part/attr/hidden -->
 
 <% const p = {}; %>
-
 <%- include('_params', {p}) %>
 
 <div class="form-attr hidden" data-handler="<%= p.handler %>">
-    <input name="<%- p.name %>" type="hidden" value="<%= p.value %>">
+    <input name="<%- p.name %>" type="hidden" value="<%= p.value %>" class="form-value">
 </div>

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('../misc/DataGrid');
+const Base = require('../other/DataGrid');
 
 module.exports = class MetaGrid extends Base {
 
@@ -107,7 +107,7 @@ module.exports = class MetaGrid extends Base {
     async renderCell (attr, model, result) {
         const name = attr.name;
         if (this.isForbiddenAttr(name, model)) {
-            result[name] = this.renderNoAccess();
+            this.setForbiddenAttr(name, result);
         } else if (this._attrTemplateMap[name]) {
             const content = await this.actionView.render(this._attrTemplateMap[name], {attr, model});
             result[name] = `<!--handler: ${name}-->${content}`;
@@ -122,11 +122,12 @@ module.exports = class MetaGrid extends Base {
             || model.readForbiddenAttrs && model.readForbiddenAttrs.includes(name);
     }
 
-    renderNoAccess () {
-        if (!this._noAccessValue) {
-            this._noAccessValue = this.controller.format(null, 'noAccess');
+    setForbiddenAttr (name, result) {
+        if (result._forbidden) {
+            result._forbidden.push(name);
+        } else {
+            result._forbidden = [name];
         }
-        return this._noAccessValue;
     }
 
     renderAttr (attr, model) {
@@ -151,69 +152,58 @@ module.exports = class MetaGrid extends Base {
                 const state = model.class.getState(value);
                 return state ? state.title : value;
             }
-            if (attr.escaping) {
-                return ModelHelper.escapeValue(value);
-            }
         }
-        return this.controller.format(value, attr.getFormat());
-    }
-
-    renderRelationAttr (data, attr, model) {
-        const related = model.related.get(attr);
-        if (!related) {
-            return data || '';
-        }
-        return this._columnMap[attr.name].format.name === 'link'
-            ? this.renderRelatedLink(related, data)
-            : this.renderRelated(related, data);
-    }
-
-    renderRelatedLink (related, title) {
-        if (!Array.isArray(related)) {
-            return {
-                id: related.getId(),
-                text: ModelHelper.escapeValue(title)
-            };
-        }
-        if (!Array.isArray(title)) {
-            return ModelHelper.escapeValue(title);
-        }
-        const result = [];
-        for (let i = 0; i < related.length; ++i) {
-            result.push({
-                id: related[i].getId(),
-                text: ModelHelper.escapeValue(title[i])
-            });
-        }
-        return result;
-    }
-
-    renderRelated (related, title) {
-        if (!Array.isArray(related)) {
-            const result = related.output();
-            result._title = ModelHelper.escapeValue(title);
-            return result;
-        }
-        if (!Array.isArray(title)) {
-            return ModelHelper.escapeValue(title);
-        }
-        const result = [];
-        for (let i = 0; i < related.length; ++i) {
-            const data = related[i].output();
-            result._title = ModelHelper.escapeValue(title[i]);
-            result.push(data);
-        }
-        return result;
+        return value;
     }
 
     renderFileAttr (attr, model) {
-        const {file, name, preview} = this.controller.extraMeta.getModelFileData(model, attr);
-        if (!file) {
-            return this.controller.format(null);
+        return this.controller.extraMeta.getModelFileData(model);
+    }
+
+    renderRelationAttr (value, attr, model) {
+        const related = model.related.get(attr);
+        if (!related) {
+            return value;
         }
-        return preview
-            ? this.controller.format(preview, 'preview', {text: name})
-            : name;
+        const handler = this.getRenderRelatedHandler(attr);
+        if (!Array.isArray(related)) {
+            return handler.call(this, related, value, attr);
+        }
+        if (!Array.isArray(value)) {
+            return value;
+        }
+        const result = [];
+        for (let i = 0; i < related.length; ++i) {
+            result.push(handler.call(this, related[i], value[i], attr));
+        }
+        return result;
+    }
+
+    getRenderRelatedHandler (attr) {
+        switch (this._columnMap[attr.name].format.name) {
+            case 'link': return this.renderRelatedLink;
+            case 'thumbnail': return this.renderRelatedThumbnail;
+        }
+        return this.renderRelatedDefault;
+    }
+
+    renderRelatedDefault (model, title) {
+        const result = model.output();
+        result._title = title;
+        return result;
+    }
+
+    renderRelatedLink (model, text) {
+        return {id: model.getId(), text};
+    }
+
+    renderRelatedThumbnail (model, title, attr) {
+        const size = attr.options.thumbnail || model.view.options.thumbnail;
+        const data = this.controller.extraMeta.getModelFileData(model, size);
+        if (data) {
+            data.name = title;
+            return data;
+        }
     }
 };
 
@@ -221,4 +211,3 @@ const PromiseHelper = require('areto/helper/PromiseHelper');
 const BadRequest = require('areto/error/BadRequestHttpException');
 const MetaCommonSearch = require('./MetaCommonSearch');
 const MetaListFilter = require('./MetaListFilter');
-const ModelHelper = require('../helper/ModelHelper');

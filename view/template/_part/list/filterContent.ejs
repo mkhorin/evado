@@ -55,6 +55,26 @@
             </div>
         </div>
 
+        <div data-id="datetime">
+            <div class="col-sm-2">
+                <select class="condition-operation form-control">
+                    <option>=</option>
+                    <option>!=</option>
+                    <option><</option>
+                    <option>></option>
+                    <option><=</option>
+                    <option>>=</option>
+                </select>
+            </div>
+            <div class="col-sm-5">
+                <input class="condition-value" type="hidden">
+                <div class="input-group">
+                    <input class="form-control datepicker" type="text" placeholder="Select date...">
+                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </div>
+
         <div data-id="id">
             <div class="col-sm-2">
                 <select class="condition-operation form-control">
@@ -186,7 +206,7 @@
                         <div class="form-group required">
                             <label class="control-label col-sm-3" data-t="">Name</label>
                             <div class="col-sm-9">
-                                <input name="name" type="text" class="form-control"/>
+                                <input name="name" type="text" class="form-control">
                                 <div class="error-block"></div>
                             </div>
                         </div>

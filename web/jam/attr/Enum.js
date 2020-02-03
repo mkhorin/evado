@@ -3,11 +3,11 @@
  */
 'use strict';
 
-Jam.EnumModelAttr = class ModelAttrEnum extends Jam.ModelAttr {
+Jam.EnumModelAttr = class EnumModelAttr extends Jam.ModelAttr {
 
     init () {
-        this.sets = Jam.EnumSet.createSets(this.$attr.data('sets'), this);
-        this.select2 = this.$attr.data('select2');
+        this.sets = Jam.EnumSet.createSets(this.getData('sets'), this);
+        this.select2 = this.getData('select2');
         this.$select = this.$attr.find('select');
         this.$select.change(this.changeValue.bind(this));
         this.model.events.on('change', this.onUpdate.bind(this));
@@ -24,14 +24,20 @@ Jam.EnumModelAttr = class ModelAttrEnum extends Jam.ModelAttr {
         }
     }
 
+    enable (state) {
+        super.enable(state);
+        this.$select.attr('disabled', !state);
+    }
+
     setValue (value) {
         this.$value.val(value);
-        this.$select.val(value);
+        this.$select.val(value).trigger('change.select2');
     }
 
     changeValue () {
         if (this.$value.val() !== this.$select.val()) {
-            this.$value.val(this.$select.val()).change();
+            this.$value.val(this.$select.val());
+            this.triggerChange();
         }
     }
 
@@ -41,7 +47,8 @@ Jam.EnumModelAttr = class ModelAttrEnum extends Jam.ModelAttr {
             this.$select.html(this.build());
             this.$select.val(value);
             if (value !== this.$select.val()) {
-                this.$value.val('').change();
+                this.$value.val('');
+                this.triggerChange();
             }
         }
     }
@@ -53,11 +60,12 @@ Jam.EnumModelAttr = class ModelAttrEnum extends Jam.ModelAttr {
     }
 
     build () {
-        const category = this.$attr.data('t-sets');
+        const category = this.getData('t-sets');
         let content = '<option value></option>';
-        for (const item of this.items) {
-            const text = Jam.i18n.translate(item.text, category);
-            content += `<option value="${item.value}">${text}</option>`;
+        for (let {value, text} of this.items) {
+            value = Jam.Helper.escapeTags(value);
+            text = Jam.Helper.escapeTags(Jam.i18n.translate(text, category));
+            content += `<option value="${value}">${text}</option>`;
         }
         return content;
     }
@@ -67,7 +75,7 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
 
     init () {
         super.init();
-        this.sets = Jam.EnumSet.createSets(this.$attr.data('sets'), this);
+        this.sets = Jam.EnumSet.createSets(this.getData('sets'), this);
         this.$list = this.$attr.find('.radio-items');
         this.$list.on('change', '[type="radio"]', this.changeValue.bind(this));
         this.model.events.on('change', this.onUpdate.bind(this));
@@ -118,11 +126,12 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
     }
 
     build () {
-        const category = this.$attr.data('t-sets');
+        const category = this.getData('t-sets');
         let result = '';
         for (let {value, text, hint} of this.items) {
-            text = Jam.i18n.translate(text, category);
-            hint = Jam.i18n.translate(hint, category);
+            value = Jam.Helper.escapeTags(value);
+            text = Jam.Helper.escapeTags(Jam.i18n.translate(text, category));
+            hint = Jam.Helper.escapeTags(Jam.i18n.translate(hint, category));
             result += `<label class="radio radio-inline" title="${hint}"><input type="radio" value="${value}">${text}</label>`;
         }
         return result;
@@ -153,7 +162,7 @@ Jam.EnumSet = class EnumSet {
 
     constructor (data, owner) {
         this.owner = owner;
-        this.items = data.items;
+        this.items = this.parseItems(data.items);
         this.condition = data.condition;
         if (this.condition) {
             this.condition = new Jam.ModelCondition(this.condition, this.owner.model);
@@ -162,5 +171,23 @@ Jam.EnumSet = class EnumSet {
 
     isActive () {
         return !this.condition || this.condition.isValid();
+    }
+
+    parseItems (items) {
+        const result = [];
+        for (const item of items) {
+            result.push(Array.isArray(item)
+                ? this.parseArrayItem(item)
+                : this.parseDataItem(item));
+        }
+        return result;
+    }
+
+    parseArrayItem ([value, text, hint]) {
+        return {value, text, hint};
+    }
+
+    parseDataItem (data) {
+        return data;
     }
 };

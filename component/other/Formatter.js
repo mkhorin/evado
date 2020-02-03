@@ -31,11 +31,11 @@ module.exports = class Formatter extends Base {
         return this.translate(this.noAccessFormat, I18n.APP_SOURCE, language);
     }
 
-    asPreview (value, {text} = {}) {
+    asThumbnail (value, {text} = {}) {
         return `<img src="${value}" title="${text}" alt="${text}" loading="lazy">`;
     }
 
-    asPreviewDownload (value, {download, text} = {}) {
+    asThumbnailDownload (value, {download, text} = {}) {
         value = `<img src="${value}" alt="${text}" loading="lazy">`;
         return `<a href="${download}" class="download-link" title="${text}" target="_blank">${value}</a>`;
     }

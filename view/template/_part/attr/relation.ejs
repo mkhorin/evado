@@ -14,6 +14,7 @@ const d = {
     pageSize: 10,
     delete: true,
     unlink: true,
+    confirmDeletion: true,
     ...data
 };
 d.attr = attr;
@@ -63,7 +64,7 @@ if (d.update !== null) {
     if (d.update === undefined) {
         d.update = [`${relUrl}/update`, urlParams];
     } else if (typeof d.update === 'string') {
-        d.create = [d.update, urlParams];
+        d.update = [d.update, urlParams];
     } else if (!Array.isArray(d.update)) {
         d.update = [`${relUrl}/update`, Object.assign(urlParams, d.update)];
     }
@@ -107,12 +108,12 @@ if (d.filter && !d.filter.url) {
 }
 d.id = attr + _controller.getCurrentRoute();
 %>
-<div class="form-attr form-group<%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
+<div class="form-attr form-group <%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint%>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <div class="box box-grid box-grid-field">
-            <input name="<%- p.name %>" type="hidden">
+            <input name="<%- p.name %>" type="hidden" class="form-value">
             <div class="box-header">
                 <div class="list-commands" data-jam="IndexSorting">
                     <% if (d.link) { %>
@@ -158,7 +159,7 @@ d.id = attr + _controller.getCurrentRoute();
                         <span class="glyphicon glyphicon-th"></span>
                     </button>
                     <% } if (typeof tools !== 'undefined') { %>
-                    <%- include(_view.get('_part/misc/render'), {data: tools}) %>
+                    <%- include(_view.get('_part/other/render'), {data: tools}) %>
                     <% } %>
                 </div>
             </div>

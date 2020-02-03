@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -9,23 +9,40 @@ module.exports = class OverriddenValueBehavior extends Base {
 
     constructor (config) {
         super({
-            // originAttr:
             // attrs: []
-            // originValueMethod: Function
-            stateAttr: 'overriddenState',
             attrPrefix: 'override-',
+            originalAttr: 'original',
+            originalValueMethodMap: {},
+            stateAttr: 'overriddenState',
             ...config
         });
         this.setHandler(ActiveRecord.EVENT_BEFORE_INSERT, this.beforeSave);
         this.setHandler(ActiveRecord.EVENT_BEFORE_UPDATE, this.beforeSave);
     }
 
-    hasOrigin () {
-        return !!this.owner.get(this.originAttr);
+    hasOriginal () {
+        return !!this.owner.get(this.originalAttr);
     }
 
     get (attrName) {
-        return this.owner.get(this.getStates()[attrName] ? attrName : `${this.originAttr}.${attrName}`);
+        return this.owner.get(this.getStates()[attrName] ? attrName : `${this.originalAttr}.${attrName}`);
+    }
+
+    getOriginal () {
+        return this.owner.rel(this.originalAttr);
+    }
+
+    resolveOriginal () {
+        return this.owner.resolveRelation(this.originalAttr);
+    }
+
+    unsetOriginal () {
+        this.owner.unsetRelated(this.originalAttr);
+    }
+
+    getState (attrName) {
+        const states = this.owner.get(this.stateAttr);
+        return states ? states[attrName] === true : false;
     }
 
     getStates () { // overridden states
@@ -39,7 +56,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     async getAttrMap () {
         const data = {};
         const states = this.getStates();
-        const origin = this.owner.rel(this.originAttr);
+        const original = this.getOriginal();
         const namePrefix = `${this.owner.constructor.name}[${this.stateAttr}]`;
         for (const name of this.attrs) {
             data[name] = {
@@ -47,15 +64,14 @@ module.exports = class OverriddenValueBehavior extends Base {
                 name: `${namePrefix}[${name}]`,
                 overridden: states[name]
             };
-            data[name].inheritValue = await this.getOriginValue(name, origin);
+            data[name].originalValue = await this.getOriginalValue(name, original);
         }
         return data;
     }
 
     async beforeSave () {
         this.owner.set(this.stateAttr, this.filterStates(this.getStates()));
-        const origin = await this.owner.resolveRelation(this.originAttr);
-        return this.setStateOriginValues(origin);
+        return this.setOriginalValues(await this.resolveOriginal());
     }
 
     filterStates (states = {}) {
@@ -65,19 +81,29 @@ module.exports = class OverriddenValueBehavior extends Base {
         return states;
     }
 
-    async setStateOriginValues (origin) {
+    async setOriginalValues (original) {
         const states = this.getStates();
         for (const name of Object.keys(states)) {
             if (!states[name]) {
-                this.owner.set(name, await this.getOriginValue(name, origin));
+                this.owner.set(name, await this.getOriginalValue(name, original));
             }    
         }        
     }
 
-    getOriginValue (attrName, origin) {
-        return this.originValueMethod
-            ? this.originValueMethod(attrName, origin, this)
-            : origin.get(attrName);
+    getOriginalValue (attrName, original) {
+        return this.originalValueMethodMap.hasOwnProperty(attrName)
+            ? this.originalValueMethodMap[attrName](original, this)
+            : original.get(attrName);
+    }
+
+    hasUpdatedAttrs () {
+        const states = this.getStates();
+        for (const name of this.attrs) {
+            if (states[name]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     getUpdatedAttrNames () {
@@ -102,11 +128,11 @@ module.exports = class OverriddenValueBehavior extends Base {
         return names;
     }
 
-    async setInheritedValues (origin) {
+    async setInheritedValues (original) {
         const states = this.getStates();
         for (const name of this.attrs) {
             if (!states[name]) {
-                this.owner.set(name, await this.getOriginValue(name, origin));
+                this.owner.set(name, await this.getOriginalValue(name, original));
             }
         }
     }

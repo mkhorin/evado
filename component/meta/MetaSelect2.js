@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('../misc/Select2');
+const Base = require('../other/Select2');
 
 module.exports = class MetaSelect2 extends Base {
 

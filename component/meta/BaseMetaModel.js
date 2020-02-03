@@ -7,12 +7,16 @@ const Base = require('areto/base/Base');
 
 module.exports = class BaseMetaModel extends Base {
 
-    getPath () {
-        return this.hub.getPath(...arguments);
-    }
-
     getDb () {
         return this.hub.getDb();
+    }
+
+    getDataTables () {
+        return [];
+    }
+
+    getPath () {
+        return this.hub.getPath(...arguments);
     }
 
     emitEvent (name, data) {
@@ -39,11 +43,20 @@ module.exports = class BaseMetaModel extends Base {
         this.source = this.spawn(data, {meta: this});
     }
 
-    afterDataImport () {}
+    afterDataImport () {
+    }
 
-    exportData () {}
+    dropData () {
+    }
 
-    clearData () {}
+    async dropTablesByPrefix (prefix) {
+        const db = this.getDb();
+        for (const name of await db.getTableNames()) {
+            if (name.indexOf(prefix) === 0) {
+                await db.drop(name);
+            }
+        }
+    }
 
     log () {
         CommonHelper.log(this.hub, this.constructor.name, ...arguments);

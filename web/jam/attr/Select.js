@@ -7,8 +7,8 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.select2 = this.$attr.data('select2');
-        this.masters = this.$attr.data('masters');
+        this.select2 = this.getData('select2');
+        this.depends = this.getData('depends');
         this.$update = this.findByData('action', 'update');
         this.$update.click(this.onUpdate.bind(this));
         this.cache = new Map;
@@ -21,7 +21,7 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         if (this.select2) {
             this.createSelect2();
         }
-        if (this.masters) {
+        if (this.depends) {
             this.createDependencies();
         }
         this.activated = true;
@@ -43,19 +43,31 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
     }
 
     createDependencies () {
-        for (const master of this.masters) {
+        for (const master of this.depends) {
             master.name = master.attr;
-            master.$value = this.model.getValueField(master.name);
-            master.$value.change(this.onChangeMaster.bind(this));
+            master.$value = this.model.findAttrValueByName(master.name);
             master.attr = Jam.ModelAttr.get(master.$value);
+            master.value = master.attr.getValue();
         }
+        this.model.events.on('change', this.onChangeModel.bind(this));
     }
 
-    onChangeMaster () {
-        setTimeout(()=> {
-            this.$value.val(null).change().select2('destroy');
-            this.createSelect2();
-        }, 0);
+    onChangeModel () {
+        let changed = false;
+        for (const data of this.depends) {
+            const value = data.attr.getValue();
+            if (data.value !== value) {
+                data.value = value;
+                changed = true;
+            }
+        }
+        if (changed) {
+            setTimeout(() => {
+                this.$value.val(null).select2('destroy');
+                this.triggerChange();
+                this.createSelect2();
+            }, 0);
+        }
     }
 
     createSelect2 () {
@@ -100,8 +112,8 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
 
     getMasterData () {
         const data = {};
-        if (Array.isArray(this.masters)) {
-            for (const {attr, name, param} of this.masters) {
+        if (Array.isArray(this.depends)) {
+            for (const {attr, name, param} of this.depends) {
                 data[param || name] = attr.getValue();
             }
         }
