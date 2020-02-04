@@ -40,7 +40,9 @@ module.exports = class SecurityConsole extends Base {
 
     async createSecurity () {
         this.log('info', 'Create security...');
-        await this.app.getRbac().createByData(this.app.getConfig('security'));
+        const rbac = this.app.getRbac();
+        await rbac.load();
+        await rbac.createByData(this.app.getConfig('security'));
         this.log('info', 'Security ready');
     }
 

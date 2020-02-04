@@ -5,7 +5,7 @@
 
 const Base = require('areto/db/ActiveRecord');
 
-module.exports = class NoticeMessage extends Base {
+module.exports = class Recipient extends Base {
 
     static getConstants () {
         return {

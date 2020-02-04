@@ -19,9 +19,9 @@ module.exports = class SecurityExportConsole extends Base {
         const data = {
             rules: this.getRules(),
             assignmentRules: this.getAssignmentRules(),
+            metaPermissions: this.getMetaItems(),
             permissions: this.getItems('permission'),
             roles: this.getItems('role'),
-            meta: this.getMetaItems(),
             //users: await this.getUsers(),
             //assignments: this.getAssignments()
         };

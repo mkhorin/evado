@@ -67,7 +67,7 @@ module.exports = class Item extends Base {
         }
     }
 
-    async createMeta () {        
+    async createMeta () {
         await this.validateMeta();
         this.skipExistingTargets();
         if (!this.data.targets.length) {

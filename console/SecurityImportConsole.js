@@ -13,7 +13,6 @@ module.exports = class SecurityImportConsole extends Base {
         this.rbac = this.app.getRbac();
         this.store = this.rbac.store;
         this.key = this.store.key;
-
         if (this.params.clear) {
             await this.clearData();
         }

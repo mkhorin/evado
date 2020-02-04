@@ -167,7 +167,8 @@ module.exports = class DatabaseStore extends Base {
     async createMetaItems (items) {
         if (Array.isArray(items)) {
             for (const data of items) {
-                await (new this.rbac.Item({store: this, data})).createMeta();
+                const item = new this.rbac.Item({store: this, data});
+                await item.createMeta();
             }
         }
     }

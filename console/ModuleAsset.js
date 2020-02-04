@@ -38,17 +38,13 @@ module.exports = class ModuleAsset extends Base {
             return false;
         }
         const vendorTarget = this.module.getPath(params.target);
-
         this.log('info', `Web vendor folder: ${vendorTarget}`);
         await FileHelper.createDirectory(vendorTarget);
-
         this.log('info', `Clear folder...`);
         await FileHelper.emptyDirectory(vendorTarget);
-
         this.log('info', `Deploy assets...`);
         await this.deployVendors(params);
         await PromiseHelper.setImmediate();
-
         for (const child of this.module.getModules()) {
             await this.console.createModuleAsset(child).deploy();
         }
@@ -71,7 +67,7 @@ module.exports = class ModuleAsset extends Base {
         }
         let deployed = false;
         for (const name of files) {
-            const original = this.module.origin;
+            const original = this.module.original;
             if (original && await this.deployVendorFile(name, vendor, original, params)) {
                 deployed = true;
             }

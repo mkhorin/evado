@@ -438,7 +438,7 @@ module.exports = class Rbac extends Base {
         if (data) {
             await this.store.createAssignmentRules(data.assignmentRules);
             await super.createByData(data);
-            await this.store.createMetaItems(data.meta);
+            await this.store.createMetaItems(data.metaPermissions);
         }
     }
 };
