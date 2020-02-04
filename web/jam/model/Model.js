@@ -123,10 +123,16 @@ Jam.Model = class Model extends Jam.Element {
 
     serialize () {
         const data = {};
+        for (const element of this.$form.find('.form-value')) {
+            data[element.name] = element.value;
+        }
         for (const attr of this.attrs) {
+            const name = attr.getName();
             const value = attr.serialize();
-            if (value !== undefined && value !== null) {
-                data[attr.getName()] = value;
+            if (value === undefined && value === null) {
+                delete data[name];
+            } else {
+                data[name] = value;
             }
         }
         return $.param(data);

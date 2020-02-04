@@ -16,6 +16,7 @@ module.exports = class UtilityManager extends Base {
 
     async init () {
         this._utilityMap = this.resolveUtilityMap(this.utilities);
+        this.resolveUtilityConfigs();
         this._utilities = Object.values(this._utilityMap);
         ObjectHelper.addKeyAsNestedValue('id', this._utilityMap);
     }
@@ -26,6 +27,18 @@ module.exports = class UtilityManager extends Base {
 
     resolveFromConfig (key) {
         return this.module.config.mergeWithParents(key);
+    }
+
+    resolveUtilityConfigs () {
+        const data = this._utilityMap;
+        for (const key of Object.keys(data)) {
+            try {
+                ClassHelper.resolveSpawn(data[key], this.module);
+            } catch {
+                this.log('error', 'Invalid utility configuration:', data[key]);
+                delete data[key];
+            }
+        }
     }
 
     async isActiveUtility (params) {
@@ -60,4 +73,5 @@ module.exports = class UtilityManager extends Base {
 };
 module.exports.init();
 
+const ClassHelper = require('areto/helper/ClassHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');

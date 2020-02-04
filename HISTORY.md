@@ -1,3 +1,14 @@
+## 0.7.0
+
+* component/utility/UtilityManager
+    - resolve utility spawn configurations
+* console/SecurityConsole
+    - fix security export/import
+* console/TaskConsole
+    - fix task creation
+* web/jam/model/Model
+    - fix serialize model form
+
 ## 0.6.0
 
 * component/file/FileStorage
@@ -7,7 +18,7 @@
 * config/default
     - replace common menu title
 * console/DataConsole
-    - add file export/import          
+    - add file export/import
 * parse JSON configuration
 * update dependencies
 

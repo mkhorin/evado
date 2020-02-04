@@ -29,8 +29,9 @@ module.exports = class TaskConsole extends Base {
 
     async createTask (name, data) {
         const model = this.spawn('model/Task');
-        model.set('name', name);
         model.assignAttrs(data);
+        model.set('name', name);
+        model.set('job', JSON.stringify(data.job));
         await model.save()
             ? this.log('info', `Task created: ${name}`)
             : this.log('error', `Invalid task: ${name}:`, model.getFirstErrorMap());
