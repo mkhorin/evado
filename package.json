@@ -1,6 +1,6 @@
 {
   "name": "evado",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Software Kit for creating and operating business applications",
   "author": {
     "name": "Maxim Khorin",
@@ -16,7 +16,7 @@
     "url": "https://github.com/mkhorin/evado.git"
   },
   "dependencies": {
-    "areto": "~0.34.0",
+    "areto": "~0.35.0",
     "areto-ejs": "^0.1.6",
     "js-yaml": "^3.10.0",
     "multer": "^1.4.2",

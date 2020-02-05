@@ -27,7 +27,7 @@ module.exports = class AuthController extends Base {
                     },{
                         actions: ['sign-in', 'sign-up', 'request-reset', 'reset-password'],
                         permissions: ['?'],
-                        deny: action => action.render('signed', {model: action.controller.user.identity})
+                        deny: action => action.render('signed', {model: action.user.identity})
                     }]
                 }
             },
@@ -38,7 +38,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionSignIn () {
-        const model = this.spawn('model/auth/SignInForm', {user: this.user});
+        const model = this.spawn('model/auth/SignInForm');
         await model.resolveRateLimit();
         if (model.isBlocked()) {
             return this.blockByRateLimit(model.rateLimitModel);
@@ -63,7 +63,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionSignUp () {
-        const model = this.spawn('model/auth/SignUpForm', {user: this.user});
+        const model = this.spawn('model/auth/SignUpForm');
         if (this.isGet()) {
             return this.render('signUp', {model});
         }
@@ -78,7 +78,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionChangePassword () {
-        const model = this.spawn('model/auth/ChangePasswordForm', {user: this.user});
+        const model = this.spawn('model/auth/ChangePasswordForm');
         if (this.isGet()) {
             return this.render('changePassword', {model});
         }
@@ -91,7 +91,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionRequestReset () {
-        const model = this.spawn('model/auth/RequestResetForm', {user: this.user});
+        const model = this.spawn('model/auth/RequestResetForm');
         if (this.isGet()) {
             return this.render('requestReset', {model});
         }
@@ -104,7 +104,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionResetPassword () {
-        const model = this.spawn('model/auth/ResetPasswordForm', {user: this.user});
+        const model = this.spawn('model/auth/ResetPasswordForm');
         if (this.isGet()) {
             return this.render('resetPassword', {model});
         }
@@ -119,7 +119,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionRequestVerification () {
-        const model = this.spawn('model/auth/RequestVerificationForm', {user: this.user});
+        const model = this.spawn('model/auth/RequestVerificationForm');
         if (this.isGet()) {
             return this.render('requestVerification', {model});
         }
@@ -132,7 +132,7 @@ module.exports = class AuthController extends Base {
     }
 
     async actionVerify () {
-        const model = this.spawn('model/auth/VerifyForm', {user: this.user});
+        const model = this.spawn('model/auth/VerifyForm');
         model.set('key', this.getQueryParam('key'));
         if (!await model.verify()) {
             this.setFlash('error', model.getFirstError());

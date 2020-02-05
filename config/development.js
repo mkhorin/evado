@@ -4,6 +4,7 @@
 'use strict';
 
 module.exports = {
+
     parent: 'default',
 
     components: {

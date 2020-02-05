@@ -5,8 +5,8 @@
 
 module.exports = {
 
-    port: 3000,
     commonMenuTitle: 'Main',
+    port: 3000,
 
     components: {
         'logger': {

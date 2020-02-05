@@ -44,7 +44,7 @@ Jam.I18n.defaults = {
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
     'Close the last modal tab': 'Закройте последнюю модальную вкладку',
-    'Close without saving?': 'Закрыть без сохранения?',
+    'Close without saving changes?': 'Закрыть без сохранения изменений?',
     'Confirm': 'Подтвердить',
     'Confirmation': 'Подтверждение',
     'Content': 'Содержание',

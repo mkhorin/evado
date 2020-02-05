@@ -104,7 +104,7 @@ Jam.Model = class Model extends Jam.Element {
     beforeClose (event) {
         let confirmation = this.params.closeConfirmation;
         if (this.isChanged() && confirmation !== false) {
-            event.deferred = Jam.dialog.confirm(confirmation || 'Close without saving?');
+            event.deferred = Jam.dialog.confirm(confirmation || 'Close without saving changes?');
         }
         const message = this.inProgress();
         if (message) {

@@ -55,7 +55,7 @@ Jam.SortList = class SortList extends Jam.List {
 
     beforeClose (event) {
         if (this.changed) {
-            event.deferred = Jam.dialog.confirm('Close without saving?');
+            event.deferred = Jam.dialog.confirm('Close without saving changes?');
         }
         event.data = {saved: this.saved};
     }

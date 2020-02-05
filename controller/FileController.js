@@ -26,7 +26,7 @@ module.exports = class FileController extends Base {
     }
 
     async actionUpload () {
-        const model = this.spawn('model/RawFile', {user: this.user});
+        const model = this.spawn('model/RawFile');
         if (!await model.upload(this.req, this.res)) {
             return this.sendText(this.translate(model.getFirstError()), 400);
         }
