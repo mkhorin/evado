@@ -20,4 +20,9 @@ module.exports = {
             enableServiceNavigation: true
         }
     },
+    params: {
+        'captcha': {
+            fixedVerifyCode: '123'
+        }
+    }
 };

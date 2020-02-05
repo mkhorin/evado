@@ -91,8 +91,8 @@ module.exports = {
         }
     },
     params: {
-        'allowSignUp': true,
-        'allowPasswordReset': true,
+        'allowSignUp': false,
+        'allowPasswordReset': false,
         'passwordChangeUrl': '/auth/change-password',
         'expiredPasswordMessage': 'You password has expired',
         'userPasswordValidator': {
