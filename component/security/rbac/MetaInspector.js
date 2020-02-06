@@ -228,11 +228,16 @@ module.exports = class MetaInspector extends Base {
 
     async assignObjectFilter (query) {
         if (Object.values(this.rbac.metaObjectFilterMap).length) {
-            this._objectConditions = [];
+            this._norObjectConditions = ['NOR'];
+            this._andObjectConditions = ['AND'];
             this._metaObjectRuleCache = {};
-            if (!await this.resolveObjectFilterAssignments() && this._objectConditions.length) {
-                this._objectConditions.unshift('NOR');
-                query.and(this._objectConditions);
+            if (!await this.resolveObjectFilterAssignments()) {
+                if (this._norObjectConditions.length > 1) {
+                    query.and(this._norObjectConditions);
+                }
+                if (this._andObjectConditions.length > 1) {
+                    query.and(this._andObjectConditions);
+                }
             }
             return PromiseHelper.setImmediate();
         }
@@ -254,16 +259,17 @@ module.exports = class MetaInspector extends Base {
         }
     }
 
-    async resolveRoleObjectFilter ({rules, condition}) {
-        const roleConditions = Array.isArray(rules) ? await this.getRuleObjectFilters(rules) : [];
-        if (condition) {
-            roleConditions.push(condition);
+    async resolveRoleObjectFilter ({rules, condition, all}) {
+        const ruleConditions = Array.isArray(rules) ? await this.getRuleObjectFilters(rules) : [];
+        if (all) {
+            ruleConditions.push(['FALSE']);
         }
-        if (!roleConditions.length) {
+        if (condition) {
+            this._norObjectConditions.push(condition);
+        } else if (!ruleConditions.length) {
             return true; // no filter to role
         }
-        roleConditions.unshift('AND');
-        this._objectConditions.push(roleConditions);
+        this._andObjectConditions.push(...ruleConditions);
         return PromiseHelper.setImmediate();
     }
 
