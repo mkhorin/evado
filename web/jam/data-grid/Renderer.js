@@ -135,7 +135,10 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 
     renderBodyCellHtml (value, column) {
-        return `<td class="${this.getBodyCellClass(...arguments)}" data-name="${column.name}">${value}</td>`;
+        const height = this.getMaxCellHeight(column);
+        const style = height ? `style="max-height: ${height}px"` : '';
+        const cell = `<div class="cell" ${style}>${value}</div>`;
+        return `<td class="${this.getBodyCellClass(...arguments)}" data-name="${column.name}">${cell}</td>`;
     }
 
     renderValue (data, column) {
@@ -151,6 +154,10 @@ Jam.DataGridRenderer = class DataGridRenderer {
     getBodyCellClass (value, column) {
         const cssClass = this.grid.getOrderDirection(column.name) ? ' ordered' : '';
         return column.cssClass ? `${cssClass} ${column.cssClass}` : cssClass;
+    }
+
+    getMaxCellHeight (column) {
+        return Number.isInteger(column.maxCellHeight) ? column.maxCellHeight : this.params.maxCellHeight;
     }
 
     defaultCellValueRender (value) {

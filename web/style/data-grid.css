@@ -75,6 +75,14 @@
     background: #eee;
     border-top: 2px solid #ddd;
 }
+.data-grid-table > tbody > tr > td {
+    padding: 0;
+}
+.data-grid-table > tbody > tr > td > .cell {
+    overflow: auto;
+    padding: 5px;
+    max-height: 200px;
+}
 
 /* SEARCH */
 

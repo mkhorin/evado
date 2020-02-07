@@ -32,6 +32,7 @@ Jam.DataGrid.defaults = {
     keepPageSize: true,
     maxPageToggles: 9,
     order: null,
+    maxCellHeight: 0,
     locale: {
         orderToggle: 'Sort',
         searchToggle: 'Search',
@@ -49,7 +50,6 @@ Jam.DataGrid.defaults = {
     },
     AjaxProvider: Jam.DataGridAjaxProvider,
     CommonSearch: Jam.DataGridCommonSearch,
-    PageJumper: Jam.DataGridPageJumper,
     Pagination: Jam.DataGridPagination,
     Provider: Jam.DataGridProvider,
     Renderer: Jam.DataGridRenderer,

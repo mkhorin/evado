@@ -1,11 +1,11 @@
 # Evado Kit
 
-## Software kit for creating and operating reliable business applications
+### User-friendly software for creating and operating reliable business applications
 
-### Demo application Blog
+Using Node.js and MongoDB accelerate development and simplify support.
 
-https://github.com/mkhorin/evado-app-blog
+### Ready to use
 
-### Boilerplate application
+- [Demo Application Blog](https://github.com/mkhorin/evado-app-blog)
+- [Application Boilerplate](https://github.com/mkhorin/evado-app-boilerplate)
 
-https://github.com/mkhorin/evado-app-boilerplate
