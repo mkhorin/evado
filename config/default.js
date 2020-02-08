@@ -13,7 +13,7 @@ module.exports = {
             level: 'info'
         },
         'actionProfiler': {
-            Class: require('areto/log/actionProfiler')
+            Class: require('areto/log/ActionProfiler')
         },
         'db': {
             Class: require('areto/db/MongoDatabase'),

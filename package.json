@@ -1,7 +1,7 @@
 {
   "name": "evado",
-  "version": "0.7.3",
-  "description": "Software Kit for creating and operating business applications",
+  "version": "0.7.4",
+  "description": "Software for creating and operating business applications",
   "author": {
     "name": "Maxim Khorin",
     "email": "maksimovichu@gmail.com"
