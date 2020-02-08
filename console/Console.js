@@ -7,6 +7,10 @@ const Base = require('areto/base/Base');
 
 module.exports = class Console extends Base {
 
+    static parseProcessArguments () {
+        return SystemHelper.parseArguments(process.argv);
+    }
+
     constructor (config) {
         super({
             params: {},
@@ -65,6 +69,10 @@ module.exports = class Console extends Base {
 
     importData (params) {
         return this.execute('execute', this.DataImportConsole, params);
+    }
+
+    importDataFiles (params) {
+        return this.execute('importFiles', this.DataImportConsole, params);
     }
 
     // INDEXES
@@ -156,3 +164,4 @@ module.exports = class Console extends Base {
 
 const ClassHelper = require('areto/helper/ClassHelper');
 const PromiseHelper = require('areto/helper/PromiseHelper');
+const SystemHelper = require('areto/helper/SystemHelper');
