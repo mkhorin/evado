@@ -44,7 +44,9 @@ module.exports = class Scheduler extends Base {
 
     async taskDone ({sender}) {
         const model = await this.spawnTask().findById(sender.id).one();
-        await model.saveDone();
+        if (model) {
+            await model.saveDone();
+        }
         return super.taskDone(...arguments);
     }
 
