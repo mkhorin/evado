@@ -22,7 +22,7 @@ module.exports = class Uploader extends Base {
         const file = req.file;
         return file ? {
             name: file.originalname,
-            filename: path.join(dir, file.filename),
+            filename: `${dir}/${file.filename}`,
             size: file.size,
             mime: file.mimetype || '',
             extension: path.extname(file.originalname).substring(1).toLowerCase()
