@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -18,10 +18,13 @@ module.exports = class MetaSelect2 extends Base {
         const conditions = [];
         this.resolveKeyCondition(text, conditions);
         if (Array.isArray(this.searchAttrs)) {
-            const stringSearch = this.getStringSearch(text);
+            const stringValue = this.getStringSearch(text);
+            const numberValue = parseFloat(text);
             for (const attr of this.searchAttrs) {
                 if (attr.isString()) {
-                    conditions.push({[attr.name]: stringSearch});
+                    conditions.push({[attr.name]: stringValue});
+                } else if (attr.isNumber() && !isNaN(numberValue)) {
+                    conditions.push({[attr.name]: numberValue});
                 }
             }
         }

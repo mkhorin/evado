@@ -23,7 +23,7 @@ module.exports = class ListFilter extends Base {
         let and = ['AND'], or = ['OR', and]; // AND has priority over OR
         for (const item of this.items) {
             if (item.condition) {
-                if (!item.and && and.length > 1) {
+                if (item.or && and.length > 1) {
                     and = ['AND'];
                     or.push(and);
                 }
@@ -144,7 +144,7 @@ module.exports = class ListFilter extends Base {
 
     parseDate ({attr, op, value}) {
         if (value === '') {
-            return this.getEmptyValueCondition(op === '!=', attr);
+            return this.getEmptyValueCondition(attr, op);
         }
         const date = DateHelper.getValid(value);
         if (!date) {
@@ -165,7 +165,7 @@ module.exports = class ListFilter extends Base {
 
     parseDatetime ({attr, op, value}) {
         if (value === '') {
-            return this.getEmptyValueCondition(op === '!=', attr);
+            return this.getEmptyValueCondition(attr, op);
         }
         const date = DateHelper.getValid(value);
         if (!date) {
@@ -178,7 +178,7 @@ module.exports = class ListFilter extends Base {
 
     parseId ({attr, op, value}) {
         if (value === '') {
-            return this.getEmptyValueCondition(op === 'not equal', attr);
+            return this.getEmptyValueCondition(attr, op);
         }
         value = this.query.getDb().normalizeId(value);
         switch (op) {
@@ -190,7 +190,7 @@ module.exports = class ListFilter extends Base {
 
     parseNumber ({attr, op, value}) {
         if (value === '') {
-            return this.getEmptyValueCondition(op === '!=', attr);
+            return this.getEmptyValueCondition(attr, op);
         }
         if (!isFinite(parseFloat(value))) {
             return this.throwInvalidValue(value);
@@ -209,10 +209,12 @@ module.exports = class ListFilter extends Base {
         }
         value = EscapeHelper.escapeRegex(value);
         switch (op) {
+            case 'contains': break;
             case 'equal': value = `^${value}$`; break;
             case 'begins': value = `^${value}`; break;
             case 'ends': value = `${value}$`; break;
-            case 'contains': break;
+            case 'lt': return ['<', attr, value];
+            case 'gt': return ['>', attr, value];
             default: this.throwInvalidOperation(op);
         }
         return ['LIKE', attr, new RegExp(value, 'i')];
@@ -220,14 +222,14 @@ module.exports = class ListFilter extends Base {
 
     parseSelector ({attr, op, value}) {
         if (value === '') {
-            return this.getEmptyValueCondition(op === 'not equal', attr);
+            return this.getEmptyValueCondition(attr, op);
         }
         value = this.formatByValueType(...arguments);
         return value ? this.formatSelectorCondition(attr, op, value) : null;
     }
 
-    getEmptyValueCondition (isNotEqual, attr) {
-        return isNotEqual ? ['NOT EQUAL', attr, null] : {[attr]: null};
+    getEmptyValueCondition (attr, op) {
+        return op === '!=' || op === 'not equal' ? ['NOT EQUAL', attr, null] : {[attr]: null};
     }
 
     formatByValueType ({value, valueType}) {

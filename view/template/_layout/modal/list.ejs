@@ -1,3 +1,15 @@
-<!-- layouts/modal/list -->
+<!-- _layout/modal/list -->
 
-<%- body %>
+<div class="jmodal-scroll-container box-grid box"
+     data-tab="<%= blocks.tab %>"
+     data-title="<%= blocks.title %>"
+     data-t-tab="<%- blocks.tabTranslation %>"
+     data-t-title="<%- blocks.titleTranslation %>">
+
+    <div class="scroll-body box-body">
+
+        <%- body %>
+
+    </div>
+    <div class="list-loader overlay"><i class="fa fa-spinner fa-spin"></i></div>
+</div>

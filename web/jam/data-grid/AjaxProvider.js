@@ -71,6 +71,7 @@ Jam.DataGridAjaxProvider = class DataGridAjaxProvider {
             start: this.grid.pagination.page * length,
             search: this.grid.commonSearch.getValue(),
             order: this.getOrder(),
+            dependency: this.params.dependency,
             ...data
         };
     }
@@ -90,11 +91,9 @@ Jam.TreeGridAjaxProvider = class TreeGridAjaxProvider extends Jam.DataGridAjaxPr
     getRequestData () {
         const data = super.getRequestData();
         if (this.node) {
-            Object.assign(data, {
-                length: 0,
-                node: this.node.getId(),
-                depth: this.node.getDepth()
-            });
+            data.length = 0;
+            data.node = this.node.getId();
+            data.depth = this.node.getDepth();
         }
         return data;
     }

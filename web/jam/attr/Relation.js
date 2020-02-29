@@ -7,6 +7,8 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
+        this.$grid = this.$attr.find('.data-grid');
+        this.gridParams = this.$grid.data('params');
         this.initChanges();
     }
 
@@ -20,6 +22,11 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
         const max = this.list ? this.list.grid.itemMaxSize : 0;
         const removes = this.changes.getUnlinks().length + this.changes.getDeletes().length;
         return this.changes.hasLinks() || max > removes;
+    }
+
+    getLinkedValue () {
+        const links = this.changes.getLinks();
+        return this.gridParams.multiple ? links : links[0];
     }
 
     setValueByChanges () {
@@ -36,17 +43,34 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
         }
         this.activated = true;
         Jam.deferred.add(this.createList.bind(this));
+        this.bindDependencyChange();
     }
 
     createList (afterInit) {
-        const $grid = this.$attr.find('.data-grid');
-        this.list = (new Jam.AttrList($grid, {
+        this.list = (new Jam.AttrList(this.$grid, {
             attr: this,
             changes: this.changes,
             model: this.model,
             afterInit
         }));
         this.list.init();
+    }
+
+    getDependencyNames () {
+        return this.list && this.list.params.depends;
+    }
+
+    getDependencyValue () {
+        let data = this.list
+            ? this.list.getObjectIds(this.list.findRows())
+            : this.changes.getLinks();
+        data = Jam.ArrayHelper.exclude(this.changes.getUnlinks(), data);
+        data = Jam.ArrayHelper.exclude(this.changes.getDeletes(), data);
+        return data.length ? data : null;
+    }
+
+    onDependencyChange () {
+        this.list.clearLinks();
     }
 };
 
@@ -59,6 +83,14 @@ Jam.AttrList = class AttrList extends Jam.List {
         this.$container.mouseleave(this.hideMouseEnter.bind(this));
         this.grid.events.one('afterLoad', this.onAfterLoad.bind(this));
         this.grid.events.one('afterFail', this.afterInit);
+    }
+
+    clearLinks () {
+        if (this.changes.hasLinks()) {
+            this.changes.clearLinks();
+            this.setValue();
+            this.reload();
+        }
     }
 
     createNotice () {
@@ -85,6 +117,11 @@ Jam.AttrList = class AttrList extends Jam.List {
         }
     }
 
+    afterLoad () {
+        super.afterLoad();
+        this.attr.setBlank();
+    }
+
     setValue () {
         if (this.attr.setValueByChanges()) {
             this.attr.triggerChange();
@@ -97,6 +134,15 @@ Jam.AttrList = class AttrList extends Jam.List {
             case 'unlink': return this.onUnlink;
         }
         return super.getCommandMethod(name);
+    }
+
+    getDependencyData () {
+        const data = this.model.getDependencyData(this.attr);
+        const result = {};
+        for (const key of Object.keys(data)) {
+            result[`d[${key}]`] = data[key];
+        }
+        return result;
     }
 
     beforeCommand () {
@@ -120,28 +166,27 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     onCreate () {
         if (!this.revertChanges()) {
-            this.loadModal(this.params.create, null, this.onAfterCloseModal.bind(this));
+            this.loadModal(this.params.create, this.getDependencyData(), this.onAfterCloseModal.bind(this));
         }
     }
 
     onDelete () {
         const $rows = this.getSelectedRows();
         if ($rows) {
-            const deferred = this.params.confirmDeletion
-                ? Jam.dialog.confirmDeletion('Delete permanently selected objects?')
-                : $.when();
-            deferred.then(()=> this.deleteObjects($rows));
+            const deferred = this.params.confirmDeletion ? Jam.dialog.confirmListDeletion() : $.when();
+            deferred.then(() => this.deleteObjects($rows));
         }
     }
 
     onLink () {
-        if (!this.revertChanges()) {
-            this.loadModal(this.params.link, null, (event, data) => {
-                if (data && data.result) {
-                    this.linkObjects(data.result);
-                }
-            }, {multiple: this.multiple});
+        if (this.revertChanges()) {
+            return null;
         }
+        this.loadModal(this.params.link, this.getDependencyData(), (event, data) => {
+            if (data && data.result) {
+                this.linkObjects(data.result);
+            }
+        }, {multiple: this.multiple});
     }
 
     onUnlink () {
@@ -219,6 +264,10 @@ Jam.AttrListChanges = class AttrListChanges {
 
     getLinks () {
         return this.data.links;
+    }
+
+    clearLinks () {
+        this.data.links = [];
     }
 
     getUnlinks () {

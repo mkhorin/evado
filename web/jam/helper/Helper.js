@@ -137,6 +137,14 @@ Jam.Helper = class Helper {
         });
         $images.first().prop('src', $images.first().data('src'));
     }
+
+    static sortChildrenByInteger ($container, key = 'index') {
+        $container.children().sort((a, b) => {
+            return a.dataset.hasOwnProperty(key) && b.dataset.hasOwnProperty(key)
+                ? parseInt(a.dataset[key]) - parseInt(b.dataset[key])
+                : 0;
+        }).appendTo($container);
+    }
 };
 
 Jam.ArrayHelper = class ArrayHelper {
@@ -177,6 +185,22 @@ Jam.ArrayHelper = class ArrayHelper {
             for (const item of items) {
                 if (item) {
                     data[item[key]] = item;
+                }
+            }
+        }
+        return data;
+    }
+
+    static indexArrays (key, items) {
+        const data = {};
+        if (Array.isArray(items)) {
+            for (const item of items) {
+                if (item) {
+                    if (Array.isArray(data[item[key]])) {
+                        data[item[key]].push(item);
+                    } else {
+                        data[item[key]] = [item];
+                    }
                 }
             }
         }
@@ -401,8 +425,17 @@ Jam.FormatHelper = class FormatHelper {
         return `<span class="not-set">[${Jam.i18n.translate('not set')}]</span>`;
     }
 
-    static asTimestamp (data) {
-        return this.asDatetime(data);
+    static asSpinner () {
+        return `<span class="fa fa-spinner fa-spin"></span>`;
+    }
+
+    static asTime (data, format = 'LT') {
+        data = parseInt(data);
+        return isNaN(data) ? null : moment().startOf('day').add(moment.duration({s: data})).format(format);
+    }
+
+    static asTimestamp () {
+        return this.asDatetime(...arguments);
     }
 
     static asThumbnail (data) {
@@ -502,10 +535,9 @@ Jam.UrlHelper = class UrlHelper {
     }
 
     static openNewPage (url, data) {
-        Object.assign(document.createElement('a'), {
-            target: '_blank',
-            href: this.addParams(url, data)
-        }).click();
+        setTimeout(() => {
+            window.open(this.addParams(url, data), '_blank');
+        }, 0);
     }
 
     static addParams (url, data) {
@@ -524,7 +556,7 @@ Jam.UrlHelper = class UrlHelper {
         for (let item of data) {
             item = item.split('=');
             if (item.length === 2) {
-                params[item[0]] = item[1];
+                params[item[0]] = decodeURIComponent(item[1]);
             }
         }
         return params;

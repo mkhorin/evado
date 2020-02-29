@@ -1,13 +1,16 @@
-<!-- _layout/modal/content -->
+<!-- _layout/list -->
+<% layout(_view.get('_layout/content')) %>
 
-<div class="box box-info content-box"
+<div class="box-grid box"
      data-tab="<%= blocks.tab %>"
      data-title="<%= blocks.title %>"
      data-t-tab="<%- blocks.tabTranslation %>"
      data-t-title="<%- blocks.titleTranslation %>">
+
     <div class="box-body">
 
         <%- body %>
 
     </div>
+    <div class="list-loader overlay"><i class="fa fa-spinner fa-spin"></i></div>
 </div>

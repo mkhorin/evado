@@ -1,3 +1,16 @@
+## 1.0.0
+
+* component/security/rbac/Item
+    - expand arrayed metadata permissions targets
+* console/SecurityConsole
+    - add security data deletion
+* web/jam/model/ActionBinder
+    - fix attribute default value
+* web/jam/model/Model
+    - add dynamic dependency data
+* view/template/_layout/list
+    - extract layout from list templates
+
 ## 0.7.0
 
 * component/utility/UtilityManager

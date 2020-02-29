@@ -17,6 +17,9 @@ module.exports = class MetaListFilter extends Base {
         if (!this.class.searchAttrs.includes(attr)) {
             return this.throwBadRequest(`Invalid search attribute: ${data.attr}.${this.class.id}`);
         }
+        if (!data.type) {
+            data.type = attr.type;
+        }
         if (attr.relation) {
             data.relation = true;
             data.valueType = attr.relation.getRefAttrType();
@@ -24,17 +27,18 @@ module.exports = class MetaListFilter extends Base {
         return super.parse(data);
     }
 
-    parseRelation ({attr, op}) {
+    async parseRelation ({attr, op}) {
         let relation = this.getRelation(attr);
-        let value = this.formatByValueType(...arguments);
+        let value = this.formatByValueType(...arguments) || null;
+        if (relation.isRef()) {
+            return this.formatSelectorCondition(attr, op, value);
+        }
         if (!value) {
-            return null;
+            return ['FALSE'];
         }
-        if (relation.isBackRef()) {
-            const query = relation.refClass.find().and({[relation.refClass.getKey()]: value});
-            value = this.getRelationValue(relation, query);
-            attr = relation.linkAttrName;
-        }
+        const query = relation.refClass.find().and({[relation.refClass.getKey()]: value});
+        value = await this.getRelationValue(relation, query);
+        attr = relation.linkAttrName;
         return this.formatSelectorCondition(attr, op, value);
     }
 

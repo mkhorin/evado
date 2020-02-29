@@ -25,10 +25,12 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
             this.createDependencies();
         }
         this.activated = true;
+        this.setBlank();
     }
 
     setValue (value) {
         this.$value.val(value).trigger('change.select2');
+        this.setBlank();
     }
 
     onUpdate () {
@@ -39,7 +41,7 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         const url = this.$update.data('url');
         this.$update.data('blank')
             ? Jam.UrlHelper.openNewPage(url + id)
-            : Jam.Modal.load(this.childModal, url, {id});
+            : Jam.Modal.load(this.model.childModal, url, {id});
     }
 
     createDependencies () {
@@ -85,7 +87,19 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
             params.placeholder = Jam.i18n.translate(params.placeholder, params.translate);
         }
         this.select2 = params;
-        this.$value.select2(params);
+        this.$value.select2(params).change(this.onChangeSelect.bind(this));
+        this.$value.data('select2').on('query', this.onQuery.bind(this));
+    }
+
+    onQuery () {
+        if (this.select2.ajax) {
+            // clear previous search results except Searching...
+            this.$value.data('select2').$results.find('li:not(:first)').hide();
+        }
+    }
+
+    onChangeSelect () {
+        this.setBlank();
     }
 
     getAjaxParams (params) {

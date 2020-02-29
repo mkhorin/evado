@@ -126,6 +126,13 @@ Jam.Model = class Model extends Jam.Element {
         for (const element of this.$form.find('.form-value')) {
             data[element.name] = element.value;
         }
+        Object.assign(data, this.serializeAttrs());
+        data.dependency = this.getDependencyData();
+        return data;
+    }
+
+    serializeAttrs () {
+        const data = {};
         for (const attr of this.attrs) {
             const name = attr.getName();
             const value = attr.serialize();
@@ -135,7 +142,11 @@ Jam.Model = class Model extends Jam.Element {
                 data[name] = value;
             }
         }
-        return $.param(data);
+        return data;
+    }
+
+    stringifyAttrs () {
+        return $.param(this.serializeAttrs());
     }
 
     translate (message) {
@@ -224,7 +235,8 @@ Jam.Model = class Model extends Jam.Element {
     forceSave (reopen) {
         this.$loader.show();
         this.events.trigger('beforeSave');
-        return Jam.Helper.post(this.$form, this.params.url, this.serialize()).done(data => {
+        const data = $.param(this.serialize());
+        return Jam.Helper.post(this.$form, this.params.url, data).done(data => {
             this.saved = true;
             this.reopen = reopen;
             this.id = data;
@@ -250,6 +262,29 @@ Jam.Model = class Model extends Jam.Element {
             this.$loader.hide();
         });
     }
+
+    getDependencyData (attr) {
+        const data = {};
+        const attrs = attr ? [attr] : this.attrs;
+        for (const attr of attrs) {
+            const names = attr.getDependencyNames();
+            if (Array.isArray(names)) {
+                this.setDependencyValues(names, data);
+            }
+        }
+        return data;
+    }
+
+    setDependencyValues (names, data) {
+        for (const name of names) {
+            const attr = this.getAttr(name);
+            if (attr) {
+                data[name] = attr.getDependencyValue();
+            } else {
+                console.error(`Dependency attribute not found: ${name}`);
+            }
+        }
+    }
 };
 
 Jam.ModelChangeTracker = class ModelChangeTracker {
@@ -259,11 +294,11 @@ Jam.ModelChangeTracker = class ModelChangeTracker {
     }
 
     isChanged () {
-        return this._data !== this.model.serialize();
+        return this._data !== this.model.stringifyAttrs();
     }
 
     reset () {
-        this._data = this.model.serialize();
+        this._data = this.model.stringifyAttrs();
     }
 
     start () {

@@ -11,8 +11,7 @@ Jam.Modal = class Modal extends Jam.Element {
     }
 
     static load (modal, url, params, afterClose) {
-        modal = modal || Jam.modal.create();
-        modal.load(url, params).done(()=> {
+        return modal.load(url, params).done(()=> {
             modal.one('afterClose', (event, data) => {
                 if (data && data.reopen) {
                     this.load(modal, url, params, afterClose);
@@ -22,7 +21,6 @@ Jam.Modal = class Modal extends Jam.Element {
                 }
             });
         });
-        return modal;
     }
 
     constructor ($container) {
@@ -134,7 +132,7 @@ Jam.Modal = class Modal extends Jam.Element {
         const url = link.getAttribute('href') || link.dataset.url;
         event.ctrlKey
             ? Jam.UrlHelper.openNewPageModal(url)
-            : Jam.modal.create().load(url);
+            : this.constructor.load(Jam.modal.create(), url);
     }
 
     onKeyUp (event) {
@@ -150,7 +148,7 @@ Jam.Modal = class Modal extends Jam.Element {
     openFromUrl (url) {
         const {modal} = Jam.UrlHelper.getParams(url);
         if (modal) {
-            this.create().load(decodeURIComponent(modal));
+            this.create().load(modal);
         }   
     }    
 };

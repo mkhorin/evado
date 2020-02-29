@@ -11,8 +11,10 @@ if (typeof params !== 'undefined') {
 }
 %>
 <div class="jmodal-scroll-container content-box box-info box"
+     data-tab="<%= blocks.tab %>"
      data-title="<%= blocks.title %>"
-     data-tab="<%= blocks.tab %>">
+     data-t-tab="<%- blocks.tabTranslation %>"
+     data-t-title="<%- blocks.titleTranslation %>">
 
     <div class="box-header with-border scroll-header">
         <div class="model-commands">

@@ -7,11 +7,12 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     constructor () {
         super(...arguments);
+        this.$select = this.$attr.find('select');
+        this.selectParams = this.$select.data('params');
         this.initChanges();
     }
 
     initChanges () {
-        this.$select = this.$attr.find('select');
         this.changes = {links: [], unlinks: [], deletes: []};
         this.startValues = [];
         const defaultValue = this.getValue();
@@ -37,8 +38,9 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             minInputLength: 0,
             maxInputLength: 10,
             placeholder: '',
-            ...this.$select.data('params')
+            ...this.selectParams
         };
+        this.params.allowClear = !!this.params.unlink;
         this.$container = this.$value.closest('.box');
         this.$content = this.$container.children('.box-body');
         this.$commands = this.$content.children('.list-commands');
@@ -48,10 +50,12 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.$container.mouseleave(this.hideMouseEnter.bind(this));
         this.$container.on('click', this.select2ChoiceClass, this.onClickSelect2Choice.bind(this));
         this.$container.on('dblclick', this.select2ChoiceClass, this.onDoubleClickSelect2Choice.bind(this));
-        this.$select.change(this.changeSelect.bind(this));
+        this.$select.change(this.onChangeSelect.bind(this));
         this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
         this.createSelect2();
         this.getDefaultTitles();
+        this.setBlank();
+        this.bindDependencyChange();
     }
 
     getDefaultTitles () {
@@ -66,8 +70,26 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         return Array.isArray(data) ? data.length > 0 : !!data;
     }
 
+    getLinkedValue () {
+        const links = this.changes.links;
+        return this.selectParams.multiple ? links : links[0];
+    }
+
+    getDependencyValue () {
+        const data = this.$select.val();
+        return !Array.isArray(data) || data.length ? data : null;
+    }
+
+    clear () {
+        this.changes.links = [];
+        this.setValueByChanges();
+        this.$select.val('').trigger('change.select2');
+        this.setBlank();
+    }
+
     setValue (value) {
-        this.$value.val(value).trigger('change.select2');
+        this.$value.val(value);
+        this.setBlank();
     }
 
     setValueByChanges () {
@@ -79,16 +101,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     createSelect2 () {
-        this.$select.select2({
-            ajax: {
-                type: 'POST',
-                url: this.params.list,
-                dataType: 'json',
-                data: this.getQueryParams.bind(this),
-                processResults: this.processResults.bind(this),
-                delay: this.params.inputDelay,
-                cache: true
-            },
+        const data = {
             allowClear: this.params.allowClear,
             placeholder: this.params.placeholder,
             minimumInputLength: this.params.minInputLength,
@@ -96,7 +109,26 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             maximumSelectionLength: this.params.maxSelectionLength,
             minimumResultsForSearch: this.params.pageSize,
             readonly: true
-        });
+        };
+        if (this.params.list) {
+            data.ajax = {
+                type: 'POST',
+                url: this.params.list,
+                dataType: 'json',
+                data: this.getRequestParams.bind(this),
+                processResults: this.processResults.bind(this),
+                delay: this.params.inputDelay,
+                cache: true
+            };
+        }
+        this.$select.select2(data);
+        this.$select.data('select2').on('query', this.onQuery.bind(this));
+    }
+
+    onQuery () {
+        if (this.params.list) {
+            this.$select.data('select2').$results.find('li:not(:first)').hide();
+        }
     }
 
     findCommand (name) {
@@ -124,12 +156,17 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.model.beforeCommand();
     }
 
-    getQueryParams (data) {
+    getRequestParams (data) {
         return {
             search: data.term,
             page: data.page,
-            pageSize: this.params.pageSize
+            pageSize: this.params.pageSize,
+            dependency: this.getDependencyData()
         };
+    }
+
+    getDependencyData () {
+        return this.model.getDependencyData(this);
     }
 
     processResults (data, params) {
@@ -184,7 +221,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             || this.changes.deletes.length;
     }
 
-    changeSelect () {
+    onChangeSelect () {
         this.changes.links = [];
         let value = this.$select.val();
         if (Array.isArray(value)) {
@@ -201,6 +238,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         if (this.setValueByChanges()) {
             this.triggerChange();
         }
+        this.setBlank();
     }
 
     linkValue (value) {
@@ -218,6 +256,10 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     hideMouseEnter () {
         this.$container.removeClass('mouse-enter');
         this.notice.hide();
+    }
+
+    onDependencyChange () {
+        this.clear();
     }
 
     onUnlink () {
@@ -245,15 +287,13 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     onDelete () {
         const values = this.getSelectedValues();
         if (values.length) {
-            const def = this.params.confirmDeletion
-                ? Jam.dialog.confirmDeletion('Delete permanently selected objects?')
-                : $.when();
+            const def = this.params.confirmDeletion ? Jam.dialog.confirmListDeletion() : $.when();
             def.then(this.delete.bind(this, values));
         }
     }
 
     onSort () {
-        this.loadModal(this.params.modalSort, null, ()=> {});
+        this.loadModal(this.params.modalSort, null, ()=>{});
     }
 
     unlink (values) {

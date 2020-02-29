@@ -34,9 +34,10 @@ if (!hasKeyColumn) {
 }
 data.data = [];
 for (const model of models) {
+    const labelFormat = 'label';
     const map = {};
-    for (const column of data.columns) {
-        map[column.name] = model.getViewAttr(column.name);
+    for (const {name, format} of data.columns) {
+        map[name] = format === labelFormat ? model.getAttrValueLabel(name) : model.getViewAttr(name);
     }
     data.data.push(map);
 }
@@ -44,56 +45,48 @@ if (data.jam === undefined) {
     data.jam = 'SortList';
 }
 %>
-<div class="jmodal-scroll-container box-grid box" data-title="<%= blocks.title %>">
-    <div class="box-header with-border scroll-header">
-        <div class="list-commands clearfix">
-            <button data-command="saveClose" class="btn btn-primary" type="button" title="Save and close">
-                <span class="glyphicon glyphicon-off"></span>
+<div class="data-grid" data-jam="<%- data.jam %>" data-params="<%= JSON.stringify(data) %>">
+    <div class="list-commands clearfix">
+        <button data-command="saveClose" class="btn btn-primary" type="button" title="Save and close">
+            <span class="glyphicon glyphicon-off"></span>
+        </button>
+        <div class="btn-set">
+            <button data-command="up" class="btn btn-default" type="button">
+                <span class="glyphicon glyphicon-arrow-up"></span>
             </button>
-            <div class="btn-set">
-                <button data-command="up" class="btn btn-default" type="button">
-                    <span class="glyphicon glyphicon-arrow-up"></span>
-                </button>
-                <button data-command="down" class="btn btn-default" type="button">
-                    <span class="glyphicon glyphicon-arrow-down"></span>
-                </button>
-            </div>
-            <% if (data.update) { %>
-            <button data-command="update" class="btn btn-warning btn-light" type="button" title="Update">
-                <span class="glyphicon glyphicon-pencil"></span>
+            <button data-command="down" class="btn btn-default" type="button">
+                <span class="glyphicon glyphicon-arrow-down"></span>
             </button>
-            <% } %>
-            <div class="btn-set">
-                <button data-command="reload" class="btn btn-default" type="button" title="Reload">
-                    <span class="fa fa-redo-alt"></span>
-                </button>
-            </div>
-            <% if (typeof tools !== 'undefined') { %>
-            <%- include(_view.get('_part/other/render'), {data: tools}) %>
-            <% } %>
         </div>
+        <% if (data.update) { %>
+        <button data-command="update" class="btn btn-warning btn-light" type="button" title="Edit">
+            <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+        <% } %>
+        <div class="btn-set">
+            <button data-command="reload" class="btn btn-default" type="button" title="Reload">
+                <span class="fa fa-redo-alt"></span>
+            </button>
+        </div>
+        <% if (typeof tools !== 'undefined') { %>
+        <%- include(_view.get('_part/other/render'), {data: tools}) %>
+        <% } %>
     </div>
-
-    <div class="scroll-body box-body">
-        <div class="data-grid" data-jam="<%- data.jam %>" data-params="<%= JSON.stringify(data) %>">
-            <div class="table-responsive">
-                <table class="data-grid-table table table-bordered table-striped table-condensed">
-                    <thead></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-            <div class="row-bottom row">
-                <div class="col-md-5">
-                    <div class="data-grid-info"></div>
-                </div>
-                <div class="col-md-7">
-                    <div class="data-grid-pages">
-                        <div class="data-grid-pagination"></div>
-                        <select class="data-grid-page-jumper form-control hidden"></select>
-                    </div>
-                </div>
+    <div class="table-responsive">
+        <table class="data-grid-table table table-bordered table-striped table-condensed">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="row-bottom row">
+        <div class="col-md-5">
+            <div class="data-grid-info"></div>
+        </div>
+        <div class="col-md-7">
+            <div class="data-grid-pages">
+                <div class="data-grid-pagination"></div>
+                <select class="data-grid-page-jumper form-control hidden"></select>
             </div>
         </div>
     </div>
-    <div class="list-loader overlay"><i class="fa fa-spinner fa-spin"></i></div>
 </div>

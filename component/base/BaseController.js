@@ -41,10 +41,12 @@ module.exports = class BaseController extends Base {
         }
     }
 
-    getSpawnConfig () {
+    getSpawnConfig (params) {
         return {
+            controller: this,
             module: this.module,
-            user: this.user
+            user: this.user,
+            ...params
         };
     }
 

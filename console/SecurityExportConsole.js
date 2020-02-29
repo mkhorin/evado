@@ -8,11 +8,8 @@ const Base = require('./SecurityImportConsole');
 module.exports = class SecurityExportConsole extends Base {
 
     async execute () {
-        this.rbac = this.app.getRbac();
-        this.store = this.rbac.store;
-        this.key = this.store.key;
-        this.data = await this.store.loadData();
-        this.assignmentRuleMap = IndexHelper.indexObjects(this.data.assignmentRules, this.key);
+        this.data = await this.getStore().loadData();
+        this.assignmentRuleMap = IndexHelper.indexObjects(this.data.assignmentRules, this.getKey());
         this.childMap = IndexHelper.indexObjectArrays(this.data.links, 'parent', 'child');
         //this.userMap = await this.app.spawn('model/User').find().raw().indexById().all();
 
@@ -125,6 +122,9 @@ module.exports = class SecurityExportConsole extends Base {
 
     getMetaItemTargets (item, targetMap) {
         const targets = targetMap[item[this.key]];
+        if (!Array.isArray(targets)) {
+             return [];
+        }
         for (const target of targets) {
             delete target.item;
             delete target[this.key];

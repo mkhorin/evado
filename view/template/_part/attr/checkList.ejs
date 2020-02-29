@@ -14,13 +14,20 @@ const p = {
     <label class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
-        <div>
-            <% for (const item of items) { %>
+        <div class="checkbox-inline-list">
+            <% if (Array.isArray(items)) {
+               for (const item of items) { %>
             <label class="checkbox checkbox-inline">
                 <input value="<%- item.value %>" type="checkbox">
                 <span data-t="<%- p.translate %>"><%- item.text %></span>
             </label>
-            <% } %>
+            <% }} else {
+               for (const key of Object.keys(items)) { %>
+            <label class="checkbox checkbox-inline">
+                <input value="<%- key %>" type="checkbox">
+                <span data-t="<%- p.translate %>"><%- items[key] %></span>
+            </label>
+            <% }} %>
         </div>
         <div class="error-block"></div>
         <div class="hint-block"><%- p.hint %></div>

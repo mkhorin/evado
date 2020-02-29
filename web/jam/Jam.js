@@ -160,8 +160,12 @@ Jam.Dialog = class Dialog {
         this.$container.keyup(this.onKeyUp.bind(this));
     }
 
+    confirmListDeletion (message, data) {
+        return this.confirmDeletion(message || 'Delete selected objects permanently?', data);
+    }
+
     confirmDeletion (message, data) {
-        return this.confirm(message || 'Delete permanently?', {
+        return this.confirm(message || 'Delete object permanently?', {
             submitText: 'Delete',
             cssClass: 'danger',
             ...data

@@ -10,14 +10,14 @@ Jam.List = class List extends Jam.Element {
         Object.assign(this, data);
         this.$grid = $grid;
         this.$container = $grid.closest('.box');
-        this.$header = this.$container.children('.box-header');
         this.$content = this.$container.children('.box-body');
-        this.$commands = this.$header.children('.list-commands');
+        this.$commands = this.$grid.children('.list-commands');
         this.$modal = this.$container.closest('.jmodal');
         this.modal = this.$modal.data('modal');
         this.childModal = Jam.modal.create();
-        this.$commands.prepend(this.$modal.find('.before-list-commands'));
-        this.$commands.append(this.$modal.find('.after-list-commands'));
+        this.$commands.prepend(this.$modal.find('.before-list-commands').children());
+        this.$commands.append(this.$modal.find('.after-list-commands').children());
+        Jam.Helper.sortChildrenByInteger(this.$commands);
         this.events = new Jam.Events('List');
         this.notice = this.createNotice();
         this.params = {
@@ -345,7 +345,7 @@ Jam.List = class List extends Jam.Element {
     onDelete () {
         const $rows = this.getSelectedRows();
         if ($rows) {
-            Jam.dialog.confirmDeletion().then(this.deleteObjects.bind(this, $rows));
+            Jam.dialog.confirmListDeletion().then(this.deleteObjects.bind(this, $rows));
         }
     }
 

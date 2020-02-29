@@ -40,10 +40,17 @@ module.exports = class Formatter extends Base {
         return `<a href="${download}" class="download-link" title="${text}" target="_blank">${value}</a>`;
     }
 
+    asTimeFromInteger (value, params) {
+        return Number.isInteger(value)
+            ? this.asTime(moment().startOf('day').add(moment.duration({s: value})), params)
+            : value;
+    }
+
     asTranslatable (value, category = '') {
         return `<span data-t="${category}">${value}</span>`;
     }
 };
 module.exports.init();
 
+const moment = require('moment');
 const I18n = require('areto/i18n/I18n');

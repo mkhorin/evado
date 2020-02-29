@@ -3,18 +3,18 @@
 <% const p = {}; %>
 <%- include('_params', {p}) %>
 <%
+p.translateValue = typeof translateValue === 'undefined' ? 'none' : translateValue;
 if (p.value && typeof url !== 'undefined') {
-    p.displayValue = `<a href="${_url(url)}" class="modal-link">${p.displayValue}</a>`;
+    p.displayValue = `<a href="${_url(url)}" class="modal-link" data-t="${p.translateValue}">${p.displayValue}</a>`;
 }
 %>
 <div class="form-attr-static form-attr form-group">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" type="hidden" value="<%= p.value %>" class="form-value">
-        <div class="form-control-static">
-            <%- p.displayValue %>
-        </div>
+        <input name="<%- p.name %>" type="hidden" value="<%= p.value %>"
+               class="form-value" readonly="readonly">
+        <div class="form-control-static" data-t="<%- p.translateValue %>"><%- p.displayValue %></div>
         <div class="error-block"></div>
     </div>
 </div>

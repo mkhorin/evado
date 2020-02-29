@@ -27,11 +27,11 @@ Jam.ActionBinder = class ActionBinder {
     }
 
     update () {
-        const value = this.model.serialize();
+        const value = this.model.stringifyAttrs();
         for (const element of this.elements) {
             element.update();
         }
-        value === this.model.serialize()
+        value === this.model.stringifyAttrs()
             ? this.events.trigger('update')
             : this.model.events.trigger('change');
     }
@@ -104,7 +104,7 @@ Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderAction {
     update () {
         const visible = this.isValid();
         if (this.attr && !visible) {
-            this.attr.clear();
+            this.attr.setInitialValue();
         }
         const group = this.$item.data('group');
         group ? group.toggle(visible)

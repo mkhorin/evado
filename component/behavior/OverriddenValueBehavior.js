@@ -76,7 +76,7 @@ module.exports = class OverriddenValueBehavior extends Base {
 
     filterStates (states = {}) {
         for (const name of Object.keys(states)) {
-            states[name] = !!states[name];
+            states[name] = states[name] === 'true' || states[name] === true;
         }
         return states;
     }

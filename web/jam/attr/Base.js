@@ -33,6 +33,7 @@ Jam.ModelAttr = class ModelAttr {
         this.$value = model.findAttrValue(this.$attr);
         this.$attr.data('model-attr', this);
         this.params = this.getData('params') || {};
+        this.initialValue = this.getValue();
     }
 
     init () {
@@ -92,9 +93,21 @@ Jam.ModelAttr = class ModelAttr {
         return this.getData('type');
     }
 
+    getDependencyNames () {
+        return this.params.depends;
+    }
+
+    getDependencyValue () {
+        return this.getValue();
+    }
+
     hasValue () {
         const value = this.getValue();
         return value !== '' && value !== null && value !== undefined;
+    }
+
+    getLinkedValue () {
+        return this.getValue();
     }
 
     getValue () {
@@ -105,8 +118,16 @@ Jam.ModelAttr = class ModelAttr {
         this.$value.val(value);
     }
 
+    setInitialValue () {
+        this.setValue(this.initialValue);
+    }
+
     triggerChange () {
         this.$value.change();
+    }
+
+    setBlank () {
+        this.$attr.toggleClass('blank', !this.hasValue());
     }
 
     findByData (key, value) {
@@ -117,6 +138,22 @@ Jam.ModelAttr = class ModelAttr {
 
     serialize () {
         return this.getValue();
+    }
+
+    bindDependencyChange () {
+        const names = this.getDependencyNames();
+        if (Array.isArray(names)) {
+            for (const name of names) {
+                const attr = this.model.getAttr(name);
+                if (attr) {
+                    attr.$value.change(this.onDependencyChange.bind(this));
+                }
+            }
+        }
+    }
+
+    onDependencyChange () {
+        this.clear();
     }
 };
 
@@ -162,7 +199,8 @@ Jam.CheckboxListModelAttr = class CheckboxListModelAttr extends Jam.ModelAttr {
 
     enable (state) {
         this.$value.attr('readonly', !state);
-        this.$checks.attr('readonly', !state);
+        this.$checks.attr('disabled', !state);
+        this.$checks.closest('.checkbox').toggleClass('disabled', !state);
     }
 
     setValue (value) {
@@ -222,7 +260,7 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
                 options.maxDate = new Date(options.maxDate);
             }
             options.defaultDate = this.getDefaultDate(this.$value.val());
-            options.format = Jam.DateHelper.getMomentFormat(options.format || this.params.format || 'date');
+            options.format = this.getFormat(options);
             options.widgetParent = this.$picker.parent();
             this.$picker.datetimepicker({...$.fn.datetimepicker.defaultOptions, ...options});
             this.picker = this.$picker.data('DateTimePicker');
@@ -236,12 +274,17 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
         return !value ? null : this.utc ? new Date(value.slice(0, -1)) : new Date(value);
     }
 
+    getFormat (options) {
+        const format = this.params.momentFormat;
+        return format || Jam.DateHelper.getMomentFormat(options.format || this.params.format || 'date');
+    }
+
     onChangeDate (event) {
-        let date = event.date;
-        let format = this.picker.options().format;
+        const date = event.date;
+        const format = this.picker.options().format;
         // if date format then remove time
-        date = date && moment(moment(date).format(format), format);
-        this.$value.val(date ? Jam.DateHelper.stringify(date, this.utc) : '');
+        const value = date ? moment(moment(date).format(format), format) : '';
+        this.$value.val(value ? Jam.DateHelper.stringify(value, this.utc) : '');
         this.triggerChange();
         if (!date) {
             this.picker.hide();
@@ -250,6 +293,39 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
 
     setValue (value) {
         value ? this.picker.date(moment(value)) : this.picker.clear();
+    }
+};
+
+Jam.TimeModelAttr = class TimeModelAttr extends Jam.DateModelAttr {
+
+    constructor () {
+        super(...arguments);
+        this.utc = false;
+    }
+
+    getDefaultDate (value) {
+        return this.getDateByTime(value);
+    }
+
+    getFormat (options) {
+        return this.params.momentFormat || 'LT';
+    }
+
+    onChangeDate (event) {
+        const date = event.date;
+        const format = 'HH:mm:ss';
+        const value = date ? moment.duration(moment(date).format(format), format).asSeconds() : '';
+        this.$value.val(value);
+        this.triggerChange();
+    }
+
+    setValue (value) {
+        super.setValue(this.getDateByTime(value));
+    }
+
+    getDateByTime (seconds) {
+        seconds = parseInt(seconds);
+        return isNaN(seconds) ? null : moment().startOf('day').add(moment.duration({s: seconds})).toDate();
     }
 };
 

@@ -47,6 +47,7 @@
     --color-hover-row: #fff8e8;
     --color-selected-row: #fff4e0;
     --color-title-label: #678;
+    --color-required: #fff8f8;
 
     --color-light-primary: #3c8dbc;
     --color-dark-primary: #367fa9;
@@ -352,9 +353,6 @@ body.loading {
     display: block;
 }
 
-.box-grid + .box-grid {
-    /*margin-top: -20px;*/
-}
 .pagination > li > a,
 .pagination > li > span {
     padding: 1px 8px;
@@ -691,7 +689,7 @@ body.loading {
     border-color: var(--color-dark-danger);
 }
 .form-control:invalid {
-    background: #fff8f8;
+    background: var(--color-required);
 }
 .form-control-static {
     min-height: 30px;
@@ -714,7 +712,8 @@ body.loading {
 .form-group.has-success .form-control-feedback.success {
     display: block;
 }
-.form-group.required .control-label:before {
+.form-group.required .control-label:before,
+.form-group.required .checkbox label span:before {
     content: "*";
     margin-right: 3px;
     color: #e00;
@@ -752,6 +751,7 @@ body.loading {
 .form-group .checkbox label {
     color: #000;
 }
+.form-group .checkbox.disabled,
 .form-group .checkbox.disabled label {
     color: #aaa;
 }
@@ -1031,6 +1031,9 @@ hr + .form-columns {
 
 /* LIST */
 
+.list-commands {
+    margin-bottom: 15px;
+}
 .list-commands .btn + .btn {
     margin-left: 2px;
 }
@@ -1156,6 +1159,9 @@ hr + .form-columns {
 .table tbody tr.unlinked.selected td,
 .table tbody tr.deleted.selected td {
     background-color: #ffd8e8 !important;
+}
+.required.blank .data-grid-table > thead > tr > th {
+    background: var(--color-required);
 }
 
 /* NOTICE */
@@ -1918,6 +1924,9 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
     height: 24px;
     margin: 0;
     padding: 4px 3px;
+}
+.required.blank .select2-container--default .select2-selection {
+    background: var(--color-required);
 }
 
 /* DIALOG */

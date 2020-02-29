@@ -21,12 +21,19 @@ if (items === 'labels') {
                 <input type="radio" value="">
                 <span data-t="<%- p.translate %>"><%- emptyText %></span>
             </label>
-            <% } for (const item of items) { %>
+            <% } if (Array.isArray(items)) {
+               for (const item of items) { %>
             <label class="radio radio-inline">
                 <input value="<%- item.value %>" type="radio">
                 <span data-t="<%- p.translate %>"><%- item.text %></span>
             </label>
-            <% } %>
+            <% }} else {
+               for (const key of Object.keys(items)) { %>
+            <label class="radio radio-inline">
+                <input value="<%- key %>" type="radio">
+                <span data-t="<%- p.translate %>"><%- items[key] %></span>
+            </label>
+            <% }} %>
         </div>
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>

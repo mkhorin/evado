@@ -111,6 +111,10 @@ module.exports = class Console extends Base {
         return this.execute('execute', this.SecurityImportConsole, params);
     }
 
+    clearSecurity (params) {
+        return this.execute('clear', this.SecurityConsole, params);
+    }
+
     // TASKS
 
     createTasks (params) {

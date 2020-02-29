@@ -68,6 +68,7 @@ module.exports = class Item extends Base {
     }
 
     async createMeta () {
+        this.prepareMetaTargets();
         await this.validateMeta();
         this.skipExistingTargets();
         if (!this.data.targets.length) {
@@ -85,6 +86,25 @@ module.exports = class Item extends Base {
             targets.push(target);
         }
         return this.store.findMetaTarget().insert(targets);
+    }
+
+    prepareMetaTargets () {
+        const targets = this.data.targets;
+        if (Array.isArray(targets)) {
+            const expansions = [];
+            for (const item of targets) {
+                for (const key of Object.keys(item)) {
+                    if (Array.isArray(item[key])) {
+                        const values = item[key];
+                        item[key] = values.shift();
+                        for (const value of values) {
+                            expansions.push({...item, [key]: value});
+                        }
+                    }
+                }
+            }
+            targets.push(...expansions);
+        }
     }
 
     // MATCHES

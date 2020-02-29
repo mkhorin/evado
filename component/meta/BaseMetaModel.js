@@ -58,9 +58,18 @@ module.exports = class BaseMetaModel extends Base {
         }
     }
 
+    resolveSpawn (config, ...args) {
+        try {
+            return ClassHelper.resolveSpawn(config, this.module, ...args);
+        } catch {
+            this.log('error', 'Invalid spawn configuration', config);
+        }
+    }
+
     log () {
         CommonHelper.log(this.hub, this.constructor.name, ...arguments);
     }
 };
 
+const ClassHelper = require('areto/helper/ClassHelper');
 const CommonHelper = require('areto/helper/CommonHelper');

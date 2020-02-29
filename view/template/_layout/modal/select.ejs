@@ -1,9 +1,12 @@
-<!-- layout/modal/select -->
+<!-- _layout/modal/select -->
+<% layout(_view.get('_layout/modal/list')) %>
 
 <%- body %>
 
 <div class="before-list-commands btn-set">
-    <button data-command="select" class="btn btn-primary" type="button" title="Select">
-        <span class="glyphicon glyphicon-check"></span>
-    </button>
+    <div class="btn-set">
+        <button data-command="select" class="btn btn-primary" type="button" title="Select">
+            <span class="glyphicon glyphicon-check"></span>
+        </button>
+    </div>
 </div>

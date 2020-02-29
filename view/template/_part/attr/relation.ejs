@@ -114,57 +114,62 @@ d.id = attr + _controller.getCurrentRoute();
     <div class="<%- p.valueCss %>">
         <div class="box box-grid box-grid-field">
             <input name="<%- p.name %>" type="hidden" class="form-value">
-            <div class="box-header">
-                <div class="list-commands" data-jam="IndexSorting">
-                    <% if (d.link) { %>
-                    <div class="btn-set">
-                        <button data-command="link" data-index="10" title="Add" class="btn btn-default" type="button">
-                            <span class="fa fa-link"></span>
-                        </button>
-                        <% if (d.unlink) { %>
-                        <button data-command="unlink" data-index="20" title="Remove" class="btn btn-default"
-                                type="button">
-                            <span class="fa fa-unlink text-danger"></span>
-                        </button>
-                        <% } %>
-                    </div>
-                    <% } if (d.create) { %>
-                    <button data-command="create" data-index="30" title="Create" class="btn btn-success btn-light" type="button">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-                    <% } if (d.update) { %>
-                    <button data-command="update" data-index="40" title="Update" class="btn btn-warning btn-light" type="button">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </button>
-                    <% } if (d.delete) { %>
-                    <button data-command="delete" data-index="50" title="Delete" class="btn btn-white" type="button">
-                        <span class="glyphicon glyphicon-trash text-danger"></span>
-                    </button>
-                    <% } %>
-                    <div class="btn-set">
-                        <button data-command="reload" data-index="60" title="Reload" class="btn btn-default" type="button">
-                            <span class="fa fa-redo-alt"></span>
-                        </button>
-                    </div>
-                    <% if (d.modalSort) { %>
-                    <button data-command="sort" data-index="70" title="Sort" class="btn btn-white" type="button">
-                        <span class="glyphicon glyphicon-sort"></span>
-                    </button>
-                    <% } if (d.clone) { %>
-                    <button data-command="clone" data-index="80" title="Clone" class="btn btn-success btn-light" type="button">
-                        <span class="fa fa-copy"></span>
-                    </button>
-                    <% } if (d.createMultiple) { %>
-                    <button data-command="createMultiple" data-index="90" title="Create multiple" class="btn btn-success btn-light" type="button">
-                        <span class="glyphicon glyphicon-th"></span>
-                    </button>
-                    <% } if (typeof tools !== 'undefined') { %>
-                    <%- include(_view.get('_part/other/render'), {data: tools}) %>
-                    <% } %>
-                </div>
-            </div>
             <div class="box-body">
                 <div class="data-grid" data-params="<%= JSON.stringify(d) %>">
+                    <div class="list-commands" data-jam="IndexSorting">
+                        <% if (d.link) { %>
+                        <div class="btn-set">
+                            <button data-command="link" data-index="10" title="Add" class="btn btn-default"
+                                    type="button">
+                                <span class="fa fa-link"></span>
+                            </button>
+                            <% if (d.unlink) { %>
+                            <button data-command="unlink" data-index="20" title="Remove" class="btn btn-default"
+                                    type="button">
+                                <span class="fa fa-unlink text-danger"></span>
+                            </button>
+                            <% } %>
+                        </div>
+                        <% } if (d.create) { %>
+                        <button data-command="create" data-index="30" title="Create" class="btn btn-success btn-light"
+                                type="button">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                        <% } if (d.update) { %>
+                        <button data-command="update" data-index="40" title="Edit" class="btn btn-warning btn-light"
+                                type="button">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        <% } if (d.delete) { %>
+                        <button data-command="delete" data-index="50" title="Delete" class="btn btn-white"
+                                type="button">
+                            <span class="glyphicon glyphicon-trash text-danger"></span>
+                        </button>
+                        <% } %>
+                        <div class="btn-set" data-index="60">
+                            <button data-command="reload" title="Reload" class="btn btn-default"
+                                    type="button">
+                                <span class="fa fa-redo-alt"></span>
+                            </button>
+                        </div>
+                        <% if (d.modalSort) { %>
+                        <button data-command="sort" data-index="70" title="Sort" class="btn btn-white" type="button">
+                            <span class="glyphicon glyphicon-sort"></span>
+                        </button>
+                        <% } if (d.clone) { %>
+                        <button data-command="clone" data-index="80" title="Clone" class="btn btn-success btn-light"
+                                type="button">
+                            <span class="fa fa-copy"></span>
+                        </button>
+                        <% } if (d.createMultiple) { %>
+                        <button data-command="createMultiple" data-index="90" title="Create multiple"
+                                class="btn btn-success btn-light" type="button">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </button>
+                        <% } if (typeof tools !== 'undefined') { %>
+                        <%- include(_view.get('_part/other/render'), {data: tools}) %>
+                        <% } %>
+                    </div>
                     <% if (d.filter) { %>
                     <div class="list-filter">
                         <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>

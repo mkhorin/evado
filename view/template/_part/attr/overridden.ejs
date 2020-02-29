@@ -1,7 +1,11 @@
 <%
+let value = overridden[attr].originalValue;
+if (Array.isArray(value)) {
+    value = value.join();
+}
 let data = {
     enable: {[overridden[attr].name]: true},
-    value: [overridden[attr].originalValue, {[overridden[attr].name]: false}]
+    value: [value, {[overridden[attr].name]: false}]
 };
 if (typeof actionBinder !== 'undefined') {
     Object.assign(data, actionBinder);

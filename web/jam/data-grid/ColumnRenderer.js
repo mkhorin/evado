@@ -17,6 +17,7 @@ Jam.ColumnRenderer = class ColumnRenderer {
             case 'bytes': return this.asBytes;
             case 'date': return this.asDate;
             case 'datetime': return this.asDatetime;
+            case 'time': return this.asTime;
             case 'timestamp': return this.asTimestamp;
             case 'link': return this.asLink;
             case 'relation': return this.asLink;
@@ -102,6 +103,10 @@ Jam.ColumnRenderer = class ColumnRenderer {
         return this.join(...arguments, (data, {momentFormat, utc}) => {
             return Jam.FormatHelper.asDatetime(Jam.DateHelper.formatByUtc(data, utc), momentFormat);
         });
+    }
+
+    asTime () {
+        return this.join(...arguments, (data, {momentFormat}) => Jam.FormatHelper.asTime(data, momentFormat));
     }
 
     asTimestamp () {

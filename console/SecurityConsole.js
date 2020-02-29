@@ -7,6 +7,18 @@ const Base = require('areto/base/Base');
 
 module.exports = class SecurityConsole extends Base {
 
+    getRbac () {
+        return this.app.getRbac();
+    }
+
+    getStore () {
+        return this.getRbac().store;
+    }
+
+    getKey () {
+        return this.getStore().key;
+    }
+
     getUserItems () {
         return this.app.getConfig('users') || [];
     }
@@ -17,6 +29,21 @@ module.exports = class SecurityConsole extends Base {
 
     spawnUser (config) {
         return this.spawn('model/User', config);
+    }
+
+    async clear () {
+        this.log('info', 'Clear security...');
+        await this.getStore().clearAll();
+        this.log('info', 'Security cleared');
+    }
+
+    async clearUsers () {
+        this.log('info', 'Delete users...');
+        const user = this.spawn('model/User');
+        await user.getDb().truncate(user.getTable());
+        const password = this.spawn('security/UserPassword');
+        await password.getDb().truncate(password.getTable());
+        this.log('info', 'Users deleted');
     }
 
     async createUsers () {
@@ -40,9 +67,9 @@ module.exports = class SecurityConsole extends Base {
 
     async createSecurity () {
         this.log('info', 'Create security...');
-        const rbac = this.app.getRbac();
-        await rbac.load();
-        await rbac.createByData(this.app.getConfig('security'));
+        await this.getRbac().load();
+        const data = this.app.getConfig('security');
+        await this.getRbac().createByData(data);
         this.log('info', 'Security ready');
     }
 
@@ -66,7 +93,7 @@ module.exports = class SecurityConsole extends Base {
         if (!user) {
             return this.log('error', `User not found`);
         }
-        const store = this.app.getRbac().store;
+        const store = this.getStore();
         const item = await store.findItemByName(this.params.role).one();
         if (!item) {
             return this.log('error', 'Role not found');

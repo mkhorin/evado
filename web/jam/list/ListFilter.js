@@ -191,7 +191,7 @@ Jam.ListFilterCondition = class ListFilterCondition {
         this.events = new Jam.Events(this.constructor.name);
         this.$container = this.filter.$conditionSample.clone().removeClass('hidden');
         this.$container.data('condition', this);
-        this.setAnd(true);
+        this.setLogical(false);
         this.$content = this.$container.children('.condition-content');
         this.$groupContainer = this.$container.children('.condition-group');
         this.$attrContainer = this.$content.find('.condition-attr-container');
@@ -252,13 +252,13 @@ Jam.ListFilterCondition = class ListFilterCondition {
     }
 
     onToggleLogical () {
-        this.setAnd(!this.and);
+        this.setLogical(!this.or);
     }
 
-    setAnd (and) {
-        this.and = and;
-        this.$container.removeClass(this.and ? 'or' : 'and');
-        this.$container.addClass(this.and ? 'and' : 'or');
+    setLogical (or) {
+        this.or = or;
+        this.$container.removeClass('and or');
+        this.$container.addClass(this.or ? 'or' : 'and');
     }
 
     deleteType () {
@@ -277,14 +277,14 @@ Jam.ListFilterCondition = class ListFilterCondition {
         const op = this.getOperation();
         const value = this.getValue();
         if (op && value !== undefined) {
-            const and = this.and;
+            const or = this.or;
             const attr = this.getAttr();
-            return this.type.getRequestData({and, attr, op, value});
+            return this.type.getRequestData({or, attr, op, value});
         }
     }
 
     parse (data) {
-        this.setAnd(data.and);
+        this.setLogical(data.or);
         this.$attrSelect.val(data.attr).change();
         this.setOperation(data.op);
         this.type.changeValue(data.value, data.text);
