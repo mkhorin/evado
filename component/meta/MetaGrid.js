@@ -95,12 +95,14 @@ module.exports = class MetaGrid extends Base {
             _title: model.getTitle()
         };
         await PromiseHelper.setImmediate();
-        for (const attr of model.view.attrs) {
+        const view = this.meta.view;
+        for (const attr of view.attrs) {
             await this.renderCell(attr, model, result);
         }
-        if (!model.view.hasKeyAttr()) {
-            result[model.view.getKey()] = model.getId();
+        if (!view.hasKeyAttr()) {
+            result[view.getKey()] = model.getId();
         }
+        result._metaClass = model.view.class.name;
         return result;
     }
 
@@ -152,6 +154,10 @@ module.exports = class MetaGrid extends Base {
                 const state = model.class.getState(value);
                 return state ? state.title : value;
             }
+            if (attr.isClass()) {
+                const metaClass = model.class.meta.getClass(value);
+                return metaClass ? metaClass.title : value;
+            }
         }
         return value;
     }
@@ -198,7 +204,7 @@ module.exports = class MetaGrid extends Base {
     }
 
     renderRelatedThumbnail (model, title, attr) {
-        const size = attr.options.thumbnail || model.view.options.thumbnail;
+        const size = attr.options.thumbnail || this.meta.view.options.thumbnail;
         const data = this.controller.extraMeta.getModelFileData(model, size);
         if (data) {
             data.name = title;

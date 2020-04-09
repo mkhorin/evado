@@ -12,6 +12,7 @@ module.exports = class SortRelatedAction extends Base {
         await this.setParentModel(pid);
         await this.setRelation(rel);
         if (this.isGet()) {
+            this.setRelationWith(rel);
             return this.renderOrder();
         }
         await this.updateOrder(this.getPostParam('order'));
@@ -33,6 +34,12 @@ module.exports = class SortRelatedAction extends Base {
         this.sortOrderBehavior = this.relation.model.getBehavior('sortOrder');
         if (!(this.sortOrderBehavior instanceof SortOrderBehavior)) {
             throw new BadRequest('Invalid sort order behavior');
+        }
+    }
+
+    setRelationWith (name) {
+        if (this.with && this.with.hasOwnProperty(name)) {
+            this.relation.with(this.with[name]);
         }
     }
 
@@ -78,7 +85,7 @@ module.exports = class SortRelatedAction extends Base {
         for (const model of models) {
             const behavior = model.getBehavior(this.sortOrderBehavior.overriddenBehavior);
             const states = behavior.getStates();
-            if (!behavior.hasOriginal() || states[orderAttr] === true) {
+            if (!behavior.hasOriginal() || !behavior.attrs.includes(orderAttr) || states[orderAttr] === true) {
                 result.push(model);
             }
         }

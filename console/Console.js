@@ -121,6 +121,17 @@ module.exports = class Console extends Base {
         return this.execute('create', this.TaskConsole, params);
     }
 
+    // MODULES
+
+    async importStudioData () {
+        const studio = this.app.getModule('studio');
+        this.log('info', 'Clear studio data...');
+        await studio.dropAll();
+        this.log('info', 'Import studio data...');
+        await studio.importMeta();
+        this.log('info', 'Studio data imported');
+    }
+
     // EXECUTE
 
     async execute (handler) {

@@ -29,7 +29,7 @@ module.exports = class BaseActiveRecord extends Base {
         return this.find(...arguments).select({name: 1, label: 1}).order({name: 1});
     }
 
-    detachRelationChange () {
+    detachRelationChangeBehavior () {
         this.detachBehavior('relationChange');
     }
 };

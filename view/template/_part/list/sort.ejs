@@ -34,10 +34,15 @@ if (!hasKeyColumn) {
 }
 data.data = [];
 for (const model of models) {
-    const labelFormat = 'label';
     const map = {};
     for (const {name, format} of data.columns) {
-        map[name] = format === labelFormat ? model.getAttrValueLabel(name) : model.getViewAttr(name);
+        if (format === 'label') {
+            map[name] = model.getAttrValueLabel(name);
+        } else if (format === 'relation') {
+            map[name] = model.getRelatedTitle(name);
+        } else {
+            map[name] = model.getViewAttr(name);
+        }
     }
     data.data.push(map);
 }
@@ -78,15 +83,5 @@ if (data.jam === undefined) {
             <tbody></tbody>
         </table>
     </div>
-    <div class="row-bottom row">
-        <div class="col-md-5">
-            <div class="data-grid-info"></div>
-        </div>
-        <div class="col-md-7">
-            <div class="data-grid-pages">
-                <div class="data-grid-pagination"></div>
-                <select class="data-grid-page-jumper form-control hidden"></select>
-            </div>
-        </div>
-    </div>
+    <%- include(_view.get('_part/list/bottom')) %>
 </div>

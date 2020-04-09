@@ -154,6 +154,10 @@ Jam.List = class List extends Jam.Element {
         return this.params.list;
     }
 
+    getCloneParams () {
+        return this.getObjectIdParam(...arguments);
+    }
+
     prepareRows () {
         this.findRows().each((index, row) => {
             this.prepareRow(row, this.grid.getData(row.dataset.id), index);
@@ -331,7 +335,7 @@ Jam.List = class List extends Jam.Element {
     onClone () {
         const $row = this.getSelectedRow();
         if ($row) {
-            this.loadModal(this.params.clone, this.getObjectIdParam($row));
+            this.loadModal(this.params.clone, this.getCloneParams($row));
         }
     }
 
@@ -392,6 +396,7 @@ Jam.SelectList = class SelectList extends Jam.List {
     init () {
         Object.assign(this.params, this.modal.initData);
         super.init();
+        this.modal.findScrollHeader().append(this.$commands);
     }
 
     onDoubleClickRow (event) {

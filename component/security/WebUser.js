@@ -11,6 +11,11 @@ module.exports = class WebUser extends Base {
         return this.identity ? this.identity.getEmail() : undefined;
     }
 
+    getAssignmentTitles () {
+        const data = this.module.getRbac().itemTitleMap;
+        return this.assignments.map(name => data[name]);
+    }
+
     log () {
         return this.spawn('model/UserLog').create(this, ...arguments);
     }

@@ -400,7 +400,7 @@ Jam.FormatHelper = class FormatHelper {
             unit = 'GiB';
             size /= 1073741824;
         }
-        size = Math.round(size * 100) / 100;
+        size = Math.round((size + Number.EPSILON) * 100) / 100;
         return `${size} ${Jam.i18n.translate(unit)}`;
     }
 
@@ -431,7 +431,9 @@ Jam.FormatHelper = class FormatHelper {
 
     static asTime (data, format = 'LT') {
         data = parseInt(data);
-        return isNaN(data) ? null : moment().startOf('day').add(moment.duration({s: data})).format(format);
+        return !isNaN(data)
+            ? moment().startOf('day').add(moment.duration({s: data})).format(format)
+            : null;
     }
 
     static asTimestamp () {
@@ -444,7 +446,8 @@ Jam.FormatHelper = class FormatHelper {
         }
         const name = Jam.Helper.escapeTags(data.name);
         if (data.thumbnail) {
-            return `<img src="${data.thumbnail}" class="img-responsive" title="${name}" alt="">`;
+            const css = `img-responsive thumbnail ${data.css}`;
+            return `<img src="${data.thumbnail}" class="${css}" title="${name}" alt="">`;
         }
         return name;
     }

@@ -190,6 +190,14 @@ Jam.Dialog = class Dialog {
         });
     }
 
+    notice (message, data) {
+        return this.show(message, {
+            header: 'Notice',
+            cancelText: false,
+            ...data
+        });
+    }
+
     show (message, data) {
         data = {...this.params, ...data};
         data.message = message;

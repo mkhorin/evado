@@ -10,7 +10,9 @@ module.exports = class CrudController extends Base {
     static getConstants () {
         return {
             ACTIONS: {
-                'sort-related': require('../action/SortRelatedAction'),
+                'sort-related': {
+                    Class: require('../action/SortRelatedAction')
+                }
             },
             METHODS: {
                 'select': 'GET',

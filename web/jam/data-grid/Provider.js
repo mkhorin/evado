@@ -112,6 +112,6 @@ Jam.DataGridProvider = class DataGridProvider {
     }
 
     formatFilterValue (value) {
-        return value;
+        return typeof value === 'string' ? value.toLowerCase() : value;
     }
 };

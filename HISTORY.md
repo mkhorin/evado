@@ -1,3 +1,20 @@
+## 1.1.0
+
+* component/action/SortRelatedAction 
+    - add 'with' query param 
+    - add nested condition parser 
+    - fix overridden models filter
+* component/meta/MetaGrid 
+    - add actual meta class name to item
+    - add meta class format
+    - fix related thumbnail size         
+* component/other/ListFilter 
+    - extract item parser to separate method    
+* component/security/rbac/Rbac 
+    - inherit metadata permissions ​​from base meta class    
+* fix css styles
+* upgrade dependencies
+
 ## 1.0.0
 
 * component/security/rbac/Item

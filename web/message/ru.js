@@ -24,6 +24,7 @@ Jam.I18n.defaults = {
     'GiB': 'Гб',
     'TiB': 'Тб',
 
+    'Account': 'Аккаунт',
     'Action completed': 'Действие завершено',
     'Action failed': 'Действие не удалось',
     'Active': 'Активен',
@@ -31,6 +32,7 @@ Jam.I18n.defaults = {
     'Add': 'Добавить',
     'Add condition': 'Добавить условие',
     'Add condition to save': 'Добавьте условие для сохранения',
+    'Admin': 'Администрирование',
     'Advanced search': 'Расширенный поиск',
     'Application metadata reloaded': 'Метаданные приложения перезагружены',
     'Apply': 'Применить',
@@ -73,6 +75,7 @@ Jam.I18n.defaults = {
     'File is not an image': 'Файл не является изображением',
     'File size cannot be smaller than {limit}': 'Размер файла не может быть менее {limit}',
     'File size cannot exceed {limit}': 'Размер файла не может превышать {limit}',
+    'Front': 'Фасад',
 
     'Group': 'Группа',
 
@@ -104,6 +107,7 @@ Jam.I18n.defaults = {
     'No saved filters yet': 'Пока нет сохраненных фильтров',
 
     'Object select box': 'Выпадающий список объектов',
+    'Office': 'Офис',
     'Only these file extensions are allowed: {extensions}': 'Допустимы только эти расширения файлов: {extensions}',
     'Only these file MIME types are allowed: {mimeTypes}': 'Допустимы только эти MIME-типы файлов: {mimeTypes}',
     'Order': 'Порядок',
@@ -134,7 +138,7 @@ Jam.I18n.defaults = {
     'Select box': 'Выпадающий список',
     'Select column to sort': 'Выберите колонку для сортировки',
     'Select date...': 'Выберите дату...',
-    'Select filter': 'Выбрать фильтр',
+    'Select filter': 'Выберите фильтр',
     'Select items for action': 'Выберите объекты для действия',
     'Select one item for action': 'Выберите объект для действия',
     'Select values to restore': 'Выберите значения для восстановления',
@@ -145,6 +149,7 @@ Jam.I18n.defaults = {
     'Sort': 'Сортировать',
     'Sorting': 'Сортировка',
     'Status': 'Статус',
+    'Studio': 'Студия',
 
     'Table:': 'Таблица:',
     'Text': 'Текст',

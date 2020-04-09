@@ -1,11 +1,10 @@
 <!-- _part/attr/static -->
-
 <% const p = {}; %>
 <%- include('_params', {p}) %>
 <%
 p.translateValue = typeof translateValue === 'undefined' ? 'none' : translateValue;
 if (p.value && typeof url !== 'undefined') {
-    p.displayValue = `<a href="${_url(url)}" class="modal-link" data-t="${p.translateValue}">${p.displayValue}</a>`;
+    p.displayValue = `<a href="${_url(url)}" class="modal-link" tabindex="-1" data-t="${p.translateValue}">${p.displayValue}</a>`;
 }
 %>
 <div class="form-attr-static form-attr form-group">

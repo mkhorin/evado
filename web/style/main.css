@@ -259,6 +259,26 @@ hr {
     display: inline-block;
     margin-right: 10px;
 }
+.xs-thumbnail.thumbnail,
+.xs-thumbnail .thumbnail {
+    max-width: 64px;
+    max-height: 64px;
+}
+.sm-thumbnail.thumbnail,
+.sm-thumbnail .thumbnail {
+    max-width: 128px;
+    max-height: 128px;
+}
+.md-thumbnail.thumbnail,
+.md-thumbnail .thumbnail {
+    max-width: 256px;
+    max-height: 256px;
+}
+.lg-thumbnail.thumbnail,
+.lg-thumbnail .thumbnail {
+    max-width: 512px;
+    max-height: 512px;
+}
 
 .main-header .navbar .dropdown-menu li a {
     color: #000 !important;
@@ -672,6 +692,9 @@ body.loading {
 .box .overlay.model-loader > i {
     top: 96px;
 }
+.box-header .list-commands {
+    margin: 0;
+}
 
 /* FORM */
 
@@ -950,7 +973,7 @@ textarea.form-control {
     margin-left: 5px;
 }
 .file-download .thumbnail {
-    margin-top: 15px;
+    margin: 15px 0 0 0;
 }
 .form-group .radio-list label {
     color: #000;
@@ -972,7 +995,9 @@ textarea.form-control {
 hr + .form-columns {
     margin-top: 30px;
 }
-
+.form-container {
+    margin-bottom: 20px;
+}
 /* TABS */
 
 .tab-pane,
@@ -1027,6 +1052,9 @@ hr + .form-columns {
 .table-condensed > thead > tr > td,
 .table-condensed > thead > tr > th {
     padding:4px 5px;
+}
+.cell .thumbnail {
+    margin: 0;
 }
 
 /* LIST */
@@ -1111,7 +1139,7 @@ hr + .form-columns {
 /* TABLE */
 
 .table {
-    margin:0 0 7px !important;
+    margin:0 0 10px !important;
 }
 .table tbody {
     position: relative;
@@ -1154,11 +1182,11 @@ hr + .form-columns {
     color: #a00;
 }
 .table tbody tr.linked.selected td {
-    background-color: #d4ffd0 !important;
+    background-color: #e8ffd0 !important;
 }
 .table tbody tr.unlinked.selected td,
 .table tbody tr.deleted.selected td {
-    background-color: #ffd8e8 !important;
+    background-color: #ffe8e0 !important;
 }
 .required.blank .data-grid-table > thead > tr > th {
     background: var(--color-required);
@@ -1978,6 +2006,21 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 .dialog .btn-submit:hover,
 .dialog .btn-submit:active {
     background-color: var(--color-dark-primary)
+}
+
+.dialog-success > .box {
+    border-color: var(--color-light-success);
+}
+.dialog-success > .box > .box-head {
+    color: var(--color-dark-success);
+}
+.dialog-success .btn-submit {
+    background-color: var(--color-dark-success);
+    border-color: var(--color-dark-success);
+}
+.dialog-success .btn-submit:hover,
+.dialog-success .btn-submit:active {
+    background-color: var(--color-dark-success)
 }
 
 .dialog-warning > .box {

@@ -192,8 +192,14 @@ module.exports = class Rbac extends Base {
 
     async init () {
         this.metaHub = this.module.getMetaHub();
-        this.metaHub.onAfterLoad(this.prepareMetaDependencies.bind(this));
-        await super.init();
+        this.metaHub.onAfterLoad(this.load.bind(this));
+        //await super.init();
+    }
+
+    load () {
+        this.docMeta = this.metaHub.get('document');
+        this.navMeta = this.metaHub.get('navigation');
+        return super.load();
     }
 
     build (data) {
@@ -201,20 +207,34 @@ module.exports = class Rbac extends Base {
         this.metaItems = data.metaItems;
         this.addParentRoles(this.metaItems);
         this.resolveMetaItemRules();
+        this.addDescendantClassMetaItems();
         this.setMetaMap();
         this.setMetaAttrMap();
         this.setMetaObjectFilterMap();
         this.setMetaTransitionMap();
         this.setMetaNavMap();
         this.setAssignmentRules(data.assignmentRules);
+        this.setItemTitleMap();
         this.setItemUserMap();
-        this.prepareMetaDependencies();
+        this.metaObjectFilters.map(filter => filter.prepare());
     }
 
-    prepareMetaDependencies () {
-        this.docMeta = this.metaHub.get('document');
-        this.navMeta = this.metaHub.get('navigation');
-        this.metaObjectFilters.map(filter => filter.prepare());
+    addDescendantClassMetaItems () {
+        const items = [];
+        for (const item of this.metaItems) {
+            const index = item.key.lastIndexOf('.');
+            const prefix = index < 0 ? '' : item.key.substring(0, index + 1);
+            const metaClass = this.docMeta.getClass(item.class);
+            if (metaClass) {
+                for (const {name} of metaClass.getDescendants()) {
+                    const child = Object.assign({}, item);
+                    child.class = name;
+                    child.key = prefix + name;
+                    items.push(child);
+                }
+            }
+        }
+        this.metaItems.push(...items);
     }
 
     addParentRoles (items) {
@@ -334,6 +354,13 @@ module.exports = class Rbac extends Base {
             for (const item of this.assignmentMap[user]) {
                 ObjectHelper.push(user, item, this.itemUserMap);
             }
+        }
+    }
+
+    setItemTitleMap () {
+        this.itemTitleMap = {};
+        for (const name of Object.keys(this.itemMap)) {
+            this.itemTitleMap[name] = this.itemMap[name].label || name;
         }
     }
 

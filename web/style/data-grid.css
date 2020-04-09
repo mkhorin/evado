@@ -207,6 +207,9 @@
 
 /* PAGINATION */
 
+.data-grid-pages {
+    display: none;
+}
 .data-grid-pagination {
     display: inline-block;
     vertical-align: top;
@@ -230,11 +233,16 @@
 .data-grid-pagination .ellipsis:before {
     content: "..."
 }
-.data-grid-pages {
-    text-align: right;
-}
 .data-grid-info {
+    display: inline-block;
     color: #bbb;
+}
+.has-page-toggle .data-grid-pages {
+    display: inline-block;
+}
+.has-page-toggle .data-grid-info {
+    margin-left: 10px;
+    vertical-align: sub;
 }
 
 /* PAGE JUMPER */
@@ -242,6 +250,7 @@
 .data-grid-page-jumper {
     display: inline-block;
     width: auto;
+    vertical-align: top;
 }
 
 /* TREE VIEW */
@@ -324,11 +333,16 @@
     .data-grid .table-responsive {
         margin-bottom: 0;
     }
+    .has-page-toggle .data-grid-pages {
+        margin-top: 10px;
+        display: block;
+    }
     .data-grid-pages,
     .data-grid-info {
         text-align: center;
     }
     .data-grid-info {
+        display: block;
         line-height: 35px;
     }
 }

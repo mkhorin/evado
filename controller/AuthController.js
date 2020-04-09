@@ -51,7 +51,7 @@ module.exports = class AuthController extends Base {
             return this.render('signIn', {model});
         }
         if (this.user.getIdentity().isVerified()) {
-            return this.goBack();
+            return this.goBack(this.getQueryParam('returnUrl'));
         }
         this.setFlash('error', 'User is not verified');
         return this.redirect('request-verification');

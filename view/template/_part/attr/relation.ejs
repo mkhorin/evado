@@ -202,17 +202,7 @@ d.id = attr + _controller.getCurrentRoute();
                         </table>
                     </div>
                     <% if (d.showBottom) { %>
-                    <div class="row-bottom row">
-                        <div class="col-md-5">
-                            <div class="data-grid-info"></div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="data-grid-pages">
-                                <div class="data-grid-pagination"></div>
-                                <select class="data-grid-page-jumper form-control hidden"></select>
-                            </div>
-                        </div>
-                    </div>
+                    <%- include(_view.get('_part/list/bottom')) %>
                     <% } %>
                 </div>
             </div>

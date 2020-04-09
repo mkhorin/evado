@@ -321,6 +321,18 @@ Jam.ModalItem = class ModalItem {
         return Jam.Element.findInstanceByClass(instanceClass, this.$container);
     }
 
+    findScroll () {
+        return this.$body.children('.jmodal-scroll-container');
+    }
+
+    findScrollHeader () {
+        return this.findScroll().children('.scroll-header');
+    }
+
+    findScrollBody () {
+        return this.findScroll().children('.scroll-body');
+    }
+
     ensure () {
         if (!this.$modal) {
             this.$modal = this.modal.createModal(this);
@@ -336,17 +348,17 @@ Jam.ModalItem = class ModalItem {
         const top = this.$container.offset().top - $(window).scrollTop();
         const maxHeight = $(window).height() - top - this.$header.outerHeight();
         this.$body.css('max-height', maxHeight);
-        const $scroll = this.$body.children('.jmodal-scroll-container');
-        if ($scroll.length) {
-            const $header = $scroll.children('.scroll-header');
-            $scroll.children('.scroll-body').css('max-height', maxHeight - $header.outerHeight());
+        if (this.findScroll().length) {
+            const headerHeight = this.findScrollHeader().outerHeight();
+            this.findScrollBody().css('max-height', maxHeight - headerHeight);
         }
     }
 
     scrollTo ($target) {
-        const $scroll = this.$body.children('.jmodal-scroll-container').children('.scroll-body');
+        const $scroll = this.findScrollBody();
         const top = $target.first().offset().top - $scroll.offset().top;
-        $scroll.animate({scrollTop: $scroll.scrollTop() + top});
+        const scrollTop = $scroll.scrollTop() + top;
+        $scroll.animate({scrollTop});
     }
 };
 

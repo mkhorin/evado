@@ -87,6 +87,8 @@ Jam.DataGridPagination = class DataGridPagination {
 
     draw () {
         this.$pagination.html(this.isHidden() ? '' : this.render());
+        const $toggle = this.$pagination.find('[data-page]');
+        this.grid.$container.toggleClass('has-page-toggle', $toggle.length > 0);
         this.drawJumper();
     }
 

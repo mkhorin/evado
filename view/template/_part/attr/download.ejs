@@ -16,7 +16,9 @@ const src = model.isImage()
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <p class="form-control-static">
-            <a href="<%- p.url %>" target="_blank" title="Download"><%= model.getTitle() %></a>
+            <a href="<%- p.url %>" target="_blank" title="Download" tabindex="-1">
+                <%= model.getTitle() %>
+            </a>
         </p>
         <% if (src) { %>
         <img src="<%- src %>" class="thumbnail img-responsive" alt="<%= model.getTitle() %>">

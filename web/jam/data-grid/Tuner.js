@@ -10,11 +10,13 @@ Jam.DataGridTuner = class DataGridTuner {
         this.params = grid.params;
         this.columns = this.params.columns;
         this.$container = grid.$container.find('.data-grid-tuner');
-        this.load();
-        this.createMenu();
-        this.$toggle = this.$container.find('.toggle');
-        this.$toggle.click(this.onClickToggle.bind(this));
-        $(document.body).click(this.onClickBody.bind(this));
+        if (this.$container.length) {
+            this.load();
+            this.createMenu();
+            this.$toggle = this.$container.find('.toggle');
+            this.$toggle.click(this.onClickToggle.bind(this));
+            $(document.body).click(this.onClickBody.bind(this));
+        }
     }
 
     createMenu () {

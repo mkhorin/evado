@@ -16,12 +16,16 @@ module.exports = class ListFilter extends Base {
 
     async resolve (query) {
         this.query = query;
-        this.items = this.normalizeItems(this.items);
-        for (const item of this.items) {
+        query.and(await this.resolveItems(this.items));
+    }
+
+    async resolveItems (items) {
+        items = this.normalizeItems(items);
+        for (const item of items) {
             item.condition = await this.parse(item);
         }
         let and = ['AND'], or = ['OR', and]; // AND has priority over OR
-        for (const item of this.items) {
+        for (const item of items) {
             if (item.condition) {
                 if (item.or && and.length > 1) {
                     and = ['AND'];
@@ -30,7 +34,7 @@ module.exports = class ListFilter extends Base {
                 and.push(item.condition);
             }
         }
-        query.and(or.length > 2 ? or : and.length > 1 ? and : null);
+        return or.length > 2 ? or : and.length > 1 ? and : null;
     }
 
     normalizeItems (items) {
@@ -40,8 +44,8 @@ module.exports = class ListFilter extends Base {
     }
 
     parse (data) {
-        if (typeof data.attr !== 'string') {
-            return this.throwBadRequest('Invalid attribute');
+        if (data.items) {
+            return this.parseNestedItems(data);
         }
         if (data.owner) {
             return this.parseOwner(data);
@@ -53,6 +57,12 @@ module.exports = class ListFilter extends Base {
             return this.parseRelation(data);
         }
         return this.parseByType(data);
+    }
+
+    async parseNestedItems ({items}) {
+        return Array.isArray(items)
+            ? this.resolveItems(items)
+            : this.throwBadRequest('Invalid nested items');
     }
 
     async parseOwner ({attr, value, owner, relation}) {
@@ -245,7 +255,7 @@ module.exports = class ListFilter extends Base {
             return {[attr]: value};
         }
         if (op === 'not equal') {
-            return ['NOT IN', attr, value];
+            return ['NOT EQUAL', attr, value];
         }
         this.throwInvalidOperation(op);
     }
