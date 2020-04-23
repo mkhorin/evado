@@ -53,7 +53,7 @@ module.exports = class AuthController extends Base {
         if (this.user.getIdentity().isVerified()) {
             return this.goBack(this.getQueryParam('returnUrl'));
         }
-        this.setFlash('error', 'User is not verified');
+        this.setFlash('error', 'auth.userNotVerified');
         return this.redirect('request-verification');
     }
 
@@ -68,12 +68,14 @@ module.exports = class AuthController extends Base {
             return this.render('signUp', {model});
         }
         model.captchaAction = this.createAction('captcha');
-        if (!await model.load(this.getPostParams()).register()) {
+        const user = await model.load(this.getPostParams()).register();
+        if (!user) {
             return this.render('signUp', {model});
         }
+        const message = user.isVerified() ? 'auth.registrationCompleted' : 'auth.verificationSent';
         return this.render('alert', {
             type: 'info',
-            message: `${this.translate('Verification key sent to')} ${model.get('email')}`
+            message: this.translate(message, {email: model.get('email')})
         });
     }
 
@@ -86,7 +88,7 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).changePassword()) {
             return this.render('changePassword', {model});
         }
-        this.setFlash('success', 'Password changed');
+        this.setFlash('success', 'auth.passwordChanged');
         this.reload();
     }
 
@@ -99,7 +101,7 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).request()) {
             return this.render('requestReset', {model});
         }
-        this.setFlash('success', `${this.translate('Reset key sent to')} ${model.get('email')}`);
+        this.setFlash('success', 'auth.resetKeySent', {email: model.get('email')});
         this.reload();
     }
 
@@ -114,7 +116,7 @@ module.exports = class AuthController extends Base {
         if (!await model.resetPassword()) {
             return this.render('resetPassword', {model});
         }
-        this.setFlash('success', 'New password set');
+        this.setFlash('success', 'auth.newPasswordSet');
         this.goLogin();
     }
 
@@ -127,7 +129,7 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).request()) {
             return this.render('requestVerification', {model});
         }
-        this.setFlash('success', `${this.translate('Verification key sent to')} ${model.get('email')}`);
+        this.setFlash('success', 'auth.verificationSent', {email: model.get('email')});
         this.reload();
     }
 
@@ -140,7 +142,7 @@ module.exports = class AuthController extends Base {
         }
         return this.render('alert', {
             type: 'success',
-            message: 'User verified'
+            message: this.translate('auth.userVerified')
         });
     }
 

@@ -7,16 +7,6 @@ const Base = require('areto/base/Base');
 
 module.exports = class PasswordAuthService extends Base {
 
-    constructor (config) {
-        super({
-            failedMessage: 'Invalid authentication',
-            usedBeforeMessage: 'Password has already been used before',
-            blockedMessage: 'Account is blocked',
-            blockedUntilMessage: 'Account is blocked until {date}',
-            ...config
-        });
-    }
-
     async isPasswordExpired (user) {
         if (user.get('expiredPassword')) {
             return true;
@@ -52,30 +42,30 @@ module.exports = class PasswordAuthService extends Base {
 
     async failLogin (email, user) {
         const data = {email, ip: user.getIp()};
-        this.module.log('warn', this.failedMessage, data);
+        this.module.log('warn', 'Auth failed', data);
         await this.module.emitEvent('auth.fail', data);
-        throw this.failedMessage;
+        throw 'auth.invalidAuth';
     }
 
     resolveBlocked (model) {
         const date = model.get('unlockAt');
         if (!(date instanceof Date)) {
-            throw this.blockedMessage;
+            throw 'auth.userBlocked';
         }
         if (date >= new Date) {
-            throw [this.blockedUntilMessage, 'app', {date: [date, 'timestamp']}];
+            throw ['auth.userBlockedUntil', {date: [date, 'timestamp']}];
         }
         return model.unlock();
     }
 
     async register (data) {
         const identity = this.spawnUser();
-        identity.assignAttrs(data);
+        identity.assign(data);
         if (!await identity.validate()) {
             throw identity.getFirstError();
         }
         const password = this.spawnPassword();
-        password.assignAttrs({
+        password.assign({
             hash: data.passwordHash,
             password: data.password
         });
@@ -97,7 +87,7 @@ module.exports = class PasswordAuthService extends Base {
         }
         const old = this.module.getParam('oldUserPasswords', 0);
         if (model.constructor.isUsed(newPassword, passwords.slice(0, old + 1))) {
-            throw this.usedBeforeMessage;
+            throw 'auth.passwordAlreadyUsed';
         }
         const current = passwords[0];
         const min = this.module.getParam('minUserPasswordLifetime');
@@ -123,8 +113,7 @@ module.exports = class PasswordAuthService extends Base {
             const timeout = this.module.getParam('repeatVerificationTimeout');
             const rest = DateHelper.parseDuration(timeout) - model.getElapsedTime();
             if (rest > 0) {
-                const message = 'Request has already been sent. Try again {time}';
-                throw [message, 'app', {time: [rest, 'duration', {suffix: true}]}];
+                throw ['auth.requestAlreadySent', {time: [rest, 'duration', {suffix: true}]}];
             }
         } else {
             model = verification;
@@ -140,7 +129,7 @@ module.exports = class PasswordAuthService extends Base {
         const id = model.get('user');
         const user = await this.spawnUser().findById(id).one();
         if (!user) {
-            throw 'User not found';
+            throw 'auth.userNotFound';
         }
         return user;
     }
@@ -148,13 +137,13 @@ module.exports = class PasswordAuthService extends Base {
     async getVerification (key) {
         const model = await this.spawnVerification().find({key}).one();
         if (!model) {
-            throw 'Verification not found';
+            throw 'auth.verificationNotFound';
         }
         if (model.isDone()) {
-            throw 'Verification already done';
+            throw 'auth.verificationAlreadyDone';
         }
         if (model.isExpired(this.module.getParam('verificationLifetime'))) {
-            throw 'Verification expired';
+            throw 'auth.verificationExpired';
         }
         return model;
     }

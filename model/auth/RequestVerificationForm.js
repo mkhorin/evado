@@ -39,10 +39,10 @@ module.exports = class RequestVerificationForm extends Base {
     async getUser (service) {
         const user = await service.getUserByEmail(this.get('email'));
         if (!user) {
-            throw 'User not found';
+            throw 'auth.userNotFound';
         }
         if (user.isVerified()) {
-            throw 'User is already verified';
+            throw 'auth.userAlreadyVerified';
         }
         return user;
     }
