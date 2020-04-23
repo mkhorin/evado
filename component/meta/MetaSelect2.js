@@ -14,6 +14,10 @@ module.exports = class MetaSelect2 extends Base {
         });
     }
 
+    getMaxPageSize () {
+        return this.meta.view.options.listLimit || this.MAX_PAGE_SIZE;
+    }
+
     setSearch (text) {
         const conditions = [];
         this.resolveKeyCondition(text, conditions);

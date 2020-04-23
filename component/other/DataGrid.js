@@ -9,7 +9,8 @@ module.exports = class DataGrid extends Base {
 
     static getConstants () {
         return {
-            MAX_ITEMS: 50,
+            DEFAULT_LIMIT: 10,
+            MAX_LIMIT: 30,
             ROW_KEY: '_id'
         };
     }
@@ -62,12 +63,19 @@ module.exports = class DataGrid extends Base {
     }
 
     setLimit () {
+        this.limit = parseInt(this.request.length) || this.DEFAULT_LIMIT;
         // in mongodb limit 0 (null) or -N means no limit
-        this.limit = parseInt(this.request.length) || 10;
-        if (isNaN(this.limit) || this.limit < 0 || this.limit > this.MAX_ITEMS) {
-            throw new BadRequest(`Invalid length param`);
+        if (isNaN(this.limit) || this.limit < 1) {
+            throw new BadRequest('Invalid length param');
+        }
+        if (this.limit > this.getMaxLimit()) {
+            throw new BadRequest('Length exceeds limit');
         }
         this.query.limit(this.limit);
+    }
+
+    getMaxLimit () {
+        return this.MAX_LIMIT;
     }
 
     setOrder () {

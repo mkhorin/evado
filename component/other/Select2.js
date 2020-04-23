@@ -9,24 +9,22 @@ module.exports = class Select2 extends Base {
 
     static getConstants () {
         return {
-            MAX_ITEMS: 50
+            MAX_PAGE_SIZE: 20
         };
     }
 
     constructor (config) {
         super({
+            // controller
             // query: [new Query]
-            // request: [select2 request]
+            request: config.controller.getPostParams(),
             ...config
         });
         this.params = this.params || {};
     }
 
     async getList () {
-        const pageSize = parseInt(this.request.pageSize);
-        if (isNaN(pageSize) || pageSize < 1 || pageSize > this.MAX_ITEMS) {
-            throw new BadRequest(this.wrapClassMessage('Invalid page size'));
-        }
+        const pageSize = this.getPageSize();
         const page = parseInt(this.request.page) || 1;
         if (isNaN(page) || page < 1) {
             throw new BadRequest(this.wrapClassMessage('Invalid page'));
@@ -43,6 +41,21 @@ module.exports = class Select2 extends Base {
         return {total, items};
     }
 
+    getPageSize () {
+        const pageSize = parseInt(this.request.pageSize);
+        if (isNaN(pageSize) || pageSize < 1) {
+            throw new BadRequest(this.wrapClassMessage('Invalid page size'));
+        }
+        if (pageSize > this.getMaxPageSize()) {
+            throw new BadRequest('Page size exceeds limit');
+        }
+        return pageSize;
+    }
+
+    getMaxPageSize () {
+        return this.MAX_PAGE_SIZE;
+    }
+
     setSearch (text) {
         const conditions = [];
         this.resolveKeyCondition(text, conditions);
@@ -51,8 +64,6 @@ module.exports = class Select2 extends Base {
             for (const attr of this.params.searchAttrs) {
                 if (typeof attr === 'string') {
                     conditions.push({[attr]: stringSearch});
-                } else {
-                    // TODO parse attr type
                 }
             }
         }
@@ -73,14 +84,11 @@ module.exports = class Select2 extends Base {
     }
 
     getItems (models) {
-        const items = [];
+        const result = {};
         for (const model of models) {
-            items.push({
-                id: model.getId(),
-                text: model.getTitle()
-            });
+            result[model.getId()] = model.getTitle();
         }
-        return items;
+        return result;
     }
 };
 module.exports.init();
