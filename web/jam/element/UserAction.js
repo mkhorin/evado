@@ -41,8 +41,8 @@ Jam.UserAction = class UserAction extends Jam.Element {
     }
 
     getModel () {
-        const modal = Jam.modal.getLast();
-        return modal ? Jam.Element.findInstanceByClass(Jam.Model, modal.$container) : null;
+        const frame = Jam.modalStack.getLast();
+        return frame ? Jam.Element.findInstanceByClass(Jam.Model, frame.$container) : null;
     }
 
     getParam (name, defaults) {
@@ -63,8 +63,8 @@ Jam.UserAction = class UserAction extends Jam.Element {
     }
 
     reload (callback) {
-        const modal = Jam.modal.getLast();
-        modal ? modal.reload().done(callback) : location.reload(true);
+        const frame = Jam.modalStack.getLast();
+        frame ? frame.reload().done(callback) : location.reload(true);
     }
 
     onFail (message) {
@@ -90,9 +90,9 @@ Jam.ModalUserAction = class ModalUserAction extends Jam.UserAction {
     execute () {
         Jam.ContentNotice.clear();
         this.constructor.confirm(this.$element).then(()=> {
-            const modal = Jam.modal.create();
-            modal.load(this.getParam('url'), this.getParam('params'));
-            modal.one('afterClose', (event, data) => this.onDone(data.result));
+            const frame = Jam.modalStack.createFrame();
+            frame.load(this.getParam('url'), this.getParam('params'));
+            frame.one('afterClose', (event, data) => this.onDone(data.result));
         });
     }
 
@@ -109,6 +109,6 @@ Jam.PostUserAction = class PostUserAction extends Jam.UserAction {
         Jam.ContentNotice.clear();
         Jam.UserAction.post(this.$element)
             .done(data => this.onDone(data))
-            .fail(xhr => xhr && this.onFail(xhr.responseText));
+            .fail(data => data && this.onFail(data.responseText));
     }
 };

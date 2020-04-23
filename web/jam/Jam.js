@@ -104,6 +104,10 @@ Jam.Element = class Element {
         return this.constructor.findInstanceByClass(instanceClass, this.$element);
     }
 
+    findInstanceByModal (modal = this.modal) {
+        return modal.findInstanceByClass(this.constructor);
+    }
+
     setInstance ($element) {
         return $element.data('jammed', this);
     }

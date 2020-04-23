@@ -14,7 +14,7 @@ Jam.List = class List extends Jam.Element {
         this.$commands = this.$grid.children('.list-commands');
         this.$modal = this.$container.closest('.jmodal');
         this.modal = this.$modal.data('modal');
-        this.childModal = Jam.modal.create();
+        this.childModal = Jam.modalStack.createFrame();
         this.$commands.prepend(this.$modal.find('.before-list-commands').children());
         this.$commands.append(this.$modal.find('.after-list-commands').children());
         Jam.Helper.sortChildrenByInteger(this.$commands);
@@ -298,8 +298,8 @@ Jam.List = class List extends Jam.Element {
     post (url, data) {
         this.toggleLoader(true);
         this.xhr = Jam.Helper.post(this.$container, url, data)
-            .always(() => this.toggleLoader(false))
-            .fail(xhr => this.notice.danger(xhr.responseText || xhr.statusText));
+            .always(()=> this.toggleLoader(false))
+            .fail(data => this.notice.danger(data.responseText || data.statusText));
         return this.xhr;
     }
 

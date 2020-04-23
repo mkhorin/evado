@@ -43,6 +43,10 @@ module.exports = class File extends Base {
         return this.get('mime').indexOf('image') === 0;
     }
 
+    isSvg () {
+        return this.get('mime').indexOf('image/svg+xml') === 0;
+    }
+
     getTitle () {
         return this.get('name');
     }

@@ -1,10 +1,13 @@
+/**
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
+ */
+'use strict';
+
 module.exports = {
 
     'Access blocked': 'Доступ заблокирован',
     'Access blocked for': 'Доступ заблокирован для',
     'Access denied': 'Доступ запрешен',
-    'Account is blocked': 'Аккаунт заблокирован',
-    'Account is blocked until {date}': 'Аккаунт заблокирован до {date}',
 
     'Back to main': 'Перейти на главную',
     'Bad request': 'Неверный запрос',
@@ -21,11 +24,9 @@ module.exports = {
     'Name': 'Имя',
     'New password': 'Новый пароль',
     'New password repeat': 'Повтор нового пароля',
-    'New password set': 'Новый пароль установлен',
 
     'Page not found': 'Страница не найдена',
     'Password': 'Пароль',
-    'Password changed': 'Пароль изменен',
     'Password must not be equal to the current password': 'Пароль не должно быть равен текущему',
     'Password repeat': 'Повтор пароля',
     'Password reset timed out': 'Истекло время сброса пароля',
@@ -34,7 +35,6 @@ module.exports = {
     'Registration completed': 'Регистрация завершена',
     'Remember me': 'Запомнить меня',
     'Reset key required': 'Требуется ключ сброса',
-    'Reset key sent to': 'Код сброса отправлен на',
     'Reset password': 'Сбросить пароль',
     'Request password reset': 'Запросить сброс пароля',
     'Request verification': 'Запросить подтверждение',
@@ -50,20 +50,32 @@ module.exports = {
     'Sign up': 'Регистрация',
     'Something went wrong': 'Что-то пошло не так',
 
-    'Request has already been sent. Try again {time}': 'Запрос уже был отправлен. Повторите попытку {time}',
-
-    'User is not verified': 'Пользователь не подтвержден',
     'User not found': 'Пользователь не найден',
 
     'Verification code': 'Проверочный код',
-    'Verification expired': 'Срок подтверждения истек',
-    'Verification invalid': 'Подтверждение недействительно',
-    'Verification key sent to': 'Код подтверждения отправлен на',
-    'Verification not found': 'Подтверждение не найдено',
 
     'We could not find the resource you were looking for': 'Мы не смогли найти ресурс, который вы искали',
     'We will work on fixing that right away': 'В ближайшее время мы это обязательно исправим',
 
     'You do not have permissions to access the requested resource': 'У вас нет прав доступа к запрашиваемому ресурсу',
-    'You password has expired': 'Срок действия вашего пароля истек',
+
+    'auth.accountBlocked': 'Аккаунт заблокирован',
+    'auth.accountBlockedUntil': 'Аккаунт заблокирован до {date}',
+    'auth.expiredPassword': 'Срок действия вашего пароля истек',
+    'auth.invalidAuth': 'Неверная аутентификация',
+    'auth.newPasswordSet': 'Новый пароль установлен',
+    'auth.passwordAlreadyUsed': 'Пароль уже использовался ранее',
+    'auth.passwordChanged': 'Пароль изменен',
+    'auth.registrationCompleted': 'Регистрация успешно завершена!',
+    'auth.resetKeySent': 'Код сброса отправлен на {email}',
+    'auth.requestAlreadySent': 'Запрос уже был отправлен. Повторите попытку {time}',
+    'auth.userAlreadyVerified': 'Пользователь уже подтвержден',
+    'auth.userNotFound': 'Пользователь не найден',
+    'auth.userNotVerified': 'Пользователь не подтвержден',
+    'auth.userVerified': 'Пользователь подтвержден',
+    'auth.verificationAlreadyDone': 'Подтверждение уже выполнено',
+    'auth.verificationExpired': 'Срок подтверждения истек',
+    'auth.verificationInvalid': 'Подтверждение недействительно',
+    'auth.verificationNotFound': 'Подтверждение не найдено',
+    'auth.verificationSent': 'Код подтверждения отправлен на {email}'
 };

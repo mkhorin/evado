@@ -12,10 +12,10 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
 
     activate () {
         if (this.canActivate()) {
-            this.$editor = this.$attr.find('.json-editor');
+            this.$editor = this.find('.json-editor');
             this.$alert = this.$editor.find('.alert');
             this.$text = this.$editor.find('textarea');
-            this.$attr.find('.edit').click(this.onEdit.bind(this));
+            this.find('.edit').click(this.onEdit.bind(this));
             this.$editor.find('.save').click(this.onSave.bind(this));
             this.activated = true;
         }

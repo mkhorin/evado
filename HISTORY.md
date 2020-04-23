@@ -1,6 +1,23 @@
+## 1.2.0
+
+* component/other/CommonSearch
+    - add search by object title     
+* component/other/DataGrid
+    - customize query limit    
+* component/security/PasswordAuthService
+    - replace messages to keys     
+* model/File
+    - check svg format          
+* model/auth/SignUpForm
+    - disable mandatory verification after sign up   
+* web/jam/data-grid/ColumnRenderer
+    - model data is available in each attribute value handler
+* web/jam/element/Modal
+    - refactor modal element names 
+
 ## 1.1.0
 
-* component/action/SortRelatedAction 
+* component/action/SortRelatedAction  
     - add 'with' query param 
     - add nested condition parser 
     - fix overridden models filter

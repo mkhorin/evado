@@ -37,5 +37,5 @@ module.exports = {
     'security/PasswordAuthService': require('../component/security/PasswordAuthService'),
     'security/PasswordValidator': require('../component/security/PasswordValidator'),
     'security/UserPassword': require('../component/security/UserPassword'),
-    'security/Verification': require('../component/security/Verification'),
+    'security/Verification': require('../component/security/Verification')
 };

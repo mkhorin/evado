@@ -14,6 +14,6 @@ Jam.i18n.translateDocument();
 Jam.createElements();
 Jam.Helper.executeSerialImageLoading();
 
-if (Jam.modal) {
-    Jam.modal.openFromUrl(location.search);
+if (Jam.modalStack) {
+    Jam.modalStack.openFromUrl(location.search);
 }

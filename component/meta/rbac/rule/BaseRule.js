@@ -7,11 +7,11 @@ const Base = require('areto/security/rbac/Rule');
 
 module.exports = class BaseRule extends Base {
 
-    isAllow () {
+    isAllowType () {
         return this.item.type === Rbac.ALLOW;
     }
 
-    isDeny () {
+    isDenyType () {
         return this.item.type === Rbac.DENY;
     }
 
@@ -21,6 +21,10 @@ module.exports = class BaseRule extends Base {
 
     getTarget () {
         return this.inspector.target;
+    }
+
+    getPostData () {
+        return this.params.controller.getPostParam('data');
     }
 
     async execute () {

@@ -34,7 +34,7 @@ module.exports = class FileStorage extends Base {
         return FileHelper.getStat(this.getPath(filename));
     }
 
-    hasThumbnail () {
+    isThumbnailEnabled () {
         return Object.values(this.thumbnail.sizes).length > 0;
     }
 

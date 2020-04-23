@@ -132,8 +132,8 @@ module.exports = class BaseController extends Base {
             searchAttrs: ['name', 'label'],
             ...params
         };
-        const request = this.getPostParams();
-        const result = await (new Select2({request, query, params})).getList();
+        const select2 = new Select2({controller: this, query, params});
+        const result = await select2.getList();
         this.sendJson(result);
     }
 };

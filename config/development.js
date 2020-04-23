@@ -12,7 +12,6 @@ module.exports = {
             level: 'trace'
         },
         'metaHub': {
-            // inspectionEnabled: false
         }
     },
     metaModels: {

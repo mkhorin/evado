@@ -16,11 +16,6 @@ module.exports = class MetaSecurity extends Base {
         };
     }
 
-    canReadAttr (attr) {
-        return this.attrAccess.canRead(attr.name)
-            && (!attr.relation || this.relationAccessMap[attr.name].canRead());
-    }
-
     getForbiddenAttrs (action) {
         return this.attrAccess.forbiddenAttrMap[action];
     }
@@ -169,22 +164,22 @@ module.exports = class MetaSecurity extends Base {
         }
     }
 
-    async resolveReadForbiddenAttrs (models, view) {
+    async resolveForbiddenReadAttrs (models, view) {
         if (this.attrAccess.hasAnyObjectTargetData(view.class.name)) {
             for (const model of models) {
-                if (!model.hasOwnProperty('readForbiddenAttrs')) {
+                if (model.forbiddenReadAttrs === undefined) {
                     const data = await this.attrAccess.resolveObjectTarget(model);
-                    model.readForbiddenAttrs = data ? data[Rbac.READ] : false;
+                    model.forbiddenReadAttrs = data ? data[Rbac.READ] : null;
                 }
             }
         }
     }
 
-    getReadForbiddenAttrMap () {
+    getForbiddenReadAttrs () {
         return this.attrAccess.forbiddenAttrMap[Rbac.READ];
     }
 
-    getReadForbiddenRelationMap (view) {
+    getForbiddenReadRelationMap (view) {
         const result = {};
         for (const {name} of view.relationAttrs) {
             result[name] = !this.relationAccessMap[name].canRead();

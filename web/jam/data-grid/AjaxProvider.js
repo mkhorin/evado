@@ -38,8 +38,8 @@ Jam.DataGridAjaxProvider = class DataGridAjaxProvider {
         };
     }
 
-    fail (xhr) {
-        this.grid.fail(xhr);
+    fail (data) {
+        this.grid.fail(data);
     }
 
     abort () {

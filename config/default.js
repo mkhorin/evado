@@ -33,6 +33,7 @@ module.exports = {
         },
         'i18n': {
             sources: {
+                'app': {forceTranslation: true},
                 'mail': {forceTranslation: true}
             }
         },
@@ -66,8 +67,7 @@ module.exports = {
         },
         'metaHub': {
             Class: require('../component/meta/MetaHub'),            
-            rbacTablePrefix: 'sys_rbac_',
-            inspectionEnabled: true
+            rbacTablePrefix: 'sys_rbac_'
         },
         'notifier': {
             Class: require('../component/notifier/Notifier'),
@@ -90,35 +90,9 @@ module.exports = {
             hidden: true
         }
     },
-    params: {
-        'allowSignUp': false,
-        'allowPasswordReset': false,
-        'passwordChangeUrl': '/auth/change-password',
-        'expiredPasswordMessage': 'You password has expired',
-        'userPasswordValidator': {
-            min: 6,
-            max: 24
-        },
-        'oldUserPasswords': 0,
-        'minUserPasswordLifetime': 'P10D', // see ISO_8601#Duration
-        'maxUserPasswordLifetime': 'P30D',
-        'verificationLifetime': 'P1D',
-        'repeatVerificationTimeout': 'P1D',
-        'captcha': {
-            minLength: 4,
-            maxLength: 5
-        },
-        'static': {
-        },
-        'template': {
-            engine: require('areto-ejs'),
-            extension: 'ejs'
-        },
-        'serverAddress': 'http://localhost',
-        'userUpdateUrl': `/admin/user?modal=${encodeURIComponent('admin/user/update?id=')}`
-    },
     assets: require('./default-assets'),
     classes: require('./default-classes'),
+    params: require('./default-params'),
     utilities: require('./default-utilities'),
     widgets: {
         'commonMenu': {

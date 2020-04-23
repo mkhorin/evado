@@ -14,14 +14,15 @@ describe('MetaHelper', ()=> {
         expect(MetaHelper.isSystemName('name')).to.eql(false);
     });
 
-    it('createTitle', ()=> {
+    it('createLabel', ()=> {
         const data = {
             label: 'Custom title',
             name: 'sourceTitle'
         };
-        expect(MetaHelper.createTitle({data})).to.eql('Custom title');
+        expect(MetaHelper.createLabel({data})).to.eql('Custom title');
         delete data.label;
-        expect(MetaHelper.createTitle({data})).to.eql('Source title');
+        expect(MetaHelper.createLabel({data})).to.eql('Source title');
+        expect(data.label).to.eql('Source title');
     });
 
     it('addClosingChar', ()=> {

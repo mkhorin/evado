@@ -20,8 +20,8 @@ Jam.Model = class Model extends Jam.Element {
         this.params = $form.data('params') || {};
         this.saved = false;
         this.id = this.params.id;
-        this.childModal = Jam.modal.create();
-        this.modal = this.$container.closest('.jmodal').data('modal');
+        this.childModal = Jam.modalStack.createFrame();
+        this.modal = Jam.modalStack.getFrame(this.$container);
     }
 
     init () {
@@ -104,7 +104,7 @@ Jam.Model = class Model extends Jam.Element {
     beforeClose (event) {
         let confirmation = this.params.closeConfirmation;
         if (this.isChanged() && confirmation !== false) {
-            event.deferred = Jam.dialog.confirm(confirmation || 'Close without saving changes?');
+            event.deferred = Jam.dialog.confirm(confirmation || 'Close without saving?');
         }
         const message = this.inProgress();
         if (message) {
@@ -243,8 +243,8 @@ Jam.Model = class Model extends Jam.Element {
             this.changeTracker.reset();
             this.events.trigger('afterSave');
             this.modal.close();
-        }).fail(xhr => {
-            this.error.parse(xhr.responseJSON || xhr.responseText);
+        }).fail(data => {
+            this.error.parse(data.responseJSON || data.responseText);
         }).always(()=> {
             this.$loader.hide();
         });
@@ -257,8 +257,8 @@ Jam.Model = class Model extends Jam.Element {
             this.changeTracker.reset();
             this.events.trigger('afterDelete');
             this.modal.close();
-        }).fail(xhr => {
-            this.notice.danger(xhr.responseText || xhr.statusText);
+        }).fail(data => {
+            this.notice.danger(data.responseText || data.statusText);
             this.$loader.hide();
         });
     }

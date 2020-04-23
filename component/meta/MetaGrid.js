@@ -36,6 +36,10 @@ module.exports = class MetaGrid extends Base {
         return this._result;
     }
 
+    getMaxLimit () {
+        return this.meta.view.options.listLimit || this.MAX_LIMIT;
+    }
+
     setOrder () {
         const order = this.request.order;
         if (!order) {
@@ -75,8 +79,8 @@ module.exports = class MetaGrid extends Base {
         if (!this._models.length) {
             return this._models;
         }
-        this._forbiddenAttrs = this.security.getReadForbiddenAttrMap();
-        this._forbiddenRelationMap = this.security.getReadForbiddenRelationMap(this.meta.view);
+        this._forbiddenAttrs = this.security.getForbiddenReadAttrs();
+        this._forbiddenRelationMap = this.security.getForbiddenReadRelationMap(this.meta.view);
         this._columnMap = this.controller.extraMeta.getData(this.meta.view).columnMap;
         this._attrTemplateMap = this.getAttrTemplateMap();
         return PromiseHelper.map(this._models, this.renderModel, this);
@@ -113,15 +117,17 @@ module.exports = class MetaGrid extends Base {
         } else if (this._attrTemplateMap[name]) {
             const content = await this.actionView.render(this._attrTemplateMap[name], {attr, model});
             result[name] = `<!--handler: ${name}-->${content}`;
+        } else if (name === this.ROW_KEY) {
+            result[name] = model.getId();
         } else {
-            result[name] = name === this.ROW_KEY ? model.getId() : this.renderAttr(attr, model);
+            result[name] = this.renderAttr(attr, model, result);
         }
     }
 
     isForbiddenAttr (name, model) {
         return this._forbiddenRelationMap[name] === true
             || this._forbiddenAttrs && this._forbiddenAttrs.includes(name)
-            || model.readForbiddenAttrs && model.readForbiddenAttrs.includes(name);
+            || model.forbiddenReadAttrs && model.forbiddenReadAttrs.includes(name);
     }
 
     setForbiddenAttr (name, result) {
@@ -132,7 +138,7 @@ module.exports = class MetaGrid extends Base {
         }
     }
 
-    renderAttr (attr, model) {
+    renderAttr (attr, model, result) {
         if (model.hasDisplayValue(attr)) {
             return model.getDisplayValue(attr);
         }
@@ -143,21 +149,20 @@ module.exports = class MetaGrid extends Base {
         if (value instanceof Date) {
             return value.toISOString();
         }
-        if (value) {
-            if (attr.isEmbeddedModel()) {
-                return model.related.getTitle(attr);
-            }
-            if (attr.isFile()) {
-                return this.renderFileAttr(attr, model);
-            }
-            if (attr.isState()) {
-                const state = model.class.getState(value);
-                return state ? state.title : value;
-            }
-            if (attr.isClass()) {
-                const metaClass = model.class.meta.getClass(value);
-                return metaClass ? metaClass.title : value;
-            }
+        if (!value) {
+            return value;
+        }
+        if (attr.isFile()) {
+            return this.renderFileAttr(attr, model);
+        }
+        if (attr.isEmbeddedModel()) {
+            result[this._columnMap[attr.name].titleName] = model.related.getTitle(attr);
+        } else if (attr.isState()) {
+            const state = model.class.getState(value);
+            result[this._columnMap[attr.name].titleName] = state ? state.title : null;
+        } else if (attr.isClass()) {
+            const metaClass = model.class.meta.getClass(value);
+            result[this._columnMap[attr.name].titleName] = metaClass ? metaClass.title : null;
         }
         return value;
     }

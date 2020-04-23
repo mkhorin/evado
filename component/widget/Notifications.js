@@ -32,9 +32,9 @@ module.exports = class Notifications extends Base {
         await this.user.readMessage(id);
         const data = await this.getUnreadMessages();
         data.message = {
-          subject: model.get('subject'),
-          text: model.get('text'),
-          sentAt: model.get('sentAt')
+            subject: model.get('subject'),
+            text: model.get('text'),
+            sentAt: model.get('sentAt')
         };
         return data;
     }
@@ -42,7 +42,8 @@ module.exports = class Notifications extends Base {
     async getUnreadMessages () {
         const items = [];
         const ids = await this.user.findUnreadMessages().column('message');
-        if (ids.length > 0) {
+        const counter = ids.length;
+        if (counter > 0) {
             const message = this.spawn('notifier/NoticeMessage');
             const models = await message.findById(ids).order({[message.PK]: -1}).limit(5).all();
             for (const model of models) {
@@ -52,7 +53,7 @@ module.exports = class Notifications extends Base {
                 });
             }
         }
-        return {counter: ids.length, items};
+        return {counter, items};
     }
 
 };

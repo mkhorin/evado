@@ -19,6 +19,4 @@ describe('SelectHelper', ()=> {
         ]);
         expect(SelectHelper.getMapItems(null)).to.eql([]);
     });
-
-
 });

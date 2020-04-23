@@ -11,7 +11,7 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
     }
 
     init () {
-        this.$uploader = this.$attr.find('.uploader');
+        this.$uploader = this.find('.uploader');
         this.fileMessageSelector = '.uploader-message';
         this.uploader = Jam.Uploader.create(this.$uploader);
         this.uploader.on('select', this.onSelectFile.bind(this));
@@ -107,8 +107,8 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
 
     onConfirmFileDeletion (event, data) {
         const message = this.$uploader.data('deletionConfirm');
-        const deferred = message ? Jam.dialog.confirmDeletion(message) : $.when();
-        deferred.then(() => data.delete());
+        const deferred = message ? Jam.dialog.confirmDeletion(message) : null;
+        $.when(deferred).then(() => data.delete());
     }
 
     onDeleteFile (event, {info}) {

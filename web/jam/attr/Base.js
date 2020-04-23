@@ -38,6 +38,7 @@ Jam.ModelAttr = class ModelAttr {
 
     init () {
         this.activate();
+        this.toggleBlank();
         Jam.Behavior.createAll(this.getData('behaviors'), this);
     }
 
@@ -126,14 +127,16 @@ Jam.ModelAttr = class ModelAttr {
         this.$value.change();
     }
 
-    setBlank () {
+    toggleBlank () {
         this.$attr.toggleClass('blank', !this.hasValue());
     }
 
+    find () {
+        return this.$attr.find(...arguments);
+    }
+
     findByData (key, value) {
-        return this.$attr.find(value === undefined
-            ? `[data-${key}="${value}"]`
-            : `[data-${key}]`);
+        return this.find(value === undefined ? `[data-${key}="${value}"]` : `[data-${key}]`);
     }
 
     serialize () {
@@ -161,7 +164,7 @@ Jam.CheckboxModelAttr = class CheckboxModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.$checkbox = this.$attr.find('[type="checkbox"]');
+        this.$checkbox = this.find('[type="checkbox"]');
         this.$checkbox.change(this.onChangeCheckbox.bind(this));
     }
 
@@ -190,7 +193,7 @@ Jam.CheckboxListModelAttr = class CheckboxListModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.$checks = this.$attr.find('[type="checkbox"]');
+        this.$checks = this.find('[type="checkbox"]');
         this.$checks.change(this.onChangeCheckbox.bind(this));
         this.allValue = this.getData('all');
         this.allValue = this.allValue === true ? 'all' : this.allValue;
@@ -243,7 +246,7 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
     }
 
     activate () {
-        this.$picker = this.$attr.find('.datepicker');
+        this.$picker = this.find('.datepicker');
         if (this.$picker.length) {
             this.createPicker();
         }
@@ -333,7 +336,7 @@ Jam.RadioListModelAttr = class RadioListModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.$radioItems = this.$attr.find('[type="radio"]');
+        this.$radioItems = this.find('[type="radio"]');
         this.$radioItems.change(this.onChangeValue.bind(this));
         this.setValue(this.$value.val());
     }
@@ -368,7 +371,7 @@ Jam.StoreLastSavedValueBehavior = class StoreLastSavedValueBehavior extends Jam.
         this.defaultValue = this.owner.getValue();
         const selector = this.params.defaultValueSelector;
         if (selector) {
-            this.owner.$attr.find(selector).click(this.onDefaultValue.bind(this));
+            this.owner.find(selector).click(this.onDefaultValue.bind(this));
         }
         this.setStoreValue();
         this.model.events.one('afterSave', this.onSaveModel.bind(this));

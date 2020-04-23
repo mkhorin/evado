@@ -6,7 +6,7 @@
 Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
 
     init () {
-        this.$list = this.$attr.find('.value-map-items');
+        this.$list = this.find('.value-map-items');
         this.$list.on('click', '[data-id="add"]', this.onAddItem.bind(this));
         this.$list.on('click', '[data-id="down"]', this.onDownItem.bind(this));
         this.$list.on('click', '[data-id="up"]', this.onUpItem.bind(this));

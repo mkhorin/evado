@@ -39,10 +39,13 @@ Jam.Helper = class Helper {
     }
 
     static formatSelectItems (items) {
-        if (Array.isArray(items)) {
-            return items;
+        if (!Array.isArray(items)) {
+            items = items ? Object.keys(items).map(value => ({value, text: items[value]})) : [];
         }
-        return items ? Object.keys(items).map(value => ({value, text: items[value]})) : [];
+        for (let item of items) {
+            item.id = item.value; // for select2
+        }
+        return items;
     }
 
     static resetFormElement ($element) {

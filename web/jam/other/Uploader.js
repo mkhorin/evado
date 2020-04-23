@@ -403,9 +403,9 @@ Jam.UploaderFile = class UploaderFile {
         this.xhr = new XMLHttpRequest;
         this.xhr.open('POST', this.uploader.options.upload);
         if (this.xhr.upload) {
-            this.xhr.upload.addEventListener('progress', event => this.progressUploading(event), false);
+            this.xhr.upload.addEventListener('progress', this.progressUploading.bind(this), false);
         }
-        this.xhr.onreadystatechange = event => this.changeReadyState(event);
+        this.xhr.onreadystatechange = this.changeReadyState.bind(this);
         const data = new FormData;
         data.append(this.uploader.options.attrName, this.file.name);
         data.append(this.uploader.options.attrName, this.file);

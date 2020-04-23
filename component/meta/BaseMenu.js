@@ -12,7 +12,7 @@ module.exports = class BaseMenu extends Base {
         const section = nav.getSection('main', this.module.NAME);
         const activeItem = this.controller.meta && this.controller.meta.node;
         const openedItems = activeItem ? activeItem.getParents() : [];
-        const items = openedItems.slice(0).concat(section.children);
+        const items = [...openedItems, ...section.children];
         const forbiddenAccess = await this.resolveAccess({section, items});
         return this.renderTemplate('_part/nav/sideMenu', {
             section,

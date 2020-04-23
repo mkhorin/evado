@@ -7,7 +7,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     constructor () {
         super(...arguments);
-        this.$select = this.$attr.find('select');
+        this.$select = this.find('select');
         this.selectParams = this.$select.data('params');
         this.initChanges();
     }
@@ -31,7 +31,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             return false;
         }
         this.activated = true;
-        this.childModal = Jam.modal.create();
+        this.childModal = Jam.modalStack.createFrame();
         this.params = {
             pageSize: 10,
             inputDelay: 500,
@@ -54,7 +54,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
         this.createSelect2();
         this.getDefaultTitles();
-        this.setBlank();
+        this.toggleBlank();
         this.bindDependencyChange();
     }
 
@@ -84,12 +84,12 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.changes.links = [];
         this.setValueByChanges();
         this.$select.val('').trigger('change.select2');
-        this.setBlank();
+        this.toggleBlank();
     }
 
     setValue (value) {
         this.$value.val(value);
-        this.setBlank();
+        this.toggleBlank();
     }
 
     setValueByChanges () {
@@ -172,10 +172,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     processResults (data, params) {
         params.page = params.page || 1;
         return {
-            pagination: {
-                more: (params.page * this.params.pageSize) < data.total
-            },
-            results: data.items
+            pagination: {more: (params.page * this.params.pageSize) < data.total},
+            results: Jam.Helper.formatSelectItems(data.items)
         };
     }
 
@@ -238,7 +236,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         if (this.setValueByChanges()) {
             this.triggerChange();
         }
-        this.setBlank();
+        this.toggleBlank();
     }
 
     linkValue (value) {
@@ -287,8 +285,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     onDelete () {
         const values = this.getSelectedValues();
         if (values.length) {
-            const def = this.params.confirmDeletion ? Jam.dialog.confirmListDeletion() : $.when();
-            def.then(this.delete.bind(this, values));
+            const deferred = this.params.confirmDeletion ? Jam.dialog.confirmListDeletion() : null;
+            $.when(deferred).then(() => this.delete(values));
         }
     }
 

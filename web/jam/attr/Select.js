@@ -25,12 +25,12 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
             this.createDependencies();
         }
         this.activated = true;
-        this.setBlank();
+        this.toggleBlank();
     }
 
     setValue (value) {
         this.$value.val(value).trigger('change.select2');
-        this.setBlank();
+        this.toggleBlank();
     }
 
     onUpdate () {
@@ -41,7 +41,7 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         const url = this.$update.data('url');
         this.$update.data('blank')
             ? Jam.UrlHelper.openNewPage(url + id)
-            : Jam.Modal.load(this.model.childModal, url, {id});
+            : Jam.ModalStack.load(this.model.childModal, url, {id});
     }
 
     createDependencies () {
@@ -99,7 +99,7 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
     }
 
     onChangeSelect () {
-        this.setBlank();
+        this.toggleBlank();
     }
 
     getAjaxParams (params) {
@@ -139,14 +139,7 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         const more = ((params.page || 1) * this.select2.pageSize) < data.total;
         return {
             pagination: {more},
-            results: items.map(this.processResultItem, this)
+            results: Jam.Helper.formatSelectItems(items)
         };
-    }
-
-    processResultItem (item) {
-        if (item.value) {
-            item.id = item.value;
-        }
-        return item;
     }
 };

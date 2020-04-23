@@ -42,7 +42,7 @@ Jam.ModelTools = class ModelTools {
         name = 'handler' + (name ? Jam.StringHelper.toFirstUpperCase(name) : 'Default');
         const handler = this[name]($elem);
         if (handler && handler.fail && handler.always) {
-            handler.fail(xhr => this.alertFail(xhr.responseText));
+            handler.fail(data => this.alertFail(data.responseText));
             handler.always(()=> this.toggleLoading(false));
         }
     }

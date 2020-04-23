@@ -36,6 +36,10 @@ module.exports = class RawFile extends Base {
         return this.get('mime').indexOf('image') === 0;
     }
 
+    isSvg () {
+        return this.get('mime').indexOf('image/svg+xml') === 0;
+    }
+
     getName () {
         return this.get('name');
     }

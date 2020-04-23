@@ -10,11 +10,16 @@ module.exports = class MetaParams {
         this.security = null;
     }
 
-    isReadOnlyAttr (attr, model) {
-        return model.readOnly
-            || this.master.refAttr === attr
-            || attr.isReadOnly()
-            || this.security.attrAccess.canWrite(attr.name) !== true;
+    canReadAttr (attr, model) {
+        return this.security.attrAccess.canRead(attr.name)
+            && (!attr.relation || this.security.relationAccessMap[attr.name].canRead());
+    }
+
+    canUpdateAttr (attr, model) {
+        return !model.readOnly
+            && this.master.refAttr !== attr
+            && !attr.isReadOnly()
+            && this.security.attrAccess.canWrite(attr.name);
     }
 
     getMasterQueryParam () {

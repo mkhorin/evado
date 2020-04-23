@@ -9,8 +9,11 @@ module.exports = class MetaHelper {
         return name.charAt(0) === '_';
     }
 
-    static createTitle ({data}) {
-        return data.label || StringHelper.generateLabel(data.name);
+    static createLabel ({data}) {
+        if (!data.label) {
+            data.label = StringHelper.generateLabel(data.name);
+        }
+        return data.label;
     }
 
     static addClosingChar (text, char) {
@@ -117,13 +120,13 @@ module.exports = class MetaHelper {
         }
     }
 
-    static getModelValueList (models, attrs) {
-        let values = [];
+    static getModelValues (models, attrs) {
+        const values = [];
         for (const attr of attrs) {
             for (const model of models) {
                 const value = model.get(attr.name);
-                if (value !== undefined) {
-                    values = values.concat(value);
+                if (value !== null && value !== undefined) {
+                    Array.isArray(value) ? values.push(...value) : values.push(value);
                 }
             }
         }

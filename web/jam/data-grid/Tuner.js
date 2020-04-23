@@ -106,7 +106,8 @@ Jam.DataGridTuner = class DataGridTuner {
     load () {
         const {items, grouping} = Jam.store.get(this.getStoreKey()) || {};
         if (!this.checkStoreItems(items)) {
-            return this.save();
+            this.save();
+            return this.load();
         }
         if (items.length === 1) {
             items[0].hidden = false;

@@ -7,7 +7,7 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.$grid = this.$attr.find('.data-grid');
+        this.$grid = this.find('.data-grid');
         this.gridParams = this.$grid.data('params');
         this.initChanges();
     }
@@ -119,7 +119,7 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     afterLoad () {
         super.afterLoad();
-        this.attr.setBlank();
+        this.attr.toggleBlank();
     }
 
     setValue () {
@@ -173,8 +173,8 @@ Jam.AttrList = class AttrList extends Jam.List {
     onDelete () {
         const $rows = this.getSelectedRows();
         if ($rows) {
-            const deferred = this.params.confirmDeletion ? Jam.dialog.confirmListDeletion() : $.when();
-            deferred.then(() => this.deleteObjects($rows));
+            const deferred = this.params.confirmDeletion ? Jam.dialog.confirmListDeletion() : null;
+            $.when(deferred).then(() => this.deleteObjects($rows));
         }
     }
 

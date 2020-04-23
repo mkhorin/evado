@@ -27,7 +27,7 @@ module.exports = class RateLimit extends Base {
         let model = await this.find({type, ip}).one();
         if (!model) {
             model = model || this;
-            model.assignAttrs({type, ip});
+            model.assign({type, ip});
         }
         return model;
     }

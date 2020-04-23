@@ -300,8 +300,8 @@ Jam.ListFilterType = class ListFilterType {
         this.filter = condition.filter;
         this.name = params.type;
         this.params = {
-            ...params,
-            ...this.filter.getTypeParams(this.name)
+            ...this.filter.getTypeParams(this.name),
+            ...params
         };
         this.init();
     }
@@ -491,7 +491,7 @@ Jam.SelectorListFilterType = class SelectorListFilterType extends Jam.ListFilter
         this.params = {
             pageSize: 10,
             inputDelay: 500,
-            minInputLength: 1,
+            minInputLength: 2,
             maxInputLength: 24,
             placeholder: '',
             valueType: 'id',
@@ -544,9 +544,11 @@ Jam.SelectorListFilterType = class SelectorListFilterType extends Jam.ListFilter
 
     processResults (data, params) {
         params.page = params.page || 1;
+        const items = data.items || data;
+        const more = params.page * this.params.pageSize < data.total;
         return {
-            pagination: {more: (params.page * this.params.pageSize) < data.total},
-            results: data.items
+            pagination: {more},
+            results: Jam.Helper.formatSelectItems(items)
         };
     }
 
