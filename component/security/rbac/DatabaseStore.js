@@ -123,7 +123,7 @@ module.exports = class DatabaseStore extends Base {
     }
 
     getItemKey (data) {
-        const view = `${data.view}.${data.class}`;
+        const view = `${data.view || ''}.${data.class}`;
         switch (data.type) {
             case this.rbac.ALL:
                 return this.rbac.ALL;
@@ -134,11 +134,11 @@ module.exports = class DatabaseStore extends Base {
             case this.rbac.TARGET_STATE:
                 return `${data.state}.${view}`;
             case this.rbac.TARGET_OBJECT:
-                return `${data.object}.${data.state}.${view}`;
+                return `${data.object || ''}.${data.state || ''}.${view}`;
             case this.rbac.TARGET_TRANSITION:
-                return `${data.transition}.${data.object}.${data.class}`;
+                return `${data.transition}.${data.object || ''}.${data.class}`;
             case this.rbac.TARGET_ATTR:
-                return `${data.attr}.${data.object}.${data.state}.${view}`;
+                return `${data.attr}.${data.object || ''}.${data.state || ''}.${view}`;
             case this.rbac.TARGET_NAV_SECTION:
                 return `${data.navSection}`;
             case this.rbac.TARGET_NAV_NODE:
