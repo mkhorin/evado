@@ -18,14 +18,14 @@ module.exports = class MetaUtility extends Base {
         return id && view ? view.findById(id, this.controller.getSpawnConfig()) : null;
     }
 
-    resolveDocMeta (data = this.postParams.meta) {
+    resolveBaseMeta (data = this.postParams.meta) {
         if (typeof data !== 'string') {
             return data;
         }
         const index = data.indexOf('.');
         const className = data.substring(index + 1);
         const viewName = data.substring(0, index);
-        const meta = this.module.getMeta('document');
+        const meta = this.module.getBaseMeta();
         const result = {};
         result.class = meta.getClass(className);
         if (result.class) {

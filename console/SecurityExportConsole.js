@@ -11,7 +11,7 @@ module.exports = class SecurityExportConsole extends Base {
         this.data = await this.getStore().loadData();
         this.assignmentRuleMap = IndexHelper.indexObjects(this.data.assignmentRules, this.getKey());
         this.childMap = IndexHelper.indexObjectArrays(this.data.links, 'parent', 'child');
-        //this.userMap = await this.app.spawn('model/User').find().raw().indexById().all();
+        //this.userMap = await this.app.spawn('model/User').find().raw().indexByKey().all();
 
         const data = {
             rules: this.getRules(),
@@ -170,7 +170,7 @@ module.exports = class SecurityExportConsole extends Base {
     async getUsers () {
         const key = this.key;
         const password = this.app.spawn('security/UserPassword');
-        const passwordMap = await password.find().orderById().raw().index('user').all();
+        const passwordMap = await password.find().orderByKey().raw().index('user').all();
         const result = [];
         for (const item of Object.values(this.userMap)) {
             const password = passwordMap[item[key]];

@@ -50,6 +50,7 @@ module.exports = {
     'Sign up': 'Регистрация',
     'Something went wrong': 'Что-то пошло не так',
 
+    'Upload limit reached': 'Достигнут предел загрузки',
     'User not found': 'Пользователь не найден',
 
     'Verification code': 'Проверочный код',
@@ -66,7 +67,7 @@ module.exports = {
     'auth.newPasswordSet': 'Новый пароль установлен',
     'auth.passwordAlreadyUsed': 'Пароль уже использовался ранее',
     'auth.passwordChanged': 'Пароль изменен',
-    'auth.registrationCompleted': 'Регистрация успешно завершена!',
+    'auth.registrationCompleted': 'Регистрация успешно завершена',
     'auth.resetKeySent': 'Код сброса отправлен на {email}',
     'auth.requestAlreadySent': 'Запрос уже был отправлен. Повторите попытку {time}',
     'auth.userAlreadyVerified': 'Пользователь уже подтвержден',

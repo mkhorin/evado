@@ -117,8 +117,6 @@ module.exports = class ListFilter extends Base {
     }
 
     parseEmptyRelation ({relation}) {
-        //model.getNotRelatedIds(relation);
-        // return Array.isArray(value) ? this.formatSelectorCondition(model.PK, op, value) : null;
         return null;
     }
 

@@ -197,7 +197,7 @@ module.exports = class Rbac extends Base {
     }
 
     load () {
-        this.docMeta = this.metaHub.get('document');
+        this.baseMeta = this.metaHub.get('base');
         this.navMeta = this.metaHub.get('navigation');
         return super.load();
     }
@@ -224,7 +224,7 @@ module.exports = class Rbac extends Base {
         for (const item of this.metaItems) {
             const index = item.key.lastIndexOf('.');
             const prefix = index < 0 ? '' : item.key.substring(0, index + 1);
-            const metaClass = this.docMeta.getClass(item.class);
+            const metaClass = this.baseMeta.getClass(item.class);
             if (metaClass) {
                 for (const {name} of metaClass.getDescendants()) {
                     const child = Object.assign({}, item);

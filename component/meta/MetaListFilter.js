@@ -62,7 +62,13 @@ module.exports = class MetaListFilter extends Base {
         let relation = this.getRelation(attr);
         let value = this.formatByValueType(...arguments) || null;
         if (relation.isRef()) {
-            return this.formatSelectorCondition(attr, op, value);
+            let condition = this.formatSelectorCondition(attr, op, value);
+            if (!relation.multiple || value !== null) {
+                return condition;
+            }
+            return op === 'equal'
+                ? ['OR', condition, {[attr]: []}]
+                : ['AND', condition, ['NOT EQUAL', attr, []]];
         }
         if (!value) {
             return ['FALSE'];

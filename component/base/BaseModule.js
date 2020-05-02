@@ -15,6 +15,10 @@ module.exports = class BaseModule extends Base {
         return this.components.get('mailer');
     }
 
+    getBaseMeta () {
+        return this.getMeta('base');
+    }
+
     getMeta (name) {
         return this.getMetaHub().get(name);
     }

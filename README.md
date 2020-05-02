@@ -15,6 +15,7 @@ Build a web app by declaring entities and relations without coding.
 - [Blog App](https://github.com/mkhorin/evado-app-blog)
 - [Cinema App](https://github.com/mkhorin/evado-app-cinema)
 - [E-government App](https://github.com/mkhorin/evado-app-egov)
+- [Expert System App](https://github.com/mkhorin/evado-app-expert)
 - [Shop App](https://github.com/mkhorin/evado-app-shop)
 
 ### Ready to use

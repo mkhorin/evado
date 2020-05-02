@@ -53,6 +53,9 @@ Jam.ColumnRenderer = class ColumnRenderer {
         if (value === undefined || value === null) {
             return this.asNotSet(value, column);
         }
+        if (Array.isArray(value) && !value.length) {
+            return this.asNotSet(null, column);
+        }
         if (column.escape === undefined) {
             column.escape = true;
         }

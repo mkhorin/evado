@@ -148,6 +148,10 @@ Jam.Helper = class Helper {
                 : 0;
         }).appendTo($container);
     }
+
+    static getRandom (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 };
 
 Jam.ArrayHelper = class ArrayHelper {

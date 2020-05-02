@@ -53,10 +53,10 @@ module.exports = class MetaObjectFilter extends Base {
     }
 
     getClass (item) {
-        if (!this.rbac.docMeta) {
+        if (!this.rbac.baseMeta) {
             return null;
         }
-        const metaClass = this.rbac.docMeta.getClass(item.class);
+        const metaClass = this.rbac.baseMeta.getClass(item.class);
         if (metaClass) {
             return metaClass;
         }

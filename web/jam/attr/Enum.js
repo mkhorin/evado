@@ -77,7 +77,7 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
     init () {
         super.init();
         this.sets = Jam.EnumSet.createSets(this.getData('sets'), this);
-        this.$list = this.find('.radio-items');
+        this.$list = this.find('.radio-list');
         this.$list.on('change', '[type="radio"]', this.changeValue.bind(this));
         this.model.events.on('change', this.onUpdate.bind(this));
         setTimeout(this.onUpdate.bind(this), 0);

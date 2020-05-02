@@ -72,11 +72,11 @@ module.exports = class AuthController extends Base {
         if (!user) {
             return this.render('signUp', {model});
         }
-        const message = user.isVerified() ? 'auth.registrationCompleted' : 'auth.verificationSent';
-        return this.render('alert', {
-            type: 'info',
-            message: this.translate(message, {email: model.get('email')})
-        });
+        let verified = user.isVerified();
+        let type = verified ? 'success' : 'info';
+        let message = verified ? 'auth.registrationCompleted' : 'auth.verificationSent';
+        message = this.translate(message, {email: model.get('email')});
+        return this.render('alert', {type, message});
     }
 
     async actionChangePassword () {
@@ -147,11 +147,11 @@ module.exports = class AuthController extends Base {
     }
 
     canSignUp () {
-        return this.module.getParam('allowSignUp');
+        return this.module.getParam('enableSignUp');
     }
 
     canResetPassword () {
-        return this.module.getParam('allowPasswordReset');
+        return this.module.getParam('enablePasswordReset');
     }
 
     blockByRateLimit (model) {

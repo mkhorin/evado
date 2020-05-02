@@ -29,7 +29,7 @@ module.exports = class SignUpForm extends Base {
             return false;
         }        
         try {
-            this.set('verified', this.module.getParam('disableSignUpVerification') === true);
+            this.set('verified', !this.module.getParam('enableSignUpVerification'));
             const service = this.spawn('security/PasswordAuthService');
             const user = await service.register(this.getAttrMap());
             if (!user.isVerified()) {

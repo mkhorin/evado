@@ -12,7 +12,7 @@ module.exports = {
     'auth.newPasswordSet': 'New password set',
     'auth.passwordAlreadyUsed': 'Password has already been used before',
     'auth.passwordChanged': 'Password changed',
-    'auth.registrationCompleted': 'Registration successfully completed!',
+    'auth.registrationCompleted': 'Registration successfully completed',
     'auth.resetKeySent': 'Reset key sent to {email}',
     'auth.requestAlreadySent': 'Request has already been sent. Try again {time}',
     'auth.userAlreadyVerified': 'User is already verified',

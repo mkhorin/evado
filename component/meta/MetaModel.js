@@ -5,7 +5,7 @@
 
 const Base = require('areto/base/Base');
 
-module.exports = class BaseMetaModel extends Base {
+module.exports = class MetaModel extends Base {
 
     getDb () {
         return this.hub.getDb();

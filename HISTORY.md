@@ -1,3 +1,17 @@
+## 1.3.0
+
+* component/meta/MetaGrid
+    - add count method    
+    - render thumbnail without related model
+* component/meta/MetaListFilter
+    - fix empty relation condition      
+* component/meta/MetaModel
+    - upgrade base meta model
+* model/RawFile
+    - add user limits to file upload 
+* web/jam/data-grid/ColumnRenderer
+    - fix empty array as not set value   
+    
 ## 1.2.0
 
 * component/other/CommonSearch

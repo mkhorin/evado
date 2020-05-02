@@ -255,6 +255,9 @@ hr {
     border: 1px solid #ddd;
     border-radius: 4px
 }
+.thumbnail {
+    user-select: none;
+}
 .thumbnail-list .thumbnail {
     display: inline-block;
     margin-right: 10px;
@@ -958,12 +961,12 @@ textarea.form-control {
     padding: 0;
 }
 
-.block-item-list .radio-inline,
-.block-item-list .checkbox-inline {
+.block-list .radio-inline,
+.block-list .checkbox-inline {
     display: block;
 }
-.block-item-list .checkbox-inline + .checkbox-inline,
-.block-item-list .radio-inline + .radio-inline {
+.block-list .checkbox-inline + .checkbox-inline,
+.block-list .radio-inline + .radio-inline {
     margin-left: 0;
 }
 
@@ -1076,6 +1079,7 @@ hr + .form-columns {
 }
 .cell .thumbnail {
     margin: 0;
+    display: inline-block;
 }
 
 /* LIST */

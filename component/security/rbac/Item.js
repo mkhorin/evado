@@ -7,8 +7,8 @@ const Base = require('areto/security/rbac/Item');
 
 module.exports = class Item extends Base {
 
-    getDocMeta () {
-        return this.store.rbac.docMeta;
+    getBaseMeta () {
+        return this.store.rbac.baseMeta;
     }
 
     getNavMeta () {
@@ -241,7 +241,7 @@ module.exports = class Item extends Base {
     }
 
     validateMetaClass (data) {
-        this._target.class = this.getDocMeta().getClass(data.class);
+        this._target.class = this.getBaseMeta().getClass(data.class);
         if (this._target.class) {
             return true;
         }
