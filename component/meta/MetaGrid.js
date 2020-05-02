@@ -7,6 +7,18 @@ const Base = require('../other/DataGrid');
 
 module.exports = class MetaGrid extends Base {
 
+    static getConstants () {
+        return {
+            RELATED_HANDLERS: { // eager loaded
+                link: 'renderRelatedLink',
+                thumbnail: 'renderRelatedThumbnail'
+            },
+            RELATION_HANDLERS: {
+                thumbnail: 'renderRelationThumbnail'
+            }
+        };
+    }
+
     constructor (config) {
         super({
             // query: new Query
@@ -17,6 +29,16 @@ module.exports = class MetaGrid extends Base {
             ListFilter: MetaListFilter,
             ...config
         });
+    }
+
+    async count () {
+        this._result = {};
+        this.query.security = this.security;
+        await this.security.access.assignObjectFilter(this.query);
+        this.setOffset();
+        await this.resolveCommonSearch();
+        await this.resolveFilter();
+        return this.query.count();
     }
 
     async getList () {
@@ -144,7 +166,10 @@ module.exports = class MetaGrid extends Base {
         }
         const value = model.header.get(attr.name);
         if (attr.relation) {
-            return this.renderRelationAttr(value, attr, model);
+            const related = model.related.get(attr);
+            return related
+                ? this.renderRelatedAttr(related, value, attr)
+                : this.renderRelationAttr(value, attr)
         }
         if (value instanceof Date) {
             return value.toISOString();
@@ -168,14 +193,10 @@ module.exports = class MetaGrid extends Base {
     }
 
     renderFileAttr (attr, model) {
-        return this.controller.extraMeta.getModelFileData(model);
+        return this.controller.extraMeta.getModelFileData(model, attr.options.thumbnail);
     }
 
-    renderRelationAttr (value, attr, model) {
-        const related = model.related.get(attr);
-        if (!related) {
-            return value;
-        }
+    renderRelatedAttr (related, value, attr) {
         const handler = this.getRenderRelatedHandler(attr);
         if (!Array.isArray(related)) {
             return handler.call(this, related, value, attr);
@@ -191,11 +212,7 @@ module.exports = class MetaGrid extends Base {
     }
 
     getRenderRelatedHandler (attr) {
-        switch (this._columnMap[attr.name].format.name) {
-            case 'link': return this.renderRelatedLink;
-            case 'thumbnail': return this.renderRelatedThumbnail;
-        }
-        return this.renderRelatedDefault;
+        return this[this.RELATED_HANDLERS[this._columnMap[attr.name].format.name]] || this.renderRelatedDefault;
     }
 
     renderRelatedDefault (model, title) {
@@ -209,14 +226,37 @@ module.exports = class MetaGrid extends Base {
     }
 
     renderRelatedThumbnail (model, title, attr) {
-        const size = attr.options.thumbnail || this.meta.view.options.thumbnail;
-        const data = this.controller.extraMeta.getModelFileData(model, size);
+        const data = this.controller.extraMeta.getModelFileData(model, attr.options.thumbnail);
         if (data) {
             data.name = title;
             return data;
         }
     }
+
+    renderRelationAttr (value, attr) {
+        const handler = this.getRenderRelationHandler(attr);
+        if (!handler) {
+            return value;
+        }
+        if (!Array.isArray(value)) {
+            return handler.call(this, value, attr);
+        }
+        const result = [];
+        for (const val of value) {
+            result.push(handler.call(this, val, attr));
+        }
+        return result;
+    }
+
+    getRenderRelationHandler (attr) {
+        return this[this.RELATION_HANDLERS[this._columnMap[attr.name].format.name]];
+    }
+
+    renderRelationThumbnail (id, attr) {
+        return this.controller.extraMeta.getRelationThumbnailData(attr, id);
+    }
 };
+module.exports.init();
 
 const PromiseHelper = require('areto/helper/PromiseHelper');
 const BadRequest = require('areto/error/BadRequestHttpException');
