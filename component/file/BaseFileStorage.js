@@ -7,6 +7,14 @@ const Base = require('areto/base/Component');
 
 module.exports = class BaseFileStorage extends Base {
 
+    constructor (config) {
+        super({
+            // maxTotalUserFileSize: 100 * 1024 * 1024, // bytes
+            // maxTotalUserFiles: 2,
+            ...config
+        });
+    }
+
     upload () {
         return this.uploader.execute(...arguments);
     }

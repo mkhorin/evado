@@ -10,8 +10,6 @@ module.exports = class FileStorage extends Base {
     constructor (config) {
         super({
             basePath: 'upload/file',
-            // maxTotalSize: 100 * 1024 * 1024,
-            // maxTotalFiles: 100,
             ...config
         });
         this.basePath = this.resolvePath(this.basePath);

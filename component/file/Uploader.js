@@ -20,13 +20,13 @@ module.exports = class Uploader extends Base {
         const upload = this.createSingleMulter(dir);
         await PromiseHelper.promise(upload.bind(this, req, res));
         const file = req.file;
-        return file ? {
+        return {
             name: file.originalname,
             filename: `${dir}/${file.filename}`,
             size: file.size,
             mime: file.mimetype || '',
             extension: path.extname(file.originalname).substring(1).toLowerCase()
-        } : null;
+        };
     }
 
     createSingleMulter (dir) {

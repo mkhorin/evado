@@ -16,7 +16,7 @@ module.exports = class RawFile extends Base {
                 'size',
                 'file',
                 'createdAt',
-                'creator', // [User]
+                'creator',
                 'owner'
             ],
             RULES: [
@@ -95,11 +95,22 @@ module.exports = class RawFile extends Base {
         return this.getStorage().ensureThumbnail(key, this.getFilename());
     }
 
+    async isLimitReached (user) {
+        const {maxTotalUserFileSize, maxTotalUserFiles} = this.getStorage();
+        if (!maxTotalUserFileSize && !maxTotalUserFiles) {
+            return false;
+        }
+        const sizes = await this.find().and({creator: user.getId()}).column('size');
+        if (maxTotalUserFiles && sizes.length >= maxTotalUserFiles) {
+            return true;
+        }
+        return maxTotalUserFileSize
+            ? sizes.reduce((total, value) => total + value, 0) >= maxTotalUserFileSize
+            : false;
+    }
+
     async upload (req, res) {
         const data = await this.getStorage().upload(req, res);
-        if (!data) {
-            return this.addError('file', 'Invalid upload');
-        }
         this.setAttrs(data);
         this.set('file', { // for validation
             path: this.getStorage().getPath(data.filename),

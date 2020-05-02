@@ -27,6 +27,9 @@ module.exports = class FileController extends Base {
 
     async actionUpload () {
         const model = this.spawn('model/RawFile');
+        if (await model.isLimitReached(this.user)) {
+            return this.sendText(this.translate('Upload limit reached'), 400);
+        }
         if (!await model.upload(this.req, this.res)) {
             return this.sendText(this.translate(model.getFirstError()), 400);
         }
