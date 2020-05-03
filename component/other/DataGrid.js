@@ -10,7 +10,7 @@ module.exports = class DataGrid extends Base {
     static getConstants () {
         return {
             DEFAULT_LIMIT: 10,
-            MAX_LIMIT: 30,
+            MAX_LIMIT: 50,
             ROW_KEY: '_id'
         };
     }
