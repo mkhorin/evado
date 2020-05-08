@@ -46,7 +46,9 @@ Jam.DataGrid = class DataGrid {
     }
 
     prepareColumns () {
+        const oneColumn = this.params.columns.length === 1;
         for (const column of this.params.columns) {
+            column.hidden = oneColumn ? false : column.hidden;
             this.resolveColumnTranslation(column);
         }
     }
