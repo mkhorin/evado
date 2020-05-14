@@ -70,6 +70,11 @@ module.exports = class User extends Base {
         return this.find().andFilter({name}).orFilter({email});
     }
 
+    findByTitle (value) {
+        value = EscapeHelper.escapeRegex(value);
+        return this.find({name: new RegExp(value, 'i')});
+    }
+
     async getAssignments () {
         if (!this.assignments) {
             this.assignments = await this.module.getRbac().getUserAssignments(this.getId());
@@ -132,4 +137,5 @@ module.exports = class User extends Base {
 };
 module.exports.init(module);
 
+const EscapeHelper = require('areto/helper/EscapeHelper');
 const SecurityHelper = require('areto/helper/SecurityHelper');
