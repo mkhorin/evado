@@ -23,10 +23,11 @@ module.exports = class MetaTransit extends Base {
         if (transition instanceof Transition) {
             return model.transit(transition);
         }
-        throw new Error(`Invalid transition: ${name}`);
+        throw new BadRequest(`Invalid transition: ${name}`);
     }
 };
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
+const BadRequest = require('areto/error/BadRequestHttpException');
 const Forbidden = require('areto/error/ForbiddenHttpException');
 const Transition = require('evado-meta-base/workflow/Transition');

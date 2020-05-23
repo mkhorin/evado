@@ -83,7 +83,7 @@ module.exports = class ListFilter extends Base {
     async parseNested ({attr, value, relation}) {
         let rel = this.getRelation(attr, this.query.model);
         let query = rel.model.find();
-        await (new this.constructor({items: value})).resolve(query);
+        await this.spawnSelf({items: value}).resolve(query);
         if (!relation) {
             return {[rel.linkKey]: await query.column(rel.refKey)};
         }
@@ -108,11 +108,11 @@ module.exports = class ListFilter extends Base {
             return this.parseEmptyRelation(...arguments);
         }
         const model = this.query.model;
-        const related = await this.getRelation(attr, model).model.findById(value).one();
-        if (!related) {
+        const relative = await this.getRelation(attr, model).model.findById(value).one();
+        if (!relative) {
             this.throwBadRequest(`Related model not found: ${value}`);
         }
-        value = await this.getRelation(relation, related).ids();
+        value = await this.getRelation(relation, relative).ids();
         return this.formatSelectorCondition(model.PK, op, value);
     }
 
@@ -225,7 +225,7 @@ module.exports = class ListFilter extends Base {
             case 'gt': return ['>', attr, value];
             default: this.throwInvalidOperation(op);
         }
-        return ['LIKE', attr, new RegExp(value, 'i')];
+        return {[attr]: new RegExp(value, 'i')};
     }
 
     parseSelector ({attr, op, value}) {
@@ -244,6 +244,7 @@ module.exports = class ListFilter extends Base {
         switch (valueType) {
             case 'id': return this.query.getDb().normalizeId(value);
             case 'integer': return parseInt(value);
+            case 'number': return parseFloat(value);
         }
         return value;
     }

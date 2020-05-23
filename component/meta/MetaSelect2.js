@@ -14,21 +14,30 @@ module.exports = class MetaSelect2 extends Base {
         });
     }
 
+    async getList () {
+        await this.setListParams();
+        this.query.security = this.controller.security;
+        await this.query.security.access.assignObjectFilter(this.query);
+        return this.getListResult();
+    }
+
     getMaxPageSize () {
         return this.query.view.options.listLimit || this.MAX_PAGE_SIZE;
     }
 
-    setSearch (text) {
+    async setSearch (value) {
         const conditions = [];
-        this.resolveKeyCondition(text, conditions);
+        this.resolveKeyCondition(value, conditions);
         if (Array.isArray(this.searchAttrs)) {
-            const stringValue = this.getStringSearch(text);
-            const numberValue = parseFloat(text);
+            const regex = this.getStringSearch(value);
+            const number = parseFloat(value);
             for (const attr of this.searchAttrs) {
                 if (attr.isString()) {
-                    conditions.push({[attr.name]: stringValue});
-                } else if (attr.isNumber() && !isNaN(numberValue)) {
-                    conditions.push({[attr.name]: numberValue});
+                    conditions.push({[attr.name]: regex});
+                } else if (attr.isNumber() && !isNaN(number)) {
+                    conditions.push({[attr.name]: number});
+                } else if (attr.isEmbeddedModel()) {
+                    await this.resolveEmbeddedCondition(attr, value, regex, conditions);
                 }
             }
         }
@@ -37,11 +46,24 @@ module.exports = class MetaSelect2 extends Base {
             : this.query.where(['FALSE']);
     }
 
-    resolveKeyCondition (text, conditions) {
+    resolveKeyCondition (value, conditions) {
         const key = this.query.view.class.key;
-        const id = key.normalize(text);
+        value = key.normalize(value);
+        if (value) {
+            conditions.push({[key.name]: value});
+        }
+    }
+
+    async resolveEmbeddedCondition (attr, value, regex, conditions) {
+        const id = attr.embeddedModel.getDb().normalizeId(value);
         if (id) {
-            conditions.push({[key.name]: id});
+            return conditions.push({[attr.name]: id});
+        }
+        if (attr.isEagerLoading()) {
+            const query = attr.embeddedModel.findByTitle(value);
+            if (query) {
+                return conditions.push({[attr.name]: await query.ids()});
+            }
         }
     }
 };

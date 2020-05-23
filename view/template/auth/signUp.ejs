@@ -1,5 +1,6 @@
 <%
 const title = _t('Sign up');
+const error = model.getFirstError('register');
 layout(_view.get('_layout/auth'));
 block('title', title);
 %>
@@ -7,6 +8,10 @@ block('title', title);
 <p class="login-box-msg">
     <%- _t('Register a new user') %>
 </p>
+
+<% if (error) { %>
+<div class="alert-danger alert"><%- _t(error) %></div>
+<% } %>
 
 <form method="post" class="form">
 

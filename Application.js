@@ -40,6 +40,10 @@ module.exports = class EvadoApplication extends Base {
 
     // META
 
+    getBaseMeta () {
+        return this.getMeta('base');
+    }
+
     getMeta (name) {
         return this.getMetaHub().get(name);
     }

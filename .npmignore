@@ -1,4 +1,4 @@
-/node_modules
 /tests
-/web/vendor
+node_modules
+web/vendor
 npm-debug.log

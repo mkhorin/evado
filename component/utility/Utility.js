@@ -68,6 +68,10 @@ module.exports = class Utility extends Base {
         return this.name || this.id;
     }
 
+    getSpawnConfig (params) {
+        return this.controller.getSpawnConfig(params);
+    }
+
     getJson (data) {
         return {
             id: this.id,

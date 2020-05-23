@@ -228,15 +228,15 @@ module.exports = class MetaInspector extends Base {
 
     async assignObjectFilter (query) {
         if (Object.values(this.rbac.metaObjectFilterMap).length) {
+            this._objectConditions = ['OR'];
             this._norObjectConditions = ['NOR'];
-            this._andObjectConditions = ['AND'];
             this._metaObjectRuleCache = {};
             if (!await this.resolveObjectFilterAssignments()) {
                 if (this._norObjectConditions.length > 1) {
                     query.and(this._norObjectConditions);
                 }
-                if (this._andObjectConditions.length > 1) {
-                    query.and(this._andObjectConditions);
+                if (this._objectConditions.length > 1) {
+                    query.and(this._objectConditions);
                 }
             }
             return PromiseHelper.setImmediate();
@@ -269,19 +269,21 @@ module.exports = class MetaInspector extends Base {
         } else if (!ruleConditions.length) {
             return true; // no filter to role
         }
-        this._andObjectConditions.push(...ruleConditions);
+        this._objectConditions.push(...ruleConditions);
         return PromiseHelper.setImmediate();
     }
 
     async getRuleObjectFilters (rules) {
-        const conditions = [];
-        const cache = this._metaObjectRuleCache;
+        let conditions = [];
+        let cache = this._metaObjectRuleCache;
         for (const config of rules) {
             const condition = Object.prototype.hasOwnProperty.call(cache, config.name)
                 ? cache[config.name]
                 : await this.getRuleObjectFilter(config);
             if (condition) {
                 conditions.push(condition);
+            } else {
+                conditions = [];
             }
             cache[config.name] = condition;
         }

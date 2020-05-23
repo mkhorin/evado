@@ -20,4 +20,4 @@ Build a web app by declaring entities and relations without coding.
 
 ### Ready to use
 
-- [Application Boilerplate](https://github.com/mkhorin/evado-app-boilerplate)
+- [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate)

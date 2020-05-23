@@ -55,6 +55,7 @@ Jam.I18n.defaults = {
     'Create file': 'Создать файл',
     'Created at': 'Создано',
     'Creator': 'Автор',
+    'Customize columns': 'Настроить колонки',
 
     'Data': 'Данные',
     'Data history': 'История данных',

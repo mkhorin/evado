@@ -59,10 +59,13 @@ module.exports = class PasswordAuthService extends Base {
     }
 
     async register (data) {
-        const identity = this.spawnUser();
-        identity.assign(data);
-        if (!await identity.validate()) {
-            throw identity.getFirstError();
+        const user = this.spawnUser();
+        if (data[user.PK]) {
+            data[user.PK] = user.getDb().normalizeId(data[user.PK]);
+        }
+        user.assign(data);
+        if (!await user.validate()) {
+            throw user.getFirstError();
         }
         const password = this.spawnPassword();
         password.assign({
@@ -70,12 +73,12 @@ module.exports = class PasswordAuthService extends Base {
             password: data.password
         });
         if (!await password.validate()) {
-            throw identity.getFirstError();
+            throw user.getFirstError();
         }
-        await identity.forceSave();
-        password.set('user', identity.getId());
+        await user.forceSave();
+        password.set('user', user.getId());
         await password.forceSave();
-        return identity;
+        return user;
     }
 
     async changePassword (newPassword, user, expired = false) {

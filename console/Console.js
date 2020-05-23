@@ -39,12 +39,12 @@ module.exports = class Console extends Base {
 
     // ASSET
 
-    installAssets () {
-        return this.execute('install', this.AssetConsole);
+    installAssets (params) {
+        return this.execute('install', this.AssetConsole, params);
     }
 
-    deployAssets () {
-        return this.execute('deploy', this.AssetConsole);
+    deployAssets (params) {
+        return this.execute('deploy', this.AssetConsole, params);
     }
 
     // META

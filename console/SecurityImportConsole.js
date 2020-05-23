@@ -13,6 +13,9 @@ module.exports = class SecurityImportConsole extends Base {
         if (this.params.clear) {
             await this.clear();
         }
+        if (this.params.users) {
+            await this.createUsers();
+        }
         await this.getRbac().createByData(this.data);
         this.log('info', `Security imported: ${file}`);
     }

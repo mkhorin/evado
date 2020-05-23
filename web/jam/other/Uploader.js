@@ -423,7 +423,7 @@ Jam.UploaderFile = class UploaderFile {
     }
 
     changeReadyState () {
-        if (this.xhr.readyState === 4) {
+        if (this.xhr.readyState === XMLHttpRequest.DONE) {
             const message = this.xhr.response;
             if (this.xhr.status === 200) {
                 this.status = 'done';

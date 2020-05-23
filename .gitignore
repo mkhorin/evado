@@ -1,6 +1,7 @@
 /.hg/*
 /.idea/*
-/web/vendor
+
+web/vendor
 
 *.log
 npm-debug.log*

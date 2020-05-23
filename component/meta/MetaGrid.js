@@ -164,11 +164,11 @@ module.exports = class MetaGrid extends Base {
         if (model.hasDisplayValue(attr)) {
             return model.getDisplayValue(attr);
         }
-        const value = model.header.get(attr.name);
+        const value = model.header.get(attr);
         if (attr.relation) {
-            const related = model.related.get(attr);
-            return related
-                ? this.renderRelatedAttr(related, value, attr)
+            const relative = model.related.get(attr);
+            return relative
+                ? this.renderRelatedAttr(relative, value, attr)
                 : this.renderRelationAttr(value, attr)
         }
         if (value instanceof Date) {
@@ -179,6 +179,10 @@ module.exports = class MetaGrid extends Base {
         }
         if (attr.isFile()) {
             return this.renderFileAttr(attr, model);
+        }
+        if (attr.enum) {
+            result[this._columnMap[attr.name].titleName] = value;
+            return model.get(attr);
         }
         if (attr.isEmbeddedModel()) {
             result[this._columnMap[attr.name].titleName] = model.related.getTitle(attr);

@@ -243,8 +243,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         if (!this.startValues.includes(value)) {
             this.changes.links.push(value);
         }
-        Jam.ArrayHelper.removeValue(value, this.changes.unlinks);
-        Jam.ArrayHelper.removeValue(value, this.changes.deletes);
+        Jam.ArrayHelper.remove(value, this.changes.unlinks);
+        Jam.ArrayHelper.remove(value, this.changes.deletes);
     }
 
     showMouseEnter () {

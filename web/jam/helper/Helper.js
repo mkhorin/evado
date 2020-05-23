@@ -236,12 +236,12 @@ Jam.ArrayHelper = class ArrayHelper {
         return values;
     }
 
-    static removeValue (value, items) {
-        value = items.indexOf(value);
+    static remove (value, values) {
+        value = values.indexOf(value);
         if (value === -1) {
             return false;
         }
-        items.splice(value, 1);
+        values.splice(value, 1);
         return true;
     }
 
@@ -278,13 +278,14 @@ Jam.ArrayHelper = class ArrayHelper {
     }
 
     static uniqueByKey (key, items) {
-        const data = {};
+        const data = {}, result = [];
         for (const item of items) {
             if (!Object.prototype.hasOwnProperty.call(data, item[key])) {
                 data[item[key]] = item;
+                result.push(item);
             }
         }
-        return Object.values(data);
+        return result;
     }
 
     static getByNestedValue (value, key, items) {

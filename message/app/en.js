@@ -7,8 +7,10 @@ module.exports = {
 
     'auth.accountBlocked': 'Account is blocked',
     'auth.accountBlockedUntil': 'Account is blocked until {date}',
+    'auth.emailAlreadyTaken': 'Email has already been taken',
     'auth.expiredPassword': 'You password has expired',
     'auth.invalidAuth': 'Invalid authentication',
+    'auth.nameAlreadyTaken': 'Name has already been taken',
     'auth.newPasswordSet': 'New password set',
     'auth.passwordAlreadyUsed': 'Password has already been used before',
     'auth.passwordChanged': 'Password changed',

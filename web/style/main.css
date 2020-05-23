@@ -89,7 +89,7 @@ label {
 }
 label.radio,
 label.checkbox {
-    color: #000;
+    color: #222;
 }
 
 .mb0 {
@@ -787,7 +787,7 @@ body.loading {
     margin: 0;
 }
 .form-group .checkbox label {
-    color: #000;
+    color: #222;
 }
 .form-group .checkbox.disabled,
 .form-group .checkbox.disabled label {
@@ -1197,21 +1197,21 @@ hr + .form-columns {
     background-color: #ffe8e8 !important;
 }
 .table tbody tr.deleted:nth-child(odd) td {
-    background-color: #ffd0d0 !important;
-    text-decoration: line-through;
-    color: #a00;
-}
-.table tbody tr.deleted:nth-child(even) td {
     background-color: #ffd8d8 !important;
     text-decoration: line-through;
     color: #a00;
 }
+.table tbody tr.deleted:nth-child(even) td {
+    background-color: #ffe0e0 !important;
+    text-decoration: line-through;
+    color: #a00;
+}
 .table tbody tr.linked.selected td {
-    background-color: #e8ffd0 !important;
+    background-color: #b8ffb8 !important;
 }
 .table tbody tr.unlinked.selected td,
 .table tbody tr.deleted.selected td {
-    background-color: #ffe8e0 !important;
+    background-color: #ffc8c8 !important;
 }
 .required.blank .data-grid-table > thead > tr > th {
     background: var(--color-required);

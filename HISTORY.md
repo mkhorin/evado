@@ -1,3 +1,24 @@
+## 1.4.0
+
+* component/meta/MetaCommonSearch
+    - add search by embedded model title    
+* component/meta/rbac/rule/AuthorRule
+    - add rule customization
+* component/meta/rbac/rule/RefUserRule
+    - check user by reference attribute
+* component/security/PasswordAuthService
+    - set ID to new user    
+* component/security/rbac/MetaInspector
+    - fix object filter
+* console/AssetConsole
+    - manage assets of each module separately
+* console/ModuleAsset
+    - move and rename deployed vendor 
+* console/SecurityConsole
+    - export/import users and assignments       
+* web/jam/attr/Enum
+    - keep item order           
+    
 ## 1.3.0
 
 * component/meta/MetaGrid

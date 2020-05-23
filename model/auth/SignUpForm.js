@@ -39,7 +39,7 @@ module.exports = class SignUpForm extends Base {
             await this.user.log('register', undefined, user);
             return user;
         } catch (err) {
-            this.addErrors(err);
+            this.addError('register', err);
         }
     }
 };

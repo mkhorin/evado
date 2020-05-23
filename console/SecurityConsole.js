@@ -27,11 +27,14 @@ module.exports = class SecurityConsole extends Base {
         return this.spawnUser().findSame(this.params.name, this.params.email);
     }
 
-    spawnUser (config) {
-        return this.spawn('model/User', config);
+    spawnUser () {
+        return this.spawn('model/User', ...arguments);
     }
 
     async clear () {
+        if (this.params.clearUsers) {
+            await this.clearUsers();
+        }
         this.log('info', 'Clear security...');
         await this.getStore().clearAll();
         this.log('info', 'Security cleared');
@@ -39,7 +42,7 @@ module.exports = class SecurityConsole extends Base {
 
     async clearUsers () {
         this.log('info', 'Delete users...');
-        const user = this.spawn('model/User');
+        const user = this.spawnUser();
         await user.getDb().truncate(user.getTable());
         const password = this.spawn('security/UserPassword');
         await password.getDb().truncate(password.getTable());

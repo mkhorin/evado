@@ -10,26 +10,21 @@ module.exports = class MetaObjectFilter extends Base {
     prepare () {
         this.rules = null;
         this.condition = null;
-        let ids = [], objectClass;
+        let objects = [], skipFilter, objectClass;
         for (const item of this.items) {
-            if (item.rule) {
-                if (item.rule.Class.prototype.getObjectFilter) {
-                    ObjectHelper.push(item.rule, 'rules', this);
-                }
-            } else if (item.state) {
-                this.appendStateCondition(item);
+            if (item.state) {
+                this.addStateCondition(item);
+                this.addRule(item.rule);
             } else if (item.object) {
-                ids.push(item.object);
+                objects.push(item.object);
                 objectClass = this.getClass(item);
-            } else {
-                this.all = true;
+                this.addRule(item.rule);
+            } else if (!this.addRule(item.rule)) {
+                skipFilter = true;
             }
         }
-        if (this.all) {
-            this.log('warn', 'Access denied to all objects');
-        }
-        if (objectClass && ids.length) {
-            ObjectHelper.push(objectClass.getIdCondition(ids), 'condition', this);
+        if (objectClass && objects.length) {
+            ObjectHelper.push(objectClass.getIdCondition(objects), 'condition', this);
         }
         if (this.condition) {
             if (this.condition.length === 1) {
@@ -38,9 +33,17 @@ module.exports = class MetaObjectFilter extends Base {
                 this.condition.unshift('OR');
             }
         }
+        return !skipFilter;
     }
 
-    appendStateCondition (item) {
+    addRule (rule) {
+        if (rule && rule.Class.prototype.getObjectFilter) {
+            ObjectHelper.push(rule, 'rules', this);
+            return true;
+        }
+    }
+
+    addStateCondition (item) {
         const itemClass = this.getClass(item);
         if (!itemClass) {
             return false;

@@ -75,6 +75,7 @@ module.exports = class Item extends Base {
             return false;
         }
         const item = await this.store.findMetaItem().insert({
+            description: this.data.description,
             type: this.data.type,
             actions: this.data.actions,
             rule: this._meta.rule,
@@ -89,22 +90,22 @@ module.exports = class Item extends Base {
     }
 
     prepareMetaTargets () {
-        const targets = this.data.targets;
-        if (Array.isArray(targets)) {
-            const expansions = [];
-            for (const item of targets) {
-                for (const key of Object.keys(item)) {
-                    if (Array.isArray(item[key])) {
-                        const values = item[key];
-                        item[key] = values.shift();
-                        for (const value of values) {
-                            expansions.push({...item, [key]: value});
-                        }
+        if (!Array.isArray(this.data.targets)) {
+            this.data.targets = [this.data.targets];
+        }
+        const expansions = [];
+        for (const item of this.data.targets) {
+            for (const key of Object.keys(item)) {
+                if (Array.isArray(item[key])) {
+                    const values = item[key];
+                    item[key] = values.shift();
+                    for (const value of values) {
+                        expansions.push({...item, [key]: value});
                     }
                 }
             }
-            targets.push(...expansions);
         }
+        this.data.targets.push(...expansions);
     }
 
     // MATCHES
@@ -168,6 +169,9 @@ module.exports = class Item extends Base {
     }
 
     validateMetaActions () {
+        if (typeof this.data.actions === 'string') {
+            this.data.actions = [this.data.actions];
+        }
         if (!Array.isArray(this.data.actions)) {
             throw new Error(this.getMetaError('Actions must be array'));
         }
@@ -179,6 +183,9 @@ module.exports = class Item extends Base {
     }
 
     async validateMetaRoles () {
+        if (typeof this.data.roles === 'string') {
+            this.data.roles = [this.data.roles];
+        }
         const roles = this.data.roles;
         if (!Array.isArray(roles)) {
             throw new Error(this.getMetaError('Roles must be array'));
@@ -207,8 +214,11 @@ module.exports = class Item extends Base {
     }
 
     validateMetaTargets () {
-        if (!Array.isArray(this.data.targets) || !this.data.targets.length) {
-            throw new Error(this.getMetaError('Targets must be array'));
+        if (!Array.isArray(this.data.targets)) {
+            this.data.targets = [this.data.targets];
+        }
+        if (!this.data.targets.length) {
+            throw new Error(this.getMetaError('Targets must be set'));
         }
         for (const target of this.data.targets) {
             this.validateMetaTarget(target);
@@ -245,7 +255,7 @@ module.exports = class Item extends Base {
         if (this._target.class) {
             return true;
         }
-        this._targetError = 'Invalid class';
+        this._targetError = `Invalid class: ${data.class}`;
     }
 
     validateMetaView (data) {
@@ -254,13 +264,13 @@ module.exports = class Item extends Base {
             if (this._target.view) {
                 return true;
             }
-            this._targetError = 'Invalid view';
+            this._targetError = `Invalid view: ${data.view}`;
         }
     }
 
     validateMetaState (data) {
         if (this.validateMetaClass(data) && !this._target.class.getState(data.state)) {
-            this._targetError = 'Invalid state';
+            this._targetError = `Invalid state: ${data.state}`;
         }
     }
 
@@ -269,14 +279,14 @@ module.exports = class Item extends Base {
 
     validateMetaTransition (data) {
         if (this.validateMetaClass(data) && !this._target.class.getTransition(data.transition)) {
-            this._targetError = 'Invalid transition';
+            this._targetError = `Invalid transition: ${data.transition}`;
         }
     }
 
     validateMetaAttr (data) {
         if (data.view ? this.validateMetaView(data) : this.validateMetaClass(data)) {
             if (!(this._target.view || this._target.class).getAttr(data.attr)) {
-                this._targetError = 'Invalid attribute';
+                this._targetError = `Invalid attribute: ${data.attr}`;
             }
         }
     }
@@ -286,12 +296,12 @@ module.exports = class Item extends Base {
         if (this._target.navSection) {
             return true;
         }
-        this._targetError = 'Invalid navigation section';
+        this._targetError = `Invalid navigation section: ${data.navSection}`;
     }
 
     validateMetaNavNode (data) {
         if (this.validateMetaNavSection(data) && !this._target.navSection.getNode(data.navNode)) {
-            this._targetError = 'Invalid navigation node';
+            this._targetError = `Invalid navigation node: ${data.navNode}`;
         }
     }
 

@@ -19,6 +19,10 @@ module.exports = class BaseRule extends Base {
         return this.inspector.targetType === Rbac.TARGET_OBJECT;
     }
 
+    getBaseMeta () {
+        return this.params.controller.module.getBaseMeta();
+    }
+
     getTarget () {
         return this.inspector.target;
     }

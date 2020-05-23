@@ -7,8 +7,27 @@ const Base = require('areto/base/Base');
 
 module.exports = class ModuleAsset extends Base {
 
+    constructor (config) {
+        super(config);
+        this.params = this.getParams();
+    }
+
+    getParams () {
+        const params = this.module.getConfig('assets');
+        return params ? Object.assign(this.getDefaultParams(), params) : null;
+    }
+
+    getDefaultParams () {
+        return {
+            source: 'asset/vendor',
+            target: 'web/vendor',
+            defaults: {base: ['dist', 'min', 'build']},
+            defaultBase: 'base'
+        };
+    }
+
     async install () {
-        const dir = this.module.getConfig('assets.source');
+        const dir = this.params && this.params.source;
         if (typeof dir !== 'string') {
             return false;
         }
@@ -16,9 +35,6 @@ module.exports = class ModuleAsset extends Base {
             await this.installSource(this.module.original.getPath(dir));
         }
         await this.installSource(this.module.getPath(dir));
-        for (const child of this.module.getModules()) {
-            await this.console.createModuleAsset(child).install();
-        }
     }
 
     async installSource (source) {
@@ -33,21 +49,17 @@ module.exports = class ModuleAsset extends Base {
     }
 
     async deploy () {
-        const params = this.module.getConfig('assets');
-        if (!params) {
+        if (!this.params) {
             return false;
         }
-        const vendorTarget = this.module.getPath(params.target);
+        const vendorTarget = this.module.getPath(this.params.target);
         this.log('info', `Web vendor folder: ${vendorTarget}`);
         await FileHelper.createDirectory(vendorTarget);
         this.log('info', `Clear folder...`);
         await FileHelper.emptyDirectory(vendorTarget);
         this.log('info', `Deploy assets...`);
-        await this.deployVendors(params);
+        await this.deployVendors(this.params);
         await PromiseHelper.setImmediate();
-        for (const child of this.module.getModules()) {
-            await this.console.createModuleAsset(child).deploy();
-        }
     }
 
     async deployVendors (params) {
@@ -76,27 +88,28 @@ module.exports = class ModuleAsset extends Base {
             }
         }
         if (!deployed) {
-            this.log('error', `${vendor} not deployed`);
+            this.log('error', `Not deployed: ${vendor}`);
         }
     }
 
     async deployVendorFile (name, vendor, module, {source, target}) {
-        source = module.getPath(source, 'node_modules', vendor, name);
-        target = this.module.getPath(target, vendor, name);
+        const sourceName = Array.isArray(name) ? name[0] : name;
+        const targetName = Array.isArray(name) ? name[1] : name;
+        source = module.getPath(source, 'node_modules', vendor, sourceName);
+        target = this.module.getPath(target, vendor, targetName);
         if (await FileHelper.getStat(source)) {
             await FileHelper.copy(source, target);
-            this.log('info', `Deployed: ${vendor}/${name}`);
+            this.log('info', `Deployed: ${vendor}/${sourceName}`);
             return true;
         }
     }
 
     log () {
-        CommonHelper.log(this.console, this.module.NAME, ...arguments);
+        this.module.log(...arguments);
     }
 };
 
 const path = require('path');
-const CommonHelper = require('areto/helper/CommonHelper');
 const FileHelper = require('areto/helper/FileHelper');
 const PromiseHelper = require('areto/helper/PromiseHelper');
 const SystemHelper = require('areto/helper/SystemHelper');

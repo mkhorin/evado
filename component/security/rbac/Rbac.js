@@ -126,16 +126,19 @@ module.exports = class Rbac extends Base {
 
     static indexMetaItemsByState (items) {
         const data = {};
+        const allKey = '';
         for (const item of items) {
             if (item.view) {
                 ObjectHelper.push(item, `${item.view}.${item.class}`, data);
             } else if (item.class) {
                 ObjectHelper.push(item, `${item.class}`, data);
+            } else if (item.targetType === this.ALL) {
+                ObjectHelper.push(item, allKey, data);
             }
         }
         for (const item of items) {
             if (!item.state && !item.view && item.class) {
-                this.concatFirstArrayItems(`${item.class}`, data);
+                this.concatFirstArrayItems(`${item.class}`, data, allKey);
             }
         }
         for (const item of items) {
@@ -190,10 +193,9 @@ module.exports = class Rbac extends Base {
         });
     }
 
-    async init () {
+    init () {
         this.metaHub = this.module.getMetaHub();
         this.metaHub.onAfterLoad(this.load.bind(this));
-        //await super.init();
     }
 
     load () {
@@ -216,7 +218,6 @@ module.exports = class Rbac extends Base {
         this.setAssignmentRules(data.assignmentRules);
         this.setItemTitleMap();
         this.setItemUserMap();
-        this.metaObjectFilters.map(filter => filter.prepare());
     }
 
     addDescendantClassMetaItems () {
@@ -306,8 +307,11 @@ module.exports = class Rbac extends Base {
     setMetaObjectFilterMap () {
         const items = this.metaItems.filter(({targetType, actions, rule}) => {
             return (actions.includes(Rbac.ALL) || actions.includes(Rbac.READ))
-                && ((rule && (targetType === this.TARGET_CLASS || targetType === this.TARGET_VIEW))
-                    || (targetType === this.TARGET_STATE || targetType === this.TARGET_OBJECT));
+                && (targetType === this.ALL
+                    || targetType === this.TARGET_CLASS
+                    || targetType === this.TARGET_VIEW
+                    || targetType === this.TARGET_STATE
+                    || targetType === this.TARGET_OBJECT);
         });
         const data = this.indexMetaItemsByRole(items);
         this.metaObjectFilters = [];
@@ -320,11 +324,16 @@ module.exports = class Rbac extends Base {
 
     setRoleMetaObjectFilterMap (data) {
         for (const key of Object.keys(data)) {
-            data[key] = new MetaObjectFilter({
+            const item = new MetaObjectFilter({
                 rbac: this,
                 items: data[key]
             });
-            this.metaObjectFilters.push(data[key]);
+            if (item.prepare()) {
+                this.metaObjectFilters.push(item);
+                data[key] = item;
+            } else {
+                delete data[key];
+            }
         }
     }
 

@@ -24,21 +24,30 @@ module.exports = class Select2 extends Base {
     }
 
     async getList () {
-        const pageSize = this.getPageSize();
-        const page = parseInt(this.request.page) || 1;
-        if (isNaN(page) || page < 1) {
-            throw new BadRequest(this.wrapClassMessage('Invalid page'));
-        }
-        const text = this.request.search;
-        if (typeof text === 'string' && text.length) {
-            this.setSearch(text);
-        }
+        await this.setListParams();
+        return this.getListResult();
+    }
+
+    async getListResult () {
         const total = await this.query.count();
-        const models = await this.query.offset((page - 1) * pageSize).limit(pageSize).all();
+        const offset = (this._page - 1) * this._pageSize;
+        const models = await this.query.offset(offset).limit(this._pageSize).all();
         const items = this.params.getItems
             ? await this.params.getItems.call(this, models, this.params)
             : this.getItems(models);
         return {total, items};
+    }
+
+    setListParams () {
+        this._pageSize = this.getPageSize();
+        this._page = parseInt(this.request.page) || 1;
+        if (isNaN(this._page) || this._page < 1) {
+            throw new BadRequest(this.wrapClassMessage('Invalid page'));
+        }
+        const text = this.request.search;
+        if (typeof text === 'string' && text.length) {
+            return this.setSearch(text);
+        }
     }
 
     getPageSize () {

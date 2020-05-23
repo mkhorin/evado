@@ -31,7 +31,10 @@ Jam.UtilityManager = class UtilityManager {
         this.$menuContent.append($item.wrap('<li>').parent());
         const params = $item.data('params');
         const Class = params.frontClass ? Jam.Utility[params.frontClass] : Jam.Utility;
-        return new Class($item, this, params);
+        if (Class && typeof Class === 'function' && Jam.Utility.hasOwnProperty(params.frontClass)) {
+            return new Class($item, this, params);
+        }
+        console.error('Invalid utility class:', params.frontClass);
     }
 };
 

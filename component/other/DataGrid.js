@@ -108,7 +108,7 @@ module.exports = class DataGrid extends Base {
     resolveCommonSearch () {
         const value = this.request.search;
         if (typeof value === 'string' && value.length) {
-            const search = new this.CommonSearch({
+            const search = this.spawn(this.CommonSearch, {
                 columns: this.columns,
                 controller: this.controller
             });
@@ -119,7 +119,7 @@ module.exports = class DataGrid extends Base {
     resolveFilter () {
         const items = this.request.filter;
         if (Array.isArray(items)) {
-            return (new this.ListFilter({items})).resolve(this.query);
+            return this.spawn(this.ListFilter, {items}).resolve(this.query);
         }
     }
 

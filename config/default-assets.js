@@ -4,10 +4,6 @@
 'use strict';
 
 module.exports = {
-    source: 'asset/vendor',
-    target: 'web/vendor',
-    defaults: {base: ['dist', 'min', 'build']},
-    defaultBase: 'base',
     files: {
         '@fortawesome': [
             'fontawesome-free/css',

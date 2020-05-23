@@ -11,6 +11,7 @@ module.exports = class User extends Base {
         return {
             TABLE: 'sys_user',
             ATTRS: [
+                '_id',
                 'name', 
                 'email',
                 'verified',
@@ -30,7 +31,8 @@ module.exports = class User extends Base {
                 ['email', 'email'],
                 [['blocked', 'verified', 'expiredPassword'], 'checkbox'],
                 ['unlockAt', 'date'],
-                [['name', 'email'], 'unique', {ignoreCase: true, skipOnAnyError: true}]
+                ['name', 'unique', {ignoreCase: true, skipOnAnyError: true, message: 'auth.nameAlreadyTaken'}],
+                ['email', 'unique', {ignoreCase: true, skipOnAnyError: true, message: 'auth.emailAlreadyTaken'}]
             ],
             BEHAVIORS: {
                 'timestamp': require('areto/behavior/TimestampBehavior')

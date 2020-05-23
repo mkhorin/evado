@@ -62,8 +62,10 @@ module.exports = {
 
     'auth.accountBlocked': 'Аккаунт заблокирован',
     'auth.accountBlockedUntil': 'Аккаунт заблокирован до {date}',
+    'auth.emailAlreadyTaken': 'Электронный адрес уже используется',
     'auth.expiredPassword': 'Срок действия вашего пароля истек',
     'auth.invalidAuth': 'Неверная аутентификация',
+    'auth.nameAlreadyTaken': 'Имя уже используется',
     'auth.newPasswordSet': 'Новый пароль установлен',
     'auth.passwordAlreadyUsed': 'Пароль уже использовался ранее',
     'auth.passwordChanged': 'Пароль изменен',

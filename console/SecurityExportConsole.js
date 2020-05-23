@@ -11,21 +11,22 @@ module.exports = class SecurityExportConsole extends Base {
         this.data = await this.getStore().loadData();
         this.assignmentRuleMap = IndexHelper.indexObjects(this.data.assignmentRules, this.getKey());
         this.childMap = IndexHelper.indexObjectArrays(this.data.links, 'parent', 'child');
-        //this.userMap = await this.app.spawn('model/User').find().raw().indexByKey().all();
-
         const data = {
             rules: this.getRules(),
             assignmentRules: this.getAssignmentRules(),
             metaPermissions: this.getMetaItems(),
             permissions: this.getItems('permission'),
-            roles: this.getItems('role'),
-            //users: await this.getUsers(),
-            //assignments: this.getAssignments()
+            roles: this.getItems('role')
         };
-        this.deleteProperties(data.rules);
-        this.deleteProperties(data.assignmentRules);
-        this.deleteProperties(data.permissions, 'type');
-        this.deleteProperties(data.roles, 'type');
+        if (this.params.users) {
+            this.userMap = await this.spawnUser().find().raw().indexByKey().all();
+            data.users = await this.getUsers();
+            data.assignments = this.getAssignments();
+        }
+        this.deleteUnnecessaryProperties(data.rules);
+        this.deleteUnnecessaryProperties(data.assignmentRules);
+        this.deleteUnnecessaryProperties(data.permissions, 'type');
+        this.deleteUnnecessaryProperties(data.roles, 'type');
         const file = this.getDataFile();
         await this.saveData(data, file);
         this.log('info', `Security exported to ${file}`);
@@ -51,7 +52,7 @@ module.exports = class SecurityExportConsole extends Base {
     }
 
     getItemChildren (item) {
-        const children = this.childMap[item[this.key]];
+        const children = this.childMap[item[this.getKey()]];
         if (Array.isArray(children)) {
             const result = [];
             for (const id of children) {
@@ -65,7 +66,7 @@ module.exports = class SecurityExportConsole extends Base {
     }
 
     getItemAssignmentRules (item) {
-        const children = this.childMap[item[this.key]];
+        const children = this.childMap[item[this.getKey()]];
         if (Array.isArray(children)) {
             const result = [];
             for (const id of children) {
@@ -78,8 +79,8 @@ module.exports = class SecurityExportConsole extends Base {
         }
     }
 
-    deleteProperties (data, ...names) {
-        names = [this.key, 'name', ...names];
+    deleteUnnecessaryProperties (data, ...names) {
+        names = [this.getKey(), 'name', ...names];
         for (const item of Object.values(data)) {
             ObjectHelper.deleteProperties(names, item);
             ObjectHelper.deleteEmptyProperties(item);
@@ -103,6 +104,7 @@ module.exports = class SecurityExportConsole extends Base {
     }
 
     getMetaItems () {
+        const key = this.getKey();
         const targetMap = IndexHelper.indexObjectArrays(this.data.metaTargets, 'item');
         const result = [];
         for (const item of this.data.metaItems) {
@@ -113,7 +115,7 @@ module.exports = class SecurityExportConsole extends Base {
                 item.rule = this.getItemRuleName(item);
                 item.assignmentRules = this.getItemAssignmentRuleNames(item);
                 delete item.targetType;
-                delete item[this.key];
+                delete item[key];
                 result.push(item);
             }
         }
@@ -121,13 +123,14 @@ module.exports = class SecurityExportConsole extends Base {
     }
 
     getMetaItemTargets (item, targetMap) {
-        const targets = targetMap[item[this.key]];
+        const key = this.getKey();
+        const targets = targetMap[item[key]];
         if (!Array.isArray(targets)) {
              return [];
         }
         for (const target of targets) {
             delete target.item;
-            delete target[this.key];
+            delete target[key];
             ObjectHelper.deleteEmptyProperties(target);
         }
         return targets;
@@ -157,26 +160,23 @@ module.exports = class SecurityExportConsole extends Base {
             const user = this.userMap[data.user];
             const item = this.data.itemMap[data.item];
             if (user && item) {
-                if (Array.isArray(result[user.name])) {
-                    result[user.name].push(item.name);
-                } else {
-                    result[user.name] = [item.name];
-                }
+                ObjectHelper.push(item.name, user.name, result);
             }
         }
         return result;
     }
 
     async getUsers () {
-        const key = this.key;
-        const password = this.app.spawn('security/UserPassword');
+        const key = this.getKey();
+        const password = this.spawn('security/UserPassword');
         const passwordMap = await password.find().orderByKey().raw().index('user').all();
         const result = [];
         for (const item of Object.values(this.userMap)) {
             const password = passwordMap[item[key]];
             item.passwordHash = password ? password.hash : undefined;
-            delete item[key];
-            delete item.authKey;
+            delete item['authKey'];
+            delete item['createdAt'];
+            delete item['updatedAt'];
             result.push(item);
         }
         return result;

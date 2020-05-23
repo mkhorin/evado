@@ -164,7 +164,7 @@ Jam.ListFilterGroup = class ListFilterGroup {
     }
 
     afterDeleteCondition (condition) {
-        Jam.ArrayHelper.removeValue(condition, this.conditions);
+        Jam.ArrayHelper.remove(condition, this.conditions);
     }
 };
 

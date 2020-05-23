@@ -132,8 +132,8 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
         for (let {value, text, hint} of this.items) {
             value = Jam.Helper.escapeTags(value);
             text = Jam.Helper.escapeTags(Jam.i18n.translate(text, category));
-            hint = Jam.Helper.escapeTags(Jam.i18n.translate(hint, category));
-            result += `<label class="radio radio-inline" title="${hint}"><input type="radio" value="${value}">${text}</label>`;
+            hint = hint ? `title="${Jam.Helper.escapeTags(Jam.i18n.translate(hint, category))}"` : '';
+            result += `<label class="radio radio-inline" ${hint}><input type="radio" value="${value}">${text}</label>`;
         }
         return result;
     }
@@ -158,7 +158,8 @@ Jam.EnumSet = class EnumSet {
                 items.push(...set.items);
             }
         }
-        return Jam.ArrayHelper.uniqueByKey('value', items);
+        const result = Jam.ArrayHelper.uniqueByKey('value', items);
+        return result.sort((a, b)=> a.orderNumber - b.orderNumber);
     }
 
     constructor (data, owner) {

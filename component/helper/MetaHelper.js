@@ -124,7 +124,7 @@ module.exports = class MetaHelper {
         const values = [];
         for (const attr of attrs) {
             for (const model of models) {
-                const value = model.get(attr.name);
+                const value = model.get(attr);
                 if (value !== null && value !== undefined) {
                     Array.isArray(value) ? values.push(...value) : values.push(value);
                 }

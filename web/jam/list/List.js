@@ -82,7 +82,10 @@ Jam.List = class List extends Jam.Element {
 
     onCommand (event) {
         this.beforeCommand(event);
-        this.getCommandMethod(event.currentTarget.dataset.command).call(this, event);
+        const method = this.getCommandMethod(event.currentTarget.dataset.command);
+        if (method) {
+            method.call(this, event);
+        }
     }
 
     getCommandMethod (name) {
