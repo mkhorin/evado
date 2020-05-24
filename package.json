@@ -1,6 +1,6 @@
 {
   "name": "evado",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Platform for creating and operating business web apps without coding",
   "author": {
     "name": "Maxim Khorin",
@@ -24,7 +24,8 @@
   "devDependencies": {
     "chai": "^4.2.0"
   },
-  "scripts": {
+  "scripts": {    
+    "install": "node asset/vendor/install",
     "test": "mocha test/run --recursive"
   }
 }
