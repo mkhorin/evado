@@ -50,7 +50,7 @@ module.exports = class AssetConsole extends Base {
         await asset[method]();
         if (this.params.withModules) {
             for (const child of module.getModules()) {
-                await this.executeModule(method, child);
+                await this.execute(method, child);
             }
         }
     }
