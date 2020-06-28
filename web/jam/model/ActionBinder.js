@@ -103,12 +103,18 @@ Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderAction {
 
     update () {
         const visible = this.isValid();
-        if (this.attr && !visible) {
-            this.attr.setInitialValue();
-        }
         const group = this.$item.data('group');
-        group ? group.toggle(visible)
-              : this.$item.toggleClass('hidden', !visible);
+        if (group) {
+            group.toggle(visible);
+        } else {
+            this.$item.toggleClass('hidden', !visible);
+        }
+        if (this.attr) {
+            if (!visible) {
+                this.attr.clear();
+            }
+            this.attr.activate();
+        }
     }
 };
 

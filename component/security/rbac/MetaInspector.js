@@ -48,6 +48,7 @@ module.exports = class MetaInspector extends Base {
         }
         this.access = {};
         if (!items.length) {
+            this.resolveReadAllowedAccessOnly();
             return this;
         }
         this._targets = [[this.checkAllTarget]];
@@ -64,7 +65,37 @@ module.exports = class MetaInspector extends Base {
                 }
             }
         }
+        this.resolveReadAllowedAccessOnly();
         return this;
+    }
+
+    resolveReadAllowedAccessOnly () {
+        if (!this.rbac.metaReadAllowedMap || this.access[Rbac.READ] !== undefined) {
+            return;
+        }
+        let classKey, viewKey;
+        switch (this.targetType) {
+            case Rbac.TARGET_NAV_NODE:
+                classKey = this.targetClass && this.targetClass.id;
+                viewKey = this.targetView && this.targetView.id;
+                break;
+            case Rbac.TARGET_VIEW:
+                classKey = this.target.class.id;
+                viewKey = this.target.id;
+                break;
+            case Rbac.TARGET_CLASS:
+                classKey = this.target.id;
+                break;
+            default:
+                return;
+        }
+        for (const role of this.assignments) {
+            const data = this.rbac.metaReadAllowedMap[role];
+            if (data && (data[classKey] === true || data[viewKey] === true)) {
+                this.access[Rbac.READ] = true;
+                break;
+            }
+        }
     }
 
     addNavNodeTargets () {
@@ -227,67 +258,61 @@ module.exports = class MetaInspector extends Base {
     // OBJECT FILTER
 
     async assignObjectFilter (query) {
-        if (Object.values(this.rbac.metaObjectFilterMap).length) {
-            this._objectConditions = ['OR'];
-            this._norObjectConditions = ['NOR'];
-            this._metaObjectRuleCache = {};
-            if (!await this.resolveObjectFilterAssignments()) {
-                if (this._norObjectConditions.length > 1) {
-                    query.and(this._norObjectConditions);
-                }
-                if (this._objectConditions.length > 1) {
-                    query.and(this._objectConditions);
-                }
-            }
-            return PromiseHelper.setImmediate();
+        if (!this.rbac.metaObjectFilterMap) {
+            return null;
         }
-    }
-
-    async resolveObjectFilterAssignments () {
+        this._metaObjectRuleCache = {};
+        const conditions = ['OR'];
         for (const role of this.assignments) {
+            if (!this.rbac.metaObjectFilterMap.hasOwnProperty(role)) {
+                return null; // no filter to role
+            }
             const data = this.rbac.metaObjectFilterMap[role];
-            if (!data) {
-                return true; // no filter to role
+            const filter = data[this.target.id] || data[this.target.class.id];
+            if (!filter || filter.skipped) {
+                return null;
             }
-            const filter = data[this.target.id] || (this.target.isClass() ? null : data[this.target.class.id]);
-            if (!filter) {
-                return true; // no filter to role
+            let roleConditions = ['AND'];
+            if (filter.condition) {
+                roleConditions.push(filter.condition);
             }
-            if (await this.resolveRoleObjectFilter(filter)) {
-                return true;
+            if (filter.denyRules) {
+                const items = await this.getRuleObjectFilters(filter.denyRules, 'NOR');
+                if (items) {
+                    roleConditions.push(items);
+                }
             }
+            if (filter.allowRules) {
+                const items = await this.getRuleObjectFilters(filter.allowRules, 'OR');
+                if (items) {
+                    roleConditions.push(items.length === 2 ? items[1] : items);
+                }
+            }
+            if (roleConditions.length === 1) {
+                return null;
+            }
+            conditions.push(roleConditions.length === 2 ? roleConditions[1] : roleConditions);
         }
-    }
-
-    async resolveRoleObjectFilter ({rules, condition, all}) {
-        const ruleConditions = Array.isArray(rules) ? await this.getRuleObjectFilters(rules) : [];
-        if (all) {
-            ruleConditions.push(['FALSE']);
+        if (conditions.length === 1) {
+            return null;
         }
-        if (condition) {
-            this._norObjectConditions.push(condition);
-        } else if (!ruleConditions.length) {
-            return true; // no filter to role
-        }
-        this._objectConditions.push(...ruleConditions);
+        query.and(conditions.length === 2 ? conditions[1] : conditions);
         return PromiseHelper.setImmediate();
     }
 
-    async getRuleObjectFilters (rules) {
-        let conditions = [];
-        let cache = this._metaObjectRuleCache;
+    async getRuleObjectFilters (rules, operation) {
+        const conditions = [operation];
+        const cache = this._metaObjectRuleCache;
         for (const config of rules) {
             const condition = Object.prototype.hasOwnProperty.call(cache, config.name)
                 ? cache[config.name]
                 : await this.getRuleObjectFilter(config);
             if (condition) {
                 conditions.push(condition);
-            } else {
-                conditions = [];
             }
             cache[config.name] = condition;
         }
-        return conditions;
+        return conditions.length !== 1 ? conditions : null;
     }
 
     getRuleObjectFilter (config) {

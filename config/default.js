@@ -71,7 +71,7 @@ module.exports = {
         },
         'notifier': {
             Class: require('../component/notifier/Notifier'),
-            tasks: ['sendNoticeMessage']
+            tasks: ['createNotification']
         },
         'observer': {
             Class: require('../component/observer/Observer'),

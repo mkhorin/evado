@@ -1,3 +1,14 @@
+## 1.5.0
+
+* component/meta/MetaSecurity
+    - fix relation security by view
+* component/notifier/Notifier
+    - add service message data    
+* component/security/rbac/Rbac
+    - fix security by object states
+* component/utility/UtilityManager
+    - refactor utility render   
+
 ## 1.4.0
 
 * component/meta/MetaCommonSearch

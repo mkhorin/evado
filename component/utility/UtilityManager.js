@@ -16,7 +16,7 @@ module.exports = class UtilityManager extends Base {
 
     async init () {
         this._utilityMap = this.resolveUtilityMap(this.utilities);
-        this.resolveUtilityConfigs();
+        this.resolveUtilityConfigurations();
         this._utilities = Object.values(this._utilityMap);
         ObjectHelper.addKeyAsNestedValue('id', this._utilityMap);
     }
@@ -29,7 +29,7 @@ module.exports = class UtilityManager extends Base {
         return this.module.config.mergeWithParents(key);
     }
 
-    resolveUtilityConfigs () {
+    resolveUtilityConfigurations () {
         const data = this._utilityMap;
         for (const key of Object.keys(data)) {
             try {
@@ -41,13 +41,15 @@ module.exports = class UtilityManager extends Base {
         }
     }
 
-    async isActiveUtility (params) {
+    async getActiveItems (params) {
+        const result = [];
         for (const config of this._utilities) {
-            if (await this.createUtility(config, params).isActive()) {
-                return true;
+            const utility = this.createUtility(config, params);
+            if (await utility.isActive()) {
+                result.push(await utility.getJson());
             }
         }
-        return false;
+        return result;
     }
 
     getUtilityConfig (id) {

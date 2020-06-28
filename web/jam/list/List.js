@@ -99,7 +99,6 @@ Jam.List = class List extends Jam.Element {
             case 'sort': return this.onSort;
             case 'executeUrl': return this.onExecuteUrl;
             case 'selectAll': return this.onSelectAll;
-            case 'utilities': return this.onUtilities;
         }
     }
 
@@ -199,7 +198,7 @@ Jam.List = class List extends Jam.Element {
     openNewPage () {
         const $row = this.getSelectedRow();
         if ($row) {
-            const data = Jam.UrlHelper.addParams(this.params.update, this.getObjectIdParam($row));
+            const data = Jam.UrlHelper.addParams(this.getUpdateUrl(), this.getObjectIdParam($row));
             Jam.UrlHelper.openNewPage(Jam.UrlHelper.getNewPageUrl(data));
         }
     }
@@ -264,6 +263,10 @@ Jam.List = class List extends Jam.Element {
         return this.params.delete;
     }
 
+    getUpdateUrl () {
+        return this.params.update;
+    }
+
     deleteObjects ($rows) {
         let ids = this.serializeObjectIds($rows);
         this.post(this.getDeleteUrl($rows), {ids}).done(()=> {
@@ -275,13 +278,20 @@ Jam.List = class List extends Jam.Element {
 
     loadModal (url, params, afterClose, modalParams) {
         afterClose = afterClose || this.defaultModalAfterClose;
+        this._afterClose = afterClose.bind(this);
         this.childModal.load(url, params, modalParams).done(()=> {
-            this.childModal.one('afterClose', afterClose.bind(this));
+            this.childModal.one('afterClose', this._afterClose);
         });
     }
 
     defaultModalAfterClose (event, data) {
-        if (!data || !data.saved) {
+        if (!data) {
+            return false;
+        }
+        if (data.reload) {
+            return this.childModal.one('afterClose', this._afterClose);
+        }
+        if (!data.saved) {
             return false;
         }
         const id = data.result;
@@ -295,13 +305,13 @@ Jam.List = class List extends Jam.Element {
     }
 
     reopen (id) {
-        this.loadModal(this.params.update, {id});
+        this.loadModal(this.getUpdateUrl(), {id});
     }
 
     post (url, data) {
         this.toggleLoader(true);
         this.xhr = Jam.Helper.post(this.$container, url, data)
-            .always(()=> this.toggleLoader(false))
+            .always(() => this.toggleLoader(false))
             .fail(data => this.notice.danger(data.responseText || data.statusText));
         return this.xhr;
     }
@@ -345,7 +355,7 @@ Jam.List = class List extends Jam.Element {
     onUpdate () {
         const $row = this.getSelectedRow();
         if ($row)  {
-            this.loadModal(this.params.update, this.getObjectIdParam($row));
+            this.loadModal(this.getUpdateUrl(), this.getObjectIdParam($row));
         }
     }
 
@@ -381,17 +391,9 @@ Jam.List = class List extends Jam.Element {
     onSelectAll () {
         this.toggleRowSelect(this.$tbody.children(), true);
     }
-
-    onUtilities () {
-    }
 };
 
 Jam.MainList = class MainList extends Jam.List {
-
-    init () {
-        super.init();
-        this.utilityManager = new Jam.UtilityManager(this.$commands, this);
-    }
 };
 
 Jam.SelectList = class SelectList extends Jam.List {
@@ -456,11 +458,6 @@ Jam.TreeList = class TreeList extends Jam.List {
 };
 
 Jam.MainTreeList = class MainTreeList extends Jam.TreeList {
-
-    init () {
-        super.init();
-        this.utilityManager = new Jam.UtilityManager(this.$commands, this);
-    }
 
     onCreate (event) {
         const $row = this.findSelectedRows();

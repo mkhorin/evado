@@ -22,7 +22,7 @@ module.exports = class SortRelatedAction extends Base {
     async setParentModel (id) {
         this.parentModel = await this.controller.getModel({id});
         if (!this.parentModel) {
-            throw new BadRequest('Model not found');
+            throw new BadRequest('Parent object not found');
         }
     }
 

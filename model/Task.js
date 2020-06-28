@@ -46,7 +46,7 @@ module.exports = class Task extends Base {
             data.job = ClassHelper.resolveSpawn({...data.job}, this.module.app);
             return data;
         } catch (err) {
-            this.log('error', 'Invalid task', err);            
+            this.log('error', 'Invalid job:', err);
         }
     }
 

@@ -22,11 +22,8 @@ module.exports = {
     
     'notifier/MessageTemplate': require('../component/notifier/MessageTemplate'),
     'notifier/Notice': require('../component/notifier/Notice'),
-
-//    'notifier/NoticeJob': require('../component/notifier/NoticeJob'),
-
     'notifier/NoticeMessage': require('../component/notifier/NoticeMessage'),
-    'notifier/Recipient': require('../component/notifier/Recipient'),
+    'notifier/PopupNotification': require('../component/notifier/PopupNotification'),
     'notifier/UserFilter': require('../component/notifier/UserFilter'),
 
     'observer/EventHandler': require('../component/observer/EventHandler'),

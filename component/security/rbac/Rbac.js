@@ -75,27 +75,21 @@ module.exports = class Rbac extends Base {
             || type === this.TARGET_NAV_NODE;
     }
 
-    static splitMetaItemsByType (items) {
+    static concatFirstArrayItems (targetKey, data, ...keys) {
+        for (const key of keys) {
+            if (Array.isArray(data[key])) {
+                return data[targetKey] = data[targetKey].concat(data[key]);
+            }
+        }
+    }
+
+    static indexMetaItemsByType (items) {
         const allow = [], deny = [];
         for (const item of items) {
             item.type === this.ALLOW ? allow.push(item) : deny.push(item);
         }
         return allow.length
             ? (deny.length ? {allow, deny} : {allow})
-            : {deny};
-    }
-
-    static splitMetaItemMapByType (data) {
-        const allow = {}, deny = {};
-        for (const key of Object.keys(data)) {
-            if (data[key].type === this.ALLOW) {
-                allow[key] = data[key];
-            } else {
-                deny[key] = data[key];
-            }
-        }
-        return Object.values(allow).length
-            ? (Object.values(deny).length ? {allow, deny} : {allow})
             : {deny};
     }
 
@@ -124,38 +118,29 @@ module.exports = class Rbac extends Base {
         return data;
     }
 
-    static indexMetaItemsByState (items) {
+    static indexMetaObjectFilterItems (items) {
         const data = {};
         const allKey = '';
         for (const item of items) {
             if (item.view) {
                 ObjectHelper.push(item, `${item.view}.${item.class}`, data);
             } else if (item.class) {
-                ObjectHelper.push(item, `${item.class}`, data);
-            } else if (item.targetType === this.ALL) {
+                ObjectHelper.push(item, item.class, data);
+            } else {
                 ObjectHelper.push(item, allKey, data);
             }
         }
         for (const item of items) {
-            if (!item.state && !item.view && item.class) {
-                this.concatFirstArrayItems(`${item.class}`, data, allKey);
+            if (!item.view && item.class) {
+                this.concatFirstArrayItems(item.class, data, allKey);
             }
         }
         for (const item of items) {
-            if (!item.state && item.view) {
-                const classKey = `${item.class}`;
-                this.concatFirstArrayItems(`${item.view}.${classKey}`, data, classKey);
+            if (item.view && item.class) {
+                this.concatFirstArrayItems(`${item.view}.${item.class}`, data, item.class);
             }
         }
         return data;
-    }
-
-    static concatFirstArrayItems (targetKey, data, ...keys) {
-        for (const key of keys) {
-            if (Array.isArray(data[key])) {
-                return data[targetKey] = data[targetKey].concat(data[key]);
-            }
-        }
     }
 
     static indexMetaItems (items, key) {
@@ -211,6 +196,7 @@ module.exports = class Rbac extends Base {
         this.resolveMetaItemRules();
         this.addDescendantClassMetaItems();
         this.setMetaMap();
+        this.setMetaReadAllowedMap();
         this.setMetaAttrMap();
         this.setMetaObjectFilterMap();
         this.setMetaTransitionMap();
@@ -276,7 +262,7 @@ module.exports = class Rbac extends Base {
         this.constructor.expandAllAction(items);
         const data = this.indexMetaItemsByRole(items);
         for (const role of Object.keys(data)) {
-            data[role] = this.constructor.splitMetaItemsByType(data[role]);
+            data[role] = this.constructor.indexMetaItemsByType(data[role]);
             for (const type of Object.keys(data[role])) {
                 const items = this.constructor.indexMetaItemsByAction(data[role][type]);
                 for (const action of Object.keys(items)) {
@@ -286,6 +272,23 @@ module.exports = class Rbac extends Base {
             }
         }
         this.metaMap = data;
+    }
+
+    setMetaReadAllowedMap () {
+        const items = this.metaItems.filter(item => {
+            return item.type === this.ALLOW
+                && (item.targetType === this.TARGET_STATE || item.targetType === this.TARGET_OBJECT)
+                && item.actions.includes(this.READ);
+        });
+        const result = {};
+        for (const item of items) {
+            for (const role of item.roles) {
+                const key = item.view ? `${item.view}.${item.class}` : item.class;
+                result[role] = result[role] || {};
+                result[role][key] = true;
+            }
+        }
+        this.metaReadAllowedMap = items.length ? result : null;
     }
 
     setMetaAttrMap () {
@@ -305,35 +308,27 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaObjectFilterMap () {
-        const items = this.metaItems.filter(({targetType, actions, rule}) => {
-            return (actions.includes(Rbac.ALL) || actions.includes(Rbac.READ))
-                && (targetType === this.ALL
-                    || targetType === this.TARGET_CLASS
-                    || targetType === this.TARGET_VIEW
-                    || targetType === this.TARGET_STATE
-                    || targetType === this.TARGET_OBJECT);
+        const items = this.metaItems.filter(({targetType, actions}) => {
+            return actions.includes(Rbac.READ) && (targetType === this.ALL
+                || targetType === this.TARGET_CLASS
+                || targetType === this.TARGET_VIEW
+                || targetType === this.TARGET_STATE
+                || targetType === this.TARGET_OBJECT);
         });
         const data = this.indexMetaItemsByRole(items);
-        this.metaObjectFilters = [];
         for (const role of Object.keys(data)) {
-            data[role] = this.constructor.indexMetaItemsByState(data[role]);
+            data[role] = this.constructor.indexMetaObjectFilterItems(data[role]);
             this.setRoleMetaObjectFilterMap(data[role]);
         }
-        this.metaObjectFilterMap = data;
+        ObjectHelper.deleteEmptyObjectProperties(data);
+        this.metaObjectFilterMap = Object.values(data).length ? data : null;
     }
 
     setRoleMetaObjectFilterMap (data) {
         for (const key of Object.keys(data)) {
-            const item = new MetaObjectFilter({
-                rbac: this,
-                items: data[key]
-            });
-            if (item.prepare()) {
-                this.metaObjectFilters.push(item);
-                data[key] = item;
-            } else {
-                delete data[key];
-            }
+            const items = data[key];
+            data[key] = new MetaObjectFilter({rbac: this, items});
+            data[key].prepare();
         }
     }
 
@@ -485,3 +480,4 @@ const ClassHelper = require('areto/helper/ClassHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');
 const MetaObjectFilter = require('./MetaObjectFilter');
 const MongoHelper = require('areto/helper/MongoHelper');
+const NestedHelper = require('areto/helper/NestedHelper');

@@ -152,14 +152,12 @@ module.exports = class MetaSecurity extends Base {
     }
 
     async resolveRelations (view, actions = [Rbac.READ, Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]) {
-        const data = {
-            targetType: Rbac.TARGET_CLASS,
-            actions
-        };
+        const data = {actions};
         const assignments = this.controller.user.assignments;
         this.relationAccessMap = {};
         for (const attr of view.relationAttrs) {
-            data.target = attr.relation.refClass;
+            data.target = attr.eagerView;
+            data.targetType = data.target.isClass() ? Rbac.TARGET_CLASS : Rbac.TARGET_VIEW;
             this.relationAccessMap[attr.name] = await this.rbac.resolveAccess(assignments, data, null);
         }
     }

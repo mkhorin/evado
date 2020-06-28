@@ -106,6 +106,7 @@ Jam.I18n.defaults = {
     'Name': 'Название',
     'No': 'Нет',
     'No saved filters yet': 'Пока нет сохраненных фильтров',
+    'Notifications': 'Уведомления',
 
     'Object select box': 'Выпадающий список объектов',
     'Office': 'Офис',
@@ -129,6 +130,7 @@ Jam.I18n.defaults = {
     'Restore selected values?': 'Востановить выбранные значения?',
     'Role': 'Роль',
     'Roles': 'Роли',
+    'Roles:': 'Роли:',
 
     'Save': 'Сохранить',
     'Save and close': 'Сохранить и закрыть',

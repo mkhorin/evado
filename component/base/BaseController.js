@@ -64,7 +64,7 @@ module.exports = class BaseController extends Base {
         }
         model = await model.findById(params.id).with(params.with).one();
         if (!model) {
-            throw new NotFound('Model not found');
+            throw new NotFound('Object not found');
         }
         return model;
     }

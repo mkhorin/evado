@@ -32,7 +32,9 @@ if (d.list !== null) {
     }
     d.list = _url(d.list);
 }
-const relUrl = typeof relRoute === 'undefined' ? relation.model.getControllerClass().NAME : relRoute;
+const relUrl = typeof relRoute === 'undefined'
+    ? relation.model.getControllerClass().getBaseName()
+    : relRoute;
 if (d.viewTitle !== null) {
     d.viewTitle = _url(d.viewTitle === undefined ? `${relUrl}/title` : d.viewTitle);
 }

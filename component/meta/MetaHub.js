@@ -48,6 +48,12 @@ module.exports = class MetaHub extends Base {
         return MetaHelper.splitByPrefix(name, '-', this.moduleNames);
     }
 
+    createDataFinder (items, params) {
+        items = Array.isArray(items) ? items : items.split('.');
+        const meta = this.get(items[0]);
+        return meta ? meta.createDataFinder(items.slice(1), params) : null;
+    }
+
     // LOAD
 
     async load () {
@@ -111,4 +117,5 @@ module.exports.init();
 const path = require('path');
 const CommonHelper = require('areto/helper/CommonHelper');
 const PromiseHelper = require('areto/helper/PromiseHelper');
+const StringHelper = require('areto/helper/StringHelper');
 const MetaHelper = require('../helper/MetaHelper');

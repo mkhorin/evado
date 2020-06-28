@@ -23,7 +23,7 @@ module.exports = class UtilityAction extends Base {
             postParams: this.postParams
         });
         if (!await utility.isActive()) {
-            throw new BadRequest('Utility disabled');
+            throw new BadRequest('Utility unavailable');
         }
         if (!await utility.canAccess()) {
             throw new Forbidden;

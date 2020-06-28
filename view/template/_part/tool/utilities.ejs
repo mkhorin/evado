@@ -1,27 +1,38 @@
 <!-- _part/tool/utilities -->
 <%
-if (typeof hasUtility !== 'undefined' && hasUtility) {
+if (typeof utilities !== 'undefined' && utilities.length) {
     const res = {
-        action: _controller.action.name
+        action: _controller.action.name,
+        items: utilities,
+        menu: typeof utilityMenu !== 'undefined' ? utilityMenu : null
     };
     if (typeof params !== 'undefined') {
         Object.assign(res, params);
     }
 %>
-<div class="utility-container btn-set" data-command="utilities"
+<div class="utility-container btn-set" data-jam="UtilityManager" data-command="utilities"
      data-url="<%- _url('default/utility') %>"
      data-params="<%= JSON.stringify(res) %>">
-    <div class="utility-menu btn-group">
-        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
-            <span data-t="">Utilities</span>
+
+    <div class="utility-menu btn-group hidden">
+        <button type="button" class="btn btn-white dropdown-toggle" title="Utilities" data-t="" data-toggle="dropdown">
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
-            <li class="text-center">
-                <span class="fa fa-spinner fa-spin"></span>
-            </li>
-        </ul>
+        <ul class="dropdown-menu"></ul>
     </div>
-    <div class="utility-pool"></div>
+
+    <template data-id="button">
+        <button type="button" class="utility-item btn {{css}}" title="{{hint}}" data-t="">
+            <span data-t="">{{name}}</span>
+        </button>
+    </template>
+
+    <template data-id="menuItem">
+        <li>
+            <a href="#" class="utility-item" title="{{hint}}" data-t="">
+                <span data-t="">{{name}}</span>
+            </a>
+        </li>
+    </template>
 </div>
 <% } %>

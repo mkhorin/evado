@@ -7,11 +7,11 @@ const Base = require('./BaseRule');
 
 // check model attribute has the current user ID
 
-module.exports = class AuthorRule extends Base {
+module.exports = class UserRule extends Base {
 
     constructor (config) {
         super({
-            userAttr: '_creator', // user attribute
+            attr: 'user', // user attribute
             objectFilter: true, // filter objects in a list
             ...config
         });
@@ -19,16 +19,16 @@ module.exports = class AuthorRule extends Base {
 
     execute () {
         return this.isObjectTarget() // list targets filter by getObjectFilter
-            ? this.checkAuthor()
+            ? this.checkUser()
             : this.isAllowType(); // pass rule: need to allow - true, need to deny - false
     }
 
-    checkAuthor () {
-        const matched = this.isUser(this.getTarget().get(this.userAttr));
+    checkUser () {
+        const matched = this.isUser(this.getTarget().get(this.attr));
         return this.isAllowType() ? matched : !matched;
     }
 
     getObjectFilter () {
-        return this.objectFilter ? {[this.userAttr]: this.getUserId()} : null;
+        return this.objectFilter ? {[this.attr]: this.getUserId()} : null;
     }
 };

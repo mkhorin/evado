@@ -1,26 +1,24 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
 const Base = require('areto/base/Base');
-const StringHelper = require('areto/helper/StringHelper');
 
 module.exports = class Utility extends Base {
 
-    static getConstants () {
-        return {
-            NAME: this.getName(),
-            CONTROL_TEMPLATE: 'control'
-        };
+    static getBaseName () {
+        if (!this._baseName) {
+            this._baseName = StringHelper.camelToId(StringHelper.trimEnd(this.name, 'Utility'));
+        }
+        return this._baseName;
     }
 
-    static getName () {
-        const index = this.name.lastIndexOf('Utility');
-        if (index === -1) {
-            throw new Error(`Invalid utility class name: ${this.name}`);
+    static getPermissionName () {
+        if (!this._permissionName) {
+            this._permissionName = 'utility' + StringHelper.trimEnd(this.name, 'Utility');
         }
-        return StringHelper.camelToId(this.name.substring(0, index));
+        return this._permissionName;
     }
 
     isActive () {
@@ -47,17 +45,25 @@ module.exports = class Utility extends Base {
         }
     }
 
+    isUserId (id) {
+        return this.controller.user.isId(id);
+    }
+
     canAccess () {
         const name = this.getPermissionName();
         return this.controller.user.auth.rbac.getItem(name) ? this.controller.user.can(name) : true;
     }
 
+    getBaseName () {
+        return this.constructor.getName();
+    }
+
     getPermissionName () {
-        return 'utility' + this.NAME;
+        return this.constructor.getPermissionName();
     }
 
     getControlTemplate () {
-        return this.CONTROL_TEMPLATE;
+        return 'control';
     }
 
     getHint () {
@@ -77,9 +83,15 @@ module.exports = class Utility extends Base {
             id: this.id,
             name: this.name,
             hint: this.hint,
+            confirmation: this.confirmation,
+            css: this.css,
             frontClass: this.frontClass,
             ...data
         };
+    }
+
+    getUserId () {
+        return this.controller.user.getId();
     }
 
     execute () {
@@ -87,7 +99,7 @@ module.exports = class Utility extends Base {
     }
 
     render (template) {
-        return this.renderExternal(`_utility/${this.NAME}/${template}`);
+        return this.renderExternal(`_utility/${this.getBaseName()}/${template}`);
     }
 
     renderControl (data) {
@@ -100,5 +112,14 @@ module.exports = class Utility extends Base {
         const view = this.controller.getView();
         return view.renderTemplate(view.get(template), this.renderParams);
     }
+
+    createNotification () {
+        return this.module.getNotifier().createNotification(...arguments);
+    }
+
+    log () {
+        CommonHelper.log(this.module, this.constructor.name, ...arguments);
+    }
 };
-module.exports.init();
+
+const StringHelper = require('areto/helper/StringHelper');

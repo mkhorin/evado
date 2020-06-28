@@ -17,6 +17,13 @@ module.exports = class UserFilter extends Base {
                 'includes',
                 'excludes',
                 'config'
+            ],
+            RULES: [
+                ['name', 'required'],
+                [['name', 'description'], 'string'],
+                ['name', 'regex', {pattern: /^[0-9a-zA-Z-]+$/}],
+                ['name', 'unique'],
+                ['config', 'spawn']
             ]
         };
     }

@@ -110,7 +110,7 @@ module.exports = class ListFilter extends Base {
         const model = this.query.model;
         const relative = await this.getRelation(attr, model).model.findById(value).one();
         if (!relative) {
-            this.throwBadRequest(`Related model not found: ${value}`);
+            this.throwBadRequest(`Related object not found: ${value}`);
         }
         value = await this.getRelation(relation, relative).ids();
         return this.formatSelectorCondition(model.PK, op, value);

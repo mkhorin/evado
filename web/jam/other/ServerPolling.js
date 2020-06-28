@@ -11,7 +11,7 @@ Jam.ServerPolling = class ServerPolling {
         $(document.body)
             .click(this.onUserAction.bind(this))
             .keyup(this.onUserAction.bind(this));
-        this.startInternal(500);
+        this.executeStart(500);
         this._hasUserAction = true;
     }
 
@@ -52,11 +52,11 @@ Jam.ServerPolling = class ServerPolling {
     start () {
         this.stop();
         if (this._hasUserAction) {
-            this.startInternal(this._refreshInterval * 1000);
+            this.executeStart(this._refreshInterval * 1000);
         }
     }
 
-    startInternal (delay) {
+    executeStart (delay) {
         this.stop();
         this._timer = setTimeout(this.refresh.bind(this), delay);
         this._hasUserAction = false;

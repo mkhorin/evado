@@ -4,15 +4,19 @@ const user = _controller.user;
 %>
 <% if (user.identity) { %>
 <li class="user-body">
-    <p class="">
+    <p>
         <span class="fa fa-user text-primary mr5"></span>
         <b><%- _controller.user.getTitle() %></b>
     </p>
     <% if (user.assignments) { %>
-    <p class="mb0">
-        <span data-t="">Roles</span>:
-        <b><%- roles.join(', ') %></b>
-    </p>
+    <div class="user-roles">
+        <label data-t="">Roles:</label>
+        <div class="user-roles-list">
+            <% for (const role of roles) { %>
+            <div data-t=""><%- role %></div>
+            <% } %>
+        </div>
+    </div>
     <% } %>
 </li>
 <li class="user-footer">

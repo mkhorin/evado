@@ -8,62 +8,79 @@ const Base = require('areto/base/Base');
 module.exports = class MetaObjectFilter extends Base {
 
     prepare () {
-        this.rules = null;
-        this.condition = null;
-        let objects = [], skipFilter, objectClass;
-        for (const item of this.items) {
-            if (item.state) {
-                this.addStateCondition(item);
-                this.addRule(item.rule);
-            } else if (item.object) {
-                objects.push(item.object);
-                objectClass = this.getClass(item);
-                this.addRule(item.rule);
-            } else if (!this.addRule(item.rule)) {
-                skipFilter = true;
+        let {allow, deny} = this.rbac.constructor.indexMetaItemsByType(this.items);
+        let allowConditions, denyConditions;
+        if (deny) {
+            denyConditions = this.getConditions(deny, 'NOR');
+            this.denyRules = this.getRules(deny);
+        }
+        if (allow) {
+            allowConditions = this.getConditions(allow, 'OR');
+            if (allowConditions && allowConditions.length === 2) {
+                allowConditions = allowConditions[1];
             }
+            const rules = this.getRules(allow);
+            // skip all if at least one rule is missing
+            this.allowRules = rules && rules.length !== allow.length ? null : rules;
         }
-        if (objectClass && objects.length) {
-            ObjectHelper.push(objectClass.getIdCondition(objects), 'condition', this);
-        }
-        if (this.condition) {
-            if (this.condition.length === 1) {
-                this.condition = this.condition[0];
-            } else {
-                this.condition.unshift('OR');
+        this.condition = allowConditions && denyConditions
+            ? ['AND', allowConditions, denyConditions]
+            : (allowConditions || denyConditions);
+        this.skipped = !this.allowRules && !this.denyRules && !this.condition;
+    }
+
+    getConditions (items, operation) {
+        const conditions = [];
+        for (const item of items) {
+            const condition = this.getItemCondition(item);
+            if (!condition) {
+                return null;
             }
+            conditions.push(condition);
         }
-        return !skipFilter;
+        return conditions.length ? [operation, ...conditions] : null;
     }
 
-    addRule (rule) {
-        if (rule && rule.Class.prototype.getObjectFilter) {
-            ObjectHelper.push(rule, 'rules', this);
-            return true;
-        }
-    }
-
-    addStateCondition (item) {
-        const itemClass = this.getClass(item);
-        if (!itemClass) {
-            return false;
-        }
-        let condition = {[itemClass.STATE_ATTR]: item.state};
-        if (item.object) {
-            condition = ['AND', itemClass.getIdCondition(item.object), condition];
-        }
-        ObjectHelper.push(condition, 'condition', this);
-    }
-
-    getClass (item) {
-        if (!this.rbac.baseMeta) {
+    getItemCondition (item) {
+        const metaClass = this.getMetaClass(item);
+        if (!metaClass) {
             return null;
         }
-        const metaClass = this.rbac.baseMeta.getClass(item.class);
-        if (metaClass) {
-            return metaClass;
+        if (item.targetType === this.rbac.TARGET_OBJECT) {
+            return this.getObjectCondition(item, metaClass);
         }
-        this.log('error', `Item class not found: ${item.key}`);
+        if (item.targetType === this.rbac.TARGET_STATE) {
+            return this.getStateCondition(item, metaClass);
+        }
+    }
+
+    getStateCondition ({state}, metaClass) {
+        return {[metaClass.STATE_ATTR]: state};
+    }
+
+    getObjectCondition (item, metaClass) {
+        const condition = metaClass.getIdCondition(item.object);
+        if (item.state) {
+            condition[metaClass.STATE_ATTR] = item.state;
+        }
+        return condition;
+    }
+
+    getRules (items) {
+        const rules = [];
+        for (const {rule} of items) {
+            if (rule && rule.Class.prototype.getObjectFilter) {
+                rules.push(rule);
+            }
+        }
+        return rules.length ? rules : null;
+    }
+
+    getMetaClass (item) {
+        if (item.class && this.rbac.baseMeta) {
+            return this.rbac.baseMeta.getClass(item.class)
+                || this.log('error', `Item class not found: ${item.key}`);
+        }
     }
 
     log () {
@@ -72,4 +89,3 @@ module.exports = class MetaObjectFilter extends Base {
 };
 
 const CommonHelper = require('areto/helper/CommonHelper');
-const ObjectHelper = require('areto/helper/ObjectHelper');

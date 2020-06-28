@@ -66,6 +66,10 @@ module.exports = class MetaModel extends Base {
         }
     }
 
+    createDataFinder () {
+        return null;
+    }
+
     log () {
         CommonHelper.log(this.hub, this.constructor.name, ...arguments);
     }

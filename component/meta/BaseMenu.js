@@ -9,7 +9,7 @@ module.exports = class BaseMenu extends Base {
 
     async run () {
         const nav = this.module.getMeta('navigation');
-        const section = nav.getSection('main', this.module.NAME);
+        const section = nav.getSection('main', this.module.getBaseName());
         const activeItem = this.controller.meta && this.controller.meta.node;
         const openedItems = activeItem ? activeItem.getParents() : [];
         const items = [...openedItems, ...section.children];
@@ -31,7 +31,7 @@ module.exports = class BaseMenu extends Base {
     }
 
     getItemModule (item) {
-        return item.data.class ? 'office' : item.data.report ? 'report' : this.module.NAME;
+        return item.data.class ? 'office' : item.data.report ? 'report' : this.module.getBaseName();
     }
 
     resolveAccess (data) {

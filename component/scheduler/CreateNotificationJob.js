@@ -5,18 +5,25 @@
 
 const Base = require('areto/scheduler/Job');
 
-module.exports = class NoticeMessageJob extends Base {
+module.exports = class CreateNotificationJob extends Base {
+
+    constructor (config) {
+        super({
+            nextSendingDelay: 500,
+            ...config
+        });
+    }
 
     run () {
         return this.runPending();
     }
 
-    async runPending (prevId) {
-        await PromiseHelper.setTimeout(500);
+    async runPending (previous) {
+        await PromiseHelper.setTimeout(this.nextSendingDelay);
         let model = this.spawn('notifier/NoticeMessage');
         let query = model.findPending();
-        if (prevId) {
-            query.and(['>', model.PK, prevId]); // skip prev (possible failed)
+        if (previous) {
+            query.and(['>', model.PK, previous]); // skip previous (possible failed)
         }
         model = await query.one();
         if (model) {

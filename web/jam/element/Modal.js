@@ -159,14 +159,7 @@ Jam.ModalStack = class ModalStack extends Jam.Element {
 };
 
 Jam.ModalFrame = class ModalFrame {
-/*
-    static resize (element) {
-        const item = $(element).closest('.jmodal').data('item');
-        if (item) {
-            item.resize();
-        }
-    }
-*/
+
     constructor (stack) {
         this.stack = stack;
     }
@@ -291,21 +284,19 @@ Jam.ModalFrame = class ModalFrame {
         return $.when(event.deferred).then(() => this.forceClose(data));
     }
 
-    forceClose (data, reloading) {
+    forceClose (data) {
         data = data || {};
         this.abort();
         if (!data.reopen) {
             this.$body.empty();
         }
         this.stack.afterClose(this, data);
-        if (!reloading) {
-            this.trigger('afterClose', data);
-        }
+        this.trigger('afterClose', data);
     }
 
     reload (data) {
         if (this.checkLastActive()) {
-            this.forceClose(data, true);
+            this.forceClose({reload: true, ...data});
             return this.load(this.url, this.loadParams, this.initData);
         }
     }
@@ -322,6 +313,10 @@ Jam.ModalFrame = class ModalFrame {
             return true;
         }
         Jam.dialog.alert('Close the last modal tab');
+    }
+
+    find () {
+        return this.$container.find(...arguments);
     }
 
     findInstanceByClass (instanceClass) {

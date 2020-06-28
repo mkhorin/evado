@@ -68,6 +68,10 @@ module.exports = class User extends Base {
         return this.find({email});
     }
 
+    findByName (name) {
+        return this.find({name});
+    }
+
     findSame (name, email) {
         return this.find().andFilter({name}).orFilter({email});
     }
@@ -109,17 +113,17 @@ module.exports = class User extends Base {
     // NOTICE
 
     findUnreadMessages () {
-        return this.relRecipients().and({read: false});
+        return this.relPopupNotifications().and({read: false});
     }
 
     readMessage (id) {
-        return this.relRecipients().and(['ID', 'message', id]).updateAll({read: true});
+        return this.relPopupNotifications().and(['ID', 'message', id]).updateAll({read: true});
     }
 
     // RELATIONS
 
-    relRecipients () {
-        const Class = this.getClass('notifier/Recipient');
+    relPopupNotifications () {
+        const Class = this.getClass('notifier/PopupNotification');
         return this.hasMany(Class, 'user', this.PK);
     }
 

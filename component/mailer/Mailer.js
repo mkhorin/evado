@@ -84,14 +84,14 @@ module.exports = class Mailer extends Base {
     }
 
     sendPasswordReset () {
-        return this.sendVerificationInternal('passwordReset', '/auth/reset-password', ...arguments);
+        return this.executeVerificationSubmit('passwordReset', '/auth/reset-password', ...arguments);
     }
 
     sendVerification () {
-        return this.sendVerificationInternal('verification', '/auth/verify', ...arguments);
+        return this.executeVerificationSubmit('verification', '/auth/verify', ...arguments);
     }
 
-    async sendVerificationInternal (name, link, verification, user) {
+    async executeVerificationSubmit (name, link, verification, user) {
         try {
             let time = this.module.getParam('verificationLifetime');
             time = this.formatter.format(time, 'duration');

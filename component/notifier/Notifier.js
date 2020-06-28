@@ -14,12 +14,31 @@ module.exports = class Notifier extends Base {
         });
     }
 
+    async createNotification (name, data) {
+        const notice = await this.findNotice(name).one();
+        if (!notice) {
+            return this.log('error', `Notice not found: ${name}`);
+        }
+        const message = await notice.createMessage(data);
+        if (message) {
+            return message.send();
+        }
+    }
+
     async execute (notices, data) {
-        const models = await this.spawnNotice().findById(notices).and({active: true}).all();
+        const models = await this.findNoticeById(notices).all();
         for (const model of models) {
-            await model.execute(data);
+            await model.createMessage(data);
         }
         return this.module.getScheduler().executeTasks(this.tasks);
+    }
+
+    findNotice (name) {
+        return this.spawnNotice().find({name, active: true});
+    }
+
+    findNoticeById (id) {
+        return this.spawnNotice().findById(id).and({active: true});
     }
 
     spawnNotice () {

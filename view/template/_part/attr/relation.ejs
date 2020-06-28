@@ -39,8 +39,8 @@ if (d.list !== null) {
     d.list = _url(d.list);
 }
 const relUrl = typeof relRoute === 'undefined'
-        ? relation.model.getControllerClass().NAME
-        : relRoute;
+    ? relation.model.getControllerClass().getBaseName()
+    : relRoute;
 /*
 if (d.view !== null) {
     d.view = _url(d.view === undefined ? `${relUrl}/view` : d.view);

@@ -5,7 +5,7 @@ const p = {
     url: _controller.getOriginalUrl(),
     id: model.getId(),
     key: model.PK,
-    className: model.NAME,
+    className: model.getBaseName(),
     timestamp: _controller.timestamp,
     delete: _url('delete'),
     behaviors: block('behaviors').get()

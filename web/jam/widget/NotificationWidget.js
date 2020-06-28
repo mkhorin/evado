@@ -81,7 +81,7 @@ Jam.NotificationWidget = class NotificationWidget extends Jam.Element {
         data = data && data.message;
         if (data) {
             Jam.dialog.show(data.text, {
-                header: data.subject,
+                title: data.subject,
                 submitText: false,
                 cancelText: 'Close',
                 strictCancel: true

@@ -19,10 +19,12 @@ module.exports = class Console extends Base {
             DataImportConsole: require('./DataImportConsole'),
             DataExportConsole: require('./DataExportConsole'),
             IndexingConsole: require('./IndexingConsole'),
+            NoticeConsole: require('./NoticeConsole'),
             SecurityConsole: require('./SecurityConsole'),
             SecurityExportConsole: require('./SecurityExportConsole'),
             SecurityImportConsole: require('./SecurityImportConsole'),
             TaskConsole: require('./TaskConsole'),
+            UserFilterConsole: require('./UserFilterConsole'),
             ...config
         });
         this.app = this.app || ClassHelper.spawn(this.Application);
@@ -81,6 +83,12 @@ module.exports = class Console extends Base {
         return this.execute('create', this.IndexingConsole, params);
     }
 
+    // NOTICES
+
+    createNotices (params) {
+        return this.execute('create', this.NoticeConsole, params);
+    }
+
     // SECURITY
 
     createUsers () {
@@ -119,6 +127,12 @@ module.exports = class Console extends Base {
 
     createTasks (params) {
         return this.execute('create', this.TaskConsole, params);
+    }
+
+    // USER FILTERS
+
+    createUserFilters (params) {
+        return this.execute('create', this.UserFilterConsole, params);
     }
 
     // MODULES
@@ -161,11 +175,14 @@ module.exports = class Console extends Base {
         return instance[method].bind(instance);
     }
 
-    // LOG
-
-    log () {
-        this.app.log(...arguments);
+    resolveUsers (names) {
+        names = Array.isArray(names) ? names : [];
+        return names.length
+            ? this.spawn('model/User').findByName(names).ids()
+            : names;
     }
+
+    // LOG
 
     async logResult () {
         await PromiseHelper.setTimeout(200); // skip previous console output
@@ -174,6 +191,10 @@ module.exports = class Console extends Base {
         if (counters.length) {
             this.log('warn', `Logging result: ${counters.join(', ')}`);
         }
+    }
+
+    log () {
+        this.app.log(...arguments);
     }
 };
 

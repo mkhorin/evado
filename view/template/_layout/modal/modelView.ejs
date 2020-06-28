@@ -4,7 +4,7 @@ const p = {
     jam: 'Model',
     id: model.getId(),
     key: model.PK,
-    className: model.NAME
+    className: model.getBaseName()
 };
 if (typeof params !== 'undefined') {
     Object.assign(p, params);

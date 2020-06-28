@@ -17,6 +17,10 @@ Jam.ModelError = class ModelError {
         $(event.currentTarget).closest('.form-attr').removeClass('has-error');
     }
 
+    parseXhr (data) {
+        this.parse(data.responseJSON || data.responseText);
+    }
+
     parse (data) {
         this.$form.find('.has-error').removeClass('has-error');
         this.$form.find('.has-group-error').removeClass('has-group-error');

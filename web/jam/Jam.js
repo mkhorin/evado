@@ -80,7 +80,7 @@ Jam.Element = class Element {
     }
 
     static getInstance ($element) {
-        return $element.data(`jammed`);
+        return $element.data(`jamInstance`);
     }
 
     static findInstanceByClass (instanceClass, $container) {
@@ -109,7 +109,7 @@ Jam.Element = class Element {
     }
 
     setInstance ($element) {
-        return $element.data('jammed', this);
+        return $element.data('jamInstance', this);
     }
 };
 
@@ -147,12 +147,13 @@ Jam.Dialog = class Dialog {
     constructor (params) {
         this.params = {
             container: '#main-dialog',
-            header: 'Dialog',
+            title: 'Dialog',
             submitText: 'OK',
             cancelText: 'Cancel',
             returnCancel: false,
             strictCancel: false,
             cssClass: 'default',
+            beforeSubmit: null,
             ...params
         };
         this.$container = $(this.params.container);
@@ -178,7 +179,7 @@ Jam.Dialog = class Dialog {
 
     confirm (message, data) {
         return this.show(message, {
-            header: 'Confirmation',
+            title: 'Confirmation',
             cssClass: 'warning',
             ...data
         });
@@ -186,7 +187,7 @@ Jam.Dialog = class Dialog {
 
     alert (message, data) {
         return this.show(message, {
-            header: 'Warning',
+            title: 'Warning',
             submitText: false,
             cancelText: 'Close',
             cssClass: 'warning',
@@ -196,7 +197,7 @@ Jam.Dialog = class Dialog {
 
     notice (message, data) {
         return this.show(message, {
-            header: 'Notice',
+            title: 'Notice',
             cancelText: false,
             ...data
         });
@@ -213,22 +214,23 @@ Jam.Dialog = class Dialog {
         this._returnCancel = data.returnCancel;
         this._strictCancel = data.strictCancel;
         this._result = $.Deferred();
+        this._beforeSubmit = data.beforeSubmit;
         return this._result;
     }
 
     build (data) {
         this.$container.removeClass().addClass(`dialog-${data.cssClass} dialog`);
-        this.$container.find('.box-head').html(Jam.i18n.translate(data.header));
+        this.$container.find('.box-head').html(Jam.i18n.translate(data.title));
         this.$container.find('.box-body').html(Jam.i18n.translate(data.message));
         this.$submit.html(Jam.i18n.translate(data.submitText)).toggle(!!data.submitText);
         this.$cancel.html(Jam.i18n.translate(data.cancelText)).toggle(!!data.cancelText);
     }
 
     onAction (status) {
-        this.$container.hide();
-        if (status || this._returnCancel) {
-            this._result.resolve(status);
+        if (status && this._beforeSubmit && !this._beforeSubmit(status)) {
+            return false;
         }
+        this.execute(status);
     }
 
     onContainer (event) {
@@ -240,6 +242,21 @@ Jam.Dialog = class Dialog {
     onKeyUp (event) {
         if (event.keyCode === 27 && !this._strictCancel) {
             this.onAction(false);
+        }
+    }
+
+    close () {
+        this.execute(false);
+    }
+
+    submit () {
+        this.execute(true);
+    }
+
+    execute (status) {
+        this.$container.hide();
+        if (status || this._returnCancel) {
+            this._result.resolve(status);
         }
     }
 };

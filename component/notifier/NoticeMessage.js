@@ -15,14 +15,16 @@ module.exports = class NoticeMessage extends Base {
                 'subject',
                 'text',
                 'sentAt',
-                'createdAt'
+                'createdAt',
+                'data'
             ],
             RULES: [
                 [['subject', 'text'], 'required'],
-                ['sentAt', 'default', {value: null}]
+                ['sentAt', 'default', {value: null}],
+                ['data', 'json']
             ],
             UNLINK_ON_DELETE: [
-                'recipients'
+                'popupNotifications'
             ],
             OVERFLOW: 10,
             TRUNCATION: 5
@@ -41,15 +43,22 @@ module.exports = class NoticeMessage extends Base {
         return this.get('subject');
     }
 
+    getData () {
+        try {
+            return JSON.parse(this.get('data'));
+        } catch {}
+    }
+
     findPending () {
         return this.find({sentAt: null}, ['!=', 'notice', null]).order({[this.PK]: 1});
     }
 
-    create (notice) {
+    create (notice, data) {
         this.set('notice', notice.getId());
         this.set('subject', notice.get('subject'));
         this.set('text', notice.get('text'));
         this.set('createdAt', new Date);
+        this.set('data', data ? JSON.stringify(data) : '');
         return this.save();
     }
 
@@ -61,28 +70,34 @@ module.exports = class NoticeMessage extends Base {
         if (!notice) {
             return this.log('error', 'Notice not found');
         }
-        const users = await notice.getUsers();
+        const recipients = await this.getRecipients(notice);
         for (const method of notice.get('methods')) {
             switch (method) {
-                case 'message': await this.sendAsMessage(users); break;
-                case 'email': await this.sendAsEmail(users); break;
+                case 'popup': await this.sendAsPopup(recipients); break;
+                case 'email': await this.sendAsEmail(recipients); break;
             }
         }
         await this.directUpdate({sentAt: new Date});
         return true;
     }
 
-    sendAsMessage (users) {
-        return this.spawn('notifier/Recipient').addMessage(this.getId(), users);
+    getRecipients (notice) {
+        const data = this.getData();
+        const recipient = data && data.recipient;
+        return recipient
+            ? (Array.isArray(recipient) ? recipient : [recipient])
+            : notice.getUsers(data);
+    }
+
+    sendAsPopup (users) {
+        return this.spawn('notifier/PopupNotification').create(this.getId(), users);
     }
 
     async sendAsEmail (users) {
-        const emails = await this.spawn('model/User').findById(users).column('email');
-        return this.module.getMailer().send({
-            recipient: emails,
-            subject: this.get('subject'),
-            text: this.get('text')
-        });
+        const recipient = await this.spawn('model/User').findById(users).column('email');
+        const subject = this.get('subject');
+        const text = this.get('text');
+        return this.module.getMailer().send({recipient, subject, text});
     }
 
     async truncate () {
@@ -90,11 +105,10 @@ module.exports = class NoticeMessage extends Base {
         if (!notice) {
             return this.log('error', 'Notice not found');
         }
-        await ModelHelper.truncateOverflow({
-            query: this.find({notice: notice.getId()}),
-            overflow: notice.getOption('messageOverflow', this.OVERFLOW),
-            truncation: notice.getOption('messageTruncation', this.TRUNCATION)
-        });
+        const query = this.find({notice: notice.getId()});
+        const overflow = notice.getOption('messageOverflow', this.OVERFLOW);
+        const truncation = notice.getOption('messageTruncation', this.TRUNCATION);
+        await ModelHelper.truncateOverflow({query, overflow, truncation});
         return true;
     }
 
@@ -103,8 +117,8 @@ module.exports = class NoticeMessage extends Base {
         return this.hasOne(Class, Class.PK, 'notice');
     }
 
-    relRecipients () {
-        const Class = this.getClass('notifier/Recipient');
+    relPopupNotifications () {
+        const Class = this.getClass('notifier/PopupNotification');
         return this.hasMany(Class, 'message', this.PK).deleteOnUnlink();
     }
 };

@@ -317,7 +317,6 @@ hr {
     min-width: 120px;
     margin: 0;
 }
-
 .navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a > p {
     margin: 0 5px;
     overflow: hidden;
@@ -484,6 +483,12 @@ body.loading {
 .intro-header .icon {
     margin-right: 5px;
 }
+.user-roles {
+    display: flex;
+}
+.user-roles-list {
+    padding-left: 10px
+}
 
 /* BUTTONS  */
 
@@ -586,7 +591,7 @@ body.loading {
 .btn.loading .loader {
     display: inline-block !important;
 }
-.btn .caret {
+.btn span + .caret {
     margin-left: 3px;
 }
 .controls .btn,
@@ -599,7 +604,7 @@ body.loading {
     display: inline-block;
     vertical-align: middle;
 }
-.btn-set  + .btn-set,
+.btn-set + .btn-set,
 .btn-set + .btn,
 .btn + .btn-set {
     margin-left: 15px;
@@ -1090,6 +1095,9 @@ hr + .form-columns {
 .list-commands .btn + .btn {
     margin-left: 2px;
 }
+.list-commands .btn-group .btn + .btn {
+    margin-left: -1px;
+}
 .list-commands .btn-group + .btn {
     margin-left: 10px;
 }
@@ -1207,7 +1215,7 @@ hr + .form-columns {
     color: #a00;
 }
 .table tbody tr.linked.selected td {
-    background-color: #b8ffb8 !important;
+    background-color: #c0ffc0 !important;
 }
 .table tbody tr.unlinked.selected td,
 .table tbody tr.deleted.selected td {
@@ -2083,8 +2091,13 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 
 /* UTILITY */
 
-.utility-container > .utility-pool {
-    display: inline-block;
+.utility-container button.utility-item {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.utility-container > .utility-item {
+    margin-right: 3px;
 }
 
 /* NOTIFICATIONS */

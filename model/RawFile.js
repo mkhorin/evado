@@ -100,7 +100,7 @@ module.exports = class RawFile extends Base {
         if (!maxTotalUserFileSize && !maxTotalUserFiles) {
             return false;
         }
-        const sizes = await this.find().and({creator: user.getId()}).column('size');
+        const sizes = await this.find({creator: user.getId()}).column('size');
         if (maxTotalUserFiles && sizes.length >= maxTotalUserFiles) {
             return true;
         }

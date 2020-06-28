@@ -38,7 +38,6 @@ Jam.Model = class Model extends Jam.Element {
         }
         this.changeTracker = new Jam.ModelChangeTracker(this);
         this.error = new Jam.ModelError(this);
-        this.utilityManager = new Jam.UtilityManager(this.$commands, this);
         this.changeTracker.start();
         this.behaviors = Jam.ClassHelper.spawnInstances(this.params.behaviors, {owner: this});
         this.behaviors.forEach(item => item.init());
@@ -244,8 +243,8 @@ Jam.Model = class Model extends Jam.Element {
             this.events.trigger('afterSave');
             this.modal.close();
         }).fail(data => {
-            this.error.parse(data.responseJSON || data.responseText);
-        }).always(()=> {
+            this.error.parseXhr(data);
+        }).always(() => {
             this.$loader.hide();
         });
     }

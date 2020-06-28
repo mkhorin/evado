@@ -23,7 +23,7 @@ module.exports = class MetaTransit extends Base {
         if (transition instanceof Transition) {
             return model.transit(transition);
         }
-        throw new BadRequest(`Invalid transition: ${name}`);
+        throw new BadRequest(`Invalid transition: ${name}: ${model.getClassMetaId()}`);
     }
 };
 
