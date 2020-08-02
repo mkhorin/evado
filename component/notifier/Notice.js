@@ -26,7 +26,7 @@ module.exports = class Notice extends Base {
                 ['name', 'unique'],
                 ['options', 'json']
             ],
-            UNLINK_ON_DELETE: [
+            DELETE_ON_UNLINK: [
                 'noticeMessages'
             ]
         };
@@ -36,17 +36,21 @@ module.exports = class Notice extends Base {
         return this.get('name');
     }
 
+    toString () {
+        return `${this.constructor.name}: ${this.get('name')}`;
+    }
+
     getOption (key, defaults) {
         return ObjectHelper.getValue(key, this.get('options'), defaults);
     }
 
     relNoticeMessages () {
         const Class = this.getClass('notifier/NoticeMessage');
-        return this.hasMany(Class, 'notice', this.PK).deleteOnUnlink();
+        return this.hasMany(Class, 'notice', this.PK);
     }
 
     async createMessage (data) {
-        this.resolveTemplate(data);
+        this.resolveTemplate(...arguments);
         const message = this.spawn('notifier/NoticeMessage');
         if (await message.create(this, data)) {
             return message;
@@ -56,16 +60,24 @@ module.exports = class Notice extends Base {
         this.log('error', `${error}:`, message.getErrors());
     }
 
-    resolveTemplate (data) {
+    resolveTemplate (data, messageSource) {
         try {
             const config = this.getOption('MessageTemplate') || this.getClass('notifier/MessageTemplate');
             const Class = ClassHelper.resolveSpawn(config, this.module);
             const template = this.spawn(Class, {data});
-            this.set('subject', template.resolveSubject(this.get('subject')));
-            this.set('text', template.resolveText(this.get('text')));
+            this.resolveTemplateAttr('subject', template, messageSource);
+            this.resolveTemplateAttr('text', template, messageSource);
         } catch (err) {
             this.log('error', 'Invalid message template:', err);
         }
+    }
+
+    resolveTemplateAttr (name, template, messageSource) {
+        this.set(name, template.resolveSubject(this.translate(this.get(name), messageSource)));
+    }
+
+    translate (message, source) {
+        return this.module.translate(message, null, source);
     }
 
     async getUsers (data) {

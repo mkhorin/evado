@@ -103,4 +103,4 @@ module.exports = class Select2 extends Base {
 module.exports.init();
 
 const EscapeHelper = require('areto/helper/EscapeHelper');
-const BadRequest = require('areto/error/BadRequestHttpException');
+const BadRequest = require('areto/error/http/BadRequest');

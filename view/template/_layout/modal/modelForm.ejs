@@ -18,7 +18,8 @@ if (typeof params !== 'undefined') {
      data-tab="<%= blocks.tab %>"
      data-title="<%= blocks.title %>"
      data-t-tab="<%- blocks.tabTranslation %>"
-     data-t-title="<%- blocks.titleTranslation %>">
+     data-t-title="<%- blocks.titleTranslation %>"
+     data-csrf="<%- _controller.getCsrfToken() %>">
 
     <div class="box-header with-border scroll-header">
         <div class="model-commands">
@@ -39,7 +40,7 @@ if (typeof params !== 'undefined') {
                 <button data-command="copyId" class="btn btn-white" type="button" title="Copy ID">ID</button>
                 <% if (p.clone) { %>
                 <button data-command="clone" class="btn btn-success btn-light" type="button" title="Clone">
-                    <span class="fa fa-copy"></span>
+                    <span class="far fa-clone"></span>
                 </button>
             <% }} %>
 

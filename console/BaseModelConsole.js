@@ -9,7 +9,7 @@ module.exports = class BaseModelConsole extends Base {
 
     async create () {
         await this.createModuleModels(this.app);
-        this.log('info', this.readyMessage);
+        this.log('info', 'Done');
     }
 
     async createModuleModels (module) {
@@ -29,11 +29,11 @@ module.exports = class BaseModelConsole extends Base {
 
     async saveModel (model, name) {
         await model.save()
-            ? this.log('info', `${this.createdMessage}: ${name}`)
-            : this.log('error', `${this.errorMessage}: ${name}:`, model.getFirstErrorMap());
+            ? this.log('info', `Model created: ${name}`)
+            : this.log('error', `Invalid model: ${name}:`, model.getFirstErrorMap());
     }
 
-    log () {
-        this.owner.log(...arguments);
+    log (type, message, ...args) {
+        this.owner.log(type, `${this.constructor.name}: ${message}`, ...args);
     }
 };

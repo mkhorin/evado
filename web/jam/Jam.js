@@ -165,6 +165,10 @@ Jam.Dialog = class Dialog {
         this.$container.keyup(this.onKeyUp.bind(this));
     }
 
+    isVisible () {
+        return this.$container.is(':visible');
+    }
+
     confirmListDeletion (message, data) {
         return this.confirmDeletion(message || 'Delete selected objects permanently?', data);
     }
@@ -254,9 +258,11 @@ Jam.Dialog = class Dialog {
     }
 
     execute (status) {
-        this.$container.hide();
-        if (status || this._returnCancel) {
-            this._result.resolve(status);
+        if (this.isVisible()) {
+            this.$container.hide();
+            if (status || this._returnCancel) {
+                this._result.resolve(status);
+            }
         }
     }
 };

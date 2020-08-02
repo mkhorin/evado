@@ -54,8 +54,8 @@ Jam.DataGrid = class DataGrid {
     }
 
     resolveColumnTranslation (column) {
-        if (!column.hasOwnProperty('translate') && column.format === 'label') {
-            column.translate = '';
+        if (!column.hasOwnProperty('translateBody') && column.format === 'label') {
+            column.translateBody = '';
         }
     }
 

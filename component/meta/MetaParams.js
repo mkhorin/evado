@@ -10,21 +10,21 @@ module.exports = class MetaParams {
         this.security = null;
     }
 
-    canReadAttr (attr, model) {
+    canReadAttr (attr) {
         return this.security.attrAccess.canRead(attr.name)
             && (!attr.relation || this.security.relationAccessMap[attr.name].canRead());
     }
 
     canUpdateAttr (attr, model) {
         return !model.readOnly
-            && this.master.refAttr !== attr
+            && this.master.refAttr !== attr.classAttr
             && !attr.isReadOnly()
             && this.security.attrAccess.canWrite(attr.name);
     }
 
     getMasterQueryParam () {
         return this.master.model
-            ? `${this.master.attr.name}.${this.master.model.getViewMetaId()}`
+            ? `${this.master.attr.name}.${this.master.model.getMetaId()}`
             : '';
     }
 };

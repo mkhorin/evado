@@ -22,27 +22,19 @@ module.exports = class Utility extends Base {
     }
 
     isActive () {
-        return this.enabled;
+        return this.enabled && (!this.actions || !this.modelAction || this.actions.includes(this.modelAction));
     }
 
     isIndexAction () {
-        return this.modelAction === 'index';
+        return this.modelAction === 'index' || !this.modelAction;
     }
 
     isCreateAction () {
-        return this.modelAction === 'create';
+        return this.modelAction === 'create' || !this.modelAction;
     }
 
     isUpdateAction () {
-        return this.modelAction === 'update';
-    }
-
-    isAction (...names) {
-        for (const name of names) {
-            if (this.modelAction === name) {
-                return true;
-            }
-        }
+        return this.modelAction === 'update' || !this.modelAction;
     }
 
     isUserId (id) {
@@ -122,4 +114,5 @@ module.exports = class Utility extends Base {
     }
 };
 
+const CommonHelper = require('areto/helper/CommonHelper');
 const StringHelper = require('areto/helper/StringHelper');

@@ -12,9 +12,25 @@ module.exports = class EventHandler extends Base {
             TABLE: 'sys_eventHandler',
             ATTRS: [
                 'name',
+                'description',
                 'config'
+            ],
+            RULES: [
+                [['name', 'config'], 'required'],
+                ['name', 'regex', {pattern: /^[0-9a-zA-Z-]+$/}],
+                ['name', 'unique'],
+                ['description', 'string'],
+                ['config', 'spawn']
             ]
         };
+    }
+
+    getTitle () {
+        return this.get('name');
+    }
+
+    toString () {
+        return `${this.constructor.name}: ${this.get('name')}`;
     }
 
     resolve () {

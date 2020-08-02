@@ -60,7 +60,7 @@ module.exports = class SecurityConsole extends Base {
     async createUser (data = this.params) {
         try {
             const service = this.spawn('security/PasswordAuthService');
-            const user = await service.register(data);
+            const user = await service.register(data, true);
             this.log('info', `User created: ${data.email}`);
             return user;
         } catch (err) {

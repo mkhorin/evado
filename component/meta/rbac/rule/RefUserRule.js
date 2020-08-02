@@ -13,7 +13,7 @@ module.exports = class RefUserRule extends Base {
         super({
             attr: 'executor', // reference attribute to class with user attribute
             userAttr: 'user', // user attribute
-            objectFilter: true, // filter objects in a list
+            objectFilter: true, // filter objects in list
             ...config
         });
     }

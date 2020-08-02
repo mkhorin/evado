@@ -14,13 +14,13 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     initChanges () {
         this.changes = {links: [], unlinks: [], deletes: []};
-        this.startValues = [];
+        this.initValues = [];
         const defaultValue = this.getValue();
         if (defaultValue) {
             this.changes.links = defaultValue.split(',');
         } else {
             for (const option of this.$select.children()) {
-                this.startValues.push(option.getAttribute('value'));
+                this.initValues.push(option.getAttribute('value'));
             }
         }
         this.setValueByChanges();
@@ -53,7 +53,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.$select.change(this.onChangeSelect.bind(this));
         this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
         this.createSelect2();
-        this.getDefaultTitles();
+        //this.getDefaultTitles();
         this.toggleBlank();
         this.bindDependencyChange();
     }
@@ -78,6 +78,15 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     getDependencyValue () {
         const data = this.$select.val();
         return !Array.isArray(data) || data.length ? data : null;
+    }
+
+    getValueText () {
+        const data = this.$select.select2('data');
+        return data.map(item => item.text).join();
+    }
+
+    getUpdateUrl () {
+        return this.params.update;
     }
 
     clear () {
@@ -221,17 +230,14 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     onChangeSelect () {
         this.changes.links = [];
-        let value = this.$select.val();
+        const value = this.$select.val();
         if (Array.isArray(value)) {
-            value.forEach(this.linkValue.bind(this));
+            value.forEach(this.linkValue, this);
         } else {
             if (value) {
                 this.linkValue(value);
             }
-            if (!this.startValues.includes(value) && this.startValues.length
-                && !this.changes.deletes.includes(this.startValues[0])) {
-                this.changes.unlinks = [this.startValues[0]];
-            }
+            this.unlinkCurrentValue(value);
         }
         if (this.setValueByChanges()) {
             this.triggerChange();
@@ -240,11 +246,18 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     linkValue (value) {
-        if (!this.startValues.includes(value)) {
+        if (!this.initValues.includes(value)) {
             this.changes.links.push(value);
         }
         Jam.ArrayHelper.remove(value, this.changes.unlinks);
         Jam.ArrayHelper.remove(value, this.changes.deletes);
+    }
+
+    unlinkCurrentValue (value) {
+        const values = this.initValues;
+        if (values.length && !values.includes(value) && !this.changes.deletes.includes(values[0])) {
+            this.changes.unlinks = [values[0]];
+        }
     }
 
     showMouseEnter () {
@@ -278,7 +291,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     onUpdate () {
         const id = this.getOneSelectedValue();
         if (id) {
-            this.loadModal(this.params.update, {id});
+            this.loadModal(this.getUpdateUrl(), {id});
         }
     }
 
@@ -296,7 +309,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     unlink (values) {
         for (const value of values) {
-            if (this.startValues.includes(value)) {
+            if (this.initValues.includes(value)) {
                 this.changes.unlinks.push(value);
             }
             this.removeSelect2Value(value);
@@ -305,7 +318,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     delete (values) {
         for (const value of values) {
-            if (this.startValues.includes(value)) {
+            if (this.initValues.includes(value)) {
                 this.changes.deletes.push(value);
             }
             this.removeSelect2Value(value);
@@ -330,11 +343,14 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     defaultAfterCloseModal (event, data) {
-        if (data && data.result) {
+        if (!data || !data.result) {
+            return false;
+        }
+        if (data.saved) {
             this.selectValue(data.result);
-            if (data.reopen) {
-                this.loadModal(this.params.update, {id: data.result});
-            }
+        }
+        if (data.reopen) {
+            this.loadModal(this.getUpdateUrl(), {id: data.result});
         }
     }
 

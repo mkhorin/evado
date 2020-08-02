@@ -1,3 +1,17 @@
+## 1.6.0
+
+* component/base/BaseController
+    - CSRF token validation   
+* component/notifier/Notice
+    - add notification translation
+* component/scheduler/Scheduler
+    - fix task name
+* console/Console
+    - configure event handlers  
+    - configure listeners  
+* model/Task
+    - add task description  
+
 ## 1.5.0
 
 * component/meta/MetaSecurity

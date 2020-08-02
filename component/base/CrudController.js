@@ -19,8 +19,7 @@ module.exports = class CrudController extends Base {
                 'delete': 'POST',
                 'delete-list': 'POST',
                 'export': 'POST'
-            },
-
+            }
         };
     }
 
@@ -69,6 +68,7 @@ module.exports = class CrudController extends Base {
             const _layout = this.getViewLayout();
             return this.render(params.template, {model, _layout, ...params.templateData});
         }
+        this.checkCsrfToken();
         model.load(this.getPostParams());
         return this.saveModel(model, params.afterCreate);
     }
@@ -86,6 +86,7 @@ module.exports = class CrudController extends Base {
             Object.assign(params, params.getParamsByModel(model));
         }
         if (this.isPost()) {
+            this.checkCsrfToken();
             model.load(this.getPostParams());
             if (params.beforeUpdate) {
                 await params.beforeUpdate.call(this, model);
@@ -134,6 +135,7 @@ module.exports = class CrudController extends Base {
     // DELETE
 
     async actionDelete () {
+        this.checkCsrfToken();
         const model = await this.getModel();
         await model.delete();
         this.sendText(model.getId());
@@ -144,6 +146,7 @@ module.exports = class CrudController extends Base {
         if (!ids) {
             throw new BadRequest;
         }
+        this.checkCsrfToken();
         const Class = this.getModelClass();
         const models = await this.spawn(Class).findById(ids.split(',')).all();
         await Class.delete(models);
@@ -165,17 +168,18 @@ module.exports = class CrudController extends Base {
     }
 
     async actionListRelated (params) {
+        const relation = this.getQueryParam('rel');
         params = {
             pid: this.getQueryParam('pid'),
-            relation: this.getQueryParam('rel'),
-            viewModel: this.getQueryParam('rel'),
-            with: null,
+            relation: relation,
+            viewModel: relation,
+            with: this.getListRelatedWith(relation),
             ...params
         };
         const model = params.pid
             ? await this.getModel({id: params.pid})
             : this.createModel();
-        const query = model.getRelation(params.relation);
+        const query = model.getRelation(relation);
         if (!query) {
             throw new BadRequest('Relation not found');
         }
@@ -198,6 +202,10 @@ module.exports = class CrudController extends Base {
 
     // METHOD
 
+    getListRelatedWith () {
+        return null;
+    }
+
     getViewLayout () {
         return this.isAjax()
             ? '_layout/modal/modelForm'
@@ -216,4 +224,4 @@ module.exports = class CrudController extends Base {
 };
 module.exports.init();
 
-const BadRequest = require('areto/error/BadRequestHttpException');
+const BadRequest = require('areto/error/http/BadRequest');

@@ -5,9 +5,9 @@
 
 const Base = require('areto/error/HttpException');
 
-module.exports = class MetaErrorHttpException extends Base {
+module.exports = class InvalidMetadata extends Base {
 
     constructor (err, data) {
-        super(501, err || 'Metadata error', data);
+        super(501, err || 'Invalid metadata', data);
     }
 };

@@ -23,7 +23,7 @@ module.exports = class NoticeMessage extends Base {
                 ['sentAt', 'default', {value: null}],
                 ['data', 'json']
             ],
-            UNLINK_ON_DELETE: [
+            DELETE_ON_UNLINK: [
                 'popupNotifications'
             ],
             OVERFLOW: 10,
@@ -119,7 +119,7 @@ module.exports = class NoticeMessage extends Base {
 
     relPopupNotifications () {
         const Class = this.getClass('notifier/PopupNotification');
-        return this.hasMany(Class, 'message', this.PK).deleteOnUnlink();
+        return this.hasMany(Class, 'message', this.PK);
     }
 };
 module.exports.init(module);

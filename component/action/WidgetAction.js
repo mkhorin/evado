@@ -18,4 +18,4 @@ module.exports = class WidgetAction extends Base {
     }
 };
 
-const BadRequest = require('areto/error/BadRequestHttpException');
+const BadRequest = require('areto/error/http/BadRequest');

@@ -66,8 +66,8 @@ Jam.ColumnRenderer = class ColumnRenderer {
     }
 
     translate (value, column) {
-        return typeof column.translate === 'string'
-            ? Jam.i18n.translate(value, column.translate)
+        return typeof column.translateData === 'string'
+            ? Jam.i18n.translate(value, column.translateData)
             : value;
     }
 

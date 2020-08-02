@@ -84,6 +84,7 @@ module.exports = class AuthController extends Base {
         if (this.isGet()) {
             return this.render('changePassword', {model});
         }
+        this.checkCsrfToken();
         model.captchaAction = this.createAction('captcha');
         if (!await model.load(this.getPostParams()).changePassword()) {
             return this.render('changePassword', {model});

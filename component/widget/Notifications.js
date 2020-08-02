@@ -58,4 +58,4 @@ module.exports = class Notifications extends Base {
 
 };
 
-const BadRequest = require('areto/error/BadRequestHttpException');
+const BadRequest = require('areto/error/http/BadRequest');

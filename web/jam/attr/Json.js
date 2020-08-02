@@ -17,6 +17,7 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
             this.$text = this.$editor.find('textarea');
             this.find('.edit').click(this.onEdit.bind(this));
             this.$editor.find('.save').click(this.onSave.bind(this));
+            this.$editor.on('shown.bs.modal', this.onShownModal.bind(this));
             this.activated = true;
         }
     }
@@ -36,6 +37,10 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
             this.parseError(err);
         }
         this.$editor.modal();
+    }
+
+    onShownModal () {
+        this.$text.focus();
     }
 
     onSave () {

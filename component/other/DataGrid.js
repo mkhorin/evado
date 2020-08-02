@@ -173,7 +173,7 @@ module.exports = class DataGrid extends Base {
 };
 module.exports.init();
 
-const BadRequest = require('areto/error/BadRequestHttpException');
+const BadRequest = require('areto/error/http/BadRequest');
 const CommonSearch = require('./CommonSearch');
 const ListFilter = require('./ListFilter');
 const ModelHelper = require('../helper/ModelHelper');

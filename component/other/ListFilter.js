@@ -273,6 +273,6 @@ module.exports = class ListFilter extends Base {
 };
 module.exports.init();
 
-const BadRequest = require('areto/error/BadRequestHttpException');
+const BadRequest = require('areto/error/http/BadRequest');
 const EscapeHelper = require('areto/helper/EscapeHelper');
 const DateHelper = require('areto/helper/DateHelper');

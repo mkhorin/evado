@@ -10,9 +10,6 @@ module.exports = class UserFilterConsole extends Base {
     constructor (config) {
         super({
             key: 'userFilters',
-            readyMessage: 'User filters ready',
-            createdMessage: 'User filter created',
-            errorMessage: 'Invalid user filter',
             ...config
         })
     }

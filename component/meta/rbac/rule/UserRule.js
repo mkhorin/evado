@@ -12,7 +12,7 @@ module.exports = class UserRule extends Base {
     constructor (config) {
         super({
             attr: 'user', // user attribute
-            objectFilter: true, // filter objects in a list
+            objectFilter: true, // filter objects in list
             ...config
         });
     }

@@ -10,6 +10,7 @@ module.exports = class Notifier extends Base {
     constructor (config) {
         super({
             // tasks: [],
+            messageSource: 'notice',
             ...config
         });
     }
@@ -19,7 +20,7 @@ module.exports = class Notifier extends Base {
         if (!notice) {
             return this.log('error', `Notice not found: ${name}`);
         }
-        const message = await notice.createMessage(data);
+        const message = await this.createMessage(notice, data);
         if (message) {
             return message.send();
         }
@@ -28,9 +29,13 @@ module.exports = class Notifier extends Base {
     async execute (notices, data) {
         const models = await this.findNoticeById(notices).all();
         for (const model of models) {
-            await model.createMessage(data);
+            await this.createMessage(model, data);
         }
         return this.module.getScheduler().executeTasks(this.tasks);
+    }
+
+    createMessage (notice, data) {
+        return notice.createMessage(data, this.messageSource);
     }
 
     findNotice (name) {

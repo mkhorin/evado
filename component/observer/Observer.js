@@ -33,7 +33,6 @@ module.exports = class Observer extends Base {
     }
 
     catch (event, data) {
-        // this.log('info', `Catch event: ${event}`);
         if (Array.isArray(this._eventMap[event])) {
             return this.handle(event, data);
         }
@@ -45,7 +44,7 @@ module.exports = class Observer extends Base {
             try {
                 await handler.execute(data);
             } catch (err) {
-                this.log('error', `Event: ${event}: Handler failed: ${handler}:`, err);
+                this.log('error', `Event: ${event}: ${handler}:`, err);
             }
         }
     }

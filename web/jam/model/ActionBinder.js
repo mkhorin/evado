@@ -110,7 +110,7 @@ Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderAction {
             this.$item.toggleClass('hidden', !visible);
         }
         if (this.attr) {
-            if (!visible) {
+            if (!visible && !this.attr.isReadOnly()) {
                 this.attr.clear();
             }
             this.attr.activate();
@@ -138,7 +138,8 @@ Jam.ActionBinderEnable = class ActionBinderEnabled extends Jam.ActionBinderActio
 
 // [value, condition]
 // [[value1, condition], [value2, condition], ...]
-// [[attrName], condition} - value from attribute
+// [.attrName, condition} - value from attribute
+// [.attrName.methodName, condition} - value from attribute by method
 
 Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderAction {
 
@@ -151,7 +152,7 @@ Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderAction {
 
     createItems (data) {
         this.items = [];
-        if (Array.isArray(data[0]) && data[0].length === 2) {
+        if (Array.isArray(data[0])) {
             for (const item of data) {
                 this.items.push(this.createItem(item));
             }
@@ -161,9 +162,20 @@ Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderAction {
     }
 
     createItem ([value, condition]) {
-        const attrName = Array.isArray(value) ? value[0] : null;
-        condition = new Jam.ModelCondition(condition, this.element.binder.model);
-        return {value, condition, attrName};
+        const result = {value};
+        if (typeof value === 'string') {
+            const items = value.split('.');
+            if (items[1] && items[0] === '') {
+                result.attrName = items[1];
+                result.method = items[2];
+            }
+        }
+        result.condition = new Jam.ModelCondition(condition, this.element.binder.model);
+        return result;
+    }
+
+    parseAttrValue () {
+
     }
 
     getValidItem () {
@@ -174,13 +186,13 @@ Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderAction {
         }
     }
 
-    getItemValue ({value, attrName}) {
+    getItemValue ({value, attrName, method}) {
         if (!attrName) {
             return value;
         }
         const attr = this.element.binder.model.getAttr(attrName);
         if (attr) {
-            return attr.getValue();
+            return method ? attr[method]() : attr.getValue();
         }
         console.error(`${this.constructor.name}: Attribute not found: ${attrName}`);
     }

@@ -6,7 +6,7 @@ block('title', title);
 %>
 
 <p class="login-box-msg">
-    <%- _t('Register a new user') %>
+    <%- _t('auth.registerNewUser') %>
 </p>
 
 <% if (error) { %>
@@ -55,8 +55,8 @@ block('title', title);
     </div>
 </form>
 
-<div class="text-center mt20">
-    <a href="auth/sign-in">
+<div class="login-box-footer">
+    <a href="auth/sign-in" class="btn-link btn">
         <%- _t('Sign in') %>
     </a>
 </div>

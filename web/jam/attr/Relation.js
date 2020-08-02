@@ -204,7 +204,7 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     linkSingle (ids) {
-        this.changes.linkSingle(ids, this.getObjectIds(this.findRows()));
+        this.changes.linkSingle(ids, this.getObjectIds(this.findRows()), this.params);
     }
 
     linkMultiple (ids) {
@@ -214,13 +214,13 @@ Jam.AttrList = class AttrList extends Jam.List {
     unlinkObjects ($rows) {
         this.changes.unlinkObjects(this.getObjectIds($rows));
         this.setValue();
-        this.reload();
+        this.redraw();
     }
 
     deleteObjects ($rows) {
         this.changes.deleteObjects(this.getObjectIds($rows));
         this.setValue();
-        this.reload();
+        this.redraw();
     }
 
     revertChanges () { // revert unlinks or deletes
@@ -244,8 +244,9 @@ Jam.AttrList = class AttrList extends Jam.List {
 
 Jam.AttrListChanges = class AttrListChanges {
 
-    constructor () {
-        this.data = {links: [], unlinks: [], deletes: []};
+    constructor (attr) {
+        this.attr = attr;
+        this.clear();
     }
 
     isEmpty () {
@@ -266,6 +267,10 @@ Jam.AttrListChanges = class AttrListChanges {
         return this.data.links;
     }
 
+    clear () {
+        this.data = {links: [], unlinks: [], deletes: []};
+    }
+
     clearLinks () {
         this.data.links = [];
     }
@@ -282,11 +287,11 @@ Jam.AttrListChanges = class AttrListChanges {
         return this.isEmpty() ? '' : JSON.stringify(this.data);
     }
 
-    linkSingle (ids, currents) {
+    linkSingle (ids, currents, params) {
         if (ids[0] === currents[0]) {
             return this.clear();
         }
-        if (this.data.deletes.length) {
+        if (this.data.deletes.length || (params.delete && !params.unlink)) {
             this.data.unlinks = [];
             this.data.deletes = currents;
         } else {

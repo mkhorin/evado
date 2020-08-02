@@ -10,9 +10,6 @@ module.exports = class NoticeConsole extends Base {
     constructor (config) {
         super({
             key: 'notices',
-            readyMessage: 'Notices ready',
-            createdMessage: 'Notice created',
-            errorMessage: 'Invalid notice',
             ...config
         })
     }

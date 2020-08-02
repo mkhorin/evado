@@ -15,7 +15,12 @@ module.exports = class Listener extends Base {
                 'events',
                 'description',
                 'handlers',
-                'notices'
+                'notices',
+                'tasks'
+            ],
+            RULES: [
+                ['events', 'required'],
+                ['events', 'filter', {filter: 'split'}]
             ]
         };
     }

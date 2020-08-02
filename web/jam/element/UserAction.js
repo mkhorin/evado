@@ -8,7 +8,7 @@ Jam.UserAction = class UserAction extends Jam.Element {
     static post ($element, params) {
         return this.confirm($element).then(() => {
             Jam.toggleGlobalLoader(true);
-            return Jam.Helper.post($element, $element.data('url'), params)
+            return Jam.Helper.post($element.data('url'), params)
                 .always(()=> Jam.toggleGlobalLoader(false));
         });
     }

@@ -23,6 +23,7 @@ const urlParams = {
     rel: d.relName,
     pid: model.getId()
 };
+d.backRef = relation.isBackRef();
 d.multiple = relation.isMultiple();
 if (d.list !== null) {
     if (d.list === undefined) {

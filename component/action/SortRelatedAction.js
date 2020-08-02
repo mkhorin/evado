@@ -93,5 +93,5 @@ module.exports = class SortRelatedAction extends Base {
     }
 };
 
-const BadRequest = require('areto/error/BadRequestHttpException');
+const BadRequest = require('areto/error/http/BadRequest');
 const SortOrderBehavior = require('areto/behavior/SortOrderBehavior');

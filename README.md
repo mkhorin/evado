@@ -1,6 +1,6 @@
-# Evado RAD Platform
+# Evado Node.js Framework
 
-### Lightweight software for creating and operating reliable web applications
+### High-level framework for creating and operating reliable web applications
 
 Build an app by declaring entities and relations without coding.
 
@@ -19,6 +19,7 @@ Build an app by declaring entities and relations without coding.
 - [Exchange App](https://github.com/mkhorin/evado-app-exchange)
 - [Expert System App](https://github.com/mkhorin/evado-app-expert)
 - [Shop App](https://github.com/mkhorin/evado-app-shop)
+- [Social Network App](https://github.com/mkhorin/evado-app-social)
 
 ### Ready to Use
 

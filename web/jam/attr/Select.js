@@ -28,6 +28,14 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         this.toggleBlank();
     }
 
+    getValueText () {
+        if (!this.$value.data('select2')) {
+            return this.$value.find('option:selected').text();
+        }
+        const data = this.$value.select2('data');
+        return data.map(item => item.text).join();
+    }
+
     setValue (value) {
         this.$value.val(value).trigger('change.select2');
         this.toggleBlank();

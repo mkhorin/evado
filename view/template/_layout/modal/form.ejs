@@ -15,7 +15,9 @@ if (typeof params !== 'undefined') {
      data-tab="<%= blocks.tab %>"
      data-title="<%= blocks.title %>"
      data-t-tab="<%- blocks.tabTranslation %>"
-     data-t-title="<%- blocks.titleTranslation %>">
+     data-t-title="<%- blocks.titleTranslation %>"
+     data-csrf="<%- _controller.getCsrfToken() %>">
+
     <div class="box-header with-border scroll-header">
         <div class="model-commands">
             <% if (p.save) { %>

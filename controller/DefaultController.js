@@ -19,5 +19,9 @@ module.exports = class DefaultController extends Base {
     actionIndex () {
         return this.render('index');
     }
+
+    actionCsrf () {
+        this.sendText(this.getCsrfToken());
+    }
 };
 module.exports.init(module);

@@ -43,11 +43,8 @@ module.exports = class UtilityManager extends Base {
 
     async getActiveItems (params) {
         const result = [];
-        for (const config of this._utilities) {
-            const utility = this.createUtility(config, params);
-            if (await utility.isActive()) {
-                result.push(await utility.getJson());
-            }
+        for (const utility of await this.createUtilities(params)) {
+            result.push(await utility.getJson());
         }
         return result;
     }

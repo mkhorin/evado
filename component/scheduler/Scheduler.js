@@ -20,30 +20,23 @@ module.exports = class Scheduler extends Base {
         }
     }
 
-    getTaskByName (name) {
-        for (const task of this._taskMap) {
-            if (task.name === name) {
-                return task;
-            }
-        }
-    }
-
     addTask (model) {
         const config = model.resolve();
         if (config) {
-            super.addTask(model.getId(), config);
+            super.addTask(model.getName(), config);
         }
     }
 
     updateTask (model) {
-        if (this.getTask(model.getId())) {
-            this.deleteTask(model.getId());
+        const name = model.getName();
+        if (this.getTask(name)) {
+            this.deleteTask(name);
         }
         this.addTask(model);
     }
 
     async taskDone ({sender}) {
-        const model = await this.spawnTask().findById(sender.id).one();
+        const model = await this.spawnTask().findByName(sender.name).one();
         if (model) {
             await model.saveDone();
         }
@@ -51,8 +44,9 @@ module.exports = class Scheduler extends Base {
     }
 
     executeTask (name) {
-        const task = this.getTaskByName(name);
-        return super.executeTask(task ? task.id : null);
+        if (this.getTask(name)) {
+            return super.executeTask(name);
+        }
     }
 
     spawnTask () {

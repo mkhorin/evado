@@ -117,11 +117,11 @@ Jam.DataGridRenderer = class DataGridRenderer {
         return this.renderBodyGroupHtml(value, column);
     }
 
-    renderBodyGroupHtml (value, {name, label}) {
+    renderBodyGroupHtml (value, {name, label, translate}) {
         const direction = this._groupDirection;
         const span = this.columns.length;
         const sort = '<span class="order-toggle fa" title="Sort"></span>';
-        label = this.grid.translate(label || name);
+        label = this.grid.translate(label || name, translate);
         return `<tr class="group ${direction}"><th title="${label}" colspan="${span}">${value}${sort}</th></tr>`;
     }
 

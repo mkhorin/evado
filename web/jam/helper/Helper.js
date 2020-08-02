@@ -113,10 +113,17 @@ Jam.Helper = class Helper {
         return deferred ? deferred.then(spawn) : spawn();
     }
 
-    static post ($element, url, data) {
-        const csrf = $element.closest('[data-csrf]').data('csrf');
-        data = typeof data === 'string' ? `csrf=${csrf}&${data}` : {csrf, ...data};
-        return $.post(url, data);
+    static post (url, data) {
+        return $.post(url, this.addCsrfToken(data));
+    }
+
+    static addCsrfToken (data) {
+        const csrf = this.getCsrfToken();
+        return typeof data === 'string' ? `csrf=${csrf}&${data}` : {csrf, ...data};
+    }
+
+    static getCsrfToken () {
+        return $(document.body).data('csrf');
     }
 
     static createSerialImageLoading ($container = $(document.body)) {
@@ -537,18 +544,20 @@ Jam.StringHelper = class StringHelper {
 
 Jam.UrlHelper = class UrlHelper {
 
-    static getNewPageUrl (modal) {
-        return this.addParams(location.href, {modal});
+    static getPageModalUrl (modal, base) {
+        return this.getPageUrl({modal}, base);
     }
 
-    static openNewPageModal (url) {
-        this.openNewPage(this.getNewPageUrl(url));
+    static openNewPageModal () {
+        this.openNewPage(this.getPageModalUrl(...arguments));
+    }
+
+    static getPageUrl (data, base = location.href) {
+        return this.addParams(base, data);
     }
 
     static openNewPage (url, data) {
-        setTimeout(() => {
-            window.open(this.addParams(url, data), '_blank');
-        }, 0);
+        setTimeout(() => window.open(this.addParams(url, data), '_blank'), 0);
     }
 
     static addParams (url, data) {

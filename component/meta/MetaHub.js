@@ -15,7 +15,7 @@ module.exports = class MetaHub extends Base {
 
     constructor (config) {
         super({
-            basePath: 'meta/app',
+            basePath: 'metadata/app',
             models: require('./MetaModels'),
             processing: {
                 Class: require('./SingleProcessing'),
@@ -117,5 +117,4 @@ module.exports.init();
 const path = require('path');
 const CommonHelper = require('areto/helper/CommonHelper');
 const PromiseHelper = require('areto/helper/PromiseHelper');
-const StringHelper = require('areto/helper/StringHelper');
 const MetaHelper = require('../helper/MetaHelper');

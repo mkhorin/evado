@@ -103,7 +103,7 @@ Jam.List = class List extends Jam.Element {
     }
 
     setDataGridParams () {
-        this.params.columns.forEach(this.prepareColumnData.bind(this));
+        this.params.columns.forEach(this.prepareColumnData, this);
         if (this.params.list) {
             this.params.ajax = {
                 url: this.params.list,
@@ -172,6 +172,10 @@ Jam.List = class List extends Jam.Element {
         }
     }
 
+    redraw () {
+        this.grid.drawPage();
+    }
+
     // SELECTION
 
     onClickRow (event) {
@@ -198,8 +202,8 @@ Jam.List = class List extends Jam.Element {
     openNewPage () {
         const $row = this.getSelectedRow();
         if ($row) {
-            const data = Jam.UrlHelper.addParams(this.getUpdateUrl(), this.getObjectIdParam($row));
-            Jam.UrlHelper.openNewPage(Jam.UrlHelper.getNewPageUrl(data));
+            const url = Jam.UrlHelper.addParams(this.getUpdateUrl(), this.getObjectIdParam($row));
+            Jam.UrlHelper.openNewPageModal(url);
         }
     }
 
@@ -310,7 +314,7 @@ Jam.List = class List extends Jam.Element {
 
     post (url, data) {
         this.toggleLoader(true);
-        this.xhr = Jam.Helper.post(this.$container, url, data)
+        this.xhr = Jam.Helper.post(url, data)
             .always(() => this.toggleLoader(false))
             .fail(data => this.notice.danger(data.responseText || data.statusText));
         return this.xhr;

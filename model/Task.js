@@ -25,9 +25,9 @@ module.exports = class Task extends Base {
             ],
             RULES: [
                 [['name', 'job'], 'required'],
-                [['name', 'description'], 'string'],
                 ['name', 'regex', {pattern: /^[0-9a-zA-Z-]+$/}],
                 ['name', 'unique'],
+                ['description', 'string'],
                 ['startDate', 'date'],
                 ['startTime', 'regex', {pattern: 'HH:mm:ss'}],
                 [['active', 'startup', 'stopOnFail'], 'checkbox'],
@@ -37,6 +37,18 @@ module.exports = class Task extends Base {
                 ['job', 'spawn', {BaseClass: require('areto/scheduler/Job')}]
             ]
         };
+    }
+
+    getName () {
+        return this.get('name');
+    }
+
+    findByName (name) {
+        return this.find({name});
+    }
+
+    toString () {
+        return `${this.constructor.name}: ${this.getName()}`;
     }
     
     resolve () {
@@ -51,7 +63,7 @@ module.exports = class Task extends Base {
     }
 
     async execute () {
-        const task = this.module.getScheduler().getTask(this.getId());
+        const task = this.module.getScheduler().getTask(this.getName());
         if (!task) {
             return this.addError('error', 'Task not found');
         }

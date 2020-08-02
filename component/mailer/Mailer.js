@@ -19,7 +19,7 @@ module.exports = class Mailer extends Base {
             engine: require('nodemailer'),
             settings: {},
             senderMap: {},
-            defaultSender: '', //'"System" <system@system.sys>'
+            defaultSender: '', // '"System" <system@system.sys>'
             defaultMessageSource: 'mail',
             ...config
         });

@@ -50,6 +50,10 @@ Jam.ModelAttr = class ModelAttr {
         return this.$attr.hasClass('disabled');
     }
 
+    isReadOnly () {
+        return !!this.$value.attr('readonly');
+    }
+
     isRequired () {
         return this.$attr.hasClass('required');
     }
@@ -310,7 +314,7 @@ Jam.TimeModelAttr = class TimeModelAttr extends Jam.DateModelAttr {
         return this.getDateByTime(value);
     }
 
-    getFormat (options) {
+    getFormat () {
         return this.params.momentFormat || 'LT';
     }
 
@@ -369,10 +373,7 @@ Jam.StoreLastSavedValueBehavior = class StoreLastSavedValueBehavior extends Jam.
         super(...arguments);
         this.model = this.owner.model;
         this.defaultValue = this.owner.getValue();
-        const selector = this.params.defaultValueSelector;
-        if (selector) {
-            this.owner.find(selector).click(this.onDefaultValue.bind(this));
-        }
+        this.owner.find('[data-value]').click(this.onValue.bind(this));
         this.setStoreValue();
         this.model.events.one('afterSave', this.onSaveModel.bind(this));
     }
@@ -383,6 +384,10 @@ Jam.StoreLastSavedValueBehavior = class StoreLastSavedValueBehavior extends Jam.
 
     onDefaultValue () {
         this.owner.setValue(this.defaultValue);
+    }
+
+    onValue (event) {
+        this.owner.setValue(event.currentTarget.dataset.value);
     }
 
     onSaveModel () {

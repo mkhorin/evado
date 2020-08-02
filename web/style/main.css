@@ -287,7 +287,14 @@ hr {
     background: none;
     border: none;
 }
-
+.thumbnail-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+.transparent {
+    background: none;
+    border: none;
+}
 .main-header .navbar .dropdown-menu li a {
     color: #000 !important;
 }
@@ -296,6 +303,16 @@ hr {
 }
 .main-header .navbar .dropdown-menu li.divider {
     background-color: #ccc !important;
+}
+.main-header .navbar .nav > li > a > .label {
+    font-size: 12px;
+    font-weight: normal;
+}
+.main-header .navbar .dropdown-menu li.dropdown-menu-footer a {
+    text-align: center;
+    padding: 6px 12px;
+    color: #777 !important;
+    border-top: 1px solid #eee;
 }
 
 .datepicker {
@@ -1051,6 +1068,9 @@ hr + .form-columns {
 .form-tabs .nav-tabs > li > a {
     padding: 7px 12px;
 }
+.form-tabs .nav-tabs > li.active > a {
+    color: #222;
+}
 .row + .form-tabs,
 .form-group + .form-tabs {
     margin-top: 30px;
@@ -1206,13 +1226,23 @@ hr + .form-columns {
 }
 .table tbody tr.deleted:nth-child(odd) td {
     background-color: #ffd8d8 !important;
-    text-decoration: line-through;
-    color: #a00;
 }
 .table tbody tr.deleted:nth-child(even) td {
     background-color: #ffe0e0 !important;
-    text-decoration: line-through;
+}
+.table tbody tr.deleted td {
+    position: relative;
     color: #a00;
+}
+.table tbody tr.deleted td:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    width: calc(100% - 10px);
+    height: 1px;
+    background: #c88;
 }
 .table tbody tr.linked.selected td {
     background-color: #c0ffc0 !important;
@@ -1794,7 +1824,7 @@ body.jmodal-root-active .jmodal-area {
     text-align: center;
     border: 1px solid #fff;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
 }
 .uploader-item.with-thumbnail .uploader-info {

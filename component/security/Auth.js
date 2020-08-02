@@ -17,6 +17,6 @@ module.exports = class Auth extends Base {
 
     async afterLogin (event) {
         await event.user.log('login');
-        return super.afterLogin(event);
+        await super.afterLogin(event);
     }
 };

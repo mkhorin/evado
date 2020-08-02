@@ -11,12 +11,16 @@ Jam.ModelTools = class ModelTools {
             this.model = model;
             this.$loader = this.$tools.find('.loader');
             this.$alert = this.$tools.find('.alert');
-            this.$tools.on('click', 'button', event => this.execute($(event.currentTarget)));
+            this.$tools.on('click', 'button', this.onClick.bind(this));
         }
     }
 
     isLoading () {
         return this.$tools.hasClass('loading');
+    }
+
+    onClick (event) {
+        this.execute($(event.currentTarget));
     }
 
     toggleLoading (state) {
@@ -49,6 +53,6 @@ Jam.ModelTools = class ModelTools {
 
     handlerDefault ($elem) {
         this.toggleLoading(true);
-        return Jam.Helper.post$.post($elem.data('url'), Jam.Helper.addCsrf($elem)).done(data => this.alertSuccess(data));
+        return Jam.Helper.post($elem.data('url')).done(this.alertSuccess.bind(this));
     }
 };

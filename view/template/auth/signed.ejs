@@ -3,6 +3,7 @@
 <% block('title', _t('Signed in')) %>
 
 <form action="auth/sign-out" method="post" class="form">
+    <input type="hidden" name="csrf" value="<%- _controller.getCsrfToken() %>">
     <div class="text-center">
         <p>
             <%- _t('Signed in as') %>

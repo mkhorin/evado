@@ -135,9 +135,12 @@ Jam.ModalStack = class ModalStack extends Jam.Element {
         event.preventDefault();
         const link = event.currentTarget;
         const url = link.getAttribute('href') || link.dataset.url;
-        event.ctrlKey
-            ? Jam.UrlHelper.openNewPageModal(url)
-            : this.constructor.load(Jam.modalStack.createFrame(), url);
+        if (event.ctrlKey || link.getAttribute('target') === '_blank') {
+            Jam.UrlHelper.openNewPageModal(url, link.dataset.base);
+        } else {
+            Jam.dialog.close();
+            this.constructor.load(Jam.modalStack.createFrame(), url);
+        }
     }
 
     onKeyUp (event) {
@@ -240,14 +243,21 @@ Jam.ModalFrame = class ModalFrame {
             Jam.createElements($container);
             this.resize();
             this.stack.afterLoad(this);
+            this.updateCsrfToken();
         });
+    }
+
+    updateCsrfToken () {
+        for (const holder of this.$body.find('[data-csrf]')) {
+            $(document.body).data('csrf', holder.dataset.csrf);
+        }
     }
 
     createTitle ($container) {
         this.title = Jam.i18n.translate($container.data('title'), $container.data('t-title'));
         this.title = Jam.Helper.escapeTags(this.title);
         const url = $container.data('url') || this.getLoadUrl();
-        this.$title.html(`<a href="${Jam.UrlHelper.getNewPageUrl(url)}" target="_blank">${this.title}</a>`);
+        this.$title.html(`<a href="${Jam.UrlHelper.getPageModalUrl(url)}" target="_blank">${this.title}</a>`);
     }
 
     createTabTitle ($container) {
@@ -261,7 +271,7 @@ Jam.ModalFrame = class ModalFrame {
         this.$body.html(`<div class="jmodal-error"><pre>${data.responseText}</pre></div>`);
         this.title = Jam.i18n.translate(`${data.status} ${data.statusText}` || 'Error');
         this.tabTitle = this.title;
-        const url = Jam.UrlHelper.getNewPageUrl(this.getLoadUrl());
+        const url = Jam.UrlHelper.getPageModalUrl(this.getLoadUrl());
         this.$title.html(`<a href="${url}" target="_blank"><span class="text-danger">${this.title}</span></a>`);
         this.resize();
         this.stack.afterLoad(this);

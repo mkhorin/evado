@@ -177,7 +177,7 @@ module.exports = class Item extends Base {
         }
         for (const action of this.data.actions) {
             if (!this.store.rbac.constructor.isMetaItemAction(action)) {
-                throw new Error(this.getMetaError(`Invalid meta action: ${action}`));
+                throw new Error(this.getMetaError(`Invalid action: ${action}`));
             }
         }
     }

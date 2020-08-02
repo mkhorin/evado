@@ -25,6 +25,9 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     init () {
+        if (this.isReadOnly()) {
+            this.setReadOnly();
+        }
         this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
         this.beforeCloseMethod = this.beforeClose.bind(this);
         this.modal.onClose(this.beforeCloseMethod);
@@ -49,6 +52,10 @@ Jam.Model = class Model extends Jam.Element {
 
     isNew () {
         return !this.id;
+    }
+
+    isReadOnly () {
+        return this.params.readOnly;
     }
 
     createNotice () {
@@ -118,6 +125,12 @@ Jam.Model = class Model extends Jam.Element {
 
     inProgress () {
         return this.attrs.map(attr => attr.inProgress()).filter(message => message)[0];
+    }
+
+    setReadOnly () {
+        this.params.closeConfirmation = false;
+        this.findCommand('saveClose').attr('disabled', true).removeAttr('data-command');
+        this.findCommand('save').attr('disabled', true).removeAttr('data-command');
     }
 
     serialize () {
@@ -235,7 +248,7 @@ Jam.Model = class Model extends Jam.Element {
         this.$loader.show();
         this.events.trigger('beforeSave');
         const data = $.param(this.serialize());
-        return Jam.Helper.post(this.$form, this.params.url, data).done(data => {
+        return Jam.Helper.post(this.params.url, data).done(data => {
             this.saved = true;
             this.reopen = reopen;
             this.id = data;
@@ -251,7 +264,7 @@ Jam.Model = class Model extends Jam.Element {
 
     deleteModel () {
         this.$loader.show();
-        return Jam.Helper.post(this.$form, this.params.delete, {id: this.id}).done(()=> {
+        return Jam.Helper.post(this.params.delete, {id: this.id}).done(()=> {
             this.saved = true;
             this.changeTracker.reset();
             this.events.trigger('afterDelete');

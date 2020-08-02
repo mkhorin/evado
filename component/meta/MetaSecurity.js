@@ -73,7 +73,7 @@ module.exports = class MetaSecurity extends Base {
                 target: view,
                 actions
             });
-            await this.resolveRelations(view, actions);
+            await this.resolveRelations(null, view, actions);
         }
         return allowed;
     }
@@ -104,12 +104,15 @@ module.exports = class MetaSecurity extends Base {
         });
     }
 
-    async resolveOnUpdate (model) {
-        await this.resolve({
+    resolveOnUpdate (model) {
+        return this.resolve({
             targetType: Rbac.TARGET_OBJECT,
             target: model,
             actions: [Rbac.READ, Rbac.UPDATE, Rbac.DELETE]
         });
+    }
+
+    resolveAttrsOnUpdate (model) {
         return this.resolveAttrs({
             targetType: Rbac.TARGET_OBJECT,
             target: model,
@@ -151,14 +154,15 @@ module.exports = class MetaSecurity extends Base {
         this.attrAccess = await this.rbac.resolveAttrAccess(this.controller.user.assignments, data, params);
     }
 
-    async resolveRelations (view, actions = [Rbac.READ, Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]) {
+    async resolveRelations (master, view, actions = [Rbac.READ, Rbac.CREATE, Rbac.UPDATE, Rbac.DELETE]) {
         const data = {actions};
         const assignments = this.controller.user.assignments;
+        const params = {master};
         this.relationAccessMap = {};
         for (const attr of view.relationAttrs) {
-            data.target = attr.eagerView;
+            data.target = attr.listView;
             data.targetType = data.target.isClass() ? Rbac.TARGET_CLASS : Rbac.TARGET_VIEW;
-            this.relationAccessMap[attr.name] = await this.rbac.resolveAccess(assignments, data, null);
+            this.relationAccessMap[attr.name] = await this.rbac.resolveAccess(assignments, data, params);
         }
     }
 
@@ -195,5 +199,5 @@ module.exports = class MetaSecurity extends Base {
     }
 };
 
-const Forbidden = require('areto/error/ForbiddenHttpException');
+const Forbidden = require('areto/error/http/Forbidden');
 const Rbac = require('../security/rbac/Rbac');

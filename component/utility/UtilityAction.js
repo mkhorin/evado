@@ -8,6 +8,7 @@ const Base = require('areto/base/Action');
 module.exports = class UtilityAction extends Base {
 
     async execute () {
+        this.controller.checkCsrfToken();
         this.manager = this.module.get('utility');
         this.postParams = this.getPostParams();
         if (!this.postParams.id) {
@@ -28,7 +29,9 @@ module.exports = class UtilityAction extends Base {
         if (!await utility.canAccess()) {
             throw new Forbidden;
         }
-        return utility.execute();
+        return this.postParams.fetch
+            ? this.sendJson(utility.getJson())
+            : utility.execute();
     }
 
     async sendList () {
@@ -60,5 +63,5 @@ module.exports = class UtilityAction extends Base {
     }
 };
 
-const BadRequest = require('areto/error/BadRequestHttpException');
-const Forbidden = require('areto/error/ForbiddenHttpException');
+const BadRequest = require('areto/error/http/BadRequest');
+const Forbidden = require('areto/error/http/Forbidden');

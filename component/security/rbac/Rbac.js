@@ -480,4 +480,3 @@ const ClassHelper = require('areto/helper/ClassHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');
 const MetaObjectFilter = require('./MetaObjectFilter');
 const MongoHelper = require('areto/helper/MongoHelper');
-const NestedHelper = require('areto/helper/NestedHelper');

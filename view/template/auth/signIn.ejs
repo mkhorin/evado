@@ -11,7 +11,7 @@ block('title', title);
 <% } %>
 
 <p class="login-box-msg">
-    <%- _t('Sign in to start your session') %>
+    <%- _t('auth.signInToStart') %>
 </p>
 
 <form method="post" class="form">
@@ -39,7 +39,10 @@ block('title', title);
     <% } %>
 
     <% if (_controller.user.auth.enableAutoLogin) { %>
-    <%- include('./_checkbox', {attr: 'rememberMe'}) %>
+    <%- include('./_checkbox', {
+        attr: 'rememberMe',
+        value: true
+    }) %>
     <% } %>
 
     <div class="form-attr form-group mt20">
@@ -51,8 +54,8 @@ block('title', title);
 
 <div class="login-box-footer">
 <% if (_controller.canSignUp()) { %>
-    <a href="auth/sign-up" class="btn-link btn"><%- _t('Sign up') %></a>
+    <a href="auth/sign-up" class="btn-link btn"><%- _t('auth.register') %></a>
 <% } if (_controller.canResetPassword()) { %>
-    <a href="auth/request-reset" class="btn-link btn"><%- _t('Forgot password') %></a>
+    <a href="auth/request-reset" class="btn-link btn"><%- _t('auth.forgotPassword') %></a>
 <% } %>
 </div>

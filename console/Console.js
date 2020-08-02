@@ -18,7 +18,9 @@ module.exports = class Console extends Base {
             DataConsole: require('./DataConsole'),
             DataImportConsole: require('./DataImportConsole'),
             DataExportConsole: require('./DataExportConsole'),
+            EventHandlerConsole: require('./EventHandlerConsole'),
             IndexingConsole: require('./IndexingConsole'),
+            ListenerConsole: require('./ListenerConsole'),
             NoticeConsole: require('./NoticeConsole'),
             SecurityConsole: require('./SecurityConsole'),
             SecurityExportConsole: require('./SecurityExportConsole'),
@@ -45,8 +47,10 @@ module.exports = class Console extends Base {
         return this.execute('install', this.AssetConsole, params);
     }
 
-    deployAssets (params) {
-        return this.execute('deploy', this.AssetConsole, params);
+    deployAssets (params = {}) {
+        if (!params.skipAssetDeploy) {
+            return this.execute('deploy', this.AssetConsole, params);
+        }
     }
 
     // META
@@ -77,10 +81,22 @@ module.exports = class Console extends Base {
         return this.execute('importFiles', this.DataImportConsole, params);
     }
 
+    // EVENT HANDLERS
+
+    createEventHandlers (params) {
+        return this.execute('create', this.EventHandlerConsole, params);
+    }
+
     // INDEXES
 
     createIndexes (params) {
         return this.execute('create', this.IndexingConsole, params);
+    }
+
+    // LISTENERS
+
+    createListeners (params) {
+        return this.execute('create', this.ListenerConsole, params);
     }
 
     // NOTICES
@@ -185,7 +201,7 @@ module.exports = class Console extends Base {
     // LOG
 
     async logResult () {
-        await PromiseHelper.setTimeout(200); // skip previous console output
+        await PromiseHelper.setTimeout(250); // wait for previous console output
         const logger = this.app.get('logger');
         const counters = logger.getCounters(['error', 'warn']).map(item => `${item.type}: ${item.counter}`);
         if (counters.length) {

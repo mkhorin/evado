@@ -22,7 +22,7 @@ module.exports = class MessageTemplate extends Base {
 
     resolveTemplate (text, data) {
         return typeof text === 'string'
-            ? text.replace(/{{(\w+)}}/gm, (match, key) => data.hasOwnProperty(key) ? data[key] : '')
+            ? text.replace(/{(\w+)}/gm, (match, key) => data.hasOwnProperty(key) ? data[key] : '')
             : this.wrapClassMessage('Text is not string');
     }
 };

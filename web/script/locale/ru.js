@@ -43,8 +43,8 @@ if (typeof moment === "function" && $.fn.daterangepicker) {
             fromlabel: 'с',
             tolabel: 'по',
             customrangelabel: 'указать период',
-            daysofweek: ["вс", "пн", "вт", "ср", "чт", "пт", "сб"],
-            monthnames: ["январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"],
+            daysofweek: ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
+            monthnames: ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
             firstday: 1
         },
         ranges: {
@@ -58,7 +58,7 @@ if (typeof moment === "function" && $.fn.daterangepicker) {
         startdate: moment().subtract(29, 'days'),
         enddate: moment()
     }, (start, end) => {
-        //console.log("Select: " + start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+        console.log(`Select: ${start.format('D MMMM YYYY')} - ${end.format('D MMMM YYYY')}`);
     });
 }
 

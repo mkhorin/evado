@@ -5,20 +5,21 @@
 
 const Base = require('./BaseModelConsole');
 
-module.exports = class TaskConsole extends Base {
+module.exports = class EventHandlerConsole extends Base {
 
     constructor (config) {
         super({
-            key: 'tasks',
+            key: 'eventHandlers',
             ...config
         })
     }
 
     async createModel (name, data) {
-        const model = this.spawn('model/Task');
-        model.assign(data);
+        const model = this.spawn('observer/EventHandler');
         model.set('name', name);
-        model.set('job', JSON.stringify(data.job));
+        model.set('description', data.description);
+        delete data.description;
+        model.set('config', JSON.stringify(data));
         await this.saveModel(model, name);
     }
 };

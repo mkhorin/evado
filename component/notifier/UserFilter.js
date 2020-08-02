@@ -28,6 +28,14 @@ module.exports = class UserFilter extends Base {
         };
     }
 
+    getTitle () {
+        return this.get('name');
+    }
+
+    toString () {
+        return `${this.constructor.name}: ${this.get('name')}`;
+    }
+
     async getUsers () {
         let users = this.get('includes');
         users = Array.isArray(users) ? users: [];

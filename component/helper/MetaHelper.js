@@ -120,14 +120,20 @@ module.exports = class MetaHelper {
         }
     }
 
-    static getModelValues (models, attrs) {
+    static getModelsValues (models, attrs) {
+        const values = [];
+        for (const model of models) {
+            values.push(...this.getModelValues(model, attrs));
+        }
+        return values;
+    }
+
+    static getModelValues (model, attrs) {
         const values = [];
         for (const attr of attrs) {
-            for (const model of models) {
-                const value = model.get(attr);
-                if (value !== null && value !== undefined) {
-                    Array.isArray(value) ? values.push(...value) : values.push(value);
-                }
+            const value = model.get(attr);
+            if (value !== null && value !== undefined) {
+                Array.isArray(value) ? values.push(...value) : values.push(value);
             }
         }
         return values;

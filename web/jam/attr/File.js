@@ -61,14 +61,15 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
 
     onAppendFile (event, data) {
         data.$item.find('.uploader-filename').text(`${data.file.name} (${Jam.FormatHelper.asBytes(data.file.size)})`);
-        this.fillNameAttr(data.file.name);
+        this.setNameAttr(data.file.name);
         this.events.trigger('append', data);
     }
 
-    fillNameAttr (value) {
+    setNameAttr (value) {
         const attr = this.getNameAttr();
         if (attr) {
             attr.setValue(value);
+            attr.triggerChange();
         }
     }
 
