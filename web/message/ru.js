@@ -59,6 +59,7 @@ Jam.I18n.defaults = {
     'Customize columns': 'Настроить колонки',
 
     'Data': 'Данные',
+    'Data does not match condition': 'Данные не соответствуют условию',
     'Data history': 'История данных',
     'Default value': 'Значение по умолчанию',
     'Delete': 'Удалить',
@@ -82,6 +83,8 @@ Jam.I18n.defaults = {
     'Group': 'Группа',
 
     'History': 'История',
+    'Home': 'Домой',
+    'Homepage': 'Стартовая страница',
 
     'Import': 'Импортировать',
     'Index definitions': 'Определения индексов',
@@ -100,7 +103,6 @@ Jam.I18n.defaults = {
     'Last done at': 'Последний раз сделано',
     'Link': 'Добавить',
 
-    'Main': 'Главная',
     'Metadata': 'Метаданные',
     'Modification date': 'Дата изменения',
 

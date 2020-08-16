@@ -33,8 +33,17 @@ module.exports = class Console extends Base {
         this.module = this.app;
     }
 
+    async clearAll () {
+        await this.clearDatabase();
+        await this.clearFiles();
+    }
+
     clearDatabase () {
         return this.app.getDb().dropAll();
+    }
+
+    clearFiles () {
+        return this.execute('deleteFiles', this.DataConsole);
     }
 
     startApp () {
@@ -178,7 +187,7 @@ module.exports = class Console extends Base {
                 await this.logResult();
             }
         } catch (err) {
-            this.log('error', err);
+            this.log('error', 'Execution failed', err);
         }
     }
 
@@ -198,6 +207,10 @@ module.exports = class Console extends Base {
             : names;
     }
 
+    stringifyData (data) {
+        return data && typeof data !== 'string' ? JSON.stringify(data) : data;
+    }
+
     // LOG
 
     async logResult () {
@@ -210,10 +223,11 @@ module.exports = class Console extends Base {
     }
 
     log () {
-        this.app.log(...arguments);
+        CommonHelper.log(this.app, this.constructor.name, ...arguments);
     }
 };
 
 const ClassHelper = require('areto/helper/ClassHelper');
+const CommonHelper = require('areto/helper/CommonHelper');
 const PromiseHelper = require('areto/helper/PromiseHelper');
 const SystemHelper = require('areto/helper/SystemHelper');

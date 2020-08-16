@@ -102,7 +102,9 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).request()) {
             return this.render('requestReset', {model});
         }
-        this.setFlash('success', 'auth.resetKeySent', {email: model.get('email')});
+        this.setFlash('success', 'auth.resetPasswordKeySent', {
+            email: model.get('email')
+        });
         this.reload();
     }
 
@@ -130,7 +132,9 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).request()) {
             return this.render('requestVerification', {model});
         }
-        this.setFlash('success', 'auth.verificationSent', {email: model.get('email')});
+        this.setFlash('success', 'auth.verificationSent', {
+            email: model.get('email')
+        });
         this.reload();
     }
 

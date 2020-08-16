@@ -33,7 +33,9 @@ module.exports = class BaseModelConsole extends Base {
             : this.log('error', `Invalid model: ${name}:`, model.getFirstErrorMap());
     }
 
-    log (type, message, ...args) {
-        this.owner.log(type, `${this.constructor.name}: ${message}`, ...args);
+    log () {
+        CommonHelper.log(this.owner, this.constructor.name, ...arguments);
     }
 };
+
+const CommonHelper = require('areto/helper/CommonHelper');

@@ -33,9 +33,9 @@ module.exports = class ResetPasswordForm extends Base {
             const verification = await service.getVerification(this.get('key'));
             const user = await service.getUserByVerification(verification);
             try {
-                await service.changePassword(this.get('newPassword'), user);
+                const old = await service.changePassword(this.get('newPassword'), user);
                 await verification.execute();
-                await this.user.log('resetPassword', undefined, user);
+                await this.user.log('resetPassword', old, user);
                 return true;
             } catch (err) {
                 this.addError('newPassword', err);

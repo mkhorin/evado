@@ -19,6 +19,22 @@ module.exports = class BaseRule extends Base {
         return this.inspector.targetType === Rbac.TARGET_OBJECT;
     }
 
+    isCreateAction () {
+        return this.inspector.actions.includes(Rbac.CREATE);
+    }
+
+    isDeleteAction () {
+        return this.inspector.actions.includes(Rbac.DELETE);
+    }
+
+    isReadAction () {
+        return this.inspector.actions.includes(Rbac.READ);
+    }
+
+    isUpdateAction () {
+        return this.inspector.actions.includes(Rbac.UPDATE);
+    }
+
     getBaseMeta () {
         return this.params.controller.module.getBaseMeta();
     }

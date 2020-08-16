@@ -147,7 +147,7 @@ module.exports = class ListFilter extends Base {
     }
 
     parseBoolean (data) {
-        return ['=', data.attr, data.value === 'true'];
+        return [data.value === 'true' ? '=' : '!=', data.attr, true];
     }
 
     parseDate ({attr, op, value}) {

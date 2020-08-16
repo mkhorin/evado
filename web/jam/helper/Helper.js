@@ -470,6 +470,10 @@ Jam.FormatHelper = class FormatHelper {
 
 Jam.ObjectHelper = class ObjectHelper {
 
+    static has (key, data) {
+        return data && Object.prototype.hasOwnProperty.call(data, key);
+    }
+
     static push (value, key, data) {
         if (Array.isArray(data[key])) {
             data[key].push(value);
@@ -489,14 +493,14 @@ Jam.ObjectHelper = class ObjectHelper {
     }
 
     static getValueLabel (key, data) {
-        return data && Object.prototype.hasOwnProperty.call(data, key) ? data[key] : key;
+        return this.has(key, data) ? data[key] : key;
     }
 
     static assignUndefined (target, ...args) {
         for (const source of args) {
             if (source && typeof source === 'object') {
                 for (const key of Object.keys(source)) {
-                    if (!Object.prototype.hasOwnProperty.call(target, key)) {
+                    if (!this.has(key, target)) {
                         target[key] = source[key];
                     }
                 }
@@ -515,7 +519,7 @@ Jam.ObjectHelper = class ObjectHelper {
         const pos = key.indexOf('.');
         if (pos > 0) {
             const targetKey = key.substring(0, pos);
-            if (Object.prototype.hasOwnProperty.call(data, targetKey)) {
+            if (this.has(targetKey, data)) {
                 key = key.substring(pos + 1);
                 if (data[targetKey]) {
                     return this.getNestedValue(key, data[targetKey], defaults);

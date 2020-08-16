@@ -174,9 +174,9 @@ module.exports = class SecurityExportConsole extends Base {
         for (const item of Object.values(this.userMap)) {
             const password = passwordMap[item[key]];
             item.passwordHash = password ? password.hash : undefined;
-            delete item['authKey'];
-            delete item['createdAt'];
-            delete item['updatedAt'];
+            delete item.authKey;
+            delete item.createdAt;
+            delete item.updatedAt;
             result.push(item);
         }
         return result;

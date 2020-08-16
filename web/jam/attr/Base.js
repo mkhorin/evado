@@ -16,7 +16,7 @@ Jam.ModelAttr = class ModelAttr {
 
     static getSpawnByType (type) {
         const data = this.getClassMap();
-        return map.hasOwnProperty(type) ? {Class: data[type]} : null;
+        return Jam.ObjectHelper.has(type, data) ? {Class: data[type]} : null;
     }
 
     static get ($elem) {

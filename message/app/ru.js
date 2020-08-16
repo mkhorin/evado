@@ -5,16 +5,19 @@
 
 module.exports = {
 
+    '<span class="no-access">[no access]</span>': '<span class="no-access">[нет доступа]</span>',
+
     'Access blocked': 'Доступ заблокирован',
     'Access blocked for': 'Доступ заблокирован для',
     'Access denied': 'Доступ запрешен',
 
-    'Back to main': 'Перейти на главную',
     'Bad request': 'Неверный запрос',
 
     'Change': 'Изменить',
     'Change password': 'Изменить пароль',
     'Current password': 'Текущий пароль',
+
+    'Home': 'Домой',
 
     'Invalid authentication': 'Неверная аутентификация',
     'Invalid requested parameters': 'Неверные запрошенные параметры',
@@ -39,6 +42,7 @@ module.exports = {
     'Save': 'Сохранить',
     'Send': 'Отправить',
     'Server error': 'Ошибка сервера',
+    'Set new password': 'Установить новый пароль',
     'Sign in': 'Войти',
     'Signed in': 'В системе',
     'Signed in as': 'В системе как',
@@ -69,7 +73,7 @@ module.exports = {
     'auth.register': 'Регистрация',
     'auth.registerNewUser': 'Регистрация нового пользователя',
     'auth.registrationCompleted': 'Регистрация завершена',
-    'auth.resetKeySent': 'Код сброса отправлен на {email}',
+    'auth.resetPasswordKeySent': 'Код сброса пароля отправлен на {email}',
     'auth.requestAlreadySent': 'Запрос уже был отправлен. Повторите попытку {time}',
     'auth.signInToStart': 'Войдите, чтобы начать работу',
     'auth.userAlreadyVerified': 'Пользователь уже подтвержден',

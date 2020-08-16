@@ -6,8 +6,8 @@
 module.exports = {
 
     permissions: {       
-        'upload': {
-            label: 'Upload files',
+        'appUpload': {
+            label: 'Direct upload files',
             description: 'Direct upload file to app'
         }
     }

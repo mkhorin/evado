@@ -5,8 +5,7 @@
 
 module.exports = {
 
-    commonMenuTitle: 'Main',
-    port: 3000,
+    commonMenuTitle: 'Home',
 
     components: {
         'logger': {
@@ -54,7 +53,9 @@ module.exports = {
             Class: require('../component/security/rbac/Rbac')
         },
         'router': {
-            errors: {Controller: require('../controller/DefaultController')}
+            errors: {
+                Controller: require('../controller/DefaultController')
+            }
         },
         'auth': {
             Class: require('../component/security/Auth'),

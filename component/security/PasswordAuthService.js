@@ -96,12 +96,15 @@ module.exports = class PasswordAuthService extends Base {
             throw 'auth.passwordAlreadyUsed';
         }
         const current = passwords[0];
+        const currentHash = current.get('hash');
         const min = this.module.getParam('minUserPasswordLifetime');
         if (!old || !min || !current.isExpired(min)) {
-            return this.executeUpdate(newPassword, current, user, expired); // update current
+            await this.executeUpdate(newPassword, current, user, expired); // update current
+            return currentHash;
         }
         await model.constructor.delete(passwords.slice(old));
         await this.executeUpdate(newPassword, model, user, expired); // append new
+        return currentHash;
     }
 
     async executeUpdate (newPassword, model, user, expiredPassword) {

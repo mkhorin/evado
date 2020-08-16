@@ -31,8 +31,12 @@ module.exports = class Item extends Base {
     async resolveAssignmentRules (userId) {
         if (Array.isArray(this.assignmentRules)) {
             for (const config of this.assignmentRules) {
-                if (await (new config.Class(config)).execute(this, userId)) {
-                    return true; // can assign item to user
+                try {
+                    if (await (new config.Class(config)).execute(this, userId)) {
+                        return true; // can assign item to user
+                    }
+                } catch (err) {
+                    this.rbac.log('error', `Item: ${this.name}: ${config.name}`, err);
                 }
             }
         }
@@ -42,7 +46,11 @@ module.exports = class Item extends Base {
         const users = [];
         if (Array.isArray(this.assignmentRules)) {
             for (const config of this.assignmentRules) {
-                users.push(...await (new config.Class(config)).getUsers(this));
+                try {
+                    users.push(...await (new config.Class(config)).getUsers(this));
+                } catch (err) {
+                    this.rbac.log('error', `Item: ${this.name}: ${config.name}`, err);
+                }
             }
         }
         return users;

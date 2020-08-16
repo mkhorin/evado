@@ -63,8 +63,8 @@ module.exports = class CrudController extends Base {
         };
         const model = params.model || this.createModel();
         model.scenario = params.scenario;
+        await model.setDefaultValues();
         if (this.isGet()) {
-            await model.setDefaultValues();
             const _layout = this.getViewLayout();
             return this.render(params.template, {model, _layout, ...params.templateData});
         }
@@ -91,17 +91,11 @@ module.exports = class CrudController extends Base {
             if (params.beforeUpdate) {
                 await params.beforeUpdate.call(this, model);
             }
-            if (params.beforePostUpdate) {
-                await params.beforePostUpdate.call(this, model);
-            }
             return this.saveModel(model, this.afterUpdate);
         }
         let data = {};
         if (params.beforeUpdate) {
             await params.beforeUpdate.call(this, model);
-        }
-        if (params.beforeGetUpdate) {
-            data = params.beforeGetUpdate.call(this, model);
         }
         const _layout = this.getViewLayout();
         Object.assign(data, {model, _layout}, params.templateData);

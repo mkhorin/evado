@@ -381,12 +381,12 @@ module.exports = class Rbac extends Base {
 
     createAssignmentRuleMap (items) {
         const data = {};
-        for (const {_id, config} of items) {
+        const module = this.module;
+        for (const {_id, name, config} of items) {
             try {
-                data[_id] = ClassHelper.resolveSpawn(config, this.module);
-                config.module = this.module;
+                data[_id] = ClassHelper.resolveSpawn(config, module, {module, name});
             } catch (err) {
-                this.log('error', `Invalid assignment rule: ${_id}`, err);
+                this.log('error', `Invalid assignment rule: ${name}`, err);
             }
         }
         return data;
@@ -447,20 +447,24 @@ module.exports = class Rbac extends Base {
         return items;
     }
 
-    resolveAccess (assignments, data, params) {
-        return (new this.MetaInspector({rbac: this, assignments, params, ...data})).execute();
+    resolveAccess () {
+        return this.executeInspector(this.MetaInspector, ...arguments);
     }
 
-    resolveAttrAccess (assignments, data, params) {
-        return (new this.MetaAttrInspector({rbac: this, assignments, params, ...data})).execute();
+    resolveAttrAccess () {
+        return this.executeInspector(this.MetaAttrInspector, ...arguments);
     }
 
-    resolveTransitionAccess (assignments, data, params) {
-        return (new this.MetaTransitionInspector({rbac: this, assignments, params, ...data})).execute();
+    resolveTransitionAccess () {
+        return this.executeInspector(this.MetaTransitionInspector, ...arguments);
     }
 
-    resolveNavAccess (assignments, data) {
-        return (new this.MetaNavInspector({rbac: this, assignments, ...data})).execute();
+    resolveNavAccess () {
+        return this.executeInspector(this.MetaNavInspector, ...arguments);
+    }
+
+    executeInspector (Inspector, assignments, data, params) {
+        return (new Inspector({rbac: this, assignments, params, ...data})).execute();
     }
 
     // DEFAULTS

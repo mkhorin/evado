@@ -54,7 +54,7 @@ module.exports = class IndexingConsole extends Base {
             this.log('info', `Create index: ${table}: ${JSON.stringify(data)}`);
             await module.getDb().createIndex(table, data);
         } catch (err) {
-            this.log('error', err);
+            this.log('error', 'Index creation failed', err);
         }
     }
 

@@ -15,10 +15,10 @@ module.exports = class UserFilterConsole extends Base {
     }
 
     async createModel (name, data) {
-        const model = this.spawn('notifier/UserFilter');
+        const model = this.spawn('model/UserFilter');
         model.assign(data);
         model.set('name', name);
-        model.set('config', data.config ? JSON.stringify(data.config) : '');
+        model.set('config', this.owner.stringifyData(data.config));
         model.set('includes', await this.owner.resolveUsers(data.includes));
         model.set('excludes', await this.owner.resolveUsers(data.excludes));
         model.set('items', await this.resolveItems(data.items));

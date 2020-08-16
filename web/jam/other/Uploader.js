@@ -20,8 +20,8 @@
 
 Jam.Uploader = class Uploader {
 
-    static create ($uploader) {
-        return $uploader.data('uploader') || new Jam.Uploader($uploader);
+    static create ($uploader, options) {
+        return $uploader.data('uploader') || new Jam.Uploader($uploader, options);
     }
 
     static getDefaultOptions () {
@@ -49,20 +49,21 @@ Jam.Uploader = class Uploader {
             alreadyExists: 'This file has already been selected',
             deletionConfirmStatuses: ['done', 'uploading'],
             attrName: 'file',
-            upload: 'file/upload',
-            delete: 'file/delete',
+            upload: 'file/upload', // or function
+            delete: 'file/delete', // or function
             doneMessage: 'Upload done',
             failedMessage: 'Upload failed'
 
         };
     }
 
-    constructor ($uploader) {
+    constructor ($uploader, options) {
         this.$uploader = $uploader;
         this.$uploader.data('uploader', this);
         this.options = {
             ...Jam.Uploader.getDefaultOptions(),
-            ...$uploader.data('options')
+            ...$uploader.data('options'),
+            ...options
         };
         this.files = [];
         this.$input = $uploader.find('[type="file"]');
@@ -138,6 +139,16 @@ Jam.Uploader = class Uploader {
         for (const file of this.files) {
             file.abort();
         }
+    }
+
+    getDeleteUrl () {
+        const url = this.options.delete;
+        return typeof url === 'function' ? url(this) : url;
+    }
+
+    getUploadUrl () {
+        const url = this.options.upload;
+        return typeof url === 'function' ? url(this) : url;
     }
 
     setFiles (files) {
@@ -401,7 +412,7 @@ Jam.UploaderFile = class UploaderFile {
 
     upload () {
         this.xhr = new XMLHttpRequest;
-        this.xhr.open('POST', this.uploader.options.upload);
+        this.xhr.open('POST', this.uploader.getUploadUrl());
         if (this.xhr.upload) {
             this.xhr.upload.addEventListener('progress', this.progressUploading.bind(this), false);
         }

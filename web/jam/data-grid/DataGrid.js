@@ -54,8 +54,8 @@ Jam.DataGrid = class DataGrid {
     }
 
     resolveColumnTranslation (column) {
-        if (!column.hasOwnProperty('translateBody') && column.format === 'label') {
-            column.translateBody = '';
+        if (!column.hasOwnProperty('translateData') && column.format === 'label') {
+            column.translateData = '';
         }
     }
 
@@ -93,7 +93,7 @@ Jam.DataGrid = class DataGrid {
     }
 
     getColumn (name) {
-        return this.columnMap.hasOwnProperty(name) ? this.columnMap[name] : null;
+        return Jam.ObjectHelper.has(name, this.columnMap) ? this.columnMap[name] : null;
     }
 
     getVisibleColumns () {
@@ -113,7 +113,7 @@ Jam.DataGrid = class DataGrid {
     }
 
     getOrderDirection (name) {
-        return this.order.hasOwnProperty(name) ? this.order[name] : null;
+        return Jam.ObjectHelper.has(name, this.order) ? this.order[name] : null;
     }
 
     setOrder (name, direction) {

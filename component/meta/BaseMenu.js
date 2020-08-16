@@ -35,7 +35,9 @@ module.exports = class BaseMenu extends Base {
     }
 
     resolveAccess (data) {
-        return this.module.getRbac().resolveNavAccess(this.controller.user.assignments, data);
+        return this.module.getRbac().resolveNavAccess(this.controller.user.assignments, data, {
+            controller: this.controller
+        });
     }
 
     async renderItems (items, section) {

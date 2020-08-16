@@ -39,8 +39,9 @@ module.exports = class ChangePasswordForm extends Base {
             return this.addError('currentPassword', 'Invalid password');
         }
         try {
-            await service.changePassword(this.get('newPassword'), this.user.getIdentity());
-            await this.user.log('changePassword');
+            const user = this.user.getIdentity();
+            const old = await service.changePassword(this.get('newPassword'), user);
+            await this.user.log('changePassword', old, user);
             return true;            
         } catch (err) {
             this.addError('newPassword', err);

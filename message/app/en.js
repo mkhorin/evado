@@ -18,7 +18,7 @@ module.exports = {
     'auth.register': 'Register',
     'auth.registerNewUser': 'Register a new user',
     'auth.registrationCompleted': 'Registration completed',
-    'auth.resetKeySent': 'Reset key sent to {email}',
+    'auth.resetPasswordKeySent': 'Reset password key sent to {email}',
     'auth.requestAlreadySent': 'Request has already been sent. Try again {time}',
     'auth.signInToStart': 'Sign in to start your session',
     'auth.userAlreadyVerified': 'User is already verified',

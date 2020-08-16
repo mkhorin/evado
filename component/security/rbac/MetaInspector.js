@@ -58,10 +58,12 @@ module.exports = class MetaInspector extends Base {
             case Rbac.TARGET_CLASS: this.addClassTargets(); break;
             case Rbac.TARGET_OBJECT: this.addObjectTargets(); break;
         }
-        for (const item of items) {
-            for (const action of this.actions) {
-                if (this.access[action] !== true) {
-                    this.access[action] = await this.resolveActionAccess(action, item);
+        if (this.actions) {
+            for (const item of items) {
+                for (const action of this.actions) {
+                    if (this.access[action] !== true) {
+                        this.access[action] = await this.resolveActionAccess(action, item);
+                    }
                 }
             }
         }
@@ -197,17 +199,12 @@ module.exports = class MetaInspector extends Base {
         return data[key] ? this.checkItems(data[key]) : false;
     }
 
-    async checkObjectTarget (model, data) {
+    async checkNewObjectTarget (model, data) {
         data = data[Rbac.TARGET_OBJECT];
         if (!data) {
             return false;
         }
         let key = `...${model.class.id}`;
-        if (data[key] && await this.checkItems(data[key])) {
-            return true;
-        }
-        const oid = model.getId().toString();
-        key = `${oid}...${model.class.id}`;
         if (data[key] && await this.checkItems(data[key])) {
             return true;
         }
@@ -217,16 +214,8 @@ module.exports = class MetaInspector extends Base {
             if (data[key] && await this.checkItems(data[key])) {
                 return true;
             }
-            key = `${oid}..${model.view.id}`;
-            if (data[key] && await this.checkItems(data[key])) {
-                return true;
-            }
             if (state) {
                 key = `.${state.name}.${model.view.id}`;
-                if (data[key] && await this.checkItems(data[key])) {
-                    return true;
-                }
-                key = `${oid}.${state.name}.${model.view.id}`;
                 if (data[key] && await this.checkItems(data[key])) {
                     return true;
                 }
@@ -239,9 +228,61 @@ module.exports = class MetaInspector extends Base {
         if (data[key] && await this.checkItems(data[key])) {
             return true;
         }
-        key = `${oid}.${state.name}..${model.class.id}`;
+    }
+
+    async checkObjectTarget (model, data) {
+        data = data[Rbac.TARGET_OBJECT];
+        if (!data) {
+            return false;
+        }
+        let key = `...${model.class.id}`;
         if (data[key] && await this.checkItems(data[key])) {
             return true;
+        }
+        const oid = model.isNew() ? false : model.getId().toString();
+        if (oid) {
+            key = `${oid}...${model.class.id}`;
+            if (data[key] && await this.checkItems(data[key])) {
+                return true;
+            }
+        }
+        const state = model.getState();
+        if (model.view !== model.class) {
+            key = `..${model.view.id}`;
+            if (data[key] && await this.checkItems(data[key])) {
+                return true;
+            }
+            if (oid) {
+                key = `${oid}..${model.view.id}`;
+                if (data[key] && await this.checkItems(data[key])) {
+                    return true;
+                }
+            }
+            if (state) {
+                key = `.${state.name}.${model.view.id}`;
+                if (data[key] && await this.checkItems(data[key])) {
+                    return true;
+                }
+                if (oid) {
+                    key = `${oid}.${state.name}.${model.view.id}`;
+                    if (data[key] && await this.checkItems(data[key])) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (!state) {
+            return false;
+        }
+        key = `.${state.name}..${model.class.id}`;
+        if (data[key] && await this.checkItems(data[key])) {
+            return true;
+        }
+        if (oid) {
+            key = `${oid}.${state.name}..${model.class.id}`;
+            if (data[key] && await this.checkItems(data[key])) {
+                return true;
+            }
         }
     }
 

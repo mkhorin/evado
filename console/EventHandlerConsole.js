@@ -17,9 +17,9 @@ module.exports = class EventHandlerConsole extends Base {
     async createModel (name, data) {
         const model = this.spawn('observer/EventHandler');
         model.set('name', name);
+        model.set('label', data.label);
         model.set('description', data.description);
-        delete data.description;
-        model.set('config', JSON.stringify(data));
+        model.set('config', this.owner.stringifyData(data.config));
         await this.saveModel(model, name);
     }
 };

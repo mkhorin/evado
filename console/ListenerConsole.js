@@ -27,6 +27,9 @@ module.exports = class ListenerConsole extends Base {
     }
 
     async getRelatedIds (modelName, names) {
+        if (typeof names === 'string') {
+            names = names.split(',');
+        }
         const result = [];
         if (Array.isArray(names)) {
             const model = this.spawn(modelName);

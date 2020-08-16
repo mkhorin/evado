@@ -27,7 +27,7 @@ module.exports = class NoticeConsole extends Base {
     resolveUserFilters (names) {
         names = Array.isArray(names) ? names : [];
         return names.length
-            ? this.spawn('notifier/UserFilter').find({name: names}).ids()
+            ? this.spawn('model/UserFilter').find({name: names}).ids()
             : names;
     }
 };

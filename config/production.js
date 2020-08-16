@@ -19,5 +19,6 @@ module.exports = {
                 maxAge: 60 * 60 * 1000
             }
         },
+        'serverAddress': 'http://localhost:8888'
     }
 };

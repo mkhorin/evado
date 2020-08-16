@@ -141,15 +141,21 @@ module.exports = class MetaGrid extends Base {
             result[name] = `<!--handler: ${name}-->${content}`;
         } else if (name === this.ROW_KEY) {
             result[name] = model.getId();
+        } else if (this.isForbiddenRelation(attr)) {
+            this.setForbiddenAttr(name, result);
+            result[name] = model.get(attr);
         } else {
             result[name] = this.renderAttr(attr, model, result);
         }
     }
 
     isForbiddenAttr (name, model) {
-        return this._forbiddenRelationMap[name] === true
-            || this._forbiddenAttrs && this._forbiddenAttrs.includes(name)
+        return this._forbiddenAttrs && this._forbiddenAttrs.includes(name)
             || model.forbiddenReadAttrs && model.forbiddenReadAttrs.includes(name);
+    }
+
+    isForbiddenRelation (attr) {
+        return this._forbiddenRelationMap[attr.name] === true;
     }
 
     setForbiddenAttr (name, result) {

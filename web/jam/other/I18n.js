@@ -73,7 +73,7 @@ Jam.I18n = class I18n {
 
     getMessage (category, message) {
         const data = category ? this._data[category] : this._data.defaults;
-        if (data && data.hasOwnProperty(message)) {
+        if (Jam.ObjectHelper.has(message, data)) {
             return data[message];
         }
         if (category) {

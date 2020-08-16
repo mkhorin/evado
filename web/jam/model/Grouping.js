@@ -44,7 +44,7 @@ Jam.ModelGrouping = class ModelGrouping {
         const data = Jam.store.get(this.getStoreKey());
         if (data) {
             for (const id of Object.keys(data)) {
-                if (this.groupMap.hasOwnProperty(id)) {
+                if (Jam.ObjectHelper.has(id, this.groupMap)) {
                     this.groupMap[id].toggleActive(data[id]);
                 }
             }

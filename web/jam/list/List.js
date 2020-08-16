@@ -400,13 +400,16 @@ Jam.List = class List extends Jam.Element {
 Jam.MainList = class MainList extends Jam.List {
 };
 
-Jam.SelectList = class SelectList extends Jam.List {
+Jam.ModalList = class ModalList extends Jam.List {
 
-    init () {
+    init() {
         Object.assign(this.params, this.modal.initData);
         super.init();
         this.modal.findScrollHeader().append(this.$commands);
     }
+};
+
+Jam.SelectList = class SelectList extends Jam.ModalList {
 
     onDoubleClickRow (event) {
         this.deselectExceptOneRow(event.currentTarget);

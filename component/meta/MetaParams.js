@@ -11,8 +11,11 @@ module.exports = class MetaParams {
     }
 
     canReadAttr (attr) {
-        return this.security.attrAccess.canRead(attr.name)
-            && (!attr.relation || this.security.relationAccessMap[attr.name].canRead());
+        return this.security.attrAccess.canRead(attr.name);
+    }
+
+    canReadRelation (attr) {
+        return this.security.relationAccessMap[attr.name].canRead();
     }
 
     canUpdateAttr (attr, model) {
@@ -22,7 +25,7 @@ module.exports = class MetaParams {
             && this.security.attrAccess.canWrite(attr.name);
     }
 
-    getMasterQueryParam () {
+    getMasterId () {
         return this.master.model
             ? `${this.master.attr.name}.${this.master.model.getMetaId()}`
             : '';

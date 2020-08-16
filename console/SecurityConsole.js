@@ -64,7 +64,7 @@ module.exports = class SecurityConsole extends Base {
             this.log('info', `User created: ${data.email}`);
             return user;
         } catch (err) {
-            this.log('error', err);
+            this.log('error', 'User creation failed', err);
         }
     }
 
@@ -72,8 +72,18 @@ module.exports = class SecurityConsole extends Base {
         this.log('info', 'Create security...');
         await this.getRbac().load();
         const data = this.app.getConfig('security');
+        this.normalizeConfigData(data.rules);
+        this.normalizeConfigData(data.assignmentRules);
         await this.getRbac().createByData(data);
         this.log('info', 'Security ready');
+    }
+
+    normalizeConfigData (data) {
+        if (data) {
+            for (const item of Object.values(data)) {
+                item.config = this.owner.stringifyData(item.config);
+            }
+        }
     }
 
     async changePassword () {
@@ -87,7 +97,7 @@ module.exports = class SecurityConsole extends Base {
             this.log('info', `Password changed`);
             return true;
         } catch (err) {
-            this.log('error', error);
+            this.log('error', 'Password change failed', err);
         }
     }
 

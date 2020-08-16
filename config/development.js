@@ -6,6 +6,7 @@
 module.exports = {
 
     parent: 'default',
+    port: 3000,
 
     components: {
         'logger': {
@@ -22,6 +23,7 @@ module.exports = {
     params: {
         'captcha': {
             fixedVerifyCode: '123'
-        }
+        },
+        'serverAddress': 'http://localhost:3000'
     }
 };

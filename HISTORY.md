@@ -1,3 +1,19 @@
+## 1.7.0
+
+* component/base/CrudController
+    - fix default values on create
+* component/security/rbac/Item
+    - catch errors on assignment rule execution
+* console/Console                   
+    - normalize imported configuration data
+    - remove uploaded files on clear all
+* model/auth/ChangePasswordForm
+    - log previous password hash 
+* model/DataHistory
+    - move from Office module 
+* web/jam/data-grid/DataGrid
+    - fix grid body translation 
+    
 ## 1.6.0
 
 * component/base/BaseController

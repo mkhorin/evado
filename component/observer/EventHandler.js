@@ -12,6 +12,7 @@ module.exports = class EventHandler extends Base {
             TABLE: 'sys_eventHandler',
             ATTRS: [
                 'name',
+                'label',
                 'description',
                 'config'
             ],
@@ -19,14 +20,14 @@ module.exports = class EventHandler extends Base {
                 [['name', 'config'], 'required'],
                 ['name', 'regex', {pattern: /^[0-9a-zA-Z-]+$/}],
                 ['name', 'unique'],
-                ['description', 'string'],
+                [['label', 'description'], 'string'],
                 ['config', 'spawn']
             ]
         };
     }
 
     getTitle () {
-        return this.get('name');
+        return this.get('label') || this.get('name');
     }
 
     toString () {

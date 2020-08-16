@@ -89,7 +89,7 @@ module.exports = class DataImportConsole extends Base {
         try {
             await this.app.getDb().insert(table, data);
         } catch (err) {
-            this.log('error', err);
+            this.log('error', 'Insertion failed', err);
         }
     }
 };

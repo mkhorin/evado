@@ -49,7 +49,7 @@ Jam.ModelCondition = class ModelCondition {
     }
 
     getAttr (name) {
-        if (!this.attrMap.hasOwnProperty(name)) {
+        if (!Jam.ObjectHelper.has(name, this.attrMap)) {
             this.attrMap[name] = this.model.getAttr(name);
         }
         if (this.attrMap[name]) {

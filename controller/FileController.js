@@ -14,7 +14,7 @@ module.exports = class FileController extends Base {
                     Class: require('areto/filter/AccessControl'),
                     rules: [{
                         actions: ['upload', 'delete'],
-                        permissions: ['upload']
+                        permissions: ['appUpload']
                     }]
                 }
             },

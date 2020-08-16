@@ -12,6 +12,7 @@ module.exports = class UserFilter extends Base {
             TABLE: 'sys_userFilter',
             ATTRS: [
                 'name',
+                'label',
                 'description',
                 'items',
                 'includes',
@@ -20,7 +21,7 @@ module.exports = class UserFilter extends Base {
             ],
             RULES: [
                 ['name', 'required'],
-                [['name', 'description'], 'string'],
+                [['name', 'label', 'description'], 'string'],
                 ['name', 'regex', {pattern: /^[0-9a-zA-Z-]+$/}],
                 ['name', 'unique'],
                 ['config', 'spawn']
