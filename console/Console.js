@@ -124,12 +124,16 @@ module.exports = class Console extends Base {
         return this.execute('createUser', this.SecurityConsole, params);
     }
 
-    createSecurity () {
-        return this.execute('createSecurity', this.SecurityConsole);
+    updateUser (params) {
+        return this.execute('updateUser', this.SecurityConsole, params);
     }
 
     changePassword (params) {
         return this.execute('changePassword', this.SecurityConsole, params);
+    }
+
+    createSecurity () {
+        return this.execute('createSecurity', this.SecurityConsole);
     }
 
     assignRole (params) {

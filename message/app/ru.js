@@ -77,6 +77,8 @@ module.exports = {
     'auth.requestAlreadySent': 'Запрос уже был отправлен. Повторите попытку {time}',
     'auth.signInToStart': 'Войдите, чтобы начать работу',
     'auth.userAlreadyVerified': 'Пользователь уже подтвержден',
+    'auth.userBlocked': 'Пользователь заблокирован',
+    'auth.userBlockedUntil': 'Пользователь блокирован до {date}',
     'auth.userNotFound': 'Пользователь не найден',
     'auth.userNotVerified': 'Пользователь не подтвержден',
     'auth.userVerified': 'Пользователь подтвержден',

@@ -80,7 +80,7 @@
 }
 .data-grid-table > tbody > tr > td > .cell {
     overflow: auto;
-    padding: 5px;
+    padding: 6px;
     max-height: 200px;
 }
 .data-grid-table .thumbnail {

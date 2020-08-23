@@ -1,3 +1,12 @@
+## 1.7.1
+
+* component/meta/MetaSecurity
+    - fix relation view to resolve access
+* console/SecurityConsole
+    - add user data update
+* web/jam/element/Modal
+    - fix modal frame close
+    
 ## 1.7.0
 
 * component/base/CrudController

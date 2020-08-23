@@ -1100,7 +1100,7 @@ hr + .form-columns {
 }
 .table-condensed > thead > tr > td,
 .table-condensed > thead > tr > th {
-    padding:4px 5px;
+    padding:4px 6px;
 }
 .cell .thumbnail {
     margin: 0;

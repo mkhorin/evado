@@ -32,7 +32,7 @@ Jam.I18n.defaults = {
     'Add': 'Добавить',
     'Add condition': 'Добавить условие',
     'Add condition to save': 'Добавьте условие для сохранения',
-    'Admin': 'Админ',
+    'Administration': 'Администрирование',
     'Advanced search': 'Расширенный поиск',
     'All notifications': 'Все уведомления',
     'Application metadata reloaded': 'Метаданные приложения перезагружены',

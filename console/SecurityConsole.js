@@ -61,10 +61,36 @@ module.exports = class SecurityConsole extends Base {
         try {
             const service = this.spawn('security/PasswordAuthService');
             const user = await service.register(data, true);
-            this.log('info', `User created: ${data.email}`);
+            this.log('info', 'User created', data.email);
             return user;
         } catch (err) {
             this.log('error', 'User creation failed', err);
+        }
+    }
+
+    async updateUser (data = this.params) {
+        const user = await this.findUserByParams().one();
+        if (!user) {
+            return this.log('error', 'User not found');
+        }
+        user.set(data.attr, data.value);
+        await user.save()
+            ? this.log('info', 'User updated', data.email)
+            : this.log('error', 'User update failed', user.getFirstErrorMap());
+    }
+
+    async changePassword () {
+        const user = await this.findUserByParams().one();
+        if (!user) {
+            return this.log('error', `User not found`);
+        }
+        try {
+            const service = this.spawn('security/PasswordAuthService');
+            await service.changePassword(this.params.password, user);
+            this.log('info', `Password changed`);
+            return true;
+        } catch (err) {
+            this.log('error', 'Password change failed', err);
         }
     }
 
@@ -83,21 +109,6 @@ module.exports = class SecurityConsole extends Base {
             for (const item of Object.values(data)) {
                 item.config = this.owner.stringifyData(item.config);
             }
-        }
-    }
-
-    async changePassword () {
-        const user = await this.findUserByParams().one();
-        if (!user) {
-            return this.log('error', `User not found`);
-        }
-        try {
-            const service = this.spawn('security/PasswordAuthService');
-            await service.changePassword(this.params.password, user);
-            this.log('info', `Password changed`);
-            return true;
-        } catch (err) {
-            this.log('error', 'Password change failed', err);
         }
     }
 

@@ -31,7 +31,7 @@ Jam.ModalStack = class ModalStack extends Jam.Element {
         this.template = Jam.Helper.getTemplate('modal', $container);
         this.handlers = [];
         this.stackToggle = new Jam.ModalStackToggle(this);
-        this.$pool.on('keyup', this.onKeyUp.bind(this));
+        $(document.body).on('keyup', this.onKeyUp.bind(this));
     }
 
     init () {
@@ -91,7 +91,7 @@ Jam.ModalStack = class ModalStack extends Jam.Element {
         this.$pool.append($frame);
         $frame.on('click', '.jmodal-stack .close', ()=> frame.close());
         $frame.click(event => {
-            if (!$frame.hasClass('loading') && event.target === $frame.get(0)) {
+            if (event.target === event.currentTarget) {
                 frame.close();
             }
         });
@@ -144,9 +144,12 @@ Jam.ModalStack = class ModalStack extends Jam.Element {
     }
 
     onKeyUp (event) {
-        if (event.keyCode !== 27) {
-            return true;
+        if (event.keyCode === 27) {
+            this.closeLastFrame();
         }
+    }
+
+    closeLastFrame () {
         const frame = this.getLast();
         if (frame) {
             frame.close();
@@ -282,7 +285,7 @@ Jam.ModalFrame = class ModalFrame {
     }
 
     close (data) {
-        if (!this.checkLastActive()) {
+        if (!this.checkLastActive() || this.isLoading()) {
             return false;
         }
         const event = $.Event(this.getEventName('beforeClose'));
@@ -388,6 +391,11 @@ Jam.ModalStackToggle = class ModalStackToggle {
     init () {
         this.$pool.on('click','.jmodal-stack-toggle', event => {
             this.stack.setActive($(event.currentTarget).data('modal'));
+        });
+        this.$pool.on('click', event => {
+            if (event.target === event.currentTarget) {
+                this.stack.closeLastFrame();
+            }
         });
         this.$root.click(()=> this.stack.setActive(null));
     }

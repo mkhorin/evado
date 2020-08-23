@@ -22,6 +22,8 @@ module.exports = {
     'auth.requestAlreadySent': 'Request has already been sent. Try again {time}',
     'auth.signInToStart': 'Sign in to start your session',
     'auth.userAlreadyVerified': 'User is already verified',
+    'auth.userBlocked': 'User is blocked',
+    'auth.userBlockedUntil': 'User blocked until {date}',
     'auth.userNotFound': 'User not found',
     'auth.userNotVerified': 'User not verified',
     'auth.userVerified': 'User verified',

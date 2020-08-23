@@ -102,7 +102,6 @@ module.exports = class MetaGrid extends Base {
             return this._models;
         }
         this._forbiddenAttrs = this.security.getForbiddenReadAttrs();
-        this._forbiddenRelationMap = this.security.getForbiddenReadRelationMap(this.meta.view);
         this._columnMap = this.controller.extraMeta.getData(this.meta.view).columnMap;
         this._attrTemplateMap = this.getAttrTemplateMap();
         return PromiseHelper.map(this._models, this.renderModel, this);
@@ -141,9 +140,6 @@ module.exports = class MetaGrid extends Base {
             result[name] = `<!--handler: ${name}-->${content}`;
         } else if (name === this.ROW_KEY) {
             result[name] = model.getId();
-        } else if (this.isForbiddenRelation(attr)) {
-            this.setForbiddenAttr(name, result);
-            result[name] = model.get(attr);
         } else {
             result[name] = this.renderAttr(attr, model, result);
         }
@@ -152,10 +148,6 @@ module.exports = class MetaGrid extends Base {
     isForbiddenAttr (name, model) {
         return this._forbiddenAttrs && this._forbiddenAttrs.includes(name)
             || model.forbiddenReadAttrs && model.forbiddenReadAttrs.includes(name);
-    }
-
-    isForbiddenRelation (attr) {
-        return this._forbiddenRelationMap[attr.name] === true;
     }
 
     setForbiddenAttr (name, result) {
