@@ -17,7 +17,7 @@ module.exports = class AuthController extends Base {
                     Class: require('areto/filter/AccessControl'),
                     rules: [{
                         actions: ['change-password'],
-                        permissions: ['@']
+                        match: action => action.controller.canChangePassword() ? undefined : false
                     },{
                         actions: ['sign-up'],
                         match: action => action.controller.canSignUp() ? undefined /* to continue rules */ : false
@@ -149,6 +149,10 @@ module.exports = class AuthController extends Base {
             type: 'success',
             message: this.translate('auth.userVerified')
         });
+    }
+
+    canChangePassword () {
+        return this.module.getParam('enablePasswordChange');
     }
 
     canSignUp () {

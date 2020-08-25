@@ -25,9 +25,11 @@ const user = _controller.user;
         <div class="pull-left">
             <button type="submit" class="btn btn-warning btn-flat" data-t="">Sign out</button>
         </div>
+        <% if (enablePasswordChange) { %>
         <div class="pull-right">
-            <a href="auth/change-password" class="btn btn-default btn-flat" data-t="">Change password</a>
+            <a href="<%- changePasswordUrl %>" class="btn btn-default btn-flat" data-t="">Change password</a>
         </div>
+        <% } %>
     </form>
 </li>
 <% } else { %>

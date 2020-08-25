@@ -5,10 +5,11 @@
 
 module.exports = {
 
+    'enablePasswordChange': true,
     'enablePasswordReset': false,
     'enableSignUp': false,
     'enableSignUpVerification': true,
-    'passwordChangeUrl': '/auth/change-password',
+    'changePasswordUrl': '/auth/change-password',
     'userPasswordValidator': {
         min: 6,
         max: 24

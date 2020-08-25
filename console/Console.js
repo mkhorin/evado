@@ -13,7 +13,6 @@ module.exports = class Console extends Base {
 
     constructor (config) {
         super({
-            params: {},
             AssetConsole: require('./AssetConsole'),
             DataConsole: require('./DataConsole'),
             DataImportConsole: require('./DataImportConsole'),
@@ -29,8 +28,15 @@ module.exports = class Console extends Base {
             UserFilterConsole: require('./UserFilterConsole'),
             ...config
         });
-        this.app = this.app || ClassHelper.spawn(this.Application);
+        this.params = this.params || {};
+        this.app = this.app || this.createApplication();
         this.module = this.app;
+    }
+    
+    createApplication () {
+        return ClassHelper.spawn(this.Application, {
+            configName: this.params.config
+        });
     }
 
     async clearAll () {

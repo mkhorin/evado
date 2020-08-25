@@ -11,9 +11,9 @@ module.exports = class ExpiredPasswordFilter extends Base {
         if (action.isAjax() || action.isPost()) {
             return;
         }
-        const controller = action.controller;        
-        const url = this.module.getParam('passwordChangeUrl');
-        if (controller.user.isGuest() || !url) {
+        const controller = action.controller;
+        const url = this.module.getParam('changePasswordUrl');
+        if (controller.user.isGuest() || !this.module.getParam('enablePasswordChange') || !url) {
             return;
         }
         const service = this.spawn('security/PasswordAuthService');
