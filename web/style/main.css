@@ -1482,7 +1482,7 @@ input[type=checkbox].condition-value {
 /* MODAL */
 
 .modal {
-    z-index: 2001;
+    z-index: 3001;
 }
 .modal-title {
     font-size: 16px;
