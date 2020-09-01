@@ -136,7 +136,8 @@ Jam.DataGridPagination = class DataGridPagination {
     }
 
     renderNumToggle (page) {
-        return this.renderToggle(page, page + 1, this.page === page ? 'num active' : 'num');
+        const css = this.page === page ? 'num active' : 'num';
+        return this.renderToggle(page, page + 1, css);
     }
 
     renderToggle (page, text, css) {

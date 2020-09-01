@@ -43,7 +43,9 @@ module.exports = class Utility extends Base {
 
     canAccess () {
         const name = this.getPermissionName();
-        return this.controller.user.auth.rbac.getItem(name) ? this.controller.user.can(name) : true;
+        return this.controller.user.auth.rbac.getItem(name)
+            ? this.controller.user.can(name)
+            : true;
     }
 
     getBaseName () {

@@ -16,7 +16,9 @@ Jam.UserAction = class UserAction extends Jam.Element {
     static confirm ($element) {
         const message = $element.data('confirm');
         const method = $element.data('confirmMethod') || 'confirm';
-        return message ? Jam.dialog[method](message, $element.data('confirmParams')) : $.when();
+        return message
+            ? Jam.dialog[method](message, $element.data('confirmParams'))
+            : $.when();
     }
 
     init () {
@@ -42,7 +44,9 @@ Jam.UserAction = class UserAction extends Jam.Element {
 
     getModel () {
         const frame = Jam.modalStack.getLast();
-        return frame ? Jam.Element.findInstanceByClass(Jam.Model, frame.$container) : null;
+        return frame
+            ? Jam.Element.findInstanceByClass(Jam.Model, frame.$container)
+            : null;
     }
 
     getParam (name, defaults) {

@@ -93,21 +93,22 @@ module.exports = class MetaHelper {
         const result = {};
         for (const row of rows) {
             const value = row[rowKey];
+            const rowValue = Object.prototype.hasOwnProperty.call(row, valueKey) ? row[valueKey] : row;
             if (Array.isArray(value)) {
                 for (const val of value) {
                     if (Object.prototype.hasOwnProperty.call(docs, val)) {
                         if (Array.isArray(result[val])) {
-                            result[val].push(Object.prototype.hasOwnProperty.call(row, valueKey) ? row[valueKey] : row);
+                            result[val].push(rowValue);
                         } else {
-                            result[val] = [Object.prototype.hasOwnProperty.call(row, valueKey) ? row[valueKey] : row];
+                            result[val] = [rowValue];
                         }
                     }
                 }
             } else if (value !== '' && value !== null && value !== undefined) {
                 if (Array.isArray(result[value])) {
-                    result[value].push(Object.prototype.hasOwnProperty.call(row, valueKey) ? row[valueKey] : row);
+                    result[value].push(rowValue);
                 } else {
-                    result[value] = [Object.prototype.hasOwnProperty.call(row, valueKey) ? row[valueKey] : row];
+                    result[value] = [rowValue];
                 }
             }
         }
