@@ -35,7 +35,8 @@ module.exports = class Console extends Base {
     
     createApplication () {
         return ClassHelper.spawn(this.Application, {
-            configName: this.params.config
+            configName: this.params.config,
+            serverPort: this.params.port
         });
     }
 
