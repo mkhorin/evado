@@ -21,11 +21,19 @@ module.exports = class MetaHelper {
     }
 
     static sortByOrderNumber (items) {
-        return items.sort((a, b) => a.orderNumber - b.orderNumber);
+        return items.sort(this.compareByOrderNumber);
+    }
+
+    static compareByOrderNumber (a, b) {
+        return a.orderNumber - b.orderNumber;
     }
 
     static sortByDataOrderNumber (items) {
-        return items.sort((a, b) => a.data.orderNumber - b.data.orderNumber);
+        return items.sort(this.compareByDataOrderNumber);
+    }
+
+    static compareByDataOrderNumber (a, b) {
+        return a.data.orderNumber - b.data.orderNumber;
     }
 
     static splitByPrefix (name, separator, prefixes) {
