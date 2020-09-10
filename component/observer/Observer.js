@@ -20,7 +20,13 @@ module.exports = class Observer extends Base {
     }
 
     attachListener (events, handlers) {
-        if (!Array.isArray(events) || !handlers.length) {
+        if (typeof events === 'string') {
+            events = events.split(',');
+        }
+        if (typeof handlers === 'function') {
+            handlers = [handlers];
+        }
+        if (!Array.isArray(events) || !Array.isArray(handlers) || !handlers.length) {
             return;
         }
         for (const name of events) {
@@ -32,13 +38,17 @@ module.exports = class Observer extends Base {
         }
     }
 
-    catch (event, data) {
+    async handle (event, data) {
         if (Array.isArray(this._eventMap[event])) {
-            return this.handle(event, data);
+            await this.handleInternal(event, data);
+        }
+        const index = event.lastIndexOf('.');
+        if (index !== -1) {
+            await this.handle(event.substring(0, index), data);
         }
     }
 
-    async handle (event, data) {
+    async handleInternal (event, data) {
         data = {...data, event};
         for (const handler of this._eventMap[event]) {
             try {
