@@ -7,9 +7,8 @@ const Base = require('areto/base/Base');
 
 module.exports = class MessageTemplate extends Base {
 
-    constructor (config) {
-        super(config);
-        this.data = this.data || {};
+    prepareData (data) {
+       return data;
     }
 
     resolveSubject (text) {
@@ -22,8 +21,7 @@ module.exports = class MessageTemplate extends Base {
 
     resolveTemplate (text, data) {
         return typeof text === 'string'
-            ? text.replace(/{(\w+)}/gm, (match, key) => data.hasOwnProperty(key) ? data[key] : '')
+            ? text.replace(/{(\w+)}/gm, (match, key) => data && data.hasOwnProperty(key) ? data[key] : '')
             : this.wrapClassMessage('Text is not string');
     }
 };
-module.exports.init(module);

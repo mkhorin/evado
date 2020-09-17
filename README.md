@@ -11,6 +11,8 @@ Build an app by declaring entities and relationships through web interface.
 - Responsive web API interacts with external systems.
 - Ease of deployment with docker containers.
 
+![Evado Declarative Framework](https://github.com/mkhorin/evado/blob/master/doc/evado-framework-steps.jpg)
+
 ### Ready to Try
 
 - [Blog App](https://github.com/mkhorin/evado-app-blog)
@@ -21,6 +23,7 @@ Build an app by declaring entities and relationships through web interface.
 - [Expert System App](https://github.com/mkhorin/evado-app-expert)
 - [Shop App](https://github.com/mkhorin/evado-app-shop)
 - [Social Network App](https://github.com/mkhorin/evado-app-social)
+- [Taxi Ordering Network App](https://github.com/mkhorin/evado-app-taxi)
 
 ### Ready to Use
 

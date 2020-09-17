@@ -12,7 +12,7 @@ const p = {
     itemTranslate: typeof itemTranslate === 'undefined' ? '' : itemTranslate
 };
 %>
-<%- include('_params', {p}) %>
+<%- include(_view.get('_part/attr/_params'), {p}) %>
 <%
 let content = p.hasEmpty ? `<option value="">${p.emptyText}</option>` : '';
 if (typeof items !== 'undefined' && items) {

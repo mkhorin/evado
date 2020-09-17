@@ -6,7 +6,7 @@ const p = {
     options: typeof options === 'undefined' ? '' : JSON.stringify(options)
 };
 %>
-<%- include('_params', {p}) %>
+<%- include(_view.get('_part/attr/_params'), {p}) %>
 
 <div class="form-attr form-group <%- p.required %>"
      data-handler="<%= p.handler %>"

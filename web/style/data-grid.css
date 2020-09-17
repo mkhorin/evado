@@ -25,6 +25,7 @@
 }
 .data-grid-table > thead > tr > .column {
     position: relative;
+    vertical-align: middle;
 }
 .data-grid-table > thead > tr > .column.sortable {
     padding-right: 24px;
@@ -37,8 +38,8 @@
 .data-grid-table .order-toggle {
     display: none;
     position: absolute;
-    right: 6px;
-    bottom: 7px;
+    right: 4px;
+    top: calc(50% - 7px);
     min-width: 16px;
     text-align: center;
     color:#ccc;

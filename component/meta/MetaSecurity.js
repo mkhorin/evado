@@ -43,7 +43,7 @@ module.exports = class MetaSecurity extends Base {
 
     resolveOnIndex (data) {
         return this.resolve({
-            targetType: Rbac.TARGET_NAV_NODE,
+            targetType: Rbac.TARGET_NODE,
             target: data.node,
             targetClass: data.class,
             targetView: data.view,
@@ -131,11 +131,11 @@ module.exports = class MetaSecurity extends Base {
         }, params);
     }
 
-    resolveModelTransitions (model) {
+    resolveModelTransitions (model, readOnly) {
         return this.resolveTransitions({
             targetType: Rbac.TARGET_OBJECT,
             target: model,
-            actions: [Rbac.UPDATE]
+            editableTarget: !readOnly
         });
     }
 

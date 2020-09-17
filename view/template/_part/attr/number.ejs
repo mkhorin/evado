@@ -1,3 +1,19 @@
 <!-- _part/attr/number -->
+<%
+const p = {};
+%>
+<%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<%- include('string') %>
+<div class="form-attr form-group <%- p.required %> <%- p.css %>"
+     data-handler="<%= p.handler %>"
+     data-behaviors="<%= p.behaviors %>"
+     data-action-binder="<%= p.actionBinder %>">
+    <label class="control-label <%- p.labelCss %>"
+           title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></label>
+    <div class="<%- p.valueCss %>">
+        <input name="<%- p.name %>" type="number" placeholder="<%- p.placeholder %>"
+               value="<%= p.value %>" <%- p.required %> class="form-control form-value">
+        <div class="error-block"></div>
+        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+    </div>
+</div>

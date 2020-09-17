@@ -114,25 +114,9 @@ module.exports = class SecurityConsole extends Base {
 
     async assignRole () {
         const user = await this.findUserByParams().one();
-        if (!user) {
-            return this.log('error', `User not found`);
-        }
-        const store = this.getStore();
-        const item = await store.findItemByName(this.params.role).one();
-        if (!item) {
-            return this.log('error', 'Role not found');
-        }
-        const assignment = await store.findAssignment().and({
-            item: item._id,
-            user: user.getId()
-        }).one();
-        if (assignment) {
-            return this.log('error', 'Role already assigned');
-        }
-        await store.findAssignment().insert({
-            item: item[store.key],
-            user: user.getId()
-        });
+        return user
+            ? this.getStore().createAssignment(this.params.role, user.getId())
+            : this.log('error', 'User not found');
     }
 
     log () {

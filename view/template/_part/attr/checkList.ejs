@@ -5,7 +5,7 @@ const p = {
     handler: 'CheckboxList'
 };
 %>
-<%- include('_params', {p}) %>
+<%- include(_view.get('_part/attr/_params'), {p}) %>
 
 <div class="form-attr <%- p.css %> <%- p.required %> form-group"
      data-handler="<%= p.handler %>"

@@ -41,7 +41,7 @@ module.exports = class Formatter extends Base {
     }
 
     asTimeFromInteger (value, params) {
-        return Number.isInteger(value)
+        return Number.isSafeInteger(value)
             ? this.asTime(moment().startOf('day').add(moment.duration({s: value})), params)
             : value;
     }

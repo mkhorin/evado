@@ -1,3 +1,26 @@
+## 1.8.0
+
+* component/helper/MetaHelper
+    - extract comparison methods
+* component/notifier/MessageTemplate
+    - add data preparation
+* component/notifier/Notice
+    - add template and recipient filter configurations        
+* component/notifier/NoticeMessage
+    - add recipients on message creating
+* component/observer/Observer
+    - cascading handling by event name    
+* component/security/rbac/MetaTransitionInspector
+    - refactor transition security
+* component/security/rbac/Rbac
+    - refactor item indexing
+* console/Console
+    - get server port from console arguments
+* console/NoticeConsole
+    - throw error on non-existent user filter
+* console/UserFilterConsole
+    - throw error on non-existent security item    
+
 ## 1.7.1
 
 * component/meta/MetaSecurity

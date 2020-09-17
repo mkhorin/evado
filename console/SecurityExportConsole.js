@@ -19,7 +19,7 @@ module.exports = class SecurityExportConsole extends Base {
             roles: this.getItems('role')
         };
         if (this.params.users) {
-            this.userMap = await this.spawnUser().find().raw().indexByKey().all();
+            this.userMap = await this.spawnUser().createQuery().indexByKey().raw().all();
             data.users = await this.getUsers();
             data.assignments = this.getAssignments();
         }
@@ -169,7 +169,7 @@ module.exports = class SecurityExportConsole extends Base {
     async getUsers () {
         const key = this.getKey();
         const password = this.spawn('security/UserPassword');
-        const passwordMap = await password.find().orderByKey().raw().index('user').all();
+        const passwordMap = await password.createQuery().orderByKey().raw().index('user').all();
         const result = [];
         for (const item of Object.values(this.userMap)) {
             const password = passwordMap[item[key]];

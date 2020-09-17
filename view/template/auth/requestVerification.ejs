@@ -2,6 +2,7 @@
 const title = _t('Request verification');
 const error = _controller.getFlash('error').join();
 const success = _controller.getFlash('success').join();
+
 layout(_view.get('_layout/auth'));
 block('title', title);
 %>
@@ -20,17 +21,16 @@ block('title', title);
 <p class="login-box-msg"><%- title %></p>
 
 <form method="post" class="form">
-    <%- include('./_input', {
+
+    <%- include(_view.get('auth/_input'), {
         attr: 'email',
         type: 'email',
         iconClass: 'glyphicon glyphicon-envelope',
         autocomplete: 'on'
     }) %>
-    <%- include('./_captcha', {
-        attr: 'captchaCode',
-        iconClass: 'glyphicon glyphicon-check',
-        url: 'auth/captcha'
-    }) %>
+
+    <%- include(_view.get('auth/_captcha')) %>
+
     <div class="form-attr form-group mt20">
         <button type="submit" class="btn btn-primary btn-block btn-flat">
             <%- _t('Send') %>

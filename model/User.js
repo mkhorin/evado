@@ -81,7 +81,7 @@ module.exports = class User extends Base {
     }
 
     findSame (name, email) {
-        return this.find().andFilter({name}).orFilter({email});
+        return this.createQuery().andFilter({name}).orFilter({email});
     }
 
     findByTitle (value) {

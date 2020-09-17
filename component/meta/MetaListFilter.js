@@ -73,7 +73,7 @@ module.exports = class MetaListFilter extends Base {
         if (!value) {
             return ['FALSE'];
         }
-        const query = relation.refClass.find().and({[relation.refClass.getKey()]: value});
+        const query = relation.refClass.find({[relation.refClass.getKey()]: value});
         value = await this.getRelationValue(relation, query);
         attr = relation.linkAttrName;
         return this.formatSelectorCondition(attr, op, value);
@@ -81,7 +81,7 @@ module.exports = class MetaListFilter extends Base {
 
     async parseNested ({attr, value}) {
         const relation = this.getRelation(attr);
-        const query = relation.refClass.find();
+        const query = relation.refClass.createQuery();
         await (new this.constructor({items: value})).resolve(query);
         if (relation.isBackRef()) {
             attr = relation.linkAttrName;

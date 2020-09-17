@@ -40,15 +40,15 @@ module.exports = class UserFilter extends Base {
     async getUsers () {
         let users = this.get('includes');
         users = Array.isArray(users) ? users: [];
-        users.push(...await this.resolveConfig());
-        users.push(...await this.resolveRbacItems());
+        users.push(...await this.resolveCustomFilterUsers());
+        users.push(...await this.resolveRbacItemUsers());
         users = MongoHelper.exclude(this.get('excludes'), users);
         return users;
     }
 
-    async resolveRbacItems () {
-        const rbac = this.module.getRbac();
+    async resolveRbacItemUsers () {
         const result = [];
+        const rbac = this.module.getRbac();
         for (let item of this.get('items')) {
             item = rbac.store.getItem(item);
             if (item) {
@@ -64,7 +64,7 @@ module.exports = class UserFilter extends Base {
         return result;
     }
 
-    resolveConfig () {
+    resolveCustomFilterUsers () {
         const data = this.get('config');
         if (!data) {
             return [];
@@ -73,7 +73,7 @@ module.exports = class UserFilter extends Base {
             const config = ClassHelper.resolveSpawn(CommonHelper.parseJson(data), this.module);
             return this.spawn(config).getUsers();
         } catch (err) {
-            this.log('error', 'Invalid configuration:', err);
+            this.log('error', 'Invalid configuration', err);
             return [];
         }
     }

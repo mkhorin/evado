@@ -1,8 +1,8 @@
 <!-- _part/attr/valueMap -->
-
-<% const p = {handler: 'ValueMap'}; %>
-
-<%- include('_params', {p}) %>
+<%
+const p = {handler: 'ValueMap'};
+%>
+<%- include(_view.get('_part/attr/_params'), {p}) %>
 
 <div class="value-map form-attr form-group <%- p.required %>"
      data-handler="<%= p.handler %>"

@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
  */
 'use strict';
 
@@ -9,41 +9,56 @@ module.exports = class Notifier extends Base {
 
     constructor (config) {
         super({
-            // tasks: [],
-            messageSource: 'notice',
+            tasks: [], // message sending task
+            messageSource: 'notice', // message translation source
             ...config
         });
     }
 
-    async createNotification (name, data) {
-        const notice = await this.findNotice(name).one();
+    async execute (name, recipients, data) {
+        const notice = await this.findNoticeByName(name).one();
         if (!notice) {
             return this.log('error', `Notice not found: ${name}`);
         }
-        const message = await this.createMessage(notice, data);
-        if (message) {
-            return message.send();
-        }
+        await this.createMessage(notice, data, recipients);
+        return this.executeTasks();
     }
 
-    async execute (notices, data) {
-        const models = await this.findNoticeById(notices).all();
-        for (const model of models) {
-            await this.createMessage(model, data);
+    async executeByNames (names, data) {
+        const models = await this.findNoticeByName(names).all();
+        return this.executeNotices(models, data);
+    }
+
+    async executeById (id, data) {
+        const models = await this.findNoticeById(id).all();
+        return this.executeNotices(models, data);
+    }
+
+    async executeNotices (notices, data) {
+        for (const notice of notices) {
+            await this.createMessage(notice, data);
         }
+        return this.executeTasks();
+    }
+
+    executeTasks () {
         return this.module.getScheduler().executeTasks(this.tasks);
     }
 
-    createMessage (notice, data) {
-        return notice.createMessage(data, this.messageSource);
+    createMessage (notice, data, recipients) {
+        return notice.createMessage(data, this.messageSource, recipients);
     }
 
-    findNotice (name) {
-        return this.spawnNotice().find({name, active: true});
+    findNoticeByName (name) {
+        return this.findActiveNotice().and({name});
     }
 
     findNoticeById (id) {
-        return this.spawnNotice().findById(id).and({active: true});
+        return this.findActiveNotice().byId(id);
+    }
+
+    findActiveNotice () {
+        return this.spawnNotice().find({active: true});
     }
 
     spawnNotice () {

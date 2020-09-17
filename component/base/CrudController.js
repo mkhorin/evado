@@ -150,7 +150,7 @@ module.exports = class CrudController extends Base {
     // LIST
 
     actionList (query, params) {
-        query = query || this.createModel().find();
+        query = query || this.createModel().createQuery();
         return this.sendGridList(query, {
             viewModel: 'list',
             ...params
@@ -158,7 +158,7 @@ module.exports = class CrudController extends Base {
     }
 
     actionListSelect (params) {
-        return this.sendSelectList(this.createModel().find(), params);
+        return this.sendSelectList(this.createModel().createQuery(), params);
     }
 
     async actionListRelated (params) {

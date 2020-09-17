@@ -36,7 +36,7 @@ module.exports = class ListenerConsole extends Base {
             for (const name of names) {
                 const id = await model.find({name}).id();
                 id ? result.push(id)
-                   : this.log('error', `Not found: ${modelName}: ${name}`);
+                   : this.log('error', `${modelName} not found: ${name}`);
             }
         }
         return result;

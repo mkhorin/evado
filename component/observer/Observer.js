@@ -13,6 +13,7 @@ module.exports = class Observer extends Base {
 
     async load () {
         this._eventMap = {};
+        this._parsedMap = {};
         this._listeners = await this.spawn('observer/Listener').findActive().all();
         for (const listener of this._listeners) {
             this.attachListener(listener.get('events'), listener.resolveHandlers());
@@ -35,28 +36,45 @@ module.exports = class Observer extends Base {
             } else {
                 this._eventMap[name] = handlers;
             }
+            delete this._parsedMap[name];
         }
     }
 
-    async handle (event, data) {
+    handle (event, data) {
+        if (!Object.prototype.hasOwnProperty.call(this._parsedMap, event)) {
+            this._parsedMap[event] = this.parseEventName(event);
+        }
+        if (this._parsedMap[event]) {
+            return this.handleInternal(event, data);
+        }
+    }
+
+    async handleInternal (originalEvent, data) {
+        data = data ? {...data} : data;
+        for (const event of this._parsedMap[originalEvent]) {
+            for (const handler of this._eventMap[event]) {
+                try {
+                    await handler.execute(data, event, originalEvent);
+                } catch (err) {
+                    this.log('error', `Event: ${event}: ${handler}:`, err);
+                }
+            }
+        }
+    }
+
+    parseEventName (event) {
+        const result = [];
         if (Array.isArray(this._eventMap[event])) {
-            await this.handleInternal(event, data);
+            result.push(event);
         }
         const index = event.lastIndexOf('.');
         if (index !== -1) {
-            await this.handle(event.substring(0, index), data);
-        }
-    }
-
-    async handleInternal (event, data) {
-        data = {...data, event};
-        for (const handler of this._eventMap[event]) {
-            try {
-                await handler.execute(data);
-            } catch (err) {
-                this.log('error', `Event: ${event}: ${handler}:`, err);
+            const events = this.parseEventName(event.substring(0, index));
+            if (events) {
+                result.push(...events);
             }
         }
+        return result.length ? result : null;
     }
 };
 module.exports.init();

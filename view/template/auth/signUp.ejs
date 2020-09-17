@@ -1,6 +1,7 @@
 <%
 const title = _t('Sign up');
 const error = model.getFirstError('register');
+
 layout(_view.get('_layout/auth'));
 block('title', title);
 %>
@@ -15,38 +16,7 @@ block('title', title);
 
 <form method="post" class="form">
 
-    <%- include('./_input', {
-        attr: 'name',
-        iconClass: 'glyphicon glyphicon-user'
-    }) %>
-
-    <%- include('./_input', {
-        attr: 'email',
-        type: 'email',
-        iconClass: 'glyphicon glyphicon-envelope'
-    }) %>
-
-    <%- include('./_input', {
-        attr: 'password',
-        type: 'password',
-        iconClass: 'glyphicon glyphicon-lock',
-        value: '',
-        autocomplete: 'new-password'
-    }) %>
-
-    <%- include('./_input', {
-        attr: 'passwordRepeat',
-        type: 'password',
-        iconClass: 'glyphicon glyphicon-lock',
-        value: '',
-        autocomplete: 'new-password'
-    }) %>
-
-    <%- include('./_captcha', {
-        attr: 'captchaCode',
-        iconClass: 'glyphicon glyphicon-check',
-        url: 'auth/captcha'
-    }) %>
+    <%- include(_view.get('auth/_signUpForm')) %>
 
     <div class="form-attr form-group mt20">
         <button type="submit" class="btn btn-primary btn-block btn-flat">

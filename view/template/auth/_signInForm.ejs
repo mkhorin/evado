@@ -1,0 +1,27 @@
+<%
+const inputTemplate = _view.get('auth/_input');
+%>
+<%- include(inputTemplate, {
+    attr: 'email',
+    type: 'email',
+    iconClass: 'glyphicon glyphicon-envelope',
+    autocomplete: 'on'
+}) %>
+
+<%- include(inputTemplate, {
+    attr: 'password',
+    type: 'password',
+    iconClass: 'glyphicon glyphicon-lock',
+    value: ''
+}) %>
+
+<% if (model.isCaptchaRequired()) { %>
+<%- include(_view.get('auth/_captcha')) %>
+<% } %>
+
+<% if (_controller.user.auth.enableAutoLogin) { %>
+<%- include(_view.get('auth/_checkbox'), {
+    attr: 'rememberMe',
+    value: true
+}) %>
+<% } %>

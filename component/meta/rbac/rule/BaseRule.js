@@ -47,7 +47,7 @@ module.exports = class BaseRule extends Base {
         return this.params.controller.getPostParam('data');
     }
 
-    async execute () {
+    execute () {
         return true; // can RBAC item be applied
     }
 };

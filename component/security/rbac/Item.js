@@ -101,19 +101,11 @@ module.exports = class Item extends Base {
         if (!Array.isArray(this.data.targets)) {
             this.data.targets = [this.data.targets];
         }
-        const expansions = [];
-        for (const item of this.data.targets) {
-            for (const key of Object.keys(item)) {
-                if (Array.isArray(item[key])) {
-                    const values = item[key];
-                    item[key] = values.shift();
-                    for (const value of values) {
-                        expansions.push({...item, [key]: value});
-                    }
-                }
-            }
+        const result = [];
+        for (const data of this.data.targets) {
+            result.push(...ObjectHelper.expandArrayValues(data));
         }
-        this.data.targets.push(...expansions);
+        this.data.targets = result;
     }
 
     // MATCHES
@@ -250,8 +242,8 @@ module.exports = class Item extends Base {
             case rbac.TARGET_OBJECT: this.validateMetaObject(data); break;
             case rbac.TARGET_TRANSITION: this.validateMetaTransition(data); break;
             case rbac.TARGET_ATTR: this.validateMetaAttr(data); break;
-            case rbac.TARGET_NAV_SECTION: this.validateMetaNavSection(data); break;
-            case rbac.TARGET_NAV_NODE: this.validateMetaNavNode(data); break;
+            case rbac.TARGET_SECTION: this.validateMetaSection(data); break;
+            case rbac.TARGET_NODE: this.validateMetaNode(data); break;
         }
         if (this._targetError) {
             throw new Error(this.getMetaError(this._targetError));
@@ -299,17 +291,17 @@ module.exports = class Item extends Base {
         }
     }
 
-    validateMetaNavSection (data) {
-        this._target.navSection = this.getNavMeta().getSection(data.navSection);
-        if (this._target.navSection) {
+    validateMetaSection (data) {
+        this._target.section = this.getNavMeta().getSection(data.section);
+        if (this._target.section) {
             return true;
         }
-        this._targetError = `Invalid navigation section: ${data.navSection}`;
+        this._targetError = `Invalid navigation section: ${data.section}`;
     }
 
-    validateMetaNavNode (data) {
-        if (this.validateMetaNavSection(data) && !this._target.navSection.getNode(data.navNode)) {
-            this._targetError = `Invalid navigation node: ${data.navNode}`;
+    validateMetaNode (data) {
+        if (this.validateMetaSection(data) && !this._target.section.getNode(data.node)) {
+            this._targetError = `Invalid navigation node: ${data.node}`;
         }
     }
 
@@ -319,3 +311,4 @@ module.exports = class Item extends Base {
 };
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
+const ObjectHelper = require('areto/helper/ObjectHelper');

@@ -159,7 +159,9 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 
     getMaxCellHeight (column) {
-        return Number.isInteger(column.maxCellHeight) ? column.maxCellHeight : this.params.maxCellHeight;
+        return Number.isSafeInteger(column.maxCellHeight)
+            ? column.maxCellHeight
+            : this.params.maxCellHeight;
     }
 
     defaultCellValueRender (value) {
@@ -172,14 +174,15 @@ Jam.DataGridRenderer = class DataGridRenderer {
         return this.createHeadByMatrix(this.createHeadMatrix(this.columns));
     }
 
-    renderHeadColumn ({name, label, translate}, columns, rows) {
+    renderHeadColumn ({name, label, hint, translate}, columns, rows) {
         let cssClass = 'column';
         if (this.grid.isSortableColumn(name)) {
             cssClass += ' sortable '+ this.getDirectionName(this.grid.getOrderDirection(name));
         }
         label = this.grid.translate(label || name, translate);
+        hint = hint ? this.grid.translate(hint, translate) : label;
         return '<th class="'+ cssClass +'" rowspan="'+ rows +'" data-name="'+ name +'">'
-            + '<span class="column-label search-toggle" title="'+ name +'">'+ label +'</span>'
+            + '<span class="column-label search-toggle" title="'+ hint +'">'+ label +'</span>'
             + '<span class="order-toggle fa" title="'+ this.locale.orderToggle +'"></span></th>';
     }
 

@@ -18,16 +18,24 @@ module.exports = class NoticeConsole extends Base {
         const model = this.spawn('notifier/Notice');
         model.assign(data);
         model.set('name', name);
-        model.set('options', data.options ? JSON.stringify(data.options) : '');
+        model.set('options', this.owner.stringifyData(data.options));
+        model.set('recipient', this.owner.stringifyData(data.recipient));
+        model.set('template', this.owner.stringifyData(data.template));
         model.set('users', await this.owner.resolveUsers(data.users));
         model.set('userFilters', await this.resolveUserFilters(data.userFilters));
         await this.saveModel(model, name);
     }
 
-    resolveUserFilters (names) {
-        names = Array.isArray(names) ? names : [];
-        return names.length
-            ? this.spawn('model/UserFilter').find({name: names}).ids()
-            : names;
+    async resolveUserFilters (names) {
+        const result = [];
+        const model = this.spawn('model/UserFilter');
+        for (const name of StringHelper.split(names)) {
+            const item = await model.find({name}).id();
+            item ? result.push(item)
+                 : this.log('error', `User filter not found: ${name}`);
+        }
+        return result;
     }
 };
+
+const StringHelper = require('areto/helper/StringHelper');

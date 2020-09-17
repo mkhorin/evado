@@ -81,7 +81,7 @@ module.exports = class RawFile extends Base {
     }
 
     findExpired (date) {
-        return this.find().and({owner: null}, ['<', 'createdAt', date]);
+        return this.find({owner: null}, ['<', 'createdAt', date]);
     }
 
     findPending (id, creator) {

@@ -174,7 +174,7 @@ Jam.Dialog = class Dialog {
     }
 
     confirmDeletion (message, data) {
-        return this.confirm(message || 'Delete object permanently?', {
+        return this.confirm(message || 'Delete this object permanently?', {
             submitText: 'Delete',
             cssClass: 'danger',
             ...data

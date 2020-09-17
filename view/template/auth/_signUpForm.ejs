@@ -1,0 +1,31 @@
+<%
+const inputTemplate = _view.get('auth/_input');
+%>
+<%- include(inputTemplate, {
+    attr: 'name',
+    iconClass: 'glyphicon glyphicon-user'
+}) %>
+
+<%- include(inputTemplate, {
+    attr: 'email',
+    type: 'email',
+    iconClass: 'glyphicon glyphicon-envelope'
+}) %>
+
+<%- include(inputTemplate, {
+    attr: 'password',
+    type: 'password',
+    iconClass: 'glyphicon glyphicon-lock',
+    value: '',
+    autocomplete: 'new-password'
+}) %>
+
+<%- include(inputTemplate, {
+    attr: 'passwordRepeat',
+    type: 'password',
+    iconClass: 'glyphicon glyphicon-lock',
+    value: '',
+    autocomplete: 'new-password'
+}) %>
+
+<%- include(_view.get('auth/_captcha')) %>

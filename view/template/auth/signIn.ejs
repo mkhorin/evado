@@ -16,34 +16,7 @@ block('title', title);
 
 <form method="post" class="form">
 
-    <%- include('./_input', {
-        attr: 'email',
-        type: 'email',
-        iconClass: 'glyphicon glyphicon-envelope',
-        autocomplete: 'on'
-    }) %>
-
-    <%- include('./_input', {
-        attr: 'password',
-        type: 'password',
-        iconClass: 'glyphicon glyphicon-lock',
-        value: ''
-    }) %>
-
-    <% if (model.isCaptchaRequired()) { %>
-    <%- include('./_captcha', {
-        attr: 'captchaCode',
-        iconClass: 'glyphicon glyphicon-check',
-        url: 'auth/captcha'
-    }) %>
-    <% } %>
-
-    <% if (_controller.user.auth.enableAutoLogin) { %>
-    <%- include('./_checkbox', {
-        attr: 'rememberMe',
-        value: true
-    }) %>
-    <% } %>
+    <%- include(_view.get('auth/_signInForm')) %>
 
     <div class="form-attr form-group mt20">
         <button type="submit" class="btn btn-primary btn-block btn-flat">

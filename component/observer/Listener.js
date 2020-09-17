@@ -36,15 +36,29 @@ module.exports = class Listener extends Base {
 
     resolveHandlers () {
         const handlers = this.rel('handlers').filter(model => model.resolve());
-        const notices = this.get('notices');
-        if (Array.isArray(notices) && notices.length) {
-            handlers.push(this.spawn('observer/NoticeHandler', {notices}));
+        const notice = this.resolveNoticeHandler();
+        if (notice) {
+            handlers.push(notice);
         }
-        const tasks = this.get('tasks');
-        if (Array.isArray(tasks) && tasks.length) {
-            handlers.push(this.spawn('observer/TaskHandler', {tasks}));
+        const task = this.resolveTaskHandler();
+        if (notice) {
+            handlers.push(task);
         }
         return handlers;
+    }
+
+    resolveNoticeHandler () {
+        const notices = this.get('notices');
+        if (Array.isArray(notices) && notices.length) {
+            return this.spawn('observer/NoticeHandler', {notices});
+        }
+    }
+
+    resolveTaskHandler () {
+        const tasks = this.get('tasks');
+        if (Array.isArray(tasks) && tasks.length) {
+            return this.spawn('observer/TaskHandler', {tasks});
+        }
     }
 };
 module.exports.init(module);

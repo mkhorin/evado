@@ -82,7 +82,7 @@ module.exports = class ListFilter extends Base {
 
     async parseNested ({attr, value, relation}) {
         let rel = this.getRelation(attr, this.query.model);
-        let query = rel.model.find();
+        let query = rel.model.createQuery();
         await this.spawnSelf({items: value}).resolve(query);
         if (!relation) {
             return {[rel.linkKey]: await query.column(rel.refKey)};

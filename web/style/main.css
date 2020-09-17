@@ -91,6 +91,10 @@ label.radio,
 label.checkbox {
     color: #222;
 }
+label.radio.radio-inline,
+label.checkbox.checkbox-inline {
+    margin-top: 0;
+}
 
 .mb0 {
     margin-bottom: 0 !important;
@@ -176,6 +180,9 @@ a:focus, button:focus {
 }
 hr {
     border-color: #ddd;
+}
+hr.space {
+    border-color: #fff;
 }
 .dashed {
     border-style: dashed;
@@ -305,7 +312,7 @@ hr {
     background-color: #ccc !important;
 }
 .main-header .navbar .nav > li > a > .label {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: normal;
 }
 .main-header .navbar .dropdown-menu li.dropdown-menu-footer a {
@@ -2033,7 +2040,7 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.3);
-    z-index: 2049;
+    z-index: 3002;
 }
 .dialog > .box {
     position: fixed;

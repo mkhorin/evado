@@ -5,9 +5,9 @@
 
 Jam.ServerPolling = class ServerPolling {
 
-    constructor () {
+    constructor (data = {}) {
         this._tasks = [];
-        this._refreshInterval = 30;
+        this._refreshInterval = data.refreshInterval || 30;
         $(document.body)
             .click(this.onUserAction.bind(this))
             .keyup(this.onUserAction.bind(this));

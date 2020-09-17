@@ -19,8 +19,8 @@ module.exports = class MetaModel extends Base {
         return this.hub.getPath(...arguments);
     }
 
-    emitEvent (name, data) {
-        return this.module.emitEvent(`meta.${this.name}.${name}`, data);
+    emit (event, data) {
+        return this.module.emit(`meta.${this.name}.${event}`, data);
     }
 
     spawnUser () {

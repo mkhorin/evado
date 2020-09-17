@@ -3,9 +3,9 @@
  */
 'use strict';
 
-const Base = require('./BaseRule');
-
 // check model attribute has the current user ID
+
+const Base = require('./BaseRule');
 
 module.exports = class UserRule extends Base {
 
@@ -18,7 +18,7 @@ module.exports = class UserRule extends Base {
     }
 
     execute () {
-        return this.isObjectTarget() // list targets filter by getObjectFilter
+        return this.isObjectTarget()
             ? this.checkUser()
             : this.isAllowType(); // pass rule: need to allow - true, need to deny - false
     }

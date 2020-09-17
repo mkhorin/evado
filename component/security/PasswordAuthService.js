@@ -43,7 +43,7 @@ module.exports = class PasswordAuthService extends Base {
     async failLogin (email, user) {
         const data = {email, ip: user.getIp()};
         this.module.log('warn', 'Authentication failed', data);
-        await this.module.emitEvent('auth.fail', data);
+        await this.module.emit('auth.fail', data);
         throw 'auth.invalidAuth';
     }
 
@@ -79,7 +79,7 @@ module.exports = class PasswordAuthService extends Base {
         password.set('user', user.getId());
         await password.forceSave();
         if (!silent) {
-            await this.module.emitEvent('auth.register', {user});
+            await this.module.emit('auth.register', {user});
         }
         return user;
     }
@@ -113,7 +113,7 @@ module.exports = class PasswordAuthService extends Base {
             throw model.getFirstError();
         }
         await user.directUpdate({expiredPassword});
-        await this.module.emitEvent('auth.changePassword', {user, model});
+        await this.module.emit('auth.changePassword', {user, model});
     }
 
     async createVerification (user) {
@@ -132,7 +132,7 @@ module.exports = class PasswordAuthService extends Base {
         if (!await verification.save()) {
             throw verification.getFirstError();
         }
-        await this.module.emitEvent('auth.createVerification', {user, verification});
+        await this.module.emit('auth.createVerification', {user, verification});
         return verification;
     }
 
@@ -164,7 +164,7 @@ module.exports = class PasswordAuthService extends Base {
         const user = await this.getUserByVerification(verification);
         await verification.execute();
         await user.verify();
-        await this.module.emitEvent('auth.verify', {user, verification});
+        await this.module.emit('auth.verify', {user, verification});
         return user;
     }
 

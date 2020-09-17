@@ -18,7 +18,7 @@ module.exports = class TaskConsole extends Base {
         const model = this.spawn('model/Task');
         model.assign(data);
         model.set('name', name);
-        model.set('job', JSON.stringify(data.job));
+        model.set('job', this.owner.stringifyData(data.job));
         await this.saveModel(model, name);
     }
 };

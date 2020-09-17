@@ -18,13 +18,17 @@ module.exports = class Notice extends Base {
                 'methods',
                 'users',
                 'userFilters',
-                'options'
+                'options',
+                'recipient',
+                'template'
             ],
             RULES: [
                 [['name', 'subject', 'text', 'methods'], 'required'],
                 ['name', 'regex', {pattern: /^[0-9a-zA-Z-]+$/}],
                 ['name', 'unique'],
-                ['options', 'json']
+                ['methods', 'filter', {filter: 'split'}],
+                [['options', 'recipient', 'template'], 'json'],
+                ['template', 'spawn', {BaseClass: require('./MessageTemplate')}],
             ],
             DELETE_ON_UNLINK: [
                 'noticeMessages'
@@ -41,7 +45,11 @@ module.exports = class Notice extends Base {
     }
 
     getOption (key, defaults) {
-        return ObjectHelper.getValue(key, this.get('options'), defaults);
+        return ObjectHelper.getValue(key, this.getOptions(), defaults);
+    }
+
+    getOptions () {
+        return CommonHelper.parseJson(this.get('options'));
     }
 
     relNoticeMessages () {
@@ -49,10 +57,11 @@ module.exports = class Notice extends Base {
         return this.hasMany(Class, 'notice', this.PK);
     }
 
-    async createMessage (data) {
-        this.resolveTemplate(...arguments);
+    async createMessage (data, messageSource, recipients) {
+        await this.resolveTemplate(data, messageSource);
+        recipients = recipients || await this.getMessageRecipients(data);
         const message = this.spawn('notifier/NoticeMessage');
-        if (await message.create(this, data)) {
+        if (await message.create(this, recipients)) {
             return message;
         }
         const error = 'Message creation failed';
@@ -60,15 +69,18 @@ module.exports = class Notice extends Base {
         this.log('error', `${error}:`, message.getErrors());
     }
 
-    resolveTemplate (data, messageSource) {
+    getTemplateConfig () {
+        return CommonHelper.parseJson(this.get('template')) || this.getClass('notifier/MessageTemplate');
+    }
+
+    async resolveTemplate (data, messageSource) {
         try {
-            const config = this.getOption('MessageTemplate') || this.getClass('notifier/MessageTemplate');
-            const Class = ClassHelper.resolveSpawn(config, this.module);
-            const template = this.spawn(Class, {data});
+            const template = this.spawn(ClassHelper.resolveSpawn(this.getTemplateConfig(), this.module));
+            template.data = await template.prepareData(data);
             this.resolveTemplateAttr('subject', template, messageSource);
             this.resolveTemplateAttr('text', template, messageSource);
         } catch (err) {
-            this.log('error', 'Invalid message template:', err);
+            this.log('error', 'Message template failed:', err);
         }
     }
 
@@ -80,24 +92,38 @@ module.exports = class Notice extends Base {
         return this.module.translate(message, null, source);
     }
 
-    async getUsers (data) {
+    async getMessageRecipients (data) { // on message creating
+        const config = CommonHelper.parseJson(this.get('recipient'));
+        if (!config) {
+            return null;
+        }
+        try {
+            const filter = this.spawn(ClassHelper.resolveSpawn(config, this.module));
+            return filter.getUsers(data);
+        } catch (err) {
+            this.log('error', 'Recipient filter failed:', err);
+        }
+    }
+
+    async getRecipientUsers () { // on message sending
         let users = this.get('users');
         users = Array.isArray(users) ? users : [];
         const filters = this.get('userFilters');
         if (Array.isArray(filters)) {
-            for (const id of filters) {
-                users.push(...await this.getUsersByFilter(id, data));
+            for (const filter of filters) {
+                users.push(...await this.getRecipientUsersByFilter(filter));
             }
         }
         return users;
     }
 
-    async getUsersByFilter (id, data) {
+    async getRecipientUsersByFilter (id) {
         const model = await this.spawn('model/UserFilter').findById(id).one();
-        return model ? model.getUsers(data) : [];
+        return model ? model.getUsers() : [];
     }
 };
 module.exports.init(module);
 
 const ClassHelper = require('areto/helper/ClassHelper');
+const CommonHelper = require('areto/helper/CommonHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');

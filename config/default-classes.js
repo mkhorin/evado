@@ -20,7 +20,7 @@ module.exports = {
     'model/User': require('../model/User'),
     'model/UserFilter': require('../model/UserFilter'),
     'model/UserLog': require('../model/UserLog'),
-    
+
     'notifier/MessageTemplate': require('../component/notifier/MessageTemplate'),
     'notifier/Notice': require('../component/notifier/Notice'),
     'notifier/NoticeMessage': require('../component/notifier/NoticeMessage'),

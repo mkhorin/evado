@@ -25,8 +25,8 @@ module.exports = class Rbac extends Base {
             TARGET_OBJECT: 'object',
             TARGET_TRANSITION: 'transition',
             TARGET_ATTR: 'attr',
-            TARGET_NAV_SECTION: 'navSection',
-            TARGET_NAV_NODE: 'navNode',
+            TARGET_SECTION: 'section',
+            TARGET_NODE: 'node',
 
             VALUE_LABELS: {
                 'types': {
@@ -48,8 +48,8 @@ module.exports = class Rbac extends Base {
                     object: 'Object',
                     transition: 'Transition',
                     attr: 'Attribute',
-                    navSection: 'Navigation section',
-                    navNode: 'Navigation node'
+                    section: 'Navigation section',
+                    node: 'Navigation node'
                 }
             }
         };
@@ -71,48 +71,23 @@ module.exports = class Rbac extends Base {
             || type === this.TARGET_OBJECT
             || type === this.TARGET_TRANSITION
             || type === this.TARGET_ATTR
-            || type === this.TARGET_NAV_SECTION
-            || type === this.TARGET_NAV_NODE;
+            || type === this.TARGET_SECTION
+            || type === this.TARGET_NODE;
     }
 
-    static concatFirstArrayItems (targetKey, data, ...keys) {
+    static concatFirstArrayItems (target, data, ...keys) {
         for (const key of keys) {
             if (Array.isArray(data[key])) {
-                return data[targetKey] = data[targetKey].concat(data[key]);
+                return data[target] = data[target].concat(data[key]);
             }
         }
-    }
-
-    static indexMetaItemsByType (items) {
-        const allow = [], deny = [];
-        for (const item of items) {
-            item.type === this.ALLOW ? allow.push(item) : deny.push(item);
-        }
-        return allow.length
-            ? (deny.length ? {allow, deny} : {allow})
-            : {deny};
-    }
-
-    static indexMetaItemsByAction (items) {
-        const data = {};
-        for (const item of items) {
-            const actions = Array.isArray(item.actions) ? item.actions : [];
-            for (const action of actions) {
-                if (Array.isArray(data[action])) {
-                    data[action].push(item);
-                } else {
-                    data[action] = [item];
-                }
-            }
-        }
-        return data;
     }
 
     static indexMetaItemsByTarget (items) {
-        const data = this.indexMetaItems(items, 'targetType');
+        const data = IndexHelper.indexObjectArrays(items, 'targetType');
         for (const target of Object.keys(data)) {
             if (target !== this.ALL) {
-                data[target] = this.indexMetaItems(data[target], 'key');
+                data[target] = IndexHelper.indexObjectArrays(data[target], 'key');
             }
         }
         return data;
@@ -139,14 +114,6 @@ module.exports = class Rbac extends Base {
             if (item.view && item.class) {
                 this.concatFirstArrayItems(`${item.view}.${item.class}`, data, item.class);
             }
-        }
-        return data;
-    }
-
-    static indexMetaItems (items, key) {
-        const data = {};
-        for (const item of items) {
-            ObjectHelper.push(item, item[key], data);
         }
         return data;
     }
@@ -262,9 +229,9 @@ module.exports = class Rbac extends Base {
         this.constructor.expandAllAction(items);
         const data = this.indexMetaItemsByRole(items);
         for (const role of Object.keys(data)) {
-            data[role] = this.constructor.indexMetaItemsByType(data[role]);
+            data[role] = IndexHelper.indexObjectArrays(data[role], 'type');
             for (const type of Object.keys(data[role])) {
-                const items = this.constructor.indexMetaItemsByAction(data[role][type]);
+                const items = IndexHelper.indexObjectArrays(data[role][type], 'actions');
                 for (const action of Object.keys(items)) {
                     items[action] = this.constructor.indexMetaItemsByTarget(items[action]);
                 }
@@ -334,21 +301,20 @@ module.exports = class Rbac extends Base {
 
     setMetaTransitionMap () {
         const items = this.metaItems.filter(item => {
-            return item.type === this.DENY && item.targetType === this.TARGET_TRANSITION;
+            return item.targetType === this.TARGET_TRANSITION;
         });
-        const data = this.indexMetaItemsByRoleKey(items);
-        if (data){
-            this.MetaTransitionInspector.concatHierarchyItems(items, data);
-        }
-        this.metaTransitionMap = data;
+        const data = IndexHelper.indexObjectArrays(items, ['roles', 'type', 'key']);
+        this.MetaTransitionInspector.concatHierarchyItems(items, data);
+        this.metaTransitionMap = Object.values(data).length ? data : null;
     }
 
     setMetaNavMap () {
-        const targets = [this.TARGET_NAV_SECTION, this.TARGET_NAV_NODE];
+        const targets = [this.TARGET_SECTION, this.TARGET_NODE];
         const items = this.metaItems.filter(item => {
             return item.type === this.DENY && item.actions[0] === this.READ && targets.includes(item.targetType);
         });
-        this.metaNavMap = this.indexMetaItemsByRoleKey(items);
+        const data = IndexHelper.indexObjectArrays(items, ['roles', 'key']);
+        this.metaNavMap = Object.values(data).length ? data : null;
     }
 
     setItemUserMap () {
@@ -395,32 +361,18 @@ module.exports = class Rbac extends Base {
     indexMetaItemsByRoleAction (items) {
         const data = this.indexMetaItemsByRole(items);
         for (const role of Object.keys(data)) {
-            data[role] = this.constructor.indexMetaItemsByAction(data[role]);
+            data[role] = IndexHelper.indexObjectArrays(data[role], 'actions');
         }
         return data;
     }
 
-    indexMetaItemsByRoleKey (items) {
-        const data = this.indexMetaItemsByRole(items);
-        for (const role of Object.keys(data)) {
-            data[role] = this.constructor.indexMetaItems(data[role], 'key');
-        }
-        return Object.values(data).length ? data : null;
-    }
-
     indexMetaItemsByRole (items) {
-        const data = {};
-        if (Array.isArray(items)) {
-            for (const item of items) {
-                if (Array.isArray(item.roles)) {
-                    for (const role of item.roles) {
-                        if (Object.prototype.hasOwnProperty.call(this.itemMap, role)) {
-                            ObjectHelper.push(item, role, data);
-                        }
-                    }
-                }
-            }    
-        }        
+        const data = IndexHelper.indexObjectArrays(items, 'roles');
+        for (const role of Object.keys(data)) {
+            if (!Object.prototype.hasOwnProperty.call(this.itemMap, role)) {
+                delete data[role];
+            }
+        }
         return data;
     }
 
@@ -434,7 +386,6 @@ module.exports = class Rbac extends Base {
             return ruleItems;
         }
         return ruleItems.length ? items.concat(ruleItems) : items;
-
     }
 
     async getUserAssignmentsByRules (userId) {
@@ -481,6 +432,7 @@ module.exports.init();
 
 const ArrayHelper = require('areto/helper/ArrayHelper');
 const ClassHelper = require('areto/helper/ClassHelper');
+const IndexHelper = require('areto/helper/IndexHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');
 const MetaObjectFilter = require('./MetaObjectFilter');
 const MongoHelper = require('areto/helper/MongoHelper');

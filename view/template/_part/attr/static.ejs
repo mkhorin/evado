@@ -1,6 +1,8 @@
 <!-- _part/attr/static -->
-<% const p = {}; %>
-<%- include('_params', {p}) %>
+<%
+const p = {};
+%>
+<%- include(_view.get('_part/attr/_params'), {p}) %>
 <%
 p.translateValue = typeof translateValue === 'undefined' ? 'none' : translateValue;
 if (p.value && typeof url !== 'undefined') {

@@ -15,21 +15,21 @@ module.exports = class CreateNotificationJob extends Base {
     }
 
     run () {
-        return this.runPending();
+        return this.processUnsentMessage();
     }
 
-    async runPending (previous) {
+    async processUnsentMessage (previous) {
         await PromiseHelper.setTimeout(this.nextSendingDelay);
-        let model = this.spawn('notifier/NoticeMessage');
-        let query = model.findPending();
+        const message = this.spawn('notifier/NoticeMessage');
+        const query = message.findUnsent();
         if (previous) {
-            query.and(['>', model.PK, previous]); // skip previous (possible failed)
+            query.and(['>', message.PK, previous]); // skip previous (possible failed)
         }
-        model = await query.one();
+        const model = await query.one();
         if (model) {
             await model.truncate();
             await model.send();
-            await this.runPending(model.getId());
+            await this.processUnsentMessage(model.getId());
         }
     }
 };

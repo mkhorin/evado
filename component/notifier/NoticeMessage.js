@@ -14,14 +14,13 @@ module.exports = class NoticeMessage extends Base {
                 'notice',
                 'subject',
                 'text',
+                'recipients',
                 'sentAt',
-                'createdAt',
-                'data'
+                'createdAt'
             ],
             RULES: [
                 [['subject', 'text'], 'required'],
-                ['sentAt', 'default', {value: null}],
-                ['data', 'json']
+                ['sentAt', 'default', {value: null}]
             ],
             DELETE_ON_UNLINK: [
                 'popupNotifications'
@@ -43,22 +42,16 @@ module.exports = class NoticeMessage extends Base {
         return this.get('subject');
     }
 
-    getData () {
-        try {
-            return JSON.parse(this.get('data'));
-        } catch {}
-    }
-
-    findPending () {
+    findUnsent () {
         return this.find({sentAt: null}, ['!=', 'notice', null]).order({[this.PK]: 1});
     }
 
-    create (notice, data) {
+    create (notice, recipients) {
         this.set('notice', notice.getId());
         this.set('subject', notice.get('subject'));
         this.set('text', notice.get('text'));
         this.set('createdAt', new Date);
-        this.set('data', data ? JSON.stringify(data) : '');
+        this.set('recipients', Array.isArray(recipients) ? recipients : recipients ? [recipients] : null);
         return this.save();
     }
 
@@ -70,7 +63,10 @@ module.exports = class NoticeMessage extends Base {
         if (!notice) {
             return this.log('error', 'Notice not found');
         }
-        const recipients = await this.getRecipients(notice);
+        const recipients = await this.resolveRecipients();
+        if (!recipients.length) {
+            return this.log('warn', 'No recipients found');
+        }
         for (const method of notice.get('methods')) {
             switch (method) {
                 case 'popup': await this.sendAsPopup(recipients); break;
@@ -81,12 +77,13 @@ module.exports = class NoticeMessage extends Base {
         return true;
     }
 
-    getRecipients (notice) {
-        const data = this.getData();
-        const recipient = data && data.recipient;
-        return recipient
-            ? (Array.isArray(recipient) ? recipient : [recipient])
-            : notice.getUsers(data);
+    async resolveRecipients () {
+        const recipients = this.get('recipients');
+        if (Array.isArray(recipients) && recipients.length) {
+            return recipients;
+        }
+        const notice = await this.resolveRelation('notice');
+        return notice ? await notice.getRecipientUsers() : [];
     }
 
     sendAsPopup (users) {

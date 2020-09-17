@@ -478,7 +478,7 @@ Jam.SelectorListFilterType = class SelectorListFilterType extends Jam.ListFilter
     }
 
     isAjax () {
-        return this.params.url;
+        return this.params.url && !this.params.items;
     }
 
     createSimple () {

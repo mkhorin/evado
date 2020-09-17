@@ -9,7 +9,7 @@ const src = model.isImage()
     ? `${p.thumbnailPath}?id=${model.getId()}&s=${p.thumbnail}&t=${_controller.timestamp}`
     : null;
 %>
-<%- include('_params', {p}) %>
+<%- include(_view.get('_part/attr/_params'), {p}) %>
 
 <div class="form-attr form-group <%- p.css %>" data-handler="<%= p.handler %>">
     <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"

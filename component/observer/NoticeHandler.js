@@ -8,7 +8,7 @@ const Base = require('areto/base/Base');
 module.exports = class NoticeHandler extends Base {
 
     execute (data) {
-        return this.module.getNotifier().execute(this.notices, data);
+        return this.module.getNotifier().executeById(this.notices, data);
     }
 };
 module.exports.init();

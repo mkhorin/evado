@@ -3,7 +3,7 @@
 const relModel = model.rel(attr);
 const id = model.get(attr);
 %>
-<%- include('static', {
+<%- include(_view.get('_part/attr/static'), {
     displayValue: relModel ? relModel.getTitle() : undefined,
     url: id ? [url, {id}] : undefined
 }) %>

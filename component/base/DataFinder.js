@@ -15,10 +15,14 @@ module.exports = class DataFinder extends Base {
     }
 
     execute (params) {
-        const query = this.find(...arguments);
+        const query = this.createQuery(params);
         if (params.condition) {
             query.and(params.condition);
         }
         return query[this.command](this.field);
+    }
+
+    createQuery () {
+        throw new Error('Need to override');
     }
 };

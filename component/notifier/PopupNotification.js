@@ -25,7 +25,7 @@ module.exports = class PopupNotification extends Base {
             items.push({read, message, user});
         }
         if (items.length) {
-            return this.find().insert(items);
+            return this.createQuery().insert(items);
         }
     }
 };

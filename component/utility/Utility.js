@@ -107,10 +107,6 @@ module.exports = class Utility extends Base {
         return view.renderTemplate(view.get(template), this.renderParams);
     }
 
-    createNotification () {
-        return this.module.getNotifier().createNotification(...arguments);
-    }
-
     log () {
         CommonHelper.log(this.module, this.constructor.name, ...arguments);
     }

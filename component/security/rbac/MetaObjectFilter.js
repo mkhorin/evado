@@ -8,7 +8,7 @@ const Base = require('areto/base/Base');
 module.exports = class MetaObjectFilter extends Base {
 
     prepare () {
-        let {allow, deny} = this.rbac.constructor.indexMetaItemsByType(this.items);
+        let {allow, deny} = IndexHelper.indexObjectArrays(this.items, 'type');
         let allowConditions, denyConditions;
         if (deny) {
             denyConditions = this.getConditions(deny, 'NOR');
@@ -89,3 +89,4 @@ module.exports = class MetaObjectFilter extends Base {
 };
 
 const CommonHelper = require('areto/helper/CommonHelper');
+const IndexHelper = require('areto/helper/IndexHelper');

@@ -139,10 +139,10 @@ module.exports = class DatabaseStore extends Base {
                 return `${data.transition}.${data.object || ''}.${data.class}`;
             case this.rbac.TARGET_ATTR:
                 return `${data.attr}.${data.object || ''}.${data.state || ''}.${view}`;
-            case this.rbac.TARGET_NAV_SECTION:
-                return `${data.navSection}`;
-            case this.rbac.TARGET_NAV_NODE:
-                return `${data.navNode}.${data.navSection}`;
+            case this.rbac.TARGET_SECTION:
+                return `${data.section}`;
+            case this.rbac.TARGET_NODE:
+                return `${data.node}.${data.section}`;
         }
     }
 

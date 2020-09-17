@@ -4,7 +4,7 @@ const p = {
     rows: typeof rows === 'undefined' ? 3 : rows
 }; 
 %>
-<%- include('_params', {p}) %>
+<%- include(_view.get('_part/attr/_params'), {p}) %>
 
 <div class="form-attr form-group <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"

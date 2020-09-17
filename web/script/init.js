@@ -13,6 +13,7 @@ Jam.store = store;
 Jam.i18n.translateDocument();
 Jam.createElements();
 Jam.Helper.executeSerialImageLoading();
+Jam.Helper.fixMultipleBootstrapModals();
 
 if (Jam.modalStack) {
     Jam.modalStack.openFromUrl(location.search);

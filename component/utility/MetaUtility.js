@@ -31,7 +31,7 @@ module.exports = class MetaUtility extends Base {
     }
 
     findModel (view, id, params) {
-        return view.findById(id, this.getSpawnConfig(params));
+        return view.createQuery(this.getSpawnConfig(params)).byId(id);
     }
 
     async createModel (view, params) {

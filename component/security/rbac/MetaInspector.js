@@ -53,7 +53,7 @@ module.exports = class MetaInspector extends Base {
         }
         this._targets = [[this.checkAllTarget]];
         switch (this.targetType) {
-            case Rbac.TARGET_NAV_NODE: this.addNavNodeTargets(); break;
+            case Rbac.TARGET_NODE: this.addNodeTargets(); break;
             case Rbac.TARGET_VIEW: this.addViewTargets(); break;
             case Rbac.TARGET_CLASS: this.addClassTargets(); break;
             case Rbac.TARGET_OBJECT: this.addObjectTargets(); break;
@@ -77,7 +77,7 @@ module.exports = class MetaInspector extends Base {
         }
         let classKey, viewKey;
         switch (this.targetType) {
-            case Rbac.TARGET_NAV_NODE:
+            case Rbac.TARGET_NODE:
                 classKey = this.targetClass && this.targetClass.id;
                 viewKey = this.targetView && this.targetView.id;
                 break;
@@ -100,18 +100,18 @@ module.exports = class MetaInspector extends Base {
         }
     }
 
-    addNavNodeTargets () {
+    addNodeTargets () {
         if (this.targetClass) {
             this._targets.push([this.checkClassTarget, this.targetClass]);
         }
         if (this.targetView && this.targetView !== this.targetClass) {
             this._targets.push([this.checkViewTarget, this.targetView]);
         }
-        this._targets.push([this.checkNavSectionTarget, this.target.section]);
+        this._targets.push([this.checkSectionTarget, this.target.section]);
         for (const parent of this.target.getParents()) {
-            this._targets.push([this.checkNavNodeTarget, parent]);
+            this._targets.push([this.checkNodeTarget, parent]);
         }
-        this._targets.push([this.checkNavNodeTarget, this.target]);
+        this._targets.push([this.checkNodeTarget, this.target]);
     }
 
     addViewTargets () {
@@ -159,13 +159,13 @@ module.exports = class MetaInspector extends Base {
         return data[Rbac.ALL] ? this.checkItems(data[Rbac.ALL]) : false
     }
 
-    checkNavSectionTarget (section, data) {
-        data = data[Rbac.TARGET_NAV_SECTION];
+    checkSectionTarget (section, data) {
+        data = data[Rbac.TARGET_SECTION];
         return data && data[section.id] ? this.checkItems(data[section.id]) : false;
     }
 
-    checkNavNodeTarget (item, data) {
-        data = data[Rbac.TARGET_NAV_NODE];
+    checkNodeTarget (item, data) {
+        data = data[Rbac.TARGET_NODE];
         return data && data[item.id] ? this.checkItems(data[item.id]) : false;
     }
 

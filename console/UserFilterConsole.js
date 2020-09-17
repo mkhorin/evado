@@ -25,10 +25,16 @@ module.exports = class UserFilterConsole extends Base {
         await this.saveModel(model, name);
     }
 
-    resolveItems (names) {
-        names = Array.isArray(names) ? names : [];
-        return names.length
-            ? this.module.getRbac().store.findItem().and({name: names}).ids()
-            : names;
+    async resolveItems (names) {
+        const result = [];
+        const store = this.module.getRbac().store;
+        for (const name of StringHelper.split(names)) {
+            const item = await store.findItem().and({name}).id();
+            item ? result.push(item)
+                 : this.log('error', `Item not found: ${name}`);
+        }
+        return result;
     }
 };
+
+const StringHelper = require('areto/helper/StringHelper');

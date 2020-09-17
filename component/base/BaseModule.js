@@ -47,7 +47,11 @@ module.exports = class BaseModule extends Base {
         return this.label || super.getTitle();
     }
 
-    emitEvent (name, data) {
-        return this.getObserver().catch(name, data);
+    createNotification () {
+        return this.getNotifier().execute(...arguments);
+    }
+
+    emit () {
+        return this.getObserver().handle(...arguments);
     }
 };

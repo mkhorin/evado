@@ -5,20 +5,20 @@
 
 module.exports = {
 
-    'deleteExpiredFiles': {        
+    'deleteExpiredFiles': {
+        description: 'Delete uploaded but unrelated files',
         job: {
             Class: 'component/scheduler/DeleteExpiredFilesJob'
         },        
         period: 'PT2H',
-        active: true,
-        description: 'Delete uploaded but unrelated files'
+        active: true
     },
     'createNotification': {
+        description: 'Create notifications from new notice messages',
         job: {
             Class: 'component/scheduler/CreateNotificationJob'
         },        
         startup: true,
-        active: true,
-        description: 'Create notifications from new messages'
+        active: true
     }
 };

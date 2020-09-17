@@ -159,6 +159,12 @@ Jam.Helper = class Helper {
     static getRandom (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+
+    static fixMultipleBootstrapModals () {
+        const $body = $(document.body).on('hidden.bs.modal', '.modal', event => {
+            $body.toggleClass('modal-open', $body.children('.modal-backdrop').length > 0);
+        });
+    }
 };
 
 Jam.ArrayHelper = class ArrayHelper {

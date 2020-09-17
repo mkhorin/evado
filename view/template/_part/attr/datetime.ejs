@@ -5,4 +5,4 @@ const p = {
     ...(typeof options === 'undefined' ? null : options)
 };
 %>
-<%- include('date', {options: p}) %>
+<%- include(_view.get('_part/attr/date'), {options: p}) %>

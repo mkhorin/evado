@@ -1,10 +1,8 @@
 <!-- _part/attr/relationSelect -->
 <%
-const p = {
-    handler: 'RelationSelect'
-};
+const p = {handler: 'RelationSelect'};
 %>
-<%- include('_params', {p}) %>
+<%- include(_view.get('_part/attr/_params'), {p}) %>
 <%
 const d = {
     relName: attr,
@@ -25,48 +23,54 @@ const urlParams = {
 };
 d.backRef = relation.isBackRef();
 d.multiple = relation.isMultiple();
-if (d.list !== null) {
-    if (d.list === undefined) {
-        d.list = ['list-related-select', urlParams];
-    } else if (typeof d.list === 'string') {
-        d.list = [d.list, urlParams];
-    }
+
+if (d.list === undefined || d.list === true) {
+    d.list = _url(['list-related-select', urlParams]);
+} else if (typeof d.list === 'string') {
+    d.list = _url([d.list, urlParams]);
+} else if (Array.isArray(d.list)) {
     d.list = _url(d.list);
+} else if (d.list) {
+    d.list = _url(['list-related-select', Object.assign(urlParams, d.list)]);
 }
 const relUrl = typeof relRoute === 'undefined'
     ? relation.model.getControllerClass().getBaseName()
     : relRoute;
+
 if (d.viewTitle !== null) {
     d.viewTitle = _url(d.viewTitle === undefined ? `${relUrl}/title` : d.viewTitle);
-}
-if (d.create !== null) {
-    if (d.create === undefined) {
-        d.create = [`${relUrl}/create`, urlParams];
-    } else if (!Array.isArray(d.create) && typeof d.create === 'object') {
-        d.create = [`${relUrl}/create`, Object.assign(urlParams, d.create)];
-    }
-    d.create = _url(d.create);
 }
 if (d.clone === true) {
     d.clone = _url(`${relUrl}/clone`);
 } else if (Array.isArray(d.clone)) {
     d.clone = _url(d.clone);
 }
-if (d.update !== null) {
-    if (d.update === undefined) {
-        d.update = [`${relUrl}/update`, urlParams];
-    } else if (!Array.isArray(d.update) && typeof d.update === 'object') {
-        d.update = [`${relUrl}/update`, Object.assign(urlParams, d.update)];
-    }
-    d.update = _url(d.update);
+if (d.create === undefined || d.create === true) {
+    d.create = _url([`${relUrl}/create`, urlParams]);
+} else if (typeof d.create === 'string') {
+    d.create = _url([d.create, urlParams]);
+} else if (Array.isArray(d.create)) {
+    d.create = _url(d.create);
+} else if (d.create) {
+    d.create = _url([`${relUrl}/create`, Object.assign(urlParams, d.create)]);
 }
-if (d.link !== null) {
-    if (d.link === undefined) {
-        d.link = [`${relUrl}/select`, urlParams];
-    } else if (typeof d.link === 'string') {
-        d.link = [d.link, urlParams];
-    }
+if (d.update === undefined || d.update === true) {
+    d.update = _url([`${relUrl}/update`, urlParams]);
+} else if (typeof d.update === 'string') {
+    d.update = _url([d.update, urlParams]);
+} else if (Array.isArray(d.update)) {
+    d.update = _url(d.update);
+} else if (d.update) {
+    d.update = _url([`${relUrl}/update`, Object.assign(urlParams, d.update)]);
+}
+if (d.link === undefined || d.link === true) {
+    d.link = _url([`${relUrl}/select`, urlParams]);
+} else if (typeof d.link === 'string') {
+    d.link = _url([d.link, urlParams]);
+} else if (Array.isArray(d.link)) {
     d.link = _url(d.link);
+} else if (d.link) {
+    d.link = _url([`${relUrl}/select`, Object.assign(urlParams, d.link)]);
 }
 if (d.modalSort) {
     if (d.modalSort === true) {
