@@ -7,6 +7,10 @@ const Base = require('areto/base/Application');
 
 module.exports = class EvadoApplication extends Base {
 
+    getI18n () {
+        return this.components.get('i18n');
+    }
+
     getMailer () {
         return this.components.get('mailer');
     }

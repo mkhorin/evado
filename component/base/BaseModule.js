@@ -11,6 +11,10 @@ module.exports = class BaseModule extends Base {
         return this.components.get('fileStorage');
     }
 
+    getI18n () {
+        return this.components.get('i18n');
+    }
+
     getMailer () {
         return this.components.get('mailer');
     }

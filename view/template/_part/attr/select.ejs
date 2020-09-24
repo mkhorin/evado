@@ -45,7 +45,8 @@ content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-cont
         <div class="input-group">
             <%- content %>
             <div class="input-group-btn">
-                <button data-action="update" class="btn btn-default" type="button" data-url="<%- p.update %>">
+                <button class="btn btn-default" type="button" tabindex="-1" data-action="update"
+                        data-url="<%- p.update %>">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
             </div>

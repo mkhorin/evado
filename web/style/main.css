@@ -2029,6 +2029,9 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 .required.blank .select2-container--default .select2-selection {
     background: var(--color-required);
 }
+.select2-container.select2-container--focus .select2-selection {
+    border-color: var(--color-light-primary);
+}
 
 /* DIALOG */
 

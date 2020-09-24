@@ -13,15 +13,8 @@ module.exports = class FileStorage extends Base {
             ...config
         });
         this.basePath = this.resolvePath(this.basePath);
-        this.uploader = this.spawn({
-            Class: require('./Uploader'),
-            basePath: this.basePath,
-            ...this.uploader
-        });
-        this.thumbnail = this.spawn({
-            Class: require('./Thumbnail'),
-            ...this.thumbnail
-        });
+        this.uploader = this.spawnUploader(this.uploader);
+        this.thumbnail = this.spawnThumbnail(this.thumbnail);
     }
 
     async init () {
@@ -34,6 +27,21 @@ module.exports = class FileStorage extends Base {
 
     isThumbnailEnabled () {
         return Object.values(this.thumbnail.sizes).length > 0;
+    }
+
+    spawnThumbnail (config) {
+        return this.spawn({
+            Class: require('./Thumbnail'),
+            ...config
+        });
+    }
+
+    spawnUploader (config) {
+        return this.spawn({
+            Class: require('./Uploader'),
+            basePath: this.basePath,
+            ...config
+        });
     }
 
     getPath (filename) {

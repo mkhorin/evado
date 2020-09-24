@@ -8,7 +8,7 @@ const Base = require('areto/security/rbac/Inspector');
 module.exports = class MetaNavInspector extends Base {
 
     /**
-     * metaNavMap  [only DENY and READ and [NAV_SECTION, NAV_NODE]]
+     * metaNavMap  [only DENY and READ and [SECTION, NODE]]
      * role
      *    id: []
      */

@@ -15,6 +15,10 @@ module.exports = class MetaModel extends Base {
         return [];
     }
 
+    getLanguage () {
+        return this.module.getI18n().language;
+    }
+
     getPath () {
         return this.hub.getPath(...arguments);
     }

@@ -278,7 +278,7 @@ module.exports = class Item extends Base {
     }
 
     validateMetaTransition (data) {
-        if (this.validateMetaClass(data) && !this._target.class.getTransition(data.transition)) {
+        if (this.validateMetaClass(data) && (data.transition && !this._target.class.getTransition(data.transition))) {
             this._targetError = `Invalid transition: ${data.transition}`;
         }
     }

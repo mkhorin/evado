@@ -446,6 +446,10 @@ Jam.FormatHelper = class FormatHelper {
         return `<span class="not-set">[${Jam.i18n.translate('not set')}]</span>`;
     }
 
+    static asNotSetOnEmpty (data) {
+        return data || data === 0 ? data : this.asNotSet();
+    }
+
     static asSpinner () {
         return `<span class="fa fa-spinner fa-spin"></span>`;
     }

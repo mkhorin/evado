@@ -21,6 +21,7 @@ module.exports = class Select2 extends Base {
             ...config
         });
         this.params = this.params || {};
+        this.titleMethod = this.params.titleMethod || 'getTitle';
     }
 
     async getList () {
@@ -95,7 +96,7 @@ module.exports = class Select2 extends Base {
     getItems (models) {
         const result = {};
         for (const model of models) {
-            result[model.getId()] = model.getTitle();
+            result[model.getId()] = model[this.titleMethod]();
         }
         return result;
     }

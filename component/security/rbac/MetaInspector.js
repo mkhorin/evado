@@ -40,17 +40,34 @@ module.exports = class MetaInspector extends Base {
     }
 
     async execute () {
-        const items = [];
-        for (const role of this.assignments) {
-            if (Object.prototype.hasOwnProperty.call(this.rbac.metaMap, role)) {
-                items.push(this.rbac.metaMap[role]);
+        this.access = {};
+        if (this.actions) {
+            for (const role of this.assignments) {
+                if (Object.prototype.hasOwnProperty.call(this.rbac.metaMap, role)) {
+                    await this.resolveRoleAccess(this.rbac.metaMap[role]);
+                }
             }
         }
-        this.access = {};
-        if (!items.length) {
-            this.resolveReadAllowedAccessOnly();
-            return this;
+        this.resolveReadAllowedAccessOnly();
+        return this;
+    }
+
+    async resolveRoleAccess ({allow, deny}) {
+        if (!this._targets) {
+            this.ensureTargets();
         }
+        for (const action of this.actions) {
+            if (this.access[action]) {
+                // other role already allowed action
+            } else if (deny && deny.hasOwnProperty(action) && await this.checkTargets(deny[action])) {
+                this.access[action] = false;
+            } else if (allow && allow.hasOwnProperty(action)) {
+                this.access[action] = await this.checkTargets(allow[action]);
+            }
+        }
+    }
+
+    ensureTargets () {
         this._targets = [[this.checkAllTarget]];
         switch (this.targetType) {
             case Rbac.TARGET_NODE: this.addNodeTargets(); break;
@@ -58,17 +75,6 @@ module.exports = class MetaInspector extends Base {
             case Rbac.TARGET_CLASS: this.addClassTargets(); break;
             case Rbac.TARGET_OBJECT: this.addObjectTargets(); break;
         }
-        if (this.actions) {
-            for (const item of items) {
-                for (const action of this.actions) {
-                    if (this.access[action] !== true) {
-                        this.access[action] = await this.resolveActionAccess(action, item);
-                    }
-                }
-            }
-        }
-        this.resolveReadAllowedAccessOnly();
-        return this;
     }
 
     resolveReadAllowedAccessOnly () {
@@ -134,17 +140,6 @@ module.exports = class MetaInspector extends Base {
             this._targets.push([this.checkViewTarget, this.target.view]);
         }
         this._targets.push([this.checkObjectTarget, this.target]);
-    }
-
-    async resolveActionAccess (action, data) {
-        if (data.deny && data.deny.hasOwnProperty(action)) {
-            if (await this.checkTargets(data.deny[action])) {
-                return false;
-            }
-        }
-        if (data.allow && data.allow.hasOwnProperty(action)) {
-            return this.checkTargets(data.allow[action]);
-        }
     }
 
     async checkTargets (data) {
