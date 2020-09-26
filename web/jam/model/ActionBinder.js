@@ -111,7 +111,7 @@ Jam.ActionBinderShow = class ActionBinderShow extends Jam.ActionBinderAction {
         }
         if (this.attr) {
             if (!visible && !this.attr.isReadOnly()) {
-                this.attr.clear();
+                this.attr.setInitialValue();
             }
             this.attr.activate();
         }
