@@ -11,7 +11,7 @@ module.exports = class UserRule extends Base {
 
     constructor (config) {
         super({
-            attr: 'user', // user attribute
+            userAttr: 'user', // user attribute
             objectFilter: true, // filter objects in list
             ...config
         });
@@ -24,11 +24,11 @@ module.exports = class UserRule extends Base {
     }
 
     checkUser () {
-        const matched = this.isUser(this.getTarget().get(this.attr));
+        const matched = this.isUser(this.getTarget().get(this.userAttr));
         return this.isAllowType() ? matched : !matched;
     }
 
     getObjectFilter () {
-        return this.objectFilter ? {[this.attr]: this.getUserId()} : null;
+        return this.objectFilter ? {[this.userAttr]: this.getUserId()} : null;
     }
 };

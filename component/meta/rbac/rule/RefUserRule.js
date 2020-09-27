@@ -11,7 +11,7 @@ module.exports = class RefUserRule extends Base {
 
     constructor (config) {
         super({
-            attr: 'executor', // reference attribute to class with user attribute
+            refAttr: 'executor', // reference attribute to class with user attribute
             userAttr: 'user', // user attribute
             objectFilter: true, // filter objects in list
             ...config
@@ -26,17 +26,17 @@ module.exports = class RefUserRule extends Base {
 
     async checkRefUser () {
         const user = await this.resolveRefUser();
-        const matched = this.isEqual(this.getTarget().get(this.attr), user);
+        const matched = this.isEqual(this.getTarget().get(this.refAttr), user);
         return this.isAllowType() ? matched : !matched;
     }
 
     async getObjectFilter () {
-        return this.objectFilter ? {[this.attr]: await this.resolveRefUser()} : null;
+        return this.objectFilter ? {[this.refAttr]: await this.resolveRefUser()} : null;
     }
 
     async resolveRefUser () {
         if (!this._refUser) {
-            const metaClass = this.getTarget().class.getAttr(this.attr).getRefClass();
+            const metaClass = this.getTarget().class.getAttr(this.refAttr).getRefClass();
             this._refUser = await metaClass.find({[this.userAttr]: this.getUserId()}).id();
         }
         return this._refUser;
