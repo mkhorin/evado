@@ -16,8 +16,8 @@ module.exports = class DataHistory extends Base {
                 'user'
             ],
             ATTR_LABELS: {
-                'createdAt': 'Modification date',
-                'data': 'Source data'
+                createdAt: 'Modification date',
+                data: 'Source data'
             },
             TABLE_PREFIX: 'dh_',
             OVERFLOW: 20,

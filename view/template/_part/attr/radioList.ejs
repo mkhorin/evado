@@ -25,7 +25,7 @@ if (items === 'labels') {
                for (const item of items) { %>
             <label class="radio radio-inline">
                 <input value="<%- item.value %>" type="radio">
-                <span data-t="<%- p.translate %>"><%- item.text %></span>
+                <span title="<%= item.hint %>" data-t="<%- p.translate %>"><%- item.text %></span>
             </label>
             <% }} else {
                for (const key of Object.keys(items)) { %>

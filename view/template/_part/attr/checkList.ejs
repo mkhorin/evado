@@ -19,7 +19,7 @@ const p = {
                for (const item of items) { %>
             <label class="checkbox checkbox-inline">
                 <input value="<%- item.value %>" type="checkbox">
-                <span data-t="<%- p.translate %>"><%- item.text %></span>
+                <span title="<%= item.hint %>" data-t="<%- p.translate %>"><%- item.text %></span>
             </label>
             <% }} else {
                for (const key of Object.keys(items)) { %>

@@ -30,7 +30,7 @@ module.exports = class File extends Base {
                 'userStamp': {Class: require('areto/behavior/UserStampBehavior')}
             },
             ATTR_LABELS: {
-                'mime': 'MIME type'
+                mime: 'MIME type'
             }
         };
     }

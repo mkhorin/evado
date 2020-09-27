@@ -15,7 +15,7 @@ module.exports = class RequestVerificationForm extends Base {
                 [['captchaCode'], require('areto/security/captcha/CaptchaValidator')]
             ],
             ATTR_LABELS: {
-                'captchaCode': 'Verification code'
+                captchaCode: 'Verification code'
             }
         };
     }
