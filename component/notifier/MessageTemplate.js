@@ -21,7 +21,25 @@ module.exports = class MessageTemplate extends Base {
 
     resolveTemplate (text, data) {
         return typeof text === 'string'
-            ? text.replace(/{(\w+)}/gm, (match, key) => data && data.hasOwnProperty(key) ? data[key] : '')
+            ? text.replace(/{([.\w]+)}/gm, this.resolveValue.bind(this, data))
             : this.wrapClassMessage('Text is not string');
+    }
+
+    resolveValue (data, match, key) {
+        if (!data) {
+            return '';
+        }
+        const items = key.split('.');
+        for (let i = 0; i < items.length; ++i) {
+            const item = items[i];
+            if (typeof data[item] === 'function') {
+                return data[item](...items.slice(i + 1));
+            }
+            data = data[item];
+            if (data === null || data === undefined) {
+                return '';
+            }
+        }
+        return data;
     }
 };
