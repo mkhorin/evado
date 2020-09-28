@@ -268,7 +268,7 @@ Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
     }
 
     drawNode (node) {
-        node.getNested().remove();
+        node.getNestedRows().remove();
         this.renderer.drawNode(node.$row, this.items);
         this.events.trigger('afterDrawNode', node);
     }
@@ -298,10 +298,10 @@ Jam.TreeGridNode = class TreeGridNode {
     }
 
     getChildren () {
-        return this.getNested().filter(`[data-depth="${this.getDepth() + 1}"]`);
+        return this.getNestedRows().filter(`[data-depth="${this.getDepth() + 1}"]`);
     }
 
-    getNested () {
+    getNestedRows () {
         const depth = this.getDepth();
         return this.$row.nextUntil(`[data-depth="${depth}"]`).filter((index, element) => {
             return element.dataset.depth > depth;
