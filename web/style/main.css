@@ -231,6 +231,9 @@ hr.space {
 .cursor-pointer {
     cursor: pointer !important;
 }
+.content-wrapper {
+    position: relative;
+}
 .content-header > h1 {
     font-size: 18px;
 }

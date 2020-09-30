@@ -53,6 +53,11 @@ module.exports = class Console extends Base {
         return this.execute('deleteFiles', this.DataConsole);
     }
 
+    async installApp (handler) {
+        await this.execute(handler);
+        this.log('info', 'Installation completed');
+    }
+
     startApp () {
         return this.execute(() => this.app.start());
     }
