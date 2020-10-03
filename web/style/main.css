@@ -1054,6 +1054,7 @@ hr + .form-columns {
 .form-container {
     margin-bottom: 20px;
 }
+
 /* TABS */
 
 .tab-pane,
@@ -1083,7 +1084,7 @@ hr + .form-columns {
 }
 .row + .form-tabs,
 .form-group + .form-tabs {
-    margin-top: 30px;
+    margin-top: 35px;
 }
 .form-tabs .nav-tabs > li.has-group-error a {
     color: var(--color-dark-danger);
@@ -1094,6 +1095,10 @@ hr + .form-columns {
 }
 .form-base-group-body > .form-tabs {
     margin-top: 0;
+}
+.hidden + .form-tabs,
+.form-columns + .form-tabs {
+    margin-top: 15px;
 }
 .tab-pane > .box {
     border: 1px solid #ddd;
