@@ -93,7 +93,7 @@ Jam.ModalUserAction = class ModalUserAction extends Jam.UserAction {
 
     execute () {
         Jam.ContentNotice.clear();
-        this.constructor.confirm(this.$element).then(()=> {
+        this.constructor.confirm(this.$element).then(() => {
             const frame = Jam.modalStack.createFrame();
             frame.load(this.getParam('url'), this.getParam('params'));
             frame.one('afterClose', (event, data) => this.onDone(data.result));

@@ -89,7 +89,7 @@ Jam.ModalStack = class ModalStack extends Jam.Element {
         }
         $frame = $(this.template);
         this.$pool.append($frame);
-        $frame.on('click', '.jmodal-stack .close', ()=> frame.close());
+        $frame.on('click', '.jmodal-stack .close', () => frame.close());
         $frame.click(event => {
             if (event.target === event.currentTarget) {
                 frame.close();
@@ -397,7 +397,7 @@ Jam.ModalStackToggle = class ModalStackToggle {
                 this.stack.closeLastFrame();
             }
         });
-        this.$root.click(()=> this.stack.setActive(null));
+        this.$root.click(() => this.stack.setActive(null));
     }
 
     findFrame (frame) {

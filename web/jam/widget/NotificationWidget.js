@@ -69,7 +69,7 @@ Jam.NotificationWidget = class NotificationWidget extends Jam.Element {
 
     requestMessage (message) {
         Jam.toggleGlobalLoader(true);
-        $.get(this._url, {message}).always(()=> {
+        $.get(this._url, {message}).always(() => {
             Jam.toggleGlobalLoader(false);
         }).done(data => {
             this.onRefreshDone(data);
@@ -96,7 +96,7 @@ Jam.NotificationWidget = class NotificationWidget extends Jam.Element {
         this.togglePopup(false);
         if (Array.isArray(items) && items.length) {
             this.buildPopup(items[0]);
-            setTimeout(()=> this.togglePopup(true), 500);
+            setTimeout(() => this.togglePopup(true), 500);
         }
     }
 

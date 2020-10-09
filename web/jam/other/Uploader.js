@@ -158,8 +158,8 @@ Jam.Uploader = class Uploader {
             return this.trigger('overflow', this.options.tooMany);
         }
         if (files.length) {
-            for (let i = 0; i < files.length; ++i) { // 'of' not work
-                this.files.push(new Jam.UploaderFile(files[i], this));
+            for (const file of Array.from(files)) {
+                this.files.push(new Jam.UploaderFile(file, this));
             }
             this.hideDropZone(counter.total);
             this.$input.wrap('<form>').closest('form').get(0).reset();
@@ -309,8 +309,8 @@ Jam.UploaderFile = class UploaderFile {
 
     validate () {
         this.image = new Image;
-        this.image.onload = ()=> this.startValidate();
-        this.image.onerror = ()=> {
+        this.image.onload = this.startValidate.bind(this);
+        this.image.onerror = () => {
             this.image = null;
             this.startValidate();
         };
@@ -368,16 +368,15 @@ Jam.UploaderFile = class UploaderFile {
     }
 
     isMatchFile () {
-        const files = this.uploader.files;
-        for (let i = 0; i < files.length; ++i) { // 'of' not work
-            const file = files[i];
-            if (!file.deleted) {
-                if (file === this) { // match with previous files only
-                    return false;
-                }
-                if (file.file.size === this.file.size && file.file.name === this.file.name) {
-                    return true;
-                }
+        for (const item of Array.from(this.uploader.files)) {
+            if (item.deleted) {
+                continue;
+            }
+            if (item === this) { // match with previous files only
+                return false;
+            }
+            if (item.file.size === this.file.size && item.file.name === this.file.name) {
+                return true;
             }
         }
         return false;

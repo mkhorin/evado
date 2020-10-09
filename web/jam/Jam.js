@@ -320,8 +320,8 @@ Jam.Resource = class Resource {
         this.resolveElements('link', 'href', result, elements);
         this.resolveElements('script', 'src', result, elements);
         Jam.AsyncHelper.each(elements, (element, cb) => {
-            element.addEventListener('load', ()=> cb(), {once: true});
-        }, ()=> done(result));
+            element.addEventListener('load', () => cb(), {once: true});
+        }, () => done(result));
     }
 
     resolveElements (selector, key, container, elements) {
