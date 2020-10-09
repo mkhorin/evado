@@ -59,7 +59,7 @@ module.exports = class AuthController extends Base {
 
     async actionSignOut () {
         await this.user.logout();
-        this.goLogin();
+        this.redirect(this.module.getParam('afterSignOutUrl') || this.module.getHomeUrl());
     }
 
     async actionSignUp () {
