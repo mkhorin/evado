@@ -298,7 +298,9 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     onDelete () {
         const values = this.getSelectedValues();
         if (values.length) {
-            const deferred = this.params.confirmDeletion ? Jam.dialog.confirmListDeletion() : null;
+            const deferred = this.params.confirmDeletion
+                ? Jam.dialog.confirmListDeletion()
+                : null;
             $.when(deferred).then(() => this.delete(values));
         }
     }
@@ -337,20 +339,30 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     loadModal (url, params, afterClose) {
         afterClose = afterClose || this.defaultAfterCloseModal;
-        this.childModal.load(url, params).done(()=> {
-            this.childModal.one('afterClose', afterClose.bind(this));
-        });
+        this._afterClose = afterClose.bind(this);
+        this.childModal.load(url, params).done(this.addAfterCloseListener.bind(this));
+    }
+
+    addAfterCloseListener () {
+        this.childModal.one('afterClose', this._afterClose);
     }
 
     defaultAfterCloseModal (event, data) {
-        if (!data || !data.result) {
+        if (!data) {
+            return false;
+        }
+        if (data.reload) {
+            return this.addAfterCloseListener();
+        }
+        const id = data.result;
+        if (!id) {
             return false;
         }
         if (data.saved) {
-            this.selectValue(data.result);
+            this.selectValue(id);
         }
         if (data.reopen) {
-            this.loadModal(this.getUpdateUrl(), {id: data.result});
+            this.loadModal(this.getUpdateUrl(), {id});
         }
     }
 

@@ -283,9 +283,11 @@ Jam.List = class List extends Jam.Element {
     loadModal (url, params, afterClose, modalParams) {
         afterClose = afterClose || this.defaultModalAfterClose;
         this._afterClose = afterClose.bind(this);
-        this.childModal.load(url, params, modalParams).done(()=> {
-            this.childModal.one('afterClose', this._afterClose);
-        });
+        this.childModal.load(url, params, modalParams).done(this.addAfterCloseListener.bind(this));
+    }
+
+    addAfterCloseListener () {
+        this.childModal.one('afterClose', this._afterClose);
     }
 
     defaultModalAfterClose (event, data) {
@@ -293,7 +295,7 @@ Jam.List = class List extends Jam.Element {
             return false;
         }
         if (data.reload) {
-            return this.childModal.one('afterClose', this._afterClose);
+            return this.addAfterCloseListener();
         }
         if (!data.saved) {
             return false;

@@ -155,38 +155,51 @@ Jam.AttrList = class AttrList extends Jam.List {
         this.afterInit();
     }
 
-    onAfterCloseModal (event, data) {
-        if (data && data.result) {
-            this.linkObjects(data.result);
-            if (data.reopen) {
-                this.loadModal(this.params.update, {id: data.result});
-            }
+    onCreate () {
+        if (!this.revertChanges()) {
+            this.loadModal(this.params.create, this.getDependencyData(), this.onAfterCloseModal);
         }
     }
 
-    onCreate () {
-        if (!this.revertChanges()) {
-            this.loadModal(this.params.create, this.getDependencyData(), this.onAfterCloseModal.bind(this));
+    onAfterCloseModal (event, data) {
+        if (!data) {
+            return false;
+        }
+        if (data.reload) {
+            return this.addAfterCloseListener();
+        }
+        const id = data.result;
+        if (!id) {
+            return false;
+        }
+        this.linkObjects(id);
+        if (data.reopen) {
+            this.loadModal(this.params.update, {id});
         }
     }
 
     onDelete () {
         const $rows = this.getSelectedRows();
         if ($rows) {
-            const deferred = this.params.confirmDeletion ? Jam.dialog.confirmListDeletion() : null;
+            const deferred = this.params.confirmDeletion
+                ? Jam.dialog.confirmListDeletion()
+                : null;
             $.when(deferred).then(() => this.deleteObjects($rows));
         }
     }
 
     onLink () {
-        if (this.revertChanges()) {
-            return null;
+        if (!this.revertChanges()) {
+            this.loadModal(this.params.link, this.getDependencyData(), this.onAfterCloseLinkModal, {
+                multiple: this.multiple
+            });
         }
-        this.loadModal(this.params.link, this.getDependencyData(), (event, data) => {
-            if (data && data.result) {
-                this.linkObjects(data.result);
-            }
-        }, {multiple: this.multiple});
+    }
+
+    onAfterCloseLinkModal (event, data) {
+        if (data && data.result) {
+            this.linkObjects(data.result);
+        }
     }
 
     onUnlink () {
@@ -225,7 +238,10 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     revertChanges () { // revert unlinks or deletes
         const ids = this.getObjectIds(this.findSelectedRows());
-        if (this.multiple ? this.changes.revertMultiple(ids) : this.changes.revertSingle(ids)) {
+        const result = this.multiple
+            ? this.changes.revertMultiple(ids)
+            : this.changes.revertSingle(ids);
+        if (result) {
             this.setValue();
             this.reload();
             return true;
@@ -250,7 +266,9 @@ Jam.AttrListChanges = class AttrListChanges {
     }
 
     isEmpty () {
-        return !this.data.links.length && !this.data.unlinks.length && !this.data.deletes.length;
+        return !this.data.links.length
+            && !this.data.unlinks.length
+            && !this.data.deletes.length;
     }
 
     setDefaultValue (value) {
