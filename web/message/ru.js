@@ -36,7 +36,6 @@ Jam.I18n.defaults = {
     'Administration': 'Администрирование',
     'Advanced search': 'Расширенный поиск',
     'All notifications': 'Все уведомления',
-    'Application metadata reloaded': 'Метаданные приложения перезагружены',
     'Apply': 'Применить',
 
     'Back to modal': 'Вернуться к модальному окну',

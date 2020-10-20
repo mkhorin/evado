@@ -10,5 +10,4 @@ module.exports = {
 
     'verification.subject': 'Запрос подтверждения',
     'verification.text': 'Здравствуйте, {name}!/r/n Для подтверждения вашего аккаунт перейдите по ссылке {link} /r/n Ссылка доступна {time}/r/n'
-
 };

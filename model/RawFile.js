@@ -23,8 +23,12 @@ module.exports = class RawFile extends Base {
                 ['file', 'required']
             ],
             BEHAVIORS: {
-                'timestamp': {Class: require('areto/behavior/TimestampBehavior')},
-                'userStamp': {Class: require('areto/behavior/UserStampBehavior')}
+                'timestamp': {
+                    Class: require('areto/behavior/TimestampBehavior')
+                },
+                'userStamp': {
+                    Class: require('areto/behavior/UserStampBehavior')
+                }
             },
             INDEXES: [
                 [{owner: 1}, {unique: false}]
@@ -103,10 +107,12 @@ module.exports = class RawFile extends Base {
         const sizes = await this.find({creator: user.getId()}).column('size');
         if (maxTotalUserFiles && sizes.length >= maxTotalUserFiles) {
             return true;
+        }      
+        if (!maxTotalUserFileSize) {
+            return false;
         }
-        return maxTotalUserFileSize
-            ? sizes.reduce((total, value) => total + value, 0) >= maxTotalUserFileSize
-            : false;
+        const totalSize = sizes.reduce((total, value) => total + value, 0);
+        return totalSize >= maxTotalUserFileSize;
     }
 
     async upload (req, res) {

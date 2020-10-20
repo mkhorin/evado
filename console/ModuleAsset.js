@@ -21,7 +21,9 @@ module.exports = class ModuleAsset extends Base {
         return {
             source: 'asset/vendor',
             target: 'web/vendor',
-            defaults: {base: ['dist', 'min', 'build']},
+            defaults: {
+                base: ['dist', 'min', 'build']
+            },
             defaultBase: 'base'
         };
     }

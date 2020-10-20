@@ -1,6 +1,6 @@
 # Evado Declarative Framework
 
-### A high-level framework for rapidly developing web applications by declaring entities and relationships through a web interface.
+### A high-level framework for rapidly developing web apps by declaring entities and relationships through a web interface.
 
 - Node.js and MongoDB accelerate development and simplify support.
 - User-friendly design optimizes data handling and reduces errors.
@@ -11,9 +11,13 @@
 
 ![Evado Declarative Framework](https://github.com/mkhorin/evado/blob/master/doc/evado-framework-steps.jpg)
 
+### Ready to Use
+
+``- [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate)
+
 ### Ready to Try
 
-Demo applications built on Evado framework.
+Demo Apps built on Evado Framework:
 
 - [Blog](https://github.com/mkhorin/evado-app-blog)
 - [Bug Tracking System](https://github.com/mkhorin/evado-app-bugs)
@@ -25,7 +29,3 @@ Demo applications built on Evado framework.
 - [Social Network](https://github.com/mkhorin/evado-app-social)
 - [Stock Exchange](https://github.com/mkhorin/evado-app-exchange)
 - [Taxi Ordering Network](https://github.com/mkhorin/evado-app-taxi)
-
-### Ready to Use
-
-- [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate)

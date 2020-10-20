@@ -9,6 +9,5 @@ module.exports = {
     'passwordReset.text': 'Hello, {name}!/r/n To reset password, please go to {link} /r/n Link available within {time}/r/n',
 
     'verification.subject': 'Verification request',
-    'verification.text': 'Hello, {name}!/r/n To verify you account, please go to {link} /r/n Link available within {time}/r/n',
-
+    'verification.text': 'Hello, {name}!/r/n To verify you account, please go to {link} /r/n Link available within {time}/r/n'
 };

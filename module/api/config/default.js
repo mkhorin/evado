@@ -7,7 +7,9 @@ module.exports = {
 
     components: {
         'router': {
-            errors: {Controller: require('../controller/DefaultController')}
+            errors: {
+                Controller: require('../controller/DefaultController')
+            }
         }
     }
 };

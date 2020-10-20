@@ -26,8 +26,12 @@ module.exports = class File extends Base {
                 ['file', 'validateFile']
             ],
             BEHAVIORS: {
-                'timestamp': {Class: require('areto/behavior/TimestampBehavior')},
-                'userStamp': {Class: require('areto/behavior/UserStampBehavior')}
+                'timestamp': {
+                    Class: require('areto/behavior/TimestampBehavior')
+                },
+                'userStamp': {
+                    Class: require('areto/behavior/UserStampBehavior')
+                }
             },
             ATTR_LABELS: {
                 mime: 'MIME type'
@@ -99,7 +103,7 @@ module.exports = class File extends Base {
     }
 
     async deleteRawFile () {
-        const RawFile = this.getRawFile();
+        const RawFile = this.getRawFile();        
         const models = await this.spawn(RawFile).find({owner: this.getId()}).all();
         return RawFile.delete(models);
     }
@@ -113,7 +117,9 @@ module.exports = class File extends Base {
         if (value === this.getOldAttr(attr)) {
             return true;
         }
-        this.rawFile = await this.spawn(this.getRawFile()).findPending(value, this.user).one();
+        const model = this.spawn(this.getRawFile());
+        const query = model.findPending(value, this.user);
+        this.rawFile = await query.one();
         if (!this.rawFile) {
             this.addError(attr, 'Raw file not found');
         }

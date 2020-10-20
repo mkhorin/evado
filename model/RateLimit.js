@@ -18,18 +18,21 @@ module.exports = class RateLimit extends Base {
                 'updatedAt'
             ],
             BEHAVIORS: {
-                'timestamp': {Class: require('areto/behavior/TimestampBehavior')}
+                'timestamp': {
+                    Class: require('areto/behavior/TimestampBehavior')
+                }
             }
         };
     }
 
     async resolveModel (type, ip) {
-        let model = await this.find({type, ip}).one();
-        if (!model) {
-            model = model || this;
-            model.assign({type, ip});
+        const data = {type, ip};
+        const model = await this.find(data).one();
+        if (model) {
+            return model;
         }
-        return model;
+        this.assign(data);
+        return this;
     }
 
     constructor (config) {

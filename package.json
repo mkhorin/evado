@@ -1,7 +1,7 @@
 {
   "name": "evado",
-  "version": "1.8.7",
-  "description": "Node.js declarative framework for rapid web application development",
+  "version": "1.8.8",
+  "description": "Node.js declarative framework for rapid web app development",
   "author": {
     "name": "Maxim Khorin",
     "email": "maksimovichu@gmail.com"

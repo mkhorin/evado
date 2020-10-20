@@ -32,9 +32,15 @@ module.exports = {
         },
         'i18n': {
             sources: {
-                'app': {forceTranslation: true},
-                'mail': {forceTranslation: true},
-                'notice': {forceTranslation: true}
+                'app': {
+                    forceTranslation: true
+                },
+                'mail': {
+                    forceTranslation: true
+                },
+                'notice': {
+                    forceTranslation: true
+                }
             }
         },
         'formatter': {

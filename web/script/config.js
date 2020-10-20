@@ -10,10 +10,12 @@ if ($.fn.select2) {
         placeholder: '---',
         minimumResultsForSearch: 8
     });
+    const $document = $(document.body);
     // prevent open dropdown to clear
-    $(document.body).on('select2:unselecting', '.select2-hidden-accessible', event => {
+    $document.on('select2:unselecting', '.select2-hidden-accessible', event => {
         $(event.target).data('unselecting', true);
-    }).on('select2:opening', '.select2-hidden-accessible', event => {
+    });
+    $document.on('select2:opening', '.select2-hidden-accessible', event => {
         if ($(event.target).data('unselecting')) {
             $(event.target).removeData('unselecting');
             event.preventDefault();
@@ -38,7 +40,9 @@ if ($.fn.datetimepicker) {
         ignoreReadonly: false,
         useCurrent: false,
         toolbarPlacement: 'bottom',
-        widgetPositioning: {vertical: 'bottom'},
+        widgetPositioning: {
+            vertical: 'bottom'
+        },
         // widgetParent: 'body',
         // debug: true
     };

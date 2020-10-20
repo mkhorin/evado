@@ -82,7 +82,9 @@ module.exports = class ThumbnailSize extends Base {
         if (!this.composite) {
             return image[this.output](this.outputParams);
         }
-        const {data, info} = await image.raw().toBuffer({resolveWithObject: true});
+        const {data, info} = await image.raw().toBuffer({
+            resolveWithObject: true
+        });
         const sharp = require('sharp');
         image = sharp(data, {raw: info}); // already resize
         image[this.output](this.outputParams);
