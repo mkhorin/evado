@@ -102,13 +102,17 @@ module.exports = class CrudController extends Base {
         await this.render(params.template, data);
     }
 
-    async actionClone (params) {
+    async actionClone (params, sampleParams) {
         params = {
             model: this.createModel(),
             scenario: 'clone',
             ...params
         };
-        const sample = await this.getModelByClassName({className: this.getQueryParam('sampleClass')});
+        sampleParams = {
+            className: this.getQueryParam('sampleClass'),
+            ...sampleParams
+        };
+        const sample = await this.getModelByClassName(sampleParams);
         params.model.getBehavior('clone').setOriginal(sample);
         return this.actionCreate(params);
     }
