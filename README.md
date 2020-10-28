@@ -9,11 +9,11 @@
 - Responsive web API interacts with external systems.
 - Unified web interface accelerates user skills.
 
-![Evado Declarative Framework](https://github.com/mkhorin/evado/blob/master/doc/evado-framework-steps.jpg)
+[![Evado Declarative Framework](doc/evado-framework-steps.jpg)](http://nervebit.com)
 
 ### Ready to Use
 
-``- [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate)
+- [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate)
 
 ### Ready to Try
 
