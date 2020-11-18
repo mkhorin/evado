@@ -133,7 +133,7 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
             value = Jam.Helper.escapeTags(value);
             text = Jam.Helper.escapeTags(Jam.i18n.translate(text, category));
             hint = hint ? `title="${Jam.Helper.escapeTags(Jam.i18n.translate(hint, category))}"` : '';
-            result += `<label class="radio radio-inline" ${hint}><input type="radio" value="${value}">${text}</label>`;
+            result += `<label class="radio radio-inline" ${hint}><input type="radio" value="${value}"><span>${text}</span></label>`;
         }
         return result;
     }

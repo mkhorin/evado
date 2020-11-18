@@ -95,6 +95,22 @@ label.radio.radio-inline,
 label.checkbox.checkbox-inline {
     margin-top: 0;
 }
+.checkbox-list .checkbox,
+.radio-list .radio {
+    padding-left: 20px;
+}
+.checkbox-inline,
+.radio-inline {
+    margin-right: 18px;
+}
+.checkbox-inline:last-child,
+.radio-inline:last-child {
+    margin-right: 0;
+}
+.checkbox-inline + .checkbox-inline,
+.radio-inline + .radio-inline {
+    margin-left: 0;
+}
 
 .mb0 {
     margin-bottom: 0 !important;
@@ -230,9 +246,6 @@ hr.space {
 }
 .cursor-pointer {
     cursor: pointer !important;
-}
-.content-wrapper {
-    position: relative;
 }
 .content-header > h1 {
     font-size: 18px;
@@ -825,16 +838,15 @@ body.loading {
 .form-group .checkbox.disabled label {
     color: #aaa;
 }
+.form-group.form-footer {
+    margin-top: 30px;
+}
 .form-control-box {
     position: relative;
 }
 .form-control-box .overlay .fa {
     margin-top: -10px;
     font-size: 18px;
-}
-.checkbox-inline + .checkbox-inline,
-.radio-inline + .radio-inline {
-    margin-left: 18px;
 }
 .login-box, .register-box {
     margin: 3% auto;
