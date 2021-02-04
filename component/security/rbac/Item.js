@@ -236,21 +236,21 @@ module.exports = class Item extends Base {
         this._target = {};
         this._targetError = null;
         switch (data.type) {
-            case rbac.TARGET_CLASS: this.validateMetaClass(data); break;
-            case rbac.TARGET_VIEW: this.validateMetaView(data); break;
-            case rbac.TARGET_STATE: this.validateMetaState(data); break;
-            case rbac.TARGET_OBJECT: this.validateMetaObject(data); break;
-            case rbac.TARGET_TRANSITION: this.validateMetaTransition(data); break;
-            case rbac.TARGET_ATTR: this.validateMetaAttr(data); break;
-            case rbac.TARGET_SECTION: this.validateMetaSection(data); break;
-            case rbac.TARGET_NODE: this.validateMetaNode(data); break;
+            case rbac.TARGET_CLASS: this.validateMetadataClass(data); break;
+            case rbac.TARGET_VIEW: this.validateMetadataView(data); break;
+            case rbac.TARGET_STATE: this.validateMetadataState(data); break;
+            case rbac.TARGET_OBJECT: this.validateMetadataObject(data); break;
+            case rbac.TARGET_TRANSITION: this.validateMetadataTransition(data); break;
+            case rbac.TARGET_ATTR: this.validateMetadataAttr(data); break;
+            case rbac.TARGET_SECTION: this.validateMetadataSection(data); break;
+            case rbac.TARGET_NODE: this.validateMetadataNode(data); break;
         }
         if (this._targetError) {
             throw new Error(this.getMetaError(this._targetError));
         }
     }
 
-    validateMetaClass (data) {
+    validateMetadataClass (data) {
         this._target.class = this.getBaseMeta().getClass(data.class);
         if (this._target.class) {
             return true;
@@ -258,8 +258,8 @@ module.exports = class Item extends Base {
         this._targetError = `Invalid class: ${data.class}`;
     }
 
-    validateMetaView (data) {
-        if (this.validateMetaClass(data)) {
+    validateMetadataView (data) {
+        if (this.validateMetadataClass(data)) {
             this._target.view = this._target.class.getView(data.view);
             if (this._target.view) {
                 return true;
@@ -268,30 +268,31 @@ module.exports = class Item extends Base {
         }
     }
 
-    validateMetaState (data) {
-        if (this.validateMetaClass(data) && !this._target.class.getState(data.state)) {
+    validateMetadataState (data) {
+        if (this.validateMetadataClass(data) && !this._target.class.getState(data.state)) {
             this._targetError = `Invalid state: ${data.state}`;
         }
     }
 
-    validateMetaObject () {
+    validateMetadataObject () {
     }
 
-    validateMetaTransition (data) {
-        if (this.validateMetaClass(data) && (data.transition && !this._target.class.getTransition(data.transition))) {
+    validateMetadataTransition (data) {
+        if (this.validateMetadataClass(data)
+            && data.transition && !this._target.class.getTransition(data.transition)) {
             this._targetError = `Invalid transition: ${data.transition}`;
         }
     }
 
-    validateMetaAttr (data) {
-        if (data.view ? this.validateMetaView(data) : this.validateMetaClass(data)) {
+    validateMetadataAttr (data) {
+        if (data.view ? this.validateMetadataView(data) : this.validateMetadataClass(data)) {
             if (!(this._target.view || this._target.class).getAttr(data.attr)) {
                 this._targetError = `Invalid attribute: ${data.attr}`;
             }
         }
     }
 
-    validateMetaSection (data) {
+    validateMetadataSection (data) {
         this._target.section = this.getNavMeta().getSection(data.section);
         if (this._target.section) {
             return true;
@@ -299,8 +300,8 @@ module.exports = class Item extends Base {
         this._targetError = `Invalid navigation section: ${data.section}`;
     }
 
-    validateMetaNode (data) {
-        if (this.validateMetaSection(data) && !this._target.section.getNode(data.node)) {
+    validateMetadataNode (data) {
+        if (this.validateMetadataSection(data) && !this._target.section.getNode(data.node)) {
             this._targetError = `Invalid navigation node: ${data.node}`;
         }
     }

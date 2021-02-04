@@ -7,11 +7,11 @@ const Base = require('areto/base/Base');
 
 module.exports = class Utility extends Base {
 
-    static getBaseName () {
-        if (!this._baseName) {
-            this._baseName = StringHelper.camelToId(StringHelper.trimEnd(this.name, 'Utility'));
+    static getRouteName () {
+        if (!this._routeName) {
+            this._routeName = StringHelper.camelToKebab(StringHelper.trimEnd(this.name, 'Utility'));
         }
-        return this._baseName;
+        return this._routeName;
     }
 
     static getPermissionName () {
@@ -48,8 +48,8 @@ module.exports = class Utility extends Base {
             : true;
     }
 
-    getBaseName () {
-        return this.constructor.getName();
+    getRouteName () {
+        return this.constructor.getRouteName();
     }
 
     getPermissionName () {
@@ -93,7 +93,7 @@ module.exports = class Utility extends Base {
     }
 
     render (template) {
-        return this.renderExternal(`_utility/${this.getBaseName()}/${template}`);
+        return this.renderExternal(`_utility/${this.getRouteName()}/${template}`);
     }
 
     renderControl (data) {

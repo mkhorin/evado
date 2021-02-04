@@ -10,33 +10,33 @@ module.exports = class Notifier extends Base {
     constructor (config) {
         super({
             tasks: [], // message sending task
-            messageSource: 'notice', // message translation source
+            messageSource: 'notification', // message translation source
             ...config
         });
     }
 
     async execute (name, recipients, data) {
-        const notice = await this.findNoticeByName(name).one();
-        if (!notice) {
-            return this.log('error', `Notice not found: ${name}`);
+        const notification = await this.findNotificationByName(name).one();
+        if (!notification) {
+            return this.log('error', `Notification not found: ${name}`);
         }
-        await this.createMessage(notice, data, recipients);
+        await this.createMessage(notification, data, recipients);
         return this.executeTasks();
     }
 
     async executeByNames (names, data) {
-        const models = await this.findNoticeByName(names).all();
-        return this.executeNotices(models, data);
+        const models = await this.findNotificationByName(names).all();
+        return this.executeNotifications(models, data);
     }
 
     async executeById (id, data) {
-        const models = await this.findNoticeById(id).all();
-        return this.executeNotices(models, data);
+        const models = await this.findNotificationById(id).all();
+        return this.executeNotifications(models, data);
     }
 
-    async executeNotices (notices, data) {
-        for (const notice of notices) {
-            await this.createMessage(notice, data);
+    async executeNotifications (notifications, data) {
+        for (const notification of notifications) {
+            await this.createMessage(notification, data);
         }
         return this.executeTasks();
     }
@@ -45,24 +45,24 @@ module.exports = class Notifier extends Base {
         return this.module.getScheduler().executeTasks(this.tasks);
     }
 
-    createMessage (notice, data, recipients) {
-        return notice.createMessage(data, this.messageSource, recipients);
+    createMessage (notification, data, recipients) {
+        return notification.createMessage(data, this.messageSource, recipients);
     }
 
-    findNoticeByName (name) {
-        return this.findActiveNotice().and({name});
+    findNotificationByName (name) {
+        return this.findActiveNotification().and({name});
     }
 
-    findNoticeById (id) {
-        return this.findActiveNotice().byId(id);
+    findNotificationById (id) {
+        return this.findActiveNotification().byId(id);
     }
 
-    findActiveNotice () {
-        return this.spawnNotice().find({active: true});
+    findActiveNotification () {
+        return this.spawnNotification().find({active: true});
     }
 
-    spawnNotice () {
-        return this.spawn('notifier/Notice');
+    spawnNotification () {
+        return this.spawn('notifier/Notification');
     }
 };
 module.exports.init(module);

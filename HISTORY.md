@@ -1,12 +1,27 @@
+## 2.0.0
+
+* console/AssetConsole
+    - add asset building
+* controller/AuthController
+    - customize URL after logout
+* component/base/CrudController
+    - add custom params to cloning sample getter
+* component/validator/PasswordValidator
+* component/validator/UserNameValidator
+* migration to Bootstrap 4
+* use optional chaining
+* web/jam/attr/Enum
+    - fix radio list
+
 ## 1.8.0
 
 * component/helper/MetaHelper
     - extract comparison methods
 * component/notifier/MessageTemplate
     - add data preparation
-* component/notifier/Notice
+* component/notifier/Notification
     - add template and recipient filter configurations        
-* component/notifier/NoticeMessage
+* component/notifier/NotificationMessage
     - add recipients on message creating
 * component/observer/Observer
     - cascading handling by event name    
@@ -16,7 +31,7 @@
     - refactor item indexing
 * console/Console
     - get server port from console arguments
-* console/NoticeConsole
+* console/NotificationConsole
     - throw error on non-existent user filter
 * console/UserFilterConsole
     - throw error on non-existent security item    
@@ -50,7 +65,7 @@
 
 * component/base/BaseController
     - CSRF token validation   
-* component/notifier/Notice
+* component/notifier/Notification
     - add notification translation
 * component/scheduler/Scheduler
     - fix task name

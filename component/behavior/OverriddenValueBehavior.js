@@ -45,7 +45,10 @@ module.exports = class OverriddenValueBehavior extends Base {
         return states ? states[attrName] === true : false;
     }
 
-    getStates () { // overridden states
+    /**
+     * Get overridden states
+     */
+    getStates () {
         return this.owner.get(this.stateAttr) || {};
     }
 

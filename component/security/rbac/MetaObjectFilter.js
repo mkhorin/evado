@@ -16,7 +16,7 @@ module.exports = class MetaObjectFilter extends Base {
         }
         if (allow) {
             allowConditions = this.getConditions(allow, 'OR');
-            if (allowConditions && allowConditions.length === 2) {
+            if (allowConditions?.length === 2) {
                 allowConditions = allowConditions[1];
             }
             const rules = this.getRules(allow);
@@ -42,26 +42,26 @@ module.exports = class MetaObjectFilter extends Base {
     }
 
     getItemCondition (item) {
-        const metaClass = this.getMetaClass(item);
-        if (!metaClass) {
+        const cls = this.getMetadataClass(item);
+        if (!cls) {
             return null;
         }
         if (item.targetType === this.rbac.TARGET_OBJECT) {
-            return this.getObjectCondition(item, metaClass);
+            return this.getObjectCondition(item, cls);
         }
         if (item.targetType === this.rbac.TARGET_STATE) {
-            return this.getStateCondition(item, metaClass);
+            return this.getStateCondition(item, cls);
         }
     }
 
-    getStateCondition ({state}, metaClass) {
-        return {[metaClass.STATE_ATTR]: state};
+    getStateCondition ({state}, cls) {
+        return {[cls.STATE_ATTR]: state};
     }
 
-    getObjectCondition (item, metaClass) {
-        const condition = metaClass.getIdCondition(item.object);
+    getObjectCondition (item, cls) {
+        const condition = cls.getIdCondition(item.object);
         if (item.state) {
-            condition[metaClass.STATE_ATTR] = item.state;
+            condition[cls.STATE_ATTR] = item.state;
         }
         return condition;
     }
@@ -69,14 +69,14 @@ module.exports = class MetaObjectFilter extends Base {
     getRules (items) {
         const rules = [];
         for (const {rule} of items) {
-            if (rule && rule.Class.prototype.getObjectFilter) {
+            if (rule?.Class.prototype.getObjectFilter) {
                 rules.push(rule);
             }
         }
         return rules.length ? rules : null;
     }
 
-    getMetaClass (item) {
+    getMetadataClass (item) {
         if (item.class && this.rbac.baseMeta) {
             return this.rbac.baseMeta.getClass(item.class)
                 || this.log('error', `Item class not found: ${item.key}`);

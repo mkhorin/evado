@@ -12,9 +12,7 @@ module.exports = class ResetPasswordForm extends Base {
             RULES: [
                 [['newPassword', 'newPasswordRepeat', 'captchaCode'], 'required'],
                 ['newPasswordRepeat', 'compare', {compareAttr: 'newPassword'}],
-                ['newPassword', (attr, model)=> {
-                    return model.spawn('security/PasswordValidator').validateAttr(attr, model);
-                }],
+                ['newPassword', 'validator/PasswordValidator'],
                 ['key', 'required', {message: 'Reset key required'}],
                 ['captchaCode', require('areto/security/captcha/CaptchaValidator')]                
             ],

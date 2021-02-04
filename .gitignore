@@ -1,6 +1,7 @@
 /.hg/*
 /.idea/*
 
+asset/dist
 web/vendor
 
 *.log

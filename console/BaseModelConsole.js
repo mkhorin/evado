@@ -14,7 +14,7 @@ module.exports = class BaseModelConsole extends Base {
 
     async createModuleModels (module) {
         await this.createByData(module.getConfig(this.key), module);
-        for (const child of module.getModules()) {
+        for (const child of module.modules) {
             await this.createModuleModels(child);
         }
     }

@@ -6,6 +6,6 @@ if (Array.isArray(data)) {
 <%- include('render', {data: item}) %>
 <% }} else if (typeof data === 'string') { %>
     <%- data %>
-<% } else if (data && data.template) { %>
+<% } else if (data?.template) { %>
     <%- include(data.template, data) %>
 <% } %>

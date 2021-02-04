@@ -15,12 +15,12 @@ module.exports = class Listener extends Base {
                 'events',
                 'description',
                 'handlers',
-                'notices',
+                'notifications',
                 'tasks'
             ],
             RULES: [
                 ['events', 'required'],
-                ['events', 'filter', {filter: 'split'}]
+                ['events', 'filter', {method: 'split'}]
             ]
         };
     }
@@ -36,27 +36,27 @@ module.exports = class Listener extends Base {
 
     resolveHandlers () {
         const handlers = this.rel('handlers').filter(model => model.resolve());
-        const notice = this.resolveNoticeHandler();
-        if (notice) {
-            handlers.push(notice);
+        const notification = this.resolveNotificationHandler();
+        if (notification) {
+            handlers.push(notification);
         }
         const task = this.resolveTaskHandler();
-        if (notice) {
+        if (task) {
             handlers.push(task);
         }
         return handlers;
     }
 
-    resolveNoticeHandler () {
-        const notices = this.get('notices');
-        if (Array.isArray(notices) && notices.length) {
-            return this.spawn('observer/NoticeHandler', {notices});
+    resolveNotificationHandler () {
+        const notifications = this.get('notifications');
+        if (notifications?.length) {
+            return this.spawn('observer/NotificationHandler', {notifications});
         }
     }
 
     resolveTaskHandler () {
         const tasks = this.get('tasks');
-        if (Array.isArray(tasks) && tasks.length) {
+        if (tasks?.length) {
             return this.spawn('observer/TaskHandler', {tasks});
         }
     }

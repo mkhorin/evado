@@ -8,7 +8,7 @@ const Base = require('areto/filter/ActionFilter');
 module.exports = class ExpiredPasswordFilter extends Base {
 
     async beforeAction (action) {
-        if (action.isAjax() || action.isPost()) {
+        if (action.isAjax() || action.isPostRequest()) {
             return;
         }
         const controller = action.controller;

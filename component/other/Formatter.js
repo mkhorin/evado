@@ -14,8 +14,8 @@ module.exports = class Formatter extends Base {
         });
     }
 
-    asDownload (value, {text} = {}) {
-        return `<a href="${value}" class="download-link" target="_blank">${text || value}</a>`;
+    asDownload (value, params) {
+        return `<a href="${value}" class="download-link" target="_blank">${params?.text || value}</a>`;
     }
 
     asInherited (value, {translate} = {}) {
@@ -23,12 +23,12 @@ module.exports = class Formatter extends Base {
         return `<span class="inherited-value" ${translate} title="Inherited value">${this.format(value)}</span>`
     }
 
-    asModalLink (value, {text} = {}) {
-        return `<a href="${value}" class="modal-link">${text || value}</a>`;
+    asFrameLink (value, params) {
+        return `<a href="${value}" class="frame-link">${params?.text || value}</a>`;
     }
 
-    asNoAccess (value, {language} = {}) {
-        return this.translate(this.noAccessFormat, I18n.APP_SOURCE, language);
+    asNoAccess (value, params) {
+        return this.translate(this.noAccessFormat, I18n.APP_SOURCE, params?.language);
     }
 
     asThumbnail (value, {text} = {}) {
@@ -46,8 +46,8 @@ module.exports = class Formatter extends Base {
             : value;
     }
 
-    asTranslatable (value, category = '') {
-        return `<span data-t="${category}">${value}</span>`;
+    asTranslatable (value, params) {
+        return `<span data-t="${params?.category || ''}">${value}</span>`;
     }
 };
 module.exports.init();

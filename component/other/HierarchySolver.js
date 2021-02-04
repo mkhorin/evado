@@ -45,7 +45,10 @@ module.exports = class HierarchySolver extends Base {
         return children.concat(await this.getDescendantIds(children));
     }
 
-    async getAncestors (child) {  // order from root to parent
+    /**
+     * Get ancestors ordered from root to parent
+     */
+    async getAncestors (child) {
         child = child || this.model;
         const parent = child.get(this.parentAttr);
         if (!parent) {

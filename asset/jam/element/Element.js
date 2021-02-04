@@ -1,0 +1,58 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
+Jam.Element = class Element {
+
+    static createInstance ($element) {
+        return this.getInstance($element) || Reflect.construct(this, arguments);
+    }
+
+    static getInstance ($element) {
+        return $element.data(`jamInstance`);
+    }
+
+    static findInstanceByClass (instanceClass, $container) {
+        for (const element of $container.find('[data-jam]')) {
+            const instance = this.getInstance($(element));
+            if (instance instanceof instanceClass) {
+                return instance;
+            }
+        }
+    }
+
+    constructor ($element) {
+        this.$element = $element;
+        this.setInstance($element);
+    }
+
+    init () {
+    }
+
+    getData (key) {
+        return this.$element.data(key);
+    }
+
+    find () {
+        return this.$element.find(...arguments);
+    }
+
+    findInstanceByClass (instanceClass) {
+        return this.constructor.findInstanceByClass(instanceClass, this.$element);
+    }
+
+    findInstanceByFrame (frame = this.frame) {
+        return frame.findInstanceByClass(this.constructor);
+    }
+
+    setInstance ($element) {
+        return $element.data('jamInstance', this);
+    }
+
+    resolveTemplate (name, data) {
+        return Jam.Helper.findAndResolveTemplate(name, this.$element, data);
+    }
+
+    toggleClass () {
+        return this.$element.toggleClass(...arguments);
+    }
+};

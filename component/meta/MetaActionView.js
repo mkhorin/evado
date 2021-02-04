@@ -18,9 +18,9 @@ module.exports = class MetaActionView extends Base {
         if (!view) {
             return super.getViewModelClass(name);
         }
-        let model = this.getViewOwnModelWithOrigin(view.viewModel);
+        let model = this.getModelFromOriginalOrSameView(view.viewModel);
         if (!model && view !== view.class) {
-            model = this.getViewOwnModelWithOrigin(view.class.viewModel);
+            model = this.getModelFromOriginalOrSameView(view.class.viewModel);
         }
         return model || super.getViewModelClass(name);
     }
@@ -30,27 +30,27 @@ module.exports = class MetaActionView extends Base {
         if (!view) {
             return super.get(name);
         }
-        let template = this.getMetaViewTemplate(view, name);
+        let template = this.getMetadataViewTemplate(view, name);
         if (!template && view !== view.class) {
-            template = this.getMetaViewTemplate(view.class, name);
+            template = this.getMetadataViewTemplate(view.class, name);
         }
         return super.get(template || name);
     }
 
-    getMetaViewTemplate (view, name) {
-        const template = this.getViewOwnTemplateWithOrigin(view.templateDir + name);
+    getMetadataViewTemplate (view, name) {
+        const template = this.getTemplateFromOriginalOrSameView(view.templateDir + name);
         return !template && view.parentTemplateDir
-            ? this.getViewOwnTemplateWithOrigin(view.parentTemplateDir + name)
+            ? this.getTemplateFromOriginalOrSameView(view.parentTemplateDir + name)
             : template;
     }
 
     getMetaItemTemplate (item) {
-        let template = this.getViewOwnTemplate(item.templateKey);
+        let template = this.getTemplateFromSameView(item.templateKey);
         if (template) {
             return template;
         }
         if (item.parentTemplateKey) {
-            template = this.getViewOwnTemplate(item.parentTemplateKey);
+            template = this.getTemplateFromSameView(item.parentTemplateKey);
             if (template) {
                 return template;
             }

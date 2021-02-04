@@ -3,9 +3,4 @@
  */
 'use strict';
 
-const Base = require('areto/view/ViewModel');
-
-module.exports = class BaseViewModel extends Base {
-
-};
-module.exports.init();
+module.exports = require('areto/view/ViewModel');

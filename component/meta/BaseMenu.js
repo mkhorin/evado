@@ -7,9 +7,9 @@ const Base = require('areto/view/Widget');
 
 module.exports = class BaseMenu extends Base {
 
-    async run () {
+    async execute () {
         const nav = this.module.getMeta('navigation');
-        const section = nav.getSection('main', this.module.getBaseName());
+        const section = nav.getSection('main', this.module.getRouteName());
         const activeItem = this.controller.meta && this.controller.meta.node;
         const openedItems = activeItem ? activeItem.getParents() : [];
         const items = [...openedItems, ...section.children];
@@ -31,7 +31,7 @@ module.exports = class BaseMenu extends Base {
     }
 
     getItemModule (item) {
-        return item.data.class ? 'office' : item.data.report ? 'report' : this.module.getBaseName();
+        return item.data.class ? 'office' : item.data.report ? 'report' : this.module.getRouteName();
     }
 
     resolveAccess (data) {

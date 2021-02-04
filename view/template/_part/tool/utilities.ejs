@@ -10,15 +10,15 @@ if (typeof utilities !== 'undefined' && utilities.length) {
         Object.assign(res, params);
     }
 %>
-<div class="utility-container btn-set" data-jam="UtilityManager" data-command="utilities"
+<div class="utility-container nav-group" data-jam="UtilityManager" data-command="utilities"
      data-url="<%- _url('default/utility') %>"
      data-params="<%= JSON.stringify(res) %>">
 
     <div class="utility-menu btn-group hidden">
-        <button type="button" class="btn btn-white dropdown-toggle" title="Utilities" data-t="" data-toggle="dropdown">
-            <span class="caret"></span>
+        <button type="button" class="dropdown-toggle btn-outline-secondary btn" title="Utilities"
+                data-toggle="dropdown" data-t="">
         </button>
-        <ul class="dropdown-menu"></ul>
+        <div class="dropdown-menu"></div>
     </div>
 
     <template data-id="button">
@@ -28,11 +28,7 @@ if (typeof utilities !== 'undefined' && utilities.length) {
     </template>
 
     <template data-id="menuItem">
-        <li>
-            <a href="#" class="utility-item" title="{{hint}}" data-t="">
-                <span data-t="">{{name}}</span>
-            </a>
-        </li>
+        <a class="utility-item dropdown-item" href="#" title="{{hint}}" data-t="">{{name}}</a>
     </template>
 </div>
 <% } %>

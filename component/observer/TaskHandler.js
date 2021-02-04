@@ -11,7 +11,7 @@ module.exports = class TaskHandler extends Base {
         const scheduler = this.module.getScheduler();
         for (const id of this.tasks) {
             const task = scheduler.getTask(id);
-            if (task && task.isActive()) {
+            if (task?.isActive()) {
                 await task.execute(data);
             }
         }

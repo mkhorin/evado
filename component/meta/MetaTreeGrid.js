@@ -24,7 +24,7 @@ module.exports = class MetaTreeGrid extends Base {
         const data = {[this.CLASS_KEY]: model.class.id};
         if (this.level) {
             const view = this.level.refView || this.level.refClass;
-            const query = view.find(this.module);
+            const query = view.find();
             await this.level.refAttr.relation.setQueryByModel(query, model);
             // await this.security.access.assignObjectFilter(query);
             data[this.HAS_CHILDREN_KEY] = !!await query.order(null).id();

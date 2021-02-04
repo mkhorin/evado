@@ -177,7 +177,7 @@ module.exports = class MetaSecurity extends Base {
             for (const model of models) {
                 if (model.forbiddenReadAttrs === undefined) {
                     const data = await this.attrAccess.resolveObjectTarget(model);
-                    model.forbiddenReadAttrs = data ? data[Rbac.READ] : null;
+                    model.forbiddenReadAttrs = data?.[Rbac.READ];
                 }
             }
         }

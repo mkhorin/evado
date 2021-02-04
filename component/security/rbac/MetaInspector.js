@@ -59,9 +59,9 @@ module.exports = class MetaInspector extends Base {
         for (const action of this.actions) {
             if (this.access[action]) {
                 // other role already allowed action
-            } else if (deny && deny.hasOwnProperty(action) && await this.checkTargets(deny[action])) {
+            } else if (deny?.hasOwnProperty(action) && await this.checkTargets(deny[action])) {
                 this.access[action] = false;
-            } else if (allow && allow.hasOwnProperty(action)) {
+            } else if (allow?.hasOwnProperty(action)) {
                 this.access[action] = await this.checkTargets(allow[action]);
             }
         }
@@ -84,8 +84,8 @@ module.exports = class MetaInspector extends Base {
         let classKey, viewKey;
         switch (this.targetType) {
             case Rbac.TARGET_NODE:
-                classKey = this.targetClass && this.targetClass.id;
-                viewKey = this.targetView && this.targetView.id;
+                classKey = this.targetClass?.id;
+                viewKey = this.targetView?.id;
                 break;
             case Rbac.TARGET_VIEW:
                 classKey = this.target.class.id;
@@ -156,16 +156,16 @@ module.exports = class MetaInspector extends Base {
 
     checkSectionTarget (section, data) {
         data = data[Rbac.TARGET_SECTION];
-        return data && data[section.id] ? this.checkItems(data[section.id]) : false;
+        return data?.[section.id] ? this.checkItems(data[section.id]) : false;
     }
 
     checkNodeTarget (item, data) {
         data = data[Rbac.TARGET_NODE];
-        return data && data[item.id] ? this.checkItems(data[item.id]) : false;
+        return data?.[item.id] ? this.checkItems(data[item.id]) : false;
     }
 
-    checkClassTarget (metaClass, data) {
-        data = data[Rbac.TARGET_CLASS] && data[Rbac.TARGET_CLASS][metaClass.id];
+    checkClassTarget (cls, data) {
+        data = data[Rbac.TARGET_CLASS] && data[Rbac.TARGET_CLASS][cls.id];
         return data ? this.checkItems(data) : false;
     }
 

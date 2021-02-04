@@ -10,7 +10,7 @@ module.exports = class Auth extends Base {
     constructor (config) {
         super({
             Identity: config.module.getClass('model/User'),
-            WebUser: require('./WebUser'),
+            WebUser: config.module.getClass('security/WebUser'),
             ...config
         });
     }

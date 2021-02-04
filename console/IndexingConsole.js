@@ -14,7 +14,7 @@ module.exports = class IndexingConsole extends Base {
 
     async createModuleIndexes (module) {
         await this.createByData(module.getConfig('indexes'), module);
-        for (const child of module.getModules()) {
+        for (const child of module.modules) {
             await this.createModuleIndexes(child);
         }
     }

@@ -34,7 +34,7 @@ if ($.fn.datetimepicker) {
     });
 }
 
-if (typeof moment === "function" && $.fn.daterangepicker) {
+if ($.fn.daterangepicker && typeof moment === 'function') {
     $('.daterange').daterangepicker({
         locale: {
             format: 'YYYY-MM-DD',
@@ -59,32 +59,5 @@ if (typeof moment === "function" && $.fn.daterangepicker) {
         enddate: moment()
     }, (start, end) => {
         console.log(`Select: ${start.format('D MMMM YYYY')} - ${end.format('D MMMM YYYY')}`);
-    });
-}
-
-if ($.fn.dataTable) {
-    Object.assign($.fn.dataTable.defaults, {
-        'language': {
-            'paginate': {
-                'first': '<<',
-                'previous': '<',
-                'next': '>',
-                'last': '>>'
-            },
-            'processing': 'Загрузка...',
-            'search': 'Поиск:',
-            'lengthMenu': 'Показать по _MENU_',
-            'info': 'Записи с _START_ до _END_ из _TOTAL_',
-            'infoEmpty': 'Записи с 0 до 0 из 0',
-            'infoFiltered': '(отфильтровано из _MAX_ записей)',
-            'infoPostFix': '',
-            'loadingRecords': 'Загрузка записей...',
-            'zeroRecords': 'Записи отсутствуют.',
-            'emptyTable': 'В таблице отсутствуют данные',
-            'aria': {
-                'sortAscending': ': активировать для сортировки столбца по возрастанию',
-                'sortDescending': ': активировать для сортировки столбца по убыванию'
-            }
-        }
     });
 }

@@ -10,16 +10,14 @@ block('title', title);
 <div class="alert alert-success"><%- success %></div>
 <% } %>
 
-<p class="login-box-msg">
-    <%- _t('auth.signInToStart') %>
-</p>
+<p class="login-box-msg"><%- _t('auth.signInToStart') %></p>
 
 <form method="post" class="form">
 
     <%- include(_view.get('auth/_signInForm')) %>
 
-    <div class="form-attr form-group mt20">
-        <button type="submit" class="btn btn-primary btn-block btn-flat">
+    <div class="form-submit form-attr form-group">
+        <button type="submit" class="btn-primary btn">
             <%- title %>
         </button>
     </div>

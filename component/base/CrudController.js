@@ -10,15 +10,15 @@ module.exports = class CrudController extends Base {
     static getConstants () {
         return {
             ACTIONS: {
-                'sort-related': {
+                'sortRelated': {
                     Class: require('../action/SortRelatedAction')
                 }
             },
             METHODS: {
-                'select': 'GET',
-                'delete': 'POST',
-                'delete-list': 'POST',
-                'export': 'POST'
+                'select': 'get',
+                'delete': 'post',
+                'deleteList': 'post',
+                'export': 'post'
             }
         };
     }
@@ -64,7 +64,7 @@ module.exports = class CrudController extends Base {
         const model = params.model || this.createModel();
         model.scenario = params.scenario;
         await model.setDefaultValues();
-        if (this.isGet()) {
+        if (this.isGetRequest()) {
             const _layout = this.getViewLayout();
             return this.render(params.template, {model, _layout, ...params.templateData});
         }
@@ -85,7 +85,7 @@ module.exports = class CrudController extends Base {
         if (params.getParamsByModel) {
             Object.assign(params, params.getParamsByModel(model));
         }
-        if (this.isPost()) {
+        if (this.isPostRequest()) {
             this.checkCsrfToken();
             model.load(this.getPostParams());
             if (params.beforeUpdate) {
@@ -206,7 +206,7 @@ module.exports = class CrudController extends Base {
 
     getViewLayout () {
         return this.isAjax()
-            ? '_layout/modal/modelForm'
+            ? '_layout/frame/modelForm'
             : '_layout/empty';
     }
 

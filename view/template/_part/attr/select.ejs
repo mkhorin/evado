@@ -33,21 +33,21 @@ if (typeof items !== 'undefined' && items) {
 }
 content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-control form-value">${content}</select>`;
 %>
-<div class="form-attr form-group <%- p.required %> <%- p.css %>"
+<div class="form-attr form-group row <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-select2="<%= p.select2 %>"
      data-depends="<%= p.depends %>"
      data-action-binder="<%= p.actionBinder %>">
     <label data-t="<%- p.translate %>" title="<%= p.extHint %>"
-           class="control-label <%- p.labelCss %>"><%- p.label %></label>
+           class="col-form-label <%- p.labelCss %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <% if (p.update) { %>
         <div class="input-group">
             <%- content %>
-            <div class="input-group-btn">
-                <button class="btn btn-default" type="button" tabindex="-1" data-action="update"
+            <div class="input-group-append">
+                <button class="btn-outline-info btn" type="button" tabindex="-1" data-action="update"
                         data-url="<%- p.update %>">
-                    <span class="glyphicon glyphicon-pencil"></span>
+                    <i class="fas fa-pencil-alt"></i>
                 </button>
             </div>
         </div>

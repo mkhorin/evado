@@ -14,7 +14,7 @@ module.exports = class SignInForm extends Base {
                 [['email', 'password'], 'required'],
                 ['email', 'email'],
                 ['rememberMe', 'checkbox'],
-                ['password', this.validatePassword.bind(this)],
+                ['password', 'validator/PasswordValidator'],
                 ['captchaCode', 'required', {on: [CAPTCHA_SCENARIO]}],
                 ['captchaCode', require('areto/security/captcha/CaptchaValidator'), {on: [CAPTCHA_SCENARIO]}]
             ],
@@ -24,10 +24,6 @@ module.exports = class SignInForm extends Base {
             },
             CAPTCHA_SCENARIO
         };
-    }
-
-    static validatePassword (attr, model) {
-        return model.spawn('security/PasswordValidator').validateAttr(attr, model);
     }
 
     constructor (config) {
@@ -46,13 +42,13 @@ module.exports = class SignInForm extends Base {
     }
 
     isBlocked () {
-        return this.rateLimitModel && this.rateLimitModel.isBlocked();
+        return this.rateLimitModel?.isBlocked();
     }
 
     async resolveRateLimit () {
         if (this.rateLimit instanceof RateLimit) {
             this.rateLimitModel = await this.rateLimit.find(this.rateLimitType, this.user);
-            this.toggleCaptchaScenario();
+            this.setCaptchaScenario();
         }
     }
 
@@ -69,13 +65,12 @@ module.exports = class SignInForm extends Base {
             this.addError('email', err);
         }
         await this.updateRateLimit();
-        this.toggleCaptchaScenario();
+        this.setCaptchaScenario();
         return !this.hasError();
     }
 
-    toggleCaptchaScenario () {
-        this.scenario = this.rateLimitModel && this.rateLimitModel.isExceeded()
-            ? this.CAPTCHA_SCENARIO : null;
+    setCaptchaScenario () {
+        this.scenario = this.rateLimitModel?.isExceeded() ? this.CAPTCHA_SCENARIO : null;
     }
 
     async updateRateLimit () {
@@ -91,4 +86,4 @@ module.exports = class SignInForm extends Base {
 };
 module.exports.init(module);
 
-const RateLimit = require('areto/security/rate-limit/RateLimit');
+const RateLimit = require('areto/security/rateLimit/RateLimit');

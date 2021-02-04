@@ -1,6 +1,5 @@
 <%
 const p = {
-    id: typeof id === 'undefined' ? model.getFormAttrId(attr) : id,
     name: typeof name === 'undefined' ?  model.getFormAttrName(attr) : name,
     type: typeof type === 'undefined' ?  'text' : type,
     value: typeof value === 'undefined' ? model.get(attr) : value,
@@ -11,12 +10,15 @@ const p = {
     iconClass: typeof iconClass === 'undefined' ? '' : iconClass
 };
 %>
-<div class="form-attr form-group <%- p.required %><%- p.error ? ' has-error' : '' %><%- p.iconClass ? ' has-feedback' : '' %>">
-    <input id="<%- p.id %>" name="<%- p.name %>" type="<%- p.type %>" <%- p.required %>
-           value="<%- p.value %>" class="form-control"
-           placeholder="<%- _t(p.label) %>" autocomplete="<%- p.autocomplete %>">
-    <% if (p.iconClass) { %>
-    <span class="<%- p.iconClass %> form-control-feedback"></span>
-    <% } %>
+<div class="form-attr form-group <%- p.required %><%- p.error ? ' has-error' : '' %>">
+    <div class="input-group">
+        <input name="<%- p.name %>" type="<%- p.type %>" value="<%- p.value %>" class="form-control" <%- p.required %>
+               placeholder="<%- _t(p.label) %>" autocomplete="<%- p.autocomplete %>">
+        <div class="input-group-append">
+            <span class="input-group-text text-muted">
+                <i class="<%- p.iconClass %>"></i>
+            </span>
+        </div>
+    </div>
     <div class="error-block"><%= p.error %></div>
 </div>

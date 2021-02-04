@@ -4,17 +4,18 @@ const p = {handler: 'Json'};
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="form-attr form-group <%- p.required %> <%- p.css %>"
+<div class="form-attr form-group row <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+    <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <div class="input-group">
-            <input name="<%- p.name %>" type="text" value="<%= p.value %>" class="form-control form-value">
-            <span class="input-group-btn">
-                <button class="edit btn btn-default" type="button" title="Editor" tabindex="-1">
-                    <i class="fa fa-ellipsis-h"></i>
+            <input name="<%- p.name %>" type="text" value="<%= p.value %>" <%- p.required %>
+                   class="form-control form-value">
+            <span class="input-group-append">
+                <button class="btn-outline-info btn" type="button" title="Editor" data-command="edit">
+                    <i class="fas fa-code"></i>
                 </button>
             </span>
         </div>
@@ -23,22 +24,24 @@ const p = {handler: 'Json'};
     </div>
 
     <div class="json-editor modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" data-t="">JSON editor</h4>
+                    <h5 class="modal-title" data-t="">JSON editor</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-danger light" style="display: none"></div>
-                    <textarea class="json-editor-text form-control"></textarea>
+                    <div class="alert alert-danger"></div>
+                    <textarea class="json-editor-text form-control" spellcheck="false"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button class="save btn btn-primary" title="Save">
-                        <span class="glyphicon glyphicon-save"></span>
+                    <button class="btn-primary btn" title="Save" data-command="save">
+                        <i class="fas fa-download"></i>
                     </button>
-                    <button class="btn btn-default" data-dismiss="modal" title="Cancel">
-                        <span class="glyphicon glyphicon-remove"></span>
+                    <button class="btn-outline-secondary btn" data-dismiss="modal" title="Cancel">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>

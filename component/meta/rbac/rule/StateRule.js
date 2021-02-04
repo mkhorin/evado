@@ -1,9 +1,9 @@
 /**
  * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
+ *
+ * Check object state
  */
 'use strict';
-
-// check object state
 
 const Base = require('./BaseRule');
 

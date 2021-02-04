@@ -1,0 +1,138 @@
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
+Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
+
+    constructor () {
+        super(...arguments);
+        this.events = new Jam.Events(this.constructor.name);
+    }
+
+    init () {
+        this.$uploader = this.find('.uploader');
+        this.fileMessageSelector = '.uploader-message';
+        this.uploader = Jam.Uploader.create(this.$uploader);
+        this.uploader.on('select', this.onSelectFile.bind(this));
+        this.uploader.on('overflow', this.onOverflowFile.bind(this));
+        this.uploader.on('file:append', this.onAppendFile.bind(this));
+        this.uploader.on('file:validate', this.onValidateFile.bind(this));
+        this.uploader.on('file:start', this.onStartFile.bind(this));
+        this.uploader.on('file:progress', this.onProgressFile.bind(this));
+        this.uploader.on('file:upload', this.onUploadFile.bind(this));
+        this.uploader.on('file:error', this.onErrorFile.bind(this));
+        this.uploader.on('file:confirmDeletion', this.onConfirmFileDeletion.bind(this));
+        this.uploader.on('file:delete', this.onDeleteFile.bind(this));
+        this.uploader.on('file:save', this.onSaveFile.bind(this));
+        this.model.frame.one('afterClose', this.afterFrameClose.bind(this));
+        this.initValue();
+    }
+
+    initValue () {
+        const values = Jam.Helper.parseJson(this.$value.val());
+        if (Array.isArray(values)) {
+            for (const value of values) {
+                this.uploader.setSavedFile(value);
+            }
+            this.$value.val(values.map(value => value.id).join());
+        }
+    }
+
+    getNameAttr () {
+        return this.model.getAttr(this.getData('nameAttr'));
+    }
+
+    inProgress () {
+        return this.uploader.isProcessing() ? 'Abort upload?' : false;
+    }
+
+    afterFrameClose () {
+        this.uploader.abort();
+    }
+
+    onSelectFile () {
+        this.$uploader.find('.uploader-overflow').hide();
+    }
+
+    onOverflowFile (event, data) {
+        this.$uploader.find('.uploader-overflow').text(data).show();
+    }
+
+    onAppendFile (event, data) {
+        data.$item.find('.uploader-filename').text(`${data.file.name} (${Jam.FormatHelper.asBytes(data.file.size)})`);
+        this.setNameAttr(data.file.name);
+        this.events.trigger('append', data);
+    }
+
+    setNameAttr (value) {
+        const attr = this.getNameAttr();
+        if (attr) {
+            attr.setValue(value);
+            attr.triggerChange();
+        }
+    }
+
+    onValidateFile (event, data) {
+        if (data.image) {
+            data.$item.addClass('with-thumbnail');
+            data.$item.find('.uploader-thumbnail').css('background-image', `url(${data.image.src})`);
+        }
+    }
+
+    onStartFile (event, data) {
+        data.$item.removeClass('pending').addClass('processing');
+        data.$item.find(this.fileMessageSelector).text('Uploading...');
+    }
+
+    onProgressFile (event, data) {
+        data.$item.find('.progress-bar').css('width', `${data.percent}%`);
+    }
+
+    onUploadFile (event, data) {
+        data.info = Jam.Helper.parseJson(data.info) || {};
+        data.$item.removeClass('pending processing').addClass('done');
+        const message = Jam.t(data.info.message || 'Upload completed');
+        data.$item.find(this.fileMessageSelector).html(message);
+        const value = this.uploader.options.maxFiles > 1
+            ? Jam.Helper.addCommaValue(data.info.id, this.$value.val())
+            : data.info.id;
+        this.$value.val(value).change();
+    }
+
+    onErrorFile (event, data) {
+        const msg = Jam.Helper.parseJson(data.error);
+        data.$item.removeClass('pending processing').addClass('failed');
+        data.$item.find(this.fileMessageSelector).text(msg?.file || data.error);
+    }
+
+    onConfirmFileDeletion (event, data) {
+        const message = this.$uploader.data('deletionConfirm');
+        const deferred = message ? Jam.dialog.confirmDeletion(message) : null;
+        $.when(deferred).then(() => data.delete());
+    }
+
+    onDeleteFile (event, {info}) {
+        if (info) {
+            const value = Jam.Helper.removeCommaValue(info.id, this.$value.val());
+            this.$value.val(value).change();
+            if (this.uploader.options.delete) {
+                $.post(this.uploader.options.delete, {id: info.id});
+            }
+        }
+    }
+
+    onSaveFile (event, data) {
+        data.$item.removeClass('pending').addClass('saved');
+        let name = data.file.name;
+        let download = this.uploader.options.download;
+        if (download) {
+            name = `<a href="${download}${data.file.id}" target="_blank">${data.file.name}</a>`;
+        }
+        data.$item.find('.uploader-filename').html(`${name} (${data.file.size})`);
+        data.$item.find(this.fileMessageSelector).html(data.file.message);
+        const thumbnail = this.uploader.options.thumbnail;
+        if (data.file.isImage && thumbnail) {
+            data.$item.addClass('with-thumbnail');
+            data.$item.find('.uploader-thumbnail').css('background-image', `url(${thumbnail}${data.file.id})`);
+        }
+    }
+};

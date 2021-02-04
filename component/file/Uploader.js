@@ -38,7 +38,10 @@ module.exports = class Uploader extends Base {
         }).single(this.fieldName);
     }
 
-    generateDirectory () { // by months
+    /**
+     * Generate directory name by months
+     */
+    generateDirectory () {
         const now = new Date;
         return now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2);
     }

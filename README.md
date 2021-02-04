@@ -11,13 +11,13 @@
 
 [![Evado Declarative Framework](doc/evado-framework-steps.jpg)](http://nervebit.com)
 
-### Ready to Use
+### Ready to use
 
 - [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate)
 
-### Ready to Try
+### Ready to try
 
-Demo Apps built on Evado Framework:
+Applications built on Evado Framework:
 
 - [Blog](https://github.com/mkhorin/evado-app-blog)
 - [Bug Tracking System](https://github.com/mkhorin/evado-app-bugs)

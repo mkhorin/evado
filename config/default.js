@@ -38,7 +38,7 @@ module.exports = {
                 'mail': {
                     forceTranslation: true
                 },
-                'notice': {
+                'notification': {
                     forceTranslation: true
                 }
             }
@@ -79,7 +79,7 @@ module.exports = {
         },
         'notifier': {
             Class: require('../component/notifier/Notifier'),
-            tasks: ['createNotification']
+            tasks: ['sendNotifications']
         },
         'observer': {
             Class: require('../component/observer/Observer'),

@@ -7,26 +7,26 @@ const p = {
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="form-attr <%- p.css %> <%- p.required %> form-group"
+<div class="form-attr <%- p.css %> <%- p.required %> form-group row"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>"
      data-all="<%- p.allValue %>">
-    <label class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
+    <label class="col-form-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
-        <div class="checkbox-list">
+        <div class="form-check-list-inline form-check-list">
             <% if (Array.isArray(items)) {
                for (const item of items) { %>
-            <label class="checkbox checkbox-inline">
-                <input value="<%- item.value %>" type="checkbox">
-                <span title="<%= item.hint %>" data-t="<%- p.translate %>"><%- item.text %></span>
-            </label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" value="<%- item.value %>" type="checkbox">
+                <label class="form-check-label" title="<%= item.hint %>" data-t="<%- p.translate %>"><%- item.text %></label>
+            </div>
             <% }} else {
                for (const key of Object.keys(items)) { %>
-            <label class="checkbox checkbox-inline">
-                <input value="<%- key %>" type="checkbox">
-                <span data-t="<%- p.translate %>"><%- items[key] %></span>
-            </label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" value="<%- key %>" type="checkbox">
+                <label class="form-check-label" data-t="<%- p.translate %>"><%- items[key] %></label>
+            </div>
             <% }} %>
         </div>
         <div class="error-block"></div>

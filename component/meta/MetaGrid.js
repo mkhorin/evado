@@ -93,8 +93,7 @@ module.exports = class MetaGrid extends Base {
     }
 
     prepareViewModels () {
-        const model = this.actionView.createViewModel();
-        return model ? model.prepareModels(this._models) : null;
+        return this.actionView.createViewModel()?.prepareModels(this._models);
     }
 
     render () {
@@ -127,7 +126,7 @@ module.exports = class MetaGrid extends Base {
         if (!view.hasKeyAttr()) {
             result[view.getKey()] = model.getId();
         }
-        result._metaClass = model.view.class.name;
+        result._class = model.view.class.name;
         return result;
     }
 
@@ -188,8 +187,8 @@ module.exports = class MetaGrid extends Base {
             const state = model.class.getState(value);
             result[this._columnMap[attr.name].titleName] = state ? state.title : null;
         } else if (attr.isClass()) {
-            const metaClass = model.class.meta.getClass(value);
-            result[this._columnMap[attr.name].titleName] = metaClass ? metaClass.title : null;
+            const cls = model.class.meta.getClass(value);
+            result[this._columnMap[attr.name].titleName] = cls ? cls.title : null;
         }
         return value;
     }

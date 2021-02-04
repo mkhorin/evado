@@ -16,7 +16,7 @@ module.exports = class PasswordAuthService extends Base {
             return false;
         }
         const password = await this.spawnPassword().findByUser(user.getId()).one();
-        if (password && password.isExpired(lifetime)) {
+        if (password?.isExpired(lifetime)) {
             return true;
         }
     }

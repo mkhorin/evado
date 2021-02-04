@@ -124,8 +124,8 @@ module.exports = class DataGrid extends Base {
     }
 
     prepareViewModels () {
-        const model = this.controller.createViewModel(this.params.viewModel, {params: this.params});
-        return model ? model.prepareModels(this._models) : null;
+        const params = this.params;
+        return this.controller.createViewModel(params.viewModel, {params})?.prepareModels(this._models);
     }
 
     render () {

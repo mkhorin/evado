@@ -31,7 +31,7 @@ module.exports = class Task extends Base {
                 ['startDate', 'date'],
                 ['startTime', 'regex', {pattern: 'HH:mm:ss'}],
                 [['active', 'startup', 'stopOnFail'], 'checkbox'],
-                ['repeats', 'number', {integerOnly: true}],
+                ['repeats', 'integer', {min: 0}],
                 ['period', 'regex', {pattern: 'duration'}],
                 [['period', 'repeats'], 'default', {value: 0}],
                 ['job', 'spawn', {BaseClass: require('areto/scheduler/Job')}]

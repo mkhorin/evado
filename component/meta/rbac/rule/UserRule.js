@@ -1,9 +1,9 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ *
+ * Check model attribute has the current user ID
  */
 'use strict';
-
-// check model attribute has the current user ID
 
 const Base = require('./BaseRule');
 

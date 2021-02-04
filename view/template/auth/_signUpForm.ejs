@@ -3,19 +3,19 @@ const inputTemplate = _view.get('auth/_input');
 %>
 <%- include(inputTemplate, {
     attr: 'name',
-    iconClass: 'glyphicon glyphicon-user'
+    iconClass: 'fas fa-user'
 }) %>
 
 <%- include(inputTemplate, {
     attr: 'email',
     type: 'email',
-    iconClass: 'glyphicon glyphicon-envelope'
+    iconClass: 'fas fa-at'
 }) %>
 
 <%- include(inputTemplate, {
     attr: 'password',
     type: 'password',
-    iconClass: 'glyphicon glyphicon-lock',
+    iconClass: 'fas fa-key',
     value: '',
     autocomplete: 'new-password'
 }) %>
@@ -23,7 +23,7 @@ const inputTemplate = _view.get('auth/_input');
 <%- include(inputTemplate, {
     attr: 'passwordRepeat',
     type: 'password',
-    iconClass: 'glyphicon glyphicon-lock',
+    iconClass: 'fas fa-key',
     value: '',
     autocomplete: 'new-password'
 }) %>

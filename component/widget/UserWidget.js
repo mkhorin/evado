@@ -7,7 +7,7 @@ const Base = require('areto/view/Widget');
 
 module.exports = class UserWidget extends Base {
 
-    run () {
+    execute () {
         return this.renderTemplate('_widget/user', {
             roles: this.controller.user.getAssignmentTitles(), 
             changePasswordUrl: this.module.getParam('changePasswordUrl'), 

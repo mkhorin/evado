@@ -11,10 +11,9 @@ module.exports = class SignUpForm extends Base {
         return {
             RULES: [
                 [['name', 'email', 'password', 'passwordRepeat', 'captchaCode'], 'required'],
-                ['name', 'string', {min: 2, max: 24}],
-                ['name', 'regex', {pattern: /^[а-яa-z\s-]+$/i}],
+                ['name', 'validator/UserNameValidator'],
                 ['email', 'email'],
-                ['password', this.validatePassword.bind(this)],
+                ['password', 'validator/PasswordValidator'],
                 ['passwordRepeat', 'compare', {compareAttr: 'password'}],
                 ['captchaCode', require('areto/security/captcha/CaptchaValidator')]
             ],
@@ -22,10 +21,6 @@ module.exports = class SignUpForm extends Base {
                 captchaCode: 'Verification code'
             }
         };
-    }
-
-    static validatePassword (attr, model) {
-        return model.spawn('security/PasswordValidator').validateAttr(attr, model);
     }
 
     async register () {

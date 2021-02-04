@@ -23,11 +23,15 @@ module.exports = {
         minLength: 4,
         maxLength: 5
     },
+    'userNameValidator': {
+        min: 2,
+        max: 24
+    },
     'static': {},
     'template': {
         engine: require('areto-ejs'),
         extension: 'ejs'
     },
     'serverAddress': 'http://localhost',
-    'userUpdateUrl': `/admin/user?modal=${encodeURIComponent('admin/user/update?id=')}`
+    'userUpdateUrl': `/admin/user?frame=${encodeURIComponent('admin/user/update?id=')}`
 };

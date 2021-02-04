@@ -13,10 +13,10 @@ module.exports = {
         period: 'PT2H',
         active: true
     },
-    'createNotification': {
-        description: 'Create notifications from new notice messages',
+    'sendNotifications': {
+        description: 'Send notifications on new messages',
         job: {
-            Class: 'component/scheduler/CreateNotificationJob'
+            Class: 'component/scheduler/SendNotificationJob'
         },        
         startup: true,
         active: true

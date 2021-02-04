@@ -7,7 +7,7 @@ const Base = require('areto/view/Widget');
 
 module.exports = class Notifications extends Base {
 
-    run () {
+    execute () {
         this.user = this.controller.user.identity;
         if (!this.user) {
             return '';
@@ -25,7 +25,7 @@ module.exports = class Notifications extends Base {
     }
 
     async readMessage (id) {
-        const model = await this.spawn('notifier/NoticeMessage').findById(id).one();
+        const model = await this.spawn('notifier/NotificationMessage').findById(id).one();
         if (!model) {
             throw new BadRequest('Message not found');
         }
@@ -44,7 +44,7 @@ module.exports = class Notifications extends Base {
         const ids = await this.user.findUnreadMessages().column('message');
         const counter = ids.length;
         if (counter > 0) {
-            const message = this.spawn('notifier/NoticeMessage');
+            const message = this.spawn('notifier/NotificationMessage');
             const models = await message.findById(ids).order({[message.PK]: -1}).limit(5).all();
             for (const model of models) {
                 items.push({

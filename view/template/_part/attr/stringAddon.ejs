@@ -9,21 +9,25 @@ const p = {
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="form-attr form-group <%- p.required %> <%- p.css %>"
+<div class="form-attr form-group row <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-behaviors="<%= p.behaviors %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="control-label <%- p.labelCss %>"
+    <label class="col-form-label <%- p.labelCss %>"
            title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <div class="input-group">
             <% if (p.before) { %>
-            <span class="input-group-addon <%- p.beforeCss %>"><%- p.before %></span>
+            <div class="input-group-prepend">
+                <span class="input-group-text <%- p.beforeCss %>"><%- p.before %></span>
+            </div>
             <% } %>
             <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
                    value="<%= p.value %>" <%- p.required %> class="form-control form-value" autocomplete="on">
             <% if (p.after) { %>
-            <span class="input-group-addon <%- p.afterCss %>"><%- p.after %></span>
+            <div class="input-group-append">
+                <span class="input-group-text <%- p.afterCss %>"><%- p.after %></span>
+            </div>
             <% } %>
         </div>
         <div class="error-block"></div>

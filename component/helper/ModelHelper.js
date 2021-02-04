@@ -5,8 +5,11 @@
 
 module.exports = class ModelHelper {
 
-    // rules: [[['createdAt', 'updatedAt'], 'timestamp']]
-
+    /**
+     * @param {Array} rules - [[['createdAt', 'updatedAt'], 'timestamp']]
+     * @param {Array} models
+     * @param controller
+     */
     static formatByRules (rules, models, controller) {
         if (!Array.isArray(rules)) {
             return false;

@@ -15,10 +15,10 @@ module.exports = class UserPassword extends Base {
                 'createdAt',
                 'hash'
             ],
-            INDEXES: [[{user: 1}, {unique: false}]],
             RULES: [
-                ['password', 'validatePassword']
-            ]
+                ['password', 'validator/PasswordValidator']
+            ],
+            INDEXES: [[{user: 1}, {unique: false}]]
         };
     }
 
@@ -37,10 +37,6 @@ module.exports = class UserPassword extends Base {
 
     findByUser (id) {
         return this.find({user: id}).order({[this.PK]: -1});
-    }
-
-    validatePassword (attr) {
-        return this.spawn('security/PasswordValidator').validateAttr(attr, this);
     }
 
     check (password, hash) {

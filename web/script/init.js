@@ -8,13 +8,15 @@ Jam.i18n = new Jam.I18n;
 Jam.resource = new Jam.Resource;
 Jam.deferred = new Jam.Deferred;
 Jam.serverPolling = new Jam.ServerPolling;
-Jam.store = store;
+Jam.localStorage = new Jam.LocalStorage;
 
 Jam.i18n.translateDocument();
 Jam.createElements();
 Jam.Helper.executeSerialImageLoading();
 Jam.Helper.fixMultipleBootstrapModals();
+Jam.FrameStack.attachFrameLinks();
 
-if (Jam.modalStack) {
-    Jam.modalStack.openFromUrl(location.search);
+if (Jam.frameStack) {
+    Jam.frameStack.openFromUrl(location.search);
 }
+document.body.classList.add('main-transition');

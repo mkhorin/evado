@@ -118,7 +118,7 @@ module.exports = class User extends Base {
         this.setAuthKey();
     }
 
-    // NOTICE
+    // NOTIFICATIONS
 
     findUnreadMessages () {
         return this.relPopupNotifications().and({read: false});

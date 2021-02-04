@@ -4,11 +4,11 @@ const p = {};
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="form-attr form-group <%- p.required %> <%- p.css %>"
+<div class="form-attr form-group row <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-behaviors="<%= p.behaviors %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="control-label <%- p.labelCss %>"
+    <label class="col-form-label <%- p.labelCss %>"
            title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="number" placeholder="<%- p.placeholder %>"

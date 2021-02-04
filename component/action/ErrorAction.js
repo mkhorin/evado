@@ -32,7 +32,7 @@ module.exports = class ErrorAction extends Base {
             return true;
         }
         /*
-        if (controller.isPost()) {
+        if (controller.isPostRequest()) {
             return this.sendText(message);
         } //*/
         switch (status) {

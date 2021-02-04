@@ -14,8 +14,8 @@ module.exports = class DeleteExpiredFilesJob extends Base {
         });
     }
 
-    run () {
-        return this.deleteFiles();
+    async execute () {
+        await this.deleteFiles();
     }
 
     async deleteFiles () {

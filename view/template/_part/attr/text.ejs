@@ -6,10 +6,10 @@ const p = {
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="form-attr form-group <%- p.required %> <%- p.css %>"
+<div class="form-attr form-group row <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+    <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <textarea name="<%- p.name %>" class="form-control form-value" <%- p.required %>

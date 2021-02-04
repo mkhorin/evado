@@ -1,0 +1,47 @@
+<!-- _layout/frame/form -->
+<%
+const p = {
+    jam: 'Model',
+    url: _controller.getOriginalUrl(),
+    className: model.getBaseName(),
+    timestamp: _controller.timestamp,
+    save: true
+};
+if (typeof params !== 'undefined') {
+    Object.assign(p, params);
+}
+%>
+<div class="frame-box scroll-container"
+     data-tab="<%= blocks.tab %>"
+     data-title="<%= blocks.title %>"
+     data-t-tab="<%- blocks.tabTranslation %>"
+     data-t-title="<%- blocks.titleTranslation %>"
+     data-csrf="<%- _controller.getCsrfToken() %>">
+
+    <div class="frame-box-header scroll-header">
+        <div class="commands">
+            <% if (p.save) { %>
+            <button data-command="saveClose" class="btn-primary btn" type="button" title="Save and close">
+                <i class="fas fa-check"></i>
+            </button>
+            <% } %>
+            <div class="nav-group">
+                <button data-command="reload" class="btn-outline-secondary btn" type="button" title="Reload">
+                    <i class="fa fa-redo-alt"></i>
+                </button>
+            </div>
+            <% if (blocks.commands) { %>
+            <%- include(_view.get('_part/other/render'), {data: blocks.commands.get()}) %>
+            <% } %>
+        </div>
+    </div>
+    <div class="frame-box-body scroll-body">
+        <form class="model form" autocomplete="off" enctype="multipart/form-data"
+              data-jam="<%- p.jam %>" data-params="<%= JSON.stringify(p) %>">
+            <%- body %>
+        </form>
+    </div>
+    <div class="overlay">
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+</div>

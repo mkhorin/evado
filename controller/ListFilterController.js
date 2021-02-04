@@ -10,9 +10,9 @@ module.exports = class ListFilterController extends Base {
     static getConstants () {
         return {            
             METHODS: {
-                'inline-list': 'get',
-                'inline-create': 'post',
-                'inline-update': 'post'
+                'inlineList': 'get',
+                'inlineCreate': 'post',
+                'inlineUpdate': 'post'
             }
         };
     }

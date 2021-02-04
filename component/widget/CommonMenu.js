@@ -7,7 +7,7 @@ const Base = require('areto/view/Widget');
 
 module.exports = class CommonMenu extends Base {
 
-    run () {
+    execute () {
         const items = this.items || this.getDefaultItems();
         const active = this.getActiveItem(items, this.controller.getQueryParam('url'));
         return this.renderTemplate('_widget/commonMenu', {items, active});
@@ -32,7 +32,7 @@ module.exports = class CommonMenu extends Base {
             if (module.hidden) {
                 continue;
             }
-            if (previous && previous.getParam('separateNextCommonMenuItem')) {
+            if (previous?.getParam('separateNextCommonMenuItem')) {
                 items.push(this.getSeparatorItem());
             }
             items.push(this.getModuleItem(module));

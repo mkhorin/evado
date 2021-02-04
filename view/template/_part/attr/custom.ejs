@@ -1,15 +1,15 @@
 <!-- _part/attr/custom -->
 <%
 const p = {
-    contentCss: typeof contentCss === 'undefined' ? 'form-control-static' : contentCss
+    contentCss: typeof contentCss === 'undefined' ? 'form-control-plaintext' : contentCss
 };
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="form-attr form-group <%- p.css %>"
+<div class="form-attr form-group row <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+    <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <div class="<%- p.contentCss %>">

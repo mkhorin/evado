@@ -34,7 +34,7 @@ if (d.list === undefined || d.list === true) {
     d.list = _url(['list-related-select', Object.assign(urlParams, d.list)]);
 }
 const relUrl = typeof relRoute === 'undefined'
-    ? relation.model.getControllerClass().getBaseName()
+    ? relation.model.getControllerClass().getRouteName()
     : relRoute;
 
 if (d.viewTitle !== null) {
@@ -81,50 +81,56 @@ if (d.modalSort) {
 }
 const related = model.rel(attr);
 %>
-<div class="form-attr form-group <%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
-    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+<div class="form-attr form-group row <%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
+    <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <div class="box relation-select-box">
-            <input name="<%- p.name %>" type="hidden" class="form-value">
-            <div class="box-body">
-                <div class="list-commands">
-                    <% if (d.unlink) { %>
-                    <div class="btn-set">
-                        <button data-command="unlink" data-index="10" title="Remove" class="btn btn-default mr10"
-                                type="button">
-                            <span class="fa fa-unlink text-danger"></span>
-                        </button>
-                    </div>
-                    <% } if (d.create) { %>
-                    <button data-command="create" data-index="20" title="Create" class="btn btn-success btn-light" type="button">
-                        <span class="glyphicon glyphicon-plus"></span>
+        <input name="<%- p.name %>" type="hidden" class="form-value">
+        <div class="relation-select">
+            <div class="hidden-commands commands">
+                <% if (d.unlink) { %>
+                <div class="nav-group">
+                    <button data-command="unlink" data-index="10" title="Remove" type="button"
+                            class="btn-white btn-outline-danger btn">
+                        <i class="fa fa-unlink"></i>
                     </button>
-                    <% } if (d.update) { %>
-                    <button data-command="update" data-index="30" title="Edit" class="btn btn-warning btn-light" type="button">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </button>
-                    <% } if (d.delete) { %>
-                    <button data-command="delete" data-index="40" title="Delete" class="btn btn-white" type="button">
-                        <span class="glyphicon glyphicon-trash text-danger"></span>
-                    </button>
-                    <% } if (d.modalSort) { %>
-                    <button data-command="sort" data-index="50" title="Sort" class="btn btn-white" type="button">
-                        <span class="glyphicon glyphicon-sort"></span>
-                    </button>
-                    <% } if (typeof tools !== 'undefined') { %>
-                    <%- include(_view.get('_part/other/render'), {data: tools}) %>
-                    <% } %>
                 </div>
+                <% } if (d.create) { %>
+                <button data-command="create" data-index="20" title="Create" type="button"
+                        class="btn-white btn-outline-success btn">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <% } if (d.delete) { %>
+                <button data-command="delete" data-index="30" title="Delete" type="button"
+                        class="btn-white btn-outline-danger btn">
+                    <i class="far fa-trash-alt"></i>
+                </button>
+                <% } if (d.modalSort) { %>
+                <button data-command="sort" data-index="40" title="Sort" type="button"
+                        class="btn-white btn-outline-secondary btn">
+                    <i class="fas fa-sort"></i>
+                </button>
+                <% } if (typeof tools !== 'undefined') { %>
+                <%- include(_view.get('_part/other/render'), {data: tools}) %>
+                <% } %>
+            </div>
+            <div class="input-group">
                 <select class="form-control" <% if (d.multiple) { %>multiple<% } %>
                         data-params="<%= JSON.stringify(d) %>">
                     <% if (Array.isArray(related)) {
-                       for (const item of related) { %>
+                            for (const item of related) { %>
                     <option value="<%- item.getId() %>" selected><%= item.getTitle() %></option>
                     <% }} else if (related) { %>
                     <option value="<%- related.getId() %>" selected><%= related.getTitle() %></option>
                     <% } %>
                 </select>
+                <% if (d.update) { %>
+                <div class="input-group-append">
+                    <button data-command="update" title="Edit" type="button" class="btn-white btn-outline-info btn">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                </div>
+                <% } %>
             </div>
         </div>
         <div class="error-block"></div>

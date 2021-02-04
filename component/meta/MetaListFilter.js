@@ -49,12 +49,12 @@ module.exports = class MetaListFilter extends Base {
         if (!value) {
             return this.getEmptyValueCondition(attr, op);
         }
-        const metaClass = this.class.meta.getClass(value);
-        if (!metaClass) {
+        const cls = this.class.meta.getClass(value);
+        if (!cls) {
             return this.throwInvalidValue(value);
         }
-        value = metaClass.isAbstract() ? [] : [metaClass.name];
-        value.push(...metaClass.getRealDescendants().map(({name}) => name));
+        value = cls.isAbstract() ? [] : [cls.name];
+        value.push(...cls.getRealDescendants().map(({name}) => name));
         return this.formatSelectorCondition(attr, op, value);
     }
 

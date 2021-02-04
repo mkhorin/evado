@@ -9,7 +9,7 @@ module.exports = class Notification extends Base {
 
     async execute (data) {
         data = await this.prepareData(data);
-        return this.module.getNotifier().executeByNames(this.notice, data);
+        return this.module.getNotifier().executeByNames(this.notification, data);
     }
 
     prepareData () {

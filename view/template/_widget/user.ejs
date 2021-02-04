@@ -2,38 +2,41 @@
 <%
 const user = _controller.user;
 %>
-<% if (user.identity) { %>
-<li class="user-body">
-    <p>
-        <span class="fa fa-user text-primary mr5"></span>
-        <b><%- _controller.user.getTitle() %></b>
-    </p>
-    <% if (user.assignments) { %>
-    <div class="user-roles">
-        <label data-t="">Roles:</label>
-        <div class="user-roles-list">
-            <% for (const role of roles) { %>
-            <div data-t=""><%- role %></div>
-            <% } %>
+<div class="card">
+    <% if (user.identity) { %>
+    <div class="card-body">
+        <div class="user-name">
+            <i class="text-primary fa fa-user"></i>
+            <b><%- _controller.user.getTitle() %></b>
         </div>
-    </div>
-    <% } %>
-</li>
-<li class="user-footer">
-    <form action="auth/sign-out" method="post">
-        <input type="hidden" name="csrf" value="<%- _controller.getCsrfToken() %>">
-        <div class="pull-left">
-            <button type="submit" class="btn btn-warning btn-flat" data-t="">Sign out</button>
-        </div>
-        <% if (enablePasswordChange) { %>
-        <div class="pull-right">
-            <a href="<%- changePasswordUrl %>" class="btn btn-default btn-flat" data-t="">Change password</a>
+        <% if (user.assignments) { %>
+        <div class="user-roles">
+            <div class="user-role-label" data-t="">Roles:</div>
+            <div class="user-role-list">
+                <% for (const role of roles) { %>
+                <div class="user-role" data-t=""><%- role %></div>
+                <% } %>
+            </div>
         </div>
         <% } %>
-    </form>
-</li>
-<% } else { %>
-<li class="user-footer">
-    <a href="auth/sign-in" class="btn btn-default btn-flat" data-t="">Sign in</a>
-</li>
-<% } %>
+    </div>
+    <div class="card-footer">
+        <form action="auth/sign-out" method="post">
+            <input type="hidden" name="csrf" value="<%- _controller.getCsrfToken() %>">
+            <div class="float-left">
+                <button type="submit" class="btn-danger btn" data-t="">Sign out</button>
+            </div>
+            <% if (enablePasswordChange) { %>
+            <div class="float-right">
+                <a href="<%- changePasswordUrl %>"
+                   class="btn-outline-dark btn" data-t="">Change password</a>
+            </div>
+            <% } %>
+        </form>
+    </div>
+    <% } else { %>
+    <div class="card-footer">
+        <a href="auth/sign-in" class="btn-primary btn w-100" data-t="">Sign in</a>
+    </div>
+    <% } %>
+</div>

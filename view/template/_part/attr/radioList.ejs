@@ -9,30 +9,30 @@ if (items === 'labels') {
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="form-attr <%- p.css %> <%- p.required %> form-group"
+<div class="form-attr <%- p.css %> <%- p.required %> form-group row"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="control-label <%- p.labelCss %>" data-t="<%- p.translate %>"><%- p.label %></label>
+    <label class="<%- p.labelCss %> col-form-label" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
-        <div class="radio-list">
+        <div class="form-check-list-inline">
             <% if (!p.required && typeof emptyText !== 'undefined') { %>
-            <label class="radio radio-inline">
-                <input type="radio" value="">
-                <span data-t="<%- p.translate %>"><%- emptyText %></span>
-            </label>
+            <div class="form-check form-check-inline form-check-list">
+                <input class="form-check-input" value="" type="radio">
+                <label class="form-check-label" data-t="<%- p.translate %>"><%- emptyText %></label>
+            </div>
             <% } if (Array.isArray(items)) {
                for (const item of items) { %>
-            <label class="radio radio-inline">
-                <input value="<%- item.value %>" type="radio">
-                <span title="<%= item.hint %>" data-t="<%- p.translate %>"><%- item.text %></span>
-            </label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" value="<%- item.value %>" type="radio">
+                <label class="form-check-label" title="<%= item.hint %>" data-t="<%- p.translate %>"><%- item.text %></label>
+            </div>
             <% }} else {
                for (const key of Object.keys(items)) { %>
-            <label class="radio radio-inline">
-                <input value="<%- key %>" type="radio">
-                <span data-t="<%- p.translate %>"><%- items[key] %></span>
-            </label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" value="<%- key %>" type="radio">
+                <label class="form-check-label" data-t="<%- p.translate %>"><%- items[key] %></label>
+            </div>
             <% }} %>
         </div>
         <div class="error-block"></div>

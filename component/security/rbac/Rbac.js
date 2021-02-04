@@ -178,9 +178,9 @@ module.exports = class Rbac extends Base {
         for (const item of this.metaItems) {
             const index = item.key.lastIndexOf('.');
             const prefix = index < 0 ? '' : item.key.substring(0, index + 1);
-            const metaClass = this.baseMeta.getClass(item.class);
-            if (metaClass) {
-                for (const {name} of metaClass.getDescendants()) {
+            const cls = this.baseMeta.getClass(item.class);
+            if (cls) {
+                for (const {name} of cls.getDescendants()) {
                     const child = Object.assign({}, item);
                     child.class = name;
                     child.key = prefix + name;

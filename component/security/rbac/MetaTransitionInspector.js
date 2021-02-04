@@ -1,11 +1,11 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ *
+ * transition is denied if transition is denied
+ * transition is allowed if transition is allowed
+ * transitions is allowed if model update is allowed
  */
 'use strict';
-
-// transition is denied if transition is denied
-// transition is allowed if transition is allowed
-// transitions is allowed if model update is allowed
 
 const Base = require('areto/security/rbac/Inspector');
 

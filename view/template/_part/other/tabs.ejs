@@ -6,13 +6,12 @@ const p = {
 };
 %>
 <div class="<%- p.cssClass %> tabs" data-jam="<%- p.jam %>">
-    <ul class="nav nav-tabs" role="tablist">
+    <div class="nav-tabs nav" role="tablist">
     <% for (const item of items) { %>
-    <li class="nav-tab <%- item.active ? 'active' : '' %>" data-id="<%- item.id %>">
-        <a href="#" data-t=""><%- item.label || item.id %></a>
-    </li>
+    <a href="#" class="nav-link nav-item <%- item.active ? 'active' : '' %>"
+       data-id="<%- item.id %>" data-t=""><%- item.label || item.id %></a>
     <% } %>
-    </ul>
+    </div>
     <div class="tab-content">
         <% for (const {active, id, content} of items) { %>
         <div class="tab-pane <%- active ? 'active' : '' %>" data-id="<%- id %>">

@@ -21,7 +21,7 @@ module.exports = class ListenerConsole extends Base {
             ...data
         });
         model.set('handlers', await this.getRelatedIds('observer/EventHandler', data.handlers));
-        model.set('notices', await this.getRelatedIds('notifier/Notice', data.notices));
+        model.set('notifications', await this.getRelatedIds('notifier/Notification', data.notifications));
         model.set('tasks', await this.getRelatedIds('model/Task', data.tasks));
         await this.saveModel(model, name);
     }

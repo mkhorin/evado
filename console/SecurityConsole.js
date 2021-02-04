@@ -35,13 +35,13 @@ module.exports = class SecurityConsole extends Base {
         if (this.params.clearUsers) {
             await this.clearUsers();
         }
-        this.log('info', 'Clear security...');
+        this.log('info', 'Clearing security...');
         await this.getStore().clearAll();
         this.log('info', 'Security cleared');
     }
 
     async clearUsers () {
-        this.log('info', 'Delete users...');
+        this.log('info', 'Deleting users...');
         const user = this.spawnUser();
         await user.getDb().truncate(user.getTable());
         const password = this.spawn('security/UserPassword');
@@ -50,7 +50,7 @@ module.exports = class SecurityConsole extends Base {
     }
 
     async createUsers () {
-        this.log('info', 'Create users...');
+        this.log('info', 'Creating users...');
         for (const data of this.getUserItems()) {
             await this.createUser(data);
         }
@@ -95,7 +95,7 @@ module.exports = class SecurityConsole extends Base {
     }
 
     async createSecurity () {
-        this.log('info', 'Create security...');
+        this.log('info', 'Creating security...');
         await this.getRbac().load();
         const data = this.app.getConfig('security');
         this.normalizeConfigData(data.rules);

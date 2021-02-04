@@ -1,9 +1,9 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ *
+ * Check model attribute has a reference to a model that has an attribute with the current user ID
  */
 'use strict';
-
-// check model attribute has a reference to a model that has an attribute with the current user ID
 
 const Base = require('./BaseRule');
 
@@ -36,8 +36,8 @@ module.exports = class RefUserRule extends Base {
 
     async resolveRefUser () {
         if (!this._refUser) {
-            const metaClass = this.getTarget().class.getAttr(this.refAttr).getRefClass();
-            this._refUser = await metaClass.find({[this.userAttr]: this.getUserId()}).id();
+            const cls = this.getTarget().class.getAttr(this.refAttr).getRefClass();
+            this._refUser = await cls.find({[this.userAttr]: this.getUserId()}).id();
         }
         return this._refUser;
     }

@@ -1,28 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%- _controller.language %>">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <base href="<%- _baseUrl %>">
+
     <title><%- blocks.title %> - <%- _module.getTitle() %></title>
-    <%- include(_view.get('_part/asset/style/defaults')) %>
+
+    <%- include(_view.get('_part/asset/style/main')) %>
+
     <link rel="stylesheet" href="style/module.css">
 </head>
 <body class="login-page">
 
+<div class="container-fluid">
     <div class="login-box">
-        <div class="login-logo">
+        <div class="login-box-head">
             <a href="/"><b><%- _module.getTitle() %></b></a>
         </div>
         <div class="login-box-body">
+
             <%- body %>
+
         </div>
     </div>
+</div>
 
-    <%- include(_view.get('_part/asset/script/jam')) %>
-    <%- include(_view.get('_part/asset/script/defaults')) %>
+<%- include(_view.get('_part/asset/script/main')) %>
 
-    <script src="script/init.js"></script>
+<script src="script/init.js"></script>
 </body>
 </html>

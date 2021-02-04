@@ -20,7 +20,7 @@ module.exports = class Console extends Base {
             EventHandlerConsole: require('./EventHandlerConsole'),
             IndexingConsole: require('./IndexingConsole'),
             ListenerConsole: require('./ListenerConsole'),
-            NoticeConsole: require('./NoticeConsole'),
+            NotificationConsole: require('./NotificationConsole'),
             SecurityConsole: require('./SecurityConsole'),
             SecurityExportConsole: require('./SecurityExportConsole'),
             SecurityImportConsole: require('./SecurityImportConsole'),
@@ -65,13 +65,21 @@ module.exports = class Console extends Base {
     // ASSET
 
     installAssets (params) {
-        return this.execute('install', this.AssetConsole, params);
+        return params.skipAssets
+            ? this.log('info', 'Asset installation skipped')
+            : this.execute('install', this.AssetConsole, params);
     }
 
-    deployAssets (params = {}) {
-        if (!params.skipAssetDeploy) {
-            return this.execute('deploy', this.AssetConsole, params);
-        }
+    buildAssets (params) {
+        return params.skipAssets
+            ? this.log('info', 'Asset building skipped')
+            : this.execute('build', this.AssetConsole, params);
+    }
+
+    deployAssets (params) {
+        return params.skipAssets
+            ? this.log('info', 'Asset deployment skipped')
+            : this.execute('deploy', this.AssetConsole, params);
     }
 
     // META
@@ -120,10 +128,10 @@ module.exports = class Console extends Base {
         return this.execute('create', this.ListenerConsole, params);
     }
 
-    // NOTICES
+    // NOTIFICATIONS
 
-    createNotices (params) {
-        return this.execute('create', this.NoticeConsole, params);
+    createNotifications (params) {
+        return this.execute('create', this.NotificationConsole, params);
     }
 
     // SECURITY
@@ -180,9 +188,9 @@ module.exports = class Console extends Base {
 
     async importStudioData () {
         const studio = this.app.getModule('studio');
-        this.log('info', 'Clear studio data...');
+        this.log('info', 'Clearing studio data...');
         await studio.dropAll();
-        this.log('info', 'Import studio data...');
+        this.log('info', 'Importing studio data...');
         await studio.importMeta();
         this.log('info', 'Studio data imported');
     }

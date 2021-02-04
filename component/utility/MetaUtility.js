@@ -16,7 +16,7 @@ module.exports = class MetaUtility extends Base {
             return true;
         }
         const data = await this.resolveMetaParams();
-        return data.class && data.class.name === this.targetClass;
+        return data.class?.name === this.targetClass;
     }
 
     getBaseMeta () {

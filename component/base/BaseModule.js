@@ -51,7 +51,7 @@ module.exports = class BaseModule extends Base {
         return this.label || super.getTitle();
     }
 
-    createNotification () {
+    notify () {
         return this.getNotifier().execute(...arguments);
     }
 

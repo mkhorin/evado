@@ -2,12 +2,8 @@
 <% block('title', _t('Bad request')) %>
 
 <div class="error-page">
-    <h2 class="headline text-yellow"> 400</h2>
     <div class="error-content">
-        <h3>
-            <i class="fa fa-exclamation text-yellow"></i>
-            <%- blocks.title %>
-        </h3>
-        <p><%- _t('Invalid requested parameters') %></p>
+        <h1 class="error-header"><%- blocks.title %></h1>
+        <div class="error-text"><%- _t('Invalid requested parameters') %></div>
     </div>
 </div>

@@ -1,15 +1,15 @@
 /**
  * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
+ *
+ * sharp.dimens.io/en/stable/api-resize
+ * sharp.dimens.io/en/stable/api-output/#jpeg
+ * sharp.dimens.io/en/stable/api-composite/#composite
  */
 'use strict';
 
 const Base = require('areto/base/Base');
 
 module.exports = class ThumbnailSize extends Base {
-
-    // sharp.dimens.io/en/stable/api-resize
-    // sharp.dimens.io/en/stable/api-output/#jpeg
-    // sharp.dimens.io/en/stable/api-composite/#composite
 
     constructor (config) {
         super({

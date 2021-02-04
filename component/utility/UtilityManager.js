@@ -15,17 +15,17 @@ module.exports = class UtilityManager extends Base {
     }
 
     async init () {
-        this._utilityMap = this.resolveUtilityMap(this.utilities);
+        this._utilityMap = this.resolveUtilityMap(this.utilities) || {};
         this.resolveUtilityConfigurations();
         this._utilities = Object.values(this._utilityMap);
         ObjectHelper.addKeyAsNestedValue('id', this._utilityMap);
     }
 
     resolveUtilityMap (data) {
-        return (typeof data === 'string' ? this.resolveFromConfig(data) : data) || {};
+        return typeof data === 'string' ? this.resolveFromConfiguration(data) : data;
     }
 
-    resolveFromConfig (key) {
+    resolveFromConfiguration (key) {
         return this.module.config.mergeWithParents(key);
     }
 
@@ -50,7 +50,7 @@ module.exports = class UtilityManager extends Base {
     }
 
     getUtilityConfig (id) {
-        return Object.prototype.hasOwnProperty.call(this._utilityMap, id) ? this._utilityMap[id] : null;
+        return ObjectHelper.getValue(id, this._utilityMap);
     }
 
     async createUtilities (params) {

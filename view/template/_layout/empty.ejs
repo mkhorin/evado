@@ -1,31 +1,31 @@
+<!-- _layout/empty -->
 <% layout(_view.get('_layout/main')) %>
 
-<!-- _layout/content -->
-<div class="wrapper">
+<header class="main-header">
+    <nav class="navbar-super navbar navbar-dark">
+        <%- include(_view.get('_part/nav/logo')) %>
+    </nav>
+    <nav class="navbar navbar-expand-md navbar-dark">
 
-    <header class="main-header">
-        <a href="" class="logo" title="Evado">
-            <span class="logo-mini"><b>E</b></span>
-            <span class="logo-lg"><b>Evado</b></span>
-        </a>
-        <nav class="navbar-static-top navbar" role="navigation" class>
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button"></a>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <%- include(_view.get('_part/nav/userToggle')) %>
-                </ul>
-            </div>
-            <%- include(_view.get('_part/nav/commonMenuToggle')) %>
-            <%- include(_view.get('_part/tool/modalBack')) %>
-        </nav>
-    </header>
+        <%- include(_view.get('_part/nav/logo')) %>
+        <%- include(_view.get('_part/nav/commonMenuToggle')) %>
+        <%- include(_view.get('_part/nav/frameStackBack')) %>
 
-    <div id="content-wrapper" class="content-wrapper">
-        <section class="content">
-            <%- include(_view.get('_part/other/alert')) %>
+        <div class="ml-auto"></div>
 
-            <%- body %>
+        <%- _view.placeWidget('notifications') %>
+        <%- include(_view.get('_part/nav/userToggle')) %>
+    </nav>
+</header>
 
-        </section>
+<section class="main-content">
+    <div class="main-container container-fluid">
+
+        <%- include(_view.get('_part/other/alert')) %>
+
+        <%- body %>
+
     </div>
-</div>
+</section>
+
+<%- include(_view.get('_part/other/footer')) %>

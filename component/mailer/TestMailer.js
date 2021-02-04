@@ -9,7 +9,6 @@ module.exports = class TestMailer extends Base {
 
     constructor (config) {
         super(config);
-
         this.settings = Object.assign({
             host: 'smtp.ethereal.email',
             port: 587

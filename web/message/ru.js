@@ -1,20 +1,22 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ *
+ * Extend default translations
+ *
+ * Use: Jam.t('Some text')
+ * Use: <span data-t="">Some text</span>
+ * Use: <div title="Some text" data-t=""></div>
+ * Use: <input placeholder="Some text" type="text" data-t="">
+ *
+ * Define custom translation category
+ *
+ * Use: Jam.t('Some text', 'custom')
+ * Use: <span data-t="custom">Some text</span>
+ * Use: <div title="Some text" data-t="custom"></div>
+ * Use: <input placeholder="Some text" type="text" data-t="custom">
+ * Use: <div title="Some text" data-t-title="custom" data-t="">Text</div>
  */
 'use strict';
-
-// web/jam/other/I18n.js
-
-// extend default translation category
-// use: <span data-t="">Some text</span>
-// use: <div title="Some text"></div>
-// use: <input placeholder="Some text" type="text" />
-
-// define custom translation category
-// use: <span data-t="custom">Any text</span>
-// use: <div data-t="custom" title="Any text"></div>
-// use: <input data-t="custom" placeholder="Any text" type="text"/>
-// use: <div data-t-title="customTitle" title="Any title" data-t="custom">Any text</div>
 
 Jam.I18n.defaults = {
 
@@ -38,7 +40,7 @@ Jam.I18n.defaults = {
     'All notifications': 'Все уведомления',
     'Apply': 'Применить',
 
-    'Back to modal': 'Вернуться к модальному окну',
+    'Back to page tabs': 'Вернуться к вкладкам страниц',
     'Blocked': 'Блокирован',
 
     'Can not restore ambiguous values': 'Не могу восстановить неоднозначные значения',
@@ -46,7 +48,7 @@ Jam.I18n.defaults = {
     'Change password': 'Изменить пароль',
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
-    'Close the last modal tab': 'Закройте последнюю модальную вкладку',
+    'Close the last stack frame first': 'Сначала закройте последний фрейм стека',
     'Close without saving?': 'Закрыть без сохранения?',
     'Confirm': 'Подтвердить',
     'Confirmation': 'Подтверждение',
@@ -74,6 +76,7 @@ Jam.I18n.defaults = {
 
     'Edit': 'Редактировать',
     'Email': 'Email',
+    'Error': 'Ошибка',
     'Export': 'Экспортировать',
 
     'File': 'Файл',
@@ -89,14 +92,16 @@ Jam.I18n.defaults = {
     'Homepage': 'Стартовая страница',
 
     'Import': 'Импортировать',
+    'Information': 'Информация',
     'Index definitions': 'Определения индексов',
     'Index definitions not found in class:': 'Определения индексов не найдены в классе',
     'Indexing': 'Индексирование',
     'Initial data': 'Исходные данные',
     'Input ID...': 'Введите ID...',
     'Input number...': 'Введите число...',
-    'Input value...': 'Введите значение...',
+    'Input value...': 'Введите значение...',    
     'Invalid class file': 'Неверный файл класса',
+    'Invalid metadata': 'Неверный файл класса',
     'Invalid verification code': 'Неверный проверочный код',
 
     'Job': 'Работа',
@@ -110,7 +115,8 @@ Jam.I18n.defaults = {
 
     'Name': 'Название',
     'No': 'Нет',
-    'No saved filters yet': 'Пока нет сохраненных фильтров',
+    'No saved filters yet': 'Нет сохраненных фильтров',
+    'Notification': 'Уведомление',
     'Notifications': 'Уведомления',
 
     'Object select box': 'Выпадающий список объектов',
@@ -147,6 +153,7 @@ Jam.I18n.defaults = {
     'Select box': 'Выпадающий список',
     'Select column to sort': 'Выберите колонку для сортировки',
     'Select date...': 'Выберите дату...',
+    'Select date and time...': 'Выберите дату и время...',
     'Select filter': 'Выберите фильтр',
     'Select from existing objects': 'Выбрать из существующих объектов',
     'Select items for action': 'Выберите объекты для действия',
@@ -175,6 +182,7 @@ Jam.I18n.defaults = {
     'Utilities': 'Утилиты',
 
     'Value': 'Значение',
+    'Value cannot be blank': 'Значение не может быть пустым',
     'View': 'Просмотр',
 
     'Warning': 'Предупреждение',

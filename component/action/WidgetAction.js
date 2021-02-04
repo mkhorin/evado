@@ -14,7 +14,7 @@ module.exports = class WidgetAction extends Base {
             throw new BadRequest('Widget not found');
         }
         widget.widgetAction = this;
-        this.send(await widget.execute(view.getRenderParams()));
+        this.send(await widget.resolveContent(view.getRenderParams()));
     }
 };
 

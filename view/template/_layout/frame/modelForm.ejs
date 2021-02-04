@@ -1,0 +1,74 @@
+<!-- _layout/frame/modelForm -->
+<%
+const p = {
+    jam: 'Model',
+    url: _controller.getOriginalUrl(),
+    id: model.getId(),
+    key: model.PK,
+    className: model.getBaseName(),
+    timestamp: _controller.timestamp,
+    delete: _url('delete'),
+    behaviors: block('behaviors').get()
+};
+if (typeof params !== 'undefined') {
+    Object.assign(p, params);
+}
+%>
+<div class="frame-box scroll-container"
+     data-tab="<%= blocks.tab %>"
+     data-title="<%= blocks.title %>"
+     data-t-tab="<%- blocks.tabTranslation %>"
+     data-t-title="<%- blocks.titleTranslation %>"
+     data-csrf="<%- _controller.getCsrfToken() %>">
+
+    <div class="frame-box-header scroll-header">
+        <div class="commands">
+            <div class="nav-group">
+                <button data-command="saveClose" class="btn-primary btn" type="button" title="Save and close">
+                    <i class="fas fa-check"></i>
+                </button>
+                <button data-command="save" class="btn-info btn" type="button" title="Save">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+            <div class="nav-group">
+                <button data-command="reload" class="btn-outline-secondary btn" type="button" title="Reload form">
+                    <i class="fa fa-redo-alt"></i>
+                </button>
+            </div>
+            <% if (p.id) { %>
+                <button data-command="copyId" class="btn-outline-secondary btn" type="button" title="Copy ID">ID</button>
+                <% if (p.clone) { %>
+                <button data-command="clone" class="btn-outline-success btn" type="button" title="Clone">
+                    <i class="far fa-clone"></i>
+                </button>
+            <% }} %>
+
+            <%- include(_view.get('_part/tool/modelHistory')) %>
+
+            <% if (blocks.commands) { %>
+            <%- include(_view.get('_part/other/render'), {data: blocks.commands.get()}) %>
+            <% } %>
+
+            <% if (p.help) { %>
+            <span class="model-help fa fa-question-circle" title="<%= p.help %>"></span>
+            <% } %>
+
+            <% if (p.id && p.delete) { %>
+            <button data-command="delete" class="ml-auto btn-outline-danger btn" type="button" title="Delete">
+                <i class="far fa-trash-alt"></i>
+            </button>
+            <% } %>
+        </div>
+    </div>
+    <div class="frame-box-body scroll-body">
+        <form class="model form" autocomplete="off" enctype="multipart/form-data"
+              data-jam="<%- p.jam %>"
+              data-params="<%= JSON.stringify(p) %>">
+            <%- body %>
+        </form>
+    </div>
+    <div class="overlay">
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+</div>

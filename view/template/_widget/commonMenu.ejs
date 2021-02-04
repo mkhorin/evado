@@ -1,10 +1,9 @@
 <!-- _widget/commonMenu -->
-
-<% for (const item of items) {
+<%
+for (const item of items) {
    if (item.name === 'separator') { %>
-<li role="separator" class="divider"></li>
+<li class="dropdown-divider"></li>
 <% } else { %>
-<li class="<%- item === active ? 'active' : '' %>">
-    <a href="<%- item.url %>" data-t=""><%- item.text %></a>
-</li>
+<a class="dropdown-item <%- item === active ? 'active' : '' %>"
+   href="<%- item.url %>" data-t=""><%- item.text %></a>
 <% }} %>

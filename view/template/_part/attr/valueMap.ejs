@@ -4,37 +4,37 @@ const p = {handler: 'ValueMap'};
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="value-map form-attr form-group <%- p.required %>"
+<div class="value-map form-attr form-group row <%- p.required %>"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+    <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="hidden" value="<%= p.value %>" class="form-value">
         <div class="value-map-items">
             <div class="value-map-item">
                 <div class="row">
-                    <div class="col-xs-6">
+                    <div class="col-6">
                         <input type="text" <%- p.required %>
                                class="form-control text-right param value-param" placeholder="Value">
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-6">
                         <input type="text" <%- p.required %>
                                class="form-control param text-param" placeholder="Text">
                     </div>
                 </div>
                 <div class="value-map-item-control btn-group">
-                    <button data-id="add" type="button" class="btn btn-success btn-light" title="Add">
-                        <span class="glyphicon glyphicon-plus"></span>
+                    <button data-id="add" type="button" class="btn-outline-success btn" title="Add">
+                        <i class="fas fa-plus"></i>
                     </button>
-                    <button data-id="down" type="button" class="btn btn-white btn-light" title="Down">
-                        <span class="glyphicon glyphicon-menu-down"></span>
+                    <button data-id="down" type="button" class="btn-outline-secondary btn" title="Down">
+                        <i class="fas fa-chevron-down"></i>
                     </button>
-                    <button data-id="up" type="button" class="btn btn-white btn-light" title="Up">
-                        <span class="glyphicon glyphicon-menu-up"></span>
+                    <button data-id="up" type="button" class="btn-outline-secondary btn" title="Up">
+                        <i class="fas fa-chevron-up"></i>
                     </button>
-                    <button data-id="delete" type="button" class="btn btn-default" title="Delete">
-                        <span class="text-danger glyphicon-remove glyphicon"></span>
+                    <button data-id="delete" type="button" class="btn-outline-danger btn" title="Delete">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>

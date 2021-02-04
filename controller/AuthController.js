@@ -16,23 +16,23 @@ module.exports = class AuthController extends Base {
                 'access': {
                     Class: require('areto/filter/AccessControl'),
                     rules: [{
-                        actions: ['change-password'],
+                        actions: ['changePassword'],
                         match: action => action.controller.canChangePassword() ? undefined : false
                     },{
-                        actions: ['sign-up'],
+                        actions: ['signUp'],
                         match: action => action.controller.canSignUp() ? undefined /* to continue rules */ : false
                     },{
-                        actions: ['request-reset', 'reset-password'],
+                        actions: ['requestReset', 'resetPassword'],
                         match: action => action.controller.canResetPassword() ? undefined : false
                     },{
-                        actions: ['sign-in', 'sign-up', 'request-reset', 'reset-password'],
+                        actions: ['signIn', 'signUp', 'requestReset', 'resetPassword'],
                         permissions: ['?'],
                         deny: action => action.render('signed', {model: action.user.identity})
                     }]
                 }
             },
             METHODS: {
-                'sign-out': 'post'
+                'signOut': 'post'
             }
         };
     }
@@ -43,7 +43,7 @@ module.exports = class AuthController extends Base {
         if (model.isBlocked()) {
             return this.blockByRateLimit(model.rateLimitModel);
         }
-        if (this.isGet()) {
+        if (this.isGetRequest()) {
             return this.render('signIn', {model});
         }
         model.captchaAction = this.createAction('captcha');
@@ -64,7 +64,7 @@ module.exports = class AuthController extends Base {
 
     async actionSignUp () {
         const model = this.spawn('model/auth/SignUpForm');
-        if (this.isGet()) {
+        if (this.isGetRequest()) {
             return this.render('signUp', {model});
         }
         model.captchaAction = this.createAction('captcha');
@@ -81,7 +81,7 @@ module.exports = class AuthController extends Base {
 
     async actionChangePassword () {
         const model = this.spawn('model/auth/ChangePasswordForm');
-        if (this.isGet()) {
+        if (this.isGetRequest()) {
             return this.render('changePassword', {model});
         }
         this.checkCsrfToken();
@@ -95,7 +95,7 @@ module.exports = class AuthController extends Base {
 
     async actionRequestReset () {
         const model = this.spawn('model/auth/RequestResetForm');
-        if (this.isGet()) {
+        if (this.isGetRequest()) {
             return this.render('requestReset', {model});
         }
         model.captchaAction = this.createAction('captcha');
@@ -110,7 +110,7 @@ module.exports = class AuthController extends Base {
 
     async actionResetPassword () {
         const model = this.spawn('model/auth/ResetPasswordForm');
-        if (this.isGet()) {
+        if (this.isGetRequest()) {
             return this.render('resetPassword', {model});
         }
         await model.load(this.getPostParams());
@@ -125,7 +125,7 @@ module.exports = class AuthController extends Base {
 
     async actionRequestVerification () {
         const model = this.spawn('model/auth/RequestVerificationForm');
-        if (this.isGet()) {
+        if (this.isGetRequest()) {
             return this.render('requestVerification', {model});
         }
         model.captchaAction = this.createAction('captcha');
@@ -164,7 +164,7 @@ module.exports = class AuthController extends Base {
     }
 
     blockByRateLimit (model) {
-        return this.isGet()
+        return this.isGetRequest()
             ? this.setHttpStatus(403).render('blocked', {model})
             : this.reload();
     }

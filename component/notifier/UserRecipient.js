@@ -15,6 +15,6 @@ module.exports = class UserRecipient extends Base {
     }
 
     getUsers (data) {
-        return data && data.model && data.model.getNestedValue(this.userAttr);
+        return data?.model?.getNestedValue(this.userAttr);
     }
 };

@@ -9,7 +9,9 @@ module.exports = class AssetConsole extends Base {
 
     constructor (config) {
         super({
-            ModuleAsset: require('./ModuleAsset'),
+            assetBuild: require('./asset/AssetBuild'),
+            assetDeploy: require('./asset/AssetDeploy'),
+            assetInstall: require('./asset/AssetInstall'),
             ...config
         });
         this.params = Object.assign(this.getDefaultParams(), this.params);
@@ -34,34 +36,35 @@ module.exports = class AssetConsole extends Base {
     }
 
     async install () {
-        await this.execute('install', this.getModule());
-        this.log('info', 'Vendors installed. Need to deploy assets to publish');
-        await PromiseHelper.setImmediate();
+        await this.execute(this.assetInstall, this.getModule());
+        this.log('info', 'Assets installed. Deploy assets to publish');
+    }
+
+    async build () {
+        await this.execute(this.assetBuild, this.getModule());
+        this.log('info', 'Assets built. Deploy assets to publish');
     }
 
     async deploy () {
-        await this.execute('deploy', this.getModule());
+        await this.execute(this.assetDeploy, this.getModule());
         this.log('info', 'Assets deployed');
-        await PromiseHelper.setImmediate();
     }
 
-    async execute (method, module) {
-        const asset = this.createModuleAsset(module);
-        await asset[method]();
+    async execute (config, module) {
+        const asset = this.createModuleAsset(config, module);
+        await asset.execute();
         if (this.params.withModules) {
-            for (const child of module.getModules()) {
-                await this.execute(method, child);
+            for (const child of module.modules) {
+                await this.execute(config, child);
             }
         }
     }
 
-    createModuleAsset (module) {
-        return this.spawn(this.ModuleAsset, {console: this, module});
+    createModuleAsset (config, module) {
+        return this.spawn(config, {console: this, module});
     }
 
     log () {
         this.owner.log(...arguments);
     }
 };
-
-const PromiseHelper = require('areto/helper/PromiseHelper');

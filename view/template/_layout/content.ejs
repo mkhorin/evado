@@ -1,50 +1,46 @@
 <% layout(_view.get('_layout/main')) %>
 
-<!-- _layout/content -->
-<div class="wrapper">
-
-    <header class="main-header">
+<header class="main-header">
+    <nav class="navbar-super navbar navbar-dark">
+        <%- include(_view.get('_part/nav/logo')) %>
+    </nav>
+    <nav class="navbar navbar-expand-md navbar-dark">
 
         <%- include(_view.get('_part/nav/logo')) %>
 
-        <nav class="navbar navbar-static-top" role="navigation" class>
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button"></a>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <%- _view.placeWidget('notifications') %>
-                    <%- include(_view.get('_part/nav/userToggle')) %>
-                </ul>
-            </div>
-            <%- include(_view.get('_part/nav/commonMenuToggle')) %>
-            <%- include(_view.get('_part/tool/modalBack')) %>
-        </nav>
-    </header>
+        <button class="sidebar-toggle nav-btn nav-btn-primary btn" type="button" data-jam="SidebarToggle">
+            <i class="fas fa-chevron-left"></i>
+        </button>
 
-    <aside class="main-sidebar">
-        <section class="sidebar">
-            <div>
-                <%- _view.placeWidget('sideMenu') %>
-            </div>
-        </section>
-    </aside>
+        <%- include(_view.get('_part/nav/commonMenuToggle')) %>
+        <%- include(_view.get('_part/nav/frameStackBack')) %>
 
-    <div id="content-wrapper" class="content-wrapper">
-        <section class="content-header">
+        <div class="ml-auto"></div>
 
-            <%- include(_view.get('_part/other/alert')) %>
+        <%- _view.placeWidget('notifications') %>
+        <%- include(_view.get('_part/nav/userToggle')) %>
+    </nav>
+</header>
 
-            <h1 data-t=""><%- blocks.title %></h1>
-        </section>
-        <section class="content">
+<aside class="main-sidebar">
+    <%- _view.placeWidget('sideMenu') %>
+</aside>
 
-            <%- body %>
+<section class="main-content">
+    <div class="main-container container-fluid">
 
-        </section>
+        <%- include(_view.get('_part/other/alert')) %>
+
+        <h1 class="content-header" data-t=""><%- blocks.title %></h1>
+
+        <%- body %>
+
     </div>
+</section>
 
-    <%- include(_view.get('_part/other/footer')) %>
+<div class="global-loader overlay">
+    <i class="fa fa-spinner fa-spin"></i>
 </div>
 
-<%- include(_view.get('_part/other/dialog')) %>
-<%- include(_view.get('_part/other/notice')) %>
-
+<%- include(_view.get('_part/other/footer')) %>
+<%- include(_view.get('_part/other/frameStack')) %>

@@ -8,7 +8,7 @@ const Base = require('areto/base/Controller');
 module.exports = class BaseController extends Base {
 
     getReferrer () {
-        const url = this.isGet()
+        const url = this.isGetRequest()
             ? this.getHttpHeader('referrer')
             : this.getPostParam('referrer');
         return url ? url : '';
@@ -51,7 +51,7 @@ module.exports = class BaseController extends Base {
     }
 
     checkCsrfToken () {
-        if (this.user.auth.csrf && this.isPost()) {
+        if (this.user.auth.csrf && this.isPostRequest()) {
             const token = this.getCsrfToken();
             if (token && this.getPostParam('csrf') !== token) {
                 throw new BadRequest('Invalid CSRF token');

@@ -177,9 +177,10 @@ module.exports = class MetaAttrInspector extends Base {
         }
     }
 
-    // check state AND object target types ONLY
-    // view type and above have already been solved with execute
-
+    /**
+     * Check state and object target types ONLY
+     * View type and above have already been solved with execute
+     */
     resolveObjectTarget (model) {
         const id = model.getId().toString();
         const state = model.getState();

@@ -5,7 +5,7 @@ if (typeof _controller.req.flash === 'function') {
     for (const key of Object.keys(flashes)) {
         const flash = flashes[key];
 %>
-    <div class="alert alert-<%- key %>">
+    <div class="alert-<%- key %> alert">
         <% for (const message of flash) { %>
             <p><%- message %></p>
         <% } %>

@@ -22,17 +22,20 @@ module.exports = {
     'model/UserLog': require('../model/UserLog'),
 
     'notifier/MessageTemplate': require('../component/notifier/MessageTemplate'),
-    'notifier/Notice': require('../component/notifier/Notice'),
-    'notifier/NoticeMessage': require('../component/notifier/NoticeMessage'),
+    'notifier/Notification': require('../component/notifier/Notification'),
+    'notifier/NotificationMessage': require('../component/notifier/NotificationMessage'),
     'notifier/PopupNotification': require('../component/notifier/PopupNotification'),
 
     'observer/EventHandler': require('../component/observer/EventHandler'),
     'observer/Listener': require('../component/observer/Listener'),
-    'observer/NoticeHandler': require('../component/observer/NoticeHandler'),
+    'observer/NotificationHandler': require('../component/observer/NotificationHandler'),
     'observer/TaskHandler': require('../component/observer/TaskHandler'),
 
     'security/PasswordAuthService': require('../component/security/PasswordAuthService'),
-    'security/PasswordValidator': require('../component/security/PasswordValidator'),
     'security/UserPassword': require('../component/security/UserPassword'),
-    'security/Verification': require('../component/security/Verification')
+    'security/Verification': require('../component/security/Verification'),
+    'security/WebUser': require('../component/security/WebUser'),
+
+    'validator/PasswordValidator': require('../component/validator/PasswordValidator'),
+    'validator/UserNameValidator': require('../component/validator/UserNameValidator')
 };

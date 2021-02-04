@@ -39,8 +39,10 @@ module.exports = class MetaModel extends Base {
         this.data = await this.source.load();
     }
 
+    /**
+     * After load all meta models
+     */
     async afterLoad () {
-        // after load all meta models
     }
 
     createSource (data) {

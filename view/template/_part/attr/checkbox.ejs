@@ -4,17 +4,15 @@ const p = {handler: 'Checkbox'};
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="form-attr form-group <%- p.css %>"
+<div class="form-attr form-group row <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>">
     <div class="<%- p.labelCss %>"></div>
     <div class="<%- p.valueCss %>">
-        <div class="checkbox checkbox-init">
-            <label data-t="<%- p.translate %>" title="<%= p.hint %>">
-                <input class="form-value" name="<%- p.name %>" type="hidden" value="<%- p.value %>">
-                <input<%- p.value ? ' checked' : '' %> type="checkbox">
-                <span data-t="<%- p.translate %>"><%- p.label %></span>
-            </label>
+        <input class="form-value" name="<%- p.name %>" type="hidden" value="<%- p.value %>">
+        <div class="form-check" title="<%- p.hint %>" data-t="<%- p.translate %>">
+            <input class="form-check-input"<%- p.value ? ' checked' : '' %> type="checkbox">
+            <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label>
         </div>
         <div class="error-block"></div>
     </div>

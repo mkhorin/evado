@@ -1,8 +1,17 @@
 <!-- _part/list/bottom -->
 <div class="row-bottom">
-    <div class="data-grid-pages">
+    <div class="data-grid-pager">
         <div class="data-grid-pagination"></div>
         <select class="data-grid-page-jumper form-control hidden"></select>
+        <template data-id="group">
+            <div class="btn-group">{{buttons}}</div>
+        </template>
+        <template data-id="button">
+            <button class="btn-outline-secondary btn {{css}}" data-page="{{page}}"><span>{{text}}</span></button>
+        </template>
+        <template data-id="gap">
+            <div class="gap"></div>
+        </template>
     </div>
     <div class="data-grid-info"></div>
 </div>

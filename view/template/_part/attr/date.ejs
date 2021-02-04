@@ -8,18 +8,20 @@ const p = {
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 
-<div class="form-attr form-group <%- p.required %>"
+<div class="form-attr form-group row <%- p.required %>"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>"
      data-utc="<%- p.utc %>"
      data-params="<%= p.options %>">
-    <label class="control-label <%- p.labelCss %>" title="<%= p.extHint %>"
+    <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="hidden" value="<%- p.value %>" class="form-value">
         <div class="input-group">
             <input type="text" <%- p.required %> class="datepicker form-control">
-            <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+            <div class="input-group-append">
+                <span class="input-group-text"><i class="far fa-calendar"></i></span>
+            </div>
         </div>
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>

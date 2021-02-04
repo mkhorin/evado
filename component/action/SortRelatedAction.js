@@ -11,7 +11,7 @@ module.exports = class SortRelatedAction extends Base {
         const {pid, rel} = this.getQueryParams();
         await this.setParentModel(pid);
         await this.setRelation(rel);
-        if (this.isGet()) {
+        if (this.isGetRequest()) {
             this.setRelationWith(rel);
             return this.renderOrder();
         }
@@ -38,7 +38,7 @@ module.exports = class SortRelatedAction extends Base {
     }
 
     setRelationWith (name) {
-        if (this.with && this.with.hasOwnProperty(name)) {
+        if (this.with?.hasOwnProperty(name)) {
             this.relation.with(this.with[name]);
         }
     }
