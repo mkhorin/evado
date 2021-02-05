@@ -1,6 +1,6 @@
 :root {
-    --link: #3c8dbc;
-    --link-active: #2a6384;
+    --link: #3c8ddd;
+    --link-active: #25;
 
     --light-primary: #0b80dc;
     --dark-primary: #096dbd;
@@ -431,10 +431,8 @@ body.loading {
 .nav-btn {
     min-width: 3rem;
     border-radius: 0;
-    height: var(--header-height);
     outline: none;
     border: none;
-    color: #eee;
 }
 .nav-btn:active,
 .nav-btn:focus,
@@ -450,7 +448,6 @@ body.loading {
 .nav-btn-primary:hover,
 .show > .nav-btn-primary {
     background: rgba(0,0,0,.15);
-    color: #fff;
 }
 .nav-block {
     position: relative;
@@ -498,6 +495,10 @@ body.loading {
 }
 .main-header .sidebar-toggle {
     min-width: 0;
+}
+.main-header .nav-btn {
+    height: var(--header-height);
+    color: #eee;
 }
 
 /* MAIN SIDEBAR */
@@ -787,7 +788,7 @@ hr + .form-columns {
 }
 
 .inline-group-container {
-    margin: 1.5rem 0 .5rem;
+    margin: 1.25rem 0 .5rem;
 }
 .inline-group-container .row .row,
 .inline-group-container .form-group {
@@ -801,6 +802,9 @@ hr + .form-columns {
 .inline-group-container .form-group {
     display: inline-block;
     vertical-align: top;
+}
+.columns + .inline-group-container {
+    margin-top: .25rem;
 }
 
 /* FORM OVERRIDE */

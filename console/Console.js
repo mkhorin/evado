@@ -28,7 +28,7 @@ module.exports = class Console extends Base {
             UserFilterConsole: require('./UserFilterConsole'),
             ...config
         });
-        this.params = this.params || {};
+        this.params = {...this.params};
         this.app = this.app || this.createApplication();
         this.module = this.app;
     }
@@ -65,73 +65,73 @@ module.exports = class Console extends Base {
     // ASSET
 
     installAssets (params) {
-        return params.skipAssets
+        return params?.skipAssets
             ? this.log('info', 'Asset installation skipped')
-            : this.execute('install', this.AssetConsole, params);
+            : this.execute('install', this.AssetConsole, ...arguments);
     }
 
     buildAssets (params) {
-        return params.skipAssets
+        return params?.skipAssets
             ? this.log('info', 'Asset building skipped')
-            : this.execute('build', this.AssetConsole, params);
+            : this.execute('build', this.AssetConsole, ...arguments);
     }
 
     deployAssets (params) {
-        return params.skipAssets
+        return params?.skipAssets
             ? this.log('info', 'Asset deployment skipped')
-            : this.execute('deploy', this.AssetConsole, params);
+            : this.execute('deploy', this.AssetConsole, ...arguments);
     }
 
     // META
 
-    dropMeta (params) {
-        return this.execute('drop', this.MetaConsole, params);
+    dropMeta () {
+        return this.execute('drop', this.MetaConsole, ...arguments);
     }
 
-    importMeta (params) {
-        return this.execute('import', this.MetaConsole, params);
+    importMeta () {
+        return this.execute('import', this.MetaConsole, ...arguments);
     }
 
     // DATA
 
-    clearData (params) {
-        return this.execute('clear', this.DataConsole, params);
+    clearData () {
+        return this.execute('clear', this.DataConsole, ...arguments);
     }
 
-    exportData (params) {
-        return this.execute('execute', this.DataExportConsole, params);
+    exportData () {
+        return this.execute('execute', this.DataExportConsole, ...arguments);
     }
 
-    importData (params) {
-        return this.execute('execute', this.DataImportConsole, params);
+    importData () {
+        return this.execute('execute', this.DataImportConsole, ...arguments);
     }
 
-    importDataFiles (params) {
-        return this.execute('importFiles', this.DataImportConsole, params);
+    importDataFiles () {
+        return this.execute('importFiles', this.DataImportConsole, ...arguments);
     }
 
     // EVENT HANDLERS
 
-    createEventHandlers (params) {
-        return this.execute('create', this.EventHandlerConsole, params);
+    createEventHandlers () {
+        return this.execute('create', this.EventHandlerConsole, ...arguments);
     }
 
     // INDEXES
 
-    createIndexes (params) {
-        return this.execute('create', this.IndexingConsole, params);
+    createIndexes () {
+        return this.execute('create', this.IndexingConsole, ...arguments);
     }
 
     // LISTENERS
 
-    createListeners (params) {
-        return this.execute('create', this.ListenerConsole, params);
+    createListeners () {
+        return this.execute('create', this.ListenerConsole, ...arguments);
     }
 
     // NOTIFICATIONS
 
-    createNotifications (params) {
-        return this.execute('create', this.NotificationConsole, params);
+    createNotifications () {
+        return this.execute('create', this.NotificationConsole, ...arguments);
     }
 
     // SECURITY
@@ -140,48 +140,48 @@ module.exports = class Console extends Base {
         return this.execute('createUsers', this.SecurityConsole);
     }
 
-    createUser (params) {
-        return this.execute('createUser', this.SecurityConsole, params);
+    createUser () {
+        return this.execute('createUser', this.SecurityConsole, ...arguments);
     }
 
-    updateUser (params) {
-        return this.execute('updateUser', this.SecurityConsole, params);
+    updateUser () {
+        return this.execute('updateUser', this.SecurityConsole, ...arguments);
     }
 
-    changePassword (params) {
-        return this.execute('changePassword', this.SecurityConsole, params);
+    changePassword () {
+        return this.execute('changePassword', this.SecurityConsole, ...arguments);
     }
 
     createSecurity () {
-        return this.execute('createSecurity', this.SecurityConsole);
+        return this.execute('createSecurity', this.SecurityConsole, ...arguments);
     }
 
-    assignRole (params) {
-        return this.execute('assignRole', this.SecurityConsole, params);
+    assignRole () {
+        return this.execute('assignRole', this.SecurityConsole, ...arguments);
     }
 
-    exportSecurity (params) {
-        return this.execute('execute', this.SecurityExportConsole, params);
+    exportSecurity () {
+        return this.execute('execute', this.SecurityExportConsole, ...arguments);
     }
 
-    importSecurity (params) {
-        return this.execute('execute', this.SecurityImportConsole, params);
+    importSecurity () {
+        return this.execute('execute', this.SecurityImportConsole, ...arguments);
     }
 
-    clearSecurity (params) {
-        return this.execute('clear', this.SecurityConsole, params);
+    clearSecurity () {
+        return this.execute('clear', this.SecurityConsole, ...arguments);
     }
 
     // TASKS
 
-    createTasks (params) {
-        return this.execute('create', this.TaskConsole, params);
+    createTasks () {
+        return this.execute('create', this.TaskConsole, ...arguments);
     }
 
     // USER FILTERS
 
-    createUserFilters (params) {
-        return this.execute('create', this.UserFilterConsole, params);
+    createUserFilters () {
+        return this.execute('create', this.UserFilterConsole, ...arguments);
     }
 
     // MODULES
