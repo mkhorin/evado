@@ -109,6 +109,7 @@ Jam.I18n.defaults = {
     'Label': 'Ярлык',
     'Last done at': 'Последний раз сделано',
     'Link': 'Добавить',
+    'Load': 'Загрузить',
 
     'Metadata': 'Метаданные',
     'Modification date': 'Дата изменения',

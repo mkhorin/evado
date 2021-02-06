@@ -2,6 +2,7 @@
 .data-grid {
     --selected-row-color: #fff4e0;
     position: relative;
+    margin-top: .1rem;
 }
 .data-grid .row-bottom {
     display: flex;
@@ -164,6 +165,17 @@
 }
 .required.blank .data-grid-table > thead > tr > th {
     background: var(--required-color);
+}
+.data-grid .btn-lazy-load {
+    display: none;
+}
+.data-grid.lazy-load .btn-lazy-load {
+    display: inline-block;
+}
+.data-grid.lazy-load .row-top,
+.data-grid.lazy-load .row-bottom,
+.data-grid.lazy-load .table-responsive {
+    display: none;
 }
 
 /* SEARCH */

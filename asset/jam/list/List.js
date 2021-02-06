@@ -7,32 +7,54 @@ Jam.List = class List extends Jam.Element {
         super($grid);
         Object.assign(this, data);
         this.$grid = $grid;
-        this.$commands = this.$grid.children('.commands');
-        this.$frame = this.$grid.closest('.stack-frame');
-        this.frame = this.$frame.data('frame');
-        this.childFrame = Jam.frameStack.createFrame();
-        this.$commands.prepend(this.$frame.find('.prepend-commands').children());
-        this.$commands.append(this.$frame.find('.append-commands').children());
-        Jam.Helper.sortChildrenByInteger(this.$commands);
-        this.events = new Jam.Events('List');
-        this.alert = this.createAlert();
         this.params = {
             multiple: true,
             ...this.$grid.data('params')
         };
+        this.prepareFrames();
+        this.events = new Jam.Events('List');
+        this.alert = this.createAlert();
+    }
+
+    prepareFrames () {
+        this.$frame = this.$grid.closest('.stack-frame');
+        this.frame = this.$frame.data('frame');
+        this.childFrame = Jam.frameStack.createFrame();
     }
 
     init () {
-        this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
         this.createColumnRenderer();
         this.setDataGridParams();
         this.createDataGrid();
+        if (this.params.lazyLoad) {
+            this.$grid.addClass('lazy-load');
+            this.$grid.on('click', '.btn-lazy-load', this.activate.bind(this));
+        } else {
+            this.activate();
+        }
+    }
+
+    activate () {
+        this.prepareCommands();
         this.initDataGrid();
         this.createFilter();
         this.grid.init();
         this.$tbody = this.grid.renderer.$tbody;
         this.$tbody.on('click', 'tr.item', this.onClickRow.bind(this));
         this.$tbody.on('dblclick', 'tr.item', this.onDoubleClickRow.bind(this));
+        this.$grid.removeClass('lazy-load');
+    }
+
+    prepareCommands () {
+        this.$commands = this.$grid.children('.commands');
+        this.addFrameCommands();
+        Jam.Helper.sortChildrenByInteger(this.$commands);
+        this.$commands.on('click', '[data-command]', this.onCommand.bind(this));
+    }
+
+    addFrameCommands () {
+        this.$commands.prepend(this.$frame.find('.prepend-commands').children());
+        this.$commands.append(this.$frame.find('.append-commands').children());
     }
 
     createColumnRenderer () {

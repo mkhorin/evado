@@ -6,10 +6,21 @@ Jam.AttrList = class AttrList extends Jam.List {
     init () {
         super.init();
         this.multiple = this.params.multiple;
+        if (this.params.lazyLoad) {
+            this.afterInit();
+        } else {
+            this.grid.events.one('afterLoad', this.onAfterLoad.bind(this));
+            this.grid.events.one('afterFail', this.afterInit);
+        }
+    }
+
+    activate () {
+        super.activate();
         this.$grid.mouseenter(this.showCommands.bind(this));
         this.$grid.mouseleave(this.hideCommands.bind(this));
-        this.grid.events.one('afterLoad', this.onAfterLoad.bind(this));
-        this.grid.events.one('afterFail', this.afterInit);
+    }
+
+    addFrameCommands () {
     }
 
     clearLinks () {

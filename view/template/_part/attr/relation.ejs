@@ -109,6 +109,7 @@ d.id = attr + _controller.getCurrentRoute();
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="hidden" class="form-value">
         <div class="data-grid" data-params="<%= JSON.stringify(d) %>">
+            <button class="btn-lazy-load btn-outline-primary btn" type="button" data-t>Load</button>
             <div class="hidden-commands commands" data-jam="IndexSorting">
                 <% if (d.link) { %>
                 <div class="nav-group">
