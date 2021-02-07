@@ -15,7 +15,7 @@ Jam.DataGrid = class DataGrid {
         params = $.extend(true, {
             'AjaxProvider': Jam.DataGridAjaxProvider,
             'CommonSearch': Jam.DataGridCommonSearch,
-            'Pagination': Jam.DataGridPagination,
+            'Pagination': Jam.Pagination,
             'Provider': Jam.DataGridProvider,
             'Renderer': Jam.DataGridRenderer,
             'Tuner': Jam.DataGridTuner
@@ -31,13 +31,24 @@ Jam.DataGrid = class DataGrid {
             ? new params.AjaxProvider(this)
             : new params.Provider(this);
         this.renderer = new params.Renderer(this);
-        this.pagination = new params.Pagination(this);
+        this.pagination = this.createPagination();
         this.commonSearch = new params.CommonSearch(this);
         this.columnGroupMap = Jam.ArrayHelper.index('name', params.columnGroups);
         this.columnMap = Jam.ArrayHelper.index('name', params.columns);
         this.tuner = params.Tuner ? new params.Tuner(this) : null;
         this.$info = this.$container.find('.data-grid-info');
         this.$container.data('dataGrid', this);
+    }
+
+    createPagination () {
+        return new this.params.Pagination(this, {
+            labels: this.locale.pagination,
+            params: this.params,
+            $pager: this.$container.find('.data-grid-pager'),
+            $pagination: this.$container.find('.data-grid-pagination'),
+            $jumper: this.$container.find('.data-grid-page-jumper'),
+            $pageSize: this.$container.find('.data-grid-page-size')
+        });
     }
 
     init () {
@@ -128,10 +139,13 @@ Jam.DataGrid = class DataGrid {
         this.renderer.clearOrder();
     }
 
+    getTotalSize () {
+        return this.itemTotalSize;
+    }
+
     setPage (page) {
         this.pagination.setPage(page);
     }
-
     
     load (params = {}) {
         if (params.resetPage) {
@@ -158,8 +172,12 @@ Jam.DataGrid = class DataGrid {
         this.events.trigger('afterFail', this);
     }
 
-    toggleLoader (state) {
-        this.$container.toggleClass('loading', state);
+    toggleClass () {
+        this.$container.toggleClass(...arguments);
+    }
+
+    toggleLoader () {
+        this.toggleClass('loading', ...arguments);
     }
 
     drawTable () {
@@ -227,106 +245,43 @@ Jam.DataGrid = class DataGrid {
     }
 };
 
-Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
-
-    constructor (container, params) {
-        super(container, $.extend(true, {
-            'Renderer': Jam.TreeGridRenderer,
-            'AjaxProvider': Jam.TreeGridAjaxProvider
-        }, Jam.TreeGrid.defaults, params));
-    }
-
-    init () {
-        super.init();
-        this.renderer.$tbody.on('click', '.node-toggle', this.onToggleNode.bind(this));
-    }
-
-    getNode (id) {
-        return this.getNodeByRow(this.findRowById(id));
-    }
-
-    getNodeByRow ($row) {
-        return Jam.TreeGridNode.get({grid: this, $row});
-    }
-
-    onToggleNode (event) {
-        this.getNodeByRow($(event.currentTarget).closest('tr')).toggle();
-    }
-
-    load (params = {}) {
-        this.itemNode = params.node;
-        super.load(params);
-    }
-
-    drawPage () {
-        this.itemNode ? this.drawNode(this.itemNode) : super.drawPage();
-    }
-
-    drawNode (node) {
-        node.getNestedRows().remove();
-        this.renderer.drawNode(node.$row, this.items);
-        this.events.trigger('afterDrawNode', node);
-    }
-};
-
-Jam.TreeGridNode = class TreeGridNode {
-
-    static get ({$row}) {
-        return $row.data('node') || Reflect.construct(this, arguments);
-    }
-
-    constructor (config) {
-        Object.assign(this, config);
-        this.$row.data('node', this);
-    }
-
-    isOpened () {
-        return this.$row.hasClass('opened');
-    }
-
-    getId () {
-        return this.$row.data('id');
-    }
-
-    getDepth () {
-        return parseInt(this.$row.data('depth'));
-    }
-
-    getChildren () {
-        return this.getNestedRows().filter(`[data-depth="${this.getDepth() + 1}"]`);
-    }
-
-    getNestedRows () {
-        const depth = this.getDepth();
-        return this.$row.nextUntil(`[data-depth="${depth}"]`).filter((index, element) => {
-            return element.dataset.depth > depth;
-        });
-    }
-
-    toggle (state) {
-        this.$row.toggleClass('opened', state);
-        this.isOpened() ? this.expand() : this.collapse();
-    }
-
-    collapse () {
-        const $children = this.getChildren();
-        for (const row of $children.filter('.opened')) {
-            this.grid.getNodeByRow($(row)).toggle(false);
-        }
-        if (this.grid.params.clearCollapsedNode) {
-            $children.remove();
-            this.loaded = false;
-        } else {
-            this._detachedChildren = $children.detach();
-        }
-    }
-
-    expand () {
-        this.loaded ? this.$row.after(this._detachedChildren) : this.load();
-    }
-
-    load () {
-        this.loaded = true;
-        this.grid.load({node: this});
+Jam.DataGrid.defaults = {
+    columns: [
+        // {name: 'b', label: 'B', group: 'g1', sortable: true, searchable: true, hidden: false}
+    ],
+    columnGroups: [
+        // {name: 'g1', label: 'G1', parent: null, hidden: false}
+    ],
+    rowGroups: {
+        // column:
+    },
+    data: [
+        /* {'a': 'a1', 'b': 'b1', 'c': 'c1'},
+        {'a': 'a2', 'b': 'b2', 'c': 'c2'},
+        {'a': 'a3', 'b': 'b3', 'c': 'c3'},
+        {'a': 'a4', 'b': 'b4', 'c': 'c4'},
+        {'a': 'a1', 'b': 'b1', 'c': 'c5'},
+        {'a': 'a1', 'b': 'b1', 'c': 'c9'},
+        {'a': 'a2', 'b': 'b2', 'c': 'c10'},
+        {'a': 'a3', 'b': 'b3', 'c': 'c11'},
+        {'a': 'a4', 'b': 'b4', 'c': 'c12'}, */
+    ],
+    hideOnePageToggle: true,
+    hideColumnGroups: false,
+    page: 0,
+    pageSize: 10,
+    pageSizes: [10, 20, 30],
+    keepPageSize: true,
+    maxPageToggles: 9,
+    order: null,
+    maxCellHeight: 0,
+    locale: {
+        orderToggle: 'Sort',
+        searchToggle: 'Search',
+        asc: 'Ascending',
+        desc: 'Descending',
+        info: 'Showing #{START} to #{END} of #{TOTAL}',
+        infoEmpty: 'Showing 0 to 0 of 0',
+        infoFiltered: '(filtered from #{MAX})'
     }
 };

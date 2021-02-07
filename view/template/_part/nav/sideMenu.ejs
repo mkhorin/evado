@@ -1,5 +1,31 @@
 <!-- _part/nav/sideMenu -->
 
-<div class="nav-tree" data-jam="NavTree">
+<div class="nav-tree" data-jam="NavTree"
+     data-params="<%= JSON.stringify(_module.getConfig('sideMenu')) %>">
 
+    <template data-id="item">
+        <div class="nav-item">
+            <a href="{{url}}" class="nav-link" title="{{title}}">
+                <span>{{label}}</span>
+            </a>
+        </div>
+    </template>
+
+    <template data-id="parent">
+        <div class="nav-item tree">
+            <a href="javascript:void(0)" class="nav-link" title="{{title}}">
+                <span>{{label}}</span>
+                <span class="arrow fa fa-angle-left"></span>
+            </a>
+            <div class="nav-children">{{children}}</div>
+        </div>
+    </template>
+
+    <template data-id="divider">
+        <div class="nav-divider"></div>
+    </template>
+
+    <template data-id="header">
+        <div class="nav-header" title="{{title}}">{{label}}</div>
+    </template>
 </div>

@@ -374,6 +374,7 @@ body.loading {
 }
 .nav-tree .nav-header {
     opacity: .6;
+    text-transform: uppercase;
 }
 .nav-tree .nav-children {
     display: none;
@@ -683,6 +684,9 @@ hr + .form-columns {
 .form .row + .tabs,
 .form-group + .tabs {
     margin-top: 2rem;
+}
+.form .columns + .tabs {
+    margin-top: 1rem;
 }
 .form .tabs .nav {
     margin-bottom: 2rem;

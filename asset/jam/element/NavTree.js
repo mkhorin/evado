@@ -4,12 +4,30 @@
 Jam.NavTree = class NavTree extends Jam.Element {
 
     init () {
+        this.params = this.getData('params');
+        this.$element.prepend(this.createItems(this.params?.items));
         this.setCurrentActive();
-        this.$element.on('click', '.tree > .nav-link', this.onItem.bind(this));
+        this.$element.on('click', '.tree > .nav-link', this.onTreeLink.bind(this));
+    }
+
+    createItems (items) {
+        return Array.isArray(items) ? items.map(this.createItem, this).join('') : '';
+    }
+
+    createItem (data) {
+        data.children = this.createItems(data.children);
+        data.label = Jam.t(data.label, data.t);
+        data.title = Jam.escape(data.title ? Jam.t(data.title, data.t) : data.label);
+        const template = data.type || (data.children ? 'parent' : 'item');
+        return this.resolveTemplate(template, data);
+    }
+
+    getItem (element) {
+        return $(element).closest('.nav-item')
     }
 
     setCurrentActive () {
-        const $item = this.getCurrentActive().closest('.nav-item');
+        const $item = this.getItem(this.getCurrentActive());
         $item.add($item.parents('.nav-item')).addClass('active open');
     }
 
@@ -25,8 +43,9 @@ Jam.NavTree = class NavTree extends Jam.Element {
         return !chr || chr === '/' || chr === '?';
     }
 
-    onItem (event) {
-        const $item = $(event.currentTarget).parent();
+    onTreeLink (event) {
+        event.preventDefault();
+        const $item = this.getItem(event.currentTarget);
         $item.toggleClass('open');
         if (!$item.hasClass('open')) {
             $item.find('.open').removeClass('open');
@@ -36,18 +55,13 @@ Jam.NavTree = class NavTree extends Jam.Element {
 
 Jam.LoadableNavTree = class LoadableNavTree extends Jam.NavTree {
 
-    init () {
-        super.init();
-        this.$element.on('click', '.tree > .nav-link', this.onLink.bind(this));
-    }
-
     getCurrentActive ($item) {
         return this.find('.active').last();
     }
 
-    onLink (event) {
-        event.preventDefault();
-        this.loadItem($(event.currentTarget).closest('.nav-item'));
+    onTreeLink (event) {
+        super.onTreeLink(event);
+        this.loadItem(this.getItem(event.currentTarget));
     }
 
     loadItem ($item) {

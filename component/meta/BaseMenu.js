@@ -10,8 +10,8 @@ module.exports = class BaseMenu extends Base {
     async execute () {
         const nav = this.module.getMeta('navigation');
         const section = nav.getSection('main', this.module.getRouteName());
-        const activeItem = this.controller.meta && this.controller.meta.node;
-        const openedItems = activeItem ? activeItem.getParents() : [];
+        const activeItem = this.controller.meta?.node;
+        const openedItems = activeItem?.getParents() || [];
         const items = [...openedItems, ...section.children];
         const forbiddenAccess = await this.resolveAccess({section, items});
         return this.renderTemplate('_part/nav/sideMenu', {

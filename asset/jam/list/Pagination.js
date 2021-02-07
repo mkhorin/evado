@@ -1,24 +1,33 @@
 /**
- * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2021 Maxim Khorin <maksimovichu@gmail.com>
  */
-Jam.DataGridPagination = class DataGridPagination {
+Jam.Pagination = class Pagination {
 
-    constructor (grid) {
-        this.grid = grid;
-        this.params = grid.params;
-        this.locale = grid.locale.pagination;
+    constructor (list, config) {
+        this.list = list;
+        this.params = config.params;
+        this.labels = Object.assign(this.getDefaultLabels(), config.labels);
         this.templates = {};
         this.pageSize = parseInt(this.params.pageSize) || 0;
         this.page = parseInt(this.params.page) || 0;
-        this.$pager = grid.$container.find('.data-grid-pager');
-        this.$pagination = this.$pager.find('.data-grid-pagination');
+        this.$pager = config.$pager;
+        this.$pagination = config.$pagination;
         this.$pagination.on('click', 'button', this.onPage.bind(this));
-        this.$jumper = this.$pager.find('.data-grid-page-jumper');
+        this.$jumper = config.$jumper;
         this.$jumper.change(this.onChangePage.bind(this));
-        this.$pageSize = grid.$container.find('.data-grid-page-size');
+        this.$pageSize = config.$pageSize;
         this.$pageSizeSelect = this.$pageSize.find('select');
         this.$pageSizeSelect.change(this.onPageSize.bind(this));
         this.createPageSizes();
+    }
+
+    getDefaultLabels () {
+        return {
+            first: '<<',
+            last: '>>',
+            previous: '<',
+            next: '>'
+        };
     }
 
     isHidden () {
@@ -38,7 +47,7 @@ Jam.DataGridPagination = class DataGridPagination {
     }
 
     getTotalSize () {
-        return this.grid.itemTotalSize;
+        return this.list.getTotalSize();
     }
 
     getDataInterval (totalSize) {
@@ -60,14 +69,14 @@ Jam.DataGridPagination = class DataGridPagination {
 
     onPage (event) {
         if (this.setPage($(event.currentTarget).blur().data('page'))) {
-            this.grid.load();
+            this.list.load();
         }
     }
 
     onChangePage () {
         this.$jumper.blur();
         if (this.setPage(this.$jumper.val())) {
-            this.grid.load();
+            this.list.load();
         }
     }
 
@@ -76,16 +85,16 @@ Jam.DataGridPagination = class DataGridPagination {
         this.page = 0;
         this.pageSize = parseInt(this.$pageSizeSelect.val());
         if (this.params.keepPageSize) {
-            this.grid.setStorageData('pageSize', this.pageSize);
+            this.list.setStorageData('pageSize', this.pageSize);
         }
-        this.grid.load();
+        this.list.load();
     }
 
     update () {
         if (this.$pager.length) {
             this.$pagination.html(this.isHidden() ? '' : this.render());
             const $toggle = this.$pagination.find('[data-page]');
-            this.grid.$container.toggleClass('has-page-toggle', $toggle.length > 0);
+            this.list.toggleClass('has-page-toggle', $toggle.length > 0);
             this.updateJumper();
         }
     }
@@ -134,7 +143,7 @@ Jam.DataGridPagination = class DataGridPagination {
     }
 
     renderDirectionButton (name, page) {
-        return this.renderButton(page, this.locale[name], 'direction '+ name);
+        return this.renderButton(page, this.labels[name], 'direction '+ name);
     }
 
     renderPageButton (page) {
@@ -207,7 +216,7 @@ Jam.DataGridPagination = class DataGridPagination {
     createPageSizes () {
         if (this.$pageSize.length && Array.isArray(this.params.pageSizes)) {
             if (this.params.keepPageSize) {
-                this.pageSize = this.grid.getStorageData('pageSize', this.pageSize);
+                this.pageSize = this.list.getStorageData('pageSize', this.pageSize);
             }
             const sizes = this.params.pageSizes.map(this.renderPageSize, this).join('');
             this.$pageSizeSelect.html(sizes).val(this.pageSize);
