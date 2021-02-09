@@ -15,7 +15,7 @@ module.exports = class MetaModels extends Base {
     add (data) {
         if (data) {
             for (const id of Object.keys(data)) {
-                if (data[id]) {
+                if (data[id]?.Class) {
                     this.addModel(id, this.createModel(data[id]));
                 }
             }
