@@ -12,19 +12,19 @@ Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
 
     init () {
         super.init();
-        this.renderer.$tbody.on('click', '.node-toggle', this.onToggleNode.bind(this));
+        this.renderer.addBodyListener('click', '.node-toggle', this.onToggleNode.bind(this));
     }
 
     getNode (id) {
-        return this.getNodeByRow(this.findRowById(id));
+        return this.getNodeByItem(this.findItemById(id));
     }
 
-    getNodeByRow ($row) {
-        return Jam.TreeGridNode.get({grid: this, $row});
+    getNodeByItem ($item) {
+        return Jam.TreeGridNode.get({grid: this, $item});
     }
 
     onToggleNode (event) {
-        this.getNodeByRow($(event.currentTarget).closest('tr')).toggle();
+        this.getNodeByItem($(event.currentTarget).closest('.data-item')).toggle();
     }
 
     load (params = {}) {
@@ -37,13 +37,14 @@ Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
     }
 
     drawNode (node) {
-        node.getNestedRows().remove();
-        this.renderer.drawNode(node.$row, this.items);
+        node.getNestedItems().remove();
+        this.renderer.drawNode(node.$item, this.items);
         this.events.trigger('afterDrawNode', node);
     }
 };
 
 Jam.TreeGrid.defaults = {
+
     clearCollapsedNode: true,
     nodeToggle: '<div class="node-toggle"><i class="fas fa-angle-right"></i></div>'
 };

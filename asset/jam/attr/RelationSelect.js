@@ -86,6 +86,10 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         return this.params.update;
     }
 
+    getSelect2 () {
+        return this.$select.data('select2');
+    }
+
     clear () {
         this.changes.links = [];
         this.setValueByChanges();
@@ -134,12 +138,12 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             };
         }
         this.$select.select2(data);
-        this.$select.data('select2').on('query', this.onQuery.bind(this));
+        this.getSelect2().on('query', this.onQuery.bind(this));
     }
 
     onQuery () {
         if (this.params.list) {
-            this.$select.data('select2').$results.find('li:not(:first)').hide();
+            this.getSelect2().$results.find('li:not(:first)').hide();
         }
     }
 

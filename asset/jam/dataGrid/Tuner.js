@@ -13,7 +13,8 @@ Jam.DataGridTuner = class DataGridTuner {
             this.createMenu();
             this.$toggle = this.$container.find('.toggle');
             this.$toggle.click(this.onToggle.bind(this));
-            $(document.body).click(this.onBody.bind(this));
+            this.attachOnBody();
+            this.attachOnResize();
         }
     }
 
@@ -51,12 +52,29 @@ Jam.DataGridTuner = class DataGridTuner {
         return this.$menu.is(':visible');
     }
 
+    attachOnBody () {
+        $(document.body).one('click', this.onBody.bind(this));
+    }
+
+    attachOnResize () {
+        $(window).one('resize', this.onResize.bind(this));
+    }
+
     onBody (event) {
         if (this.isMenuActive()) {
-            const $target = $(event.target);
-            if (!$target.closest(this.$toggle).length && !$target.closest(this.$menu).length) {
-                this.hideMenu();
-            }
+            this.onTarget($(event.target));
+        }
+        this.attachOnBody();
+    }
+
+    onResize () {
+        this.hideMenu();
+        this.attachOnResize();
+    }
+
+    onTarget ($target) {
+        if (!$target.closest(this.$toggle).length && !$target.closest(this.$menu).length) {
+            this.hideMenu();
         }
     }
 
@@ -67,7 +85,7 @@ Jam.DataGridTuner = class DataGridTuner {
     onShowItem (event) {
         const input = event.currentTarget;
         this.grid.getColumn(input.value).hidden = !input.checked;
-        this.grid.drawTable();
+        this.grid.drawContent();
         this.save();
         $(input).blur();
     }

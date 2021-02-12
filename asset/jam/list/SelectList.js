@@ -3,9 +3,9 @@
  */
 Jam.SelectList = class SelectList extends Jam.FrameList {
 
-    onDoubleClickRow (event) {
-        this.deselectExceptOneRow(event.currentTarget);
-        this.toggleRowSelect($(event.currentTarget), true);
+    onDoubleClickItem (event) {
+        this.deselectExceptOneItem(event.currentTarget);
+        this.toggleItemSelect($(event.currentTarget), true);
         event.ctrlKey
             ? this.openNewPage()
             : this.onSelect();
@@ -21,24 +21,24 @@ Jam.SelectList = class SelectList extends Jam.FrameList {
     onSelect () {
         this.params.select
             ? this.selectByUrl(this.params.select)
-            : this.selectByRows();
+            : this.selectByItems();
     }
 
-    selectByRows () {
-        const $rows = this.params.multiple
-            ? this.getSelectedRows()
-            : this.getSelectedRow();
-        if ($rows) {
-            this.frame.close({result: this.serializeObjectIds($rows)});
+    selectByItems () {
+        const $items = this.multiple
+            ? this.getSelectedItems()
+            : this.getSelectedItem();
+        if ($items) {
+            this.frame.close({result: this.serializeObjectIds($items)});
         }
     }
 
     selectByUrl (url) {
-        const $rows = this.params.multiple
-            ? this.getSelectedRows()
-            : this.getSelectedRow();
-        if ($rows) {
-            const ids = this.serializeObjectIds($rows);
+        const $items = this.multiple
+            ? this.getSelectedItems()
+            : this.getSelectedItem();
+        if ($items) {
+            const ids = this.serializeObjectIds($items);
             return this.post(url, {ids}).done(this.onDoneSelection.bind(this));
         }
     }

@@ -118,7 +118,7 @@
     - upgrade base meta model
 * model/RawFile
     - add user limits to file upload 
-* web/jam/data-grid/ColumnRenderer
+* web/jam/list/DataFormatter
     - fix empty array as not set value   
     
 ## 1.2.0
@@ -133,7 +133,7 @@
     - check svg format          
 * model/auth/SignUpForm
     - disable mandatory verification after sign up   
-* web/jam/data-grid/ColumnRenderer
+* web/jam/list/DataFormatter
     - model data is available in each attribute value handler
 * web/jam/element/Modal
     - refactor modal element names 
@@ -241,7 +241,7 @@
     - fix user creation        
 * view/template/default
     - translate error pages    
-* web/jam/data-grid/ColumnRenderer
+* web/jam/list/DataFormatter
     - separate null and undefined view
 * web/jam/element/LoadableContent
     - add resource solver and translation

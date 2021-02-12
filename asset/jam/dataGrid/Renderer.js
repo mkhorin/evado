@@ -4,45 +4,62 @@
 Jam.DataGridRenderer = class DataGridRenderer {
 
     constructor (grid) {
-        this.$table = grid.$container.find('.data-grid-table');
-        this.$thead = this.$table.children('thead');
-        this.$tbody = this.$table.children('tbody');
-        this.$tfoot = this.$table.children('tfoot');
-        this.params = grid.params;
-        this.locale = this.params.locale;
         this.grid = grid;
-        Jam.ObjectHelper.assignUndefined(this.params, {
-            getRowId: this.getRowId.bind(this),
-            renderBodyRow: this.renderBodyRow.bind(this),
+        this.params = grid.params;
+        Jam.ObjectHelper.assignUndefined(this.params, this.getDefaultParams());
+        this.locale = this.params.locale;
+        this.$content = grid.$container.find('.data-grid-content');
+        this.init();
+    }
+
+    getDefaultParams () {
+        return {
+            getItemId: this.getItemId.bind(this),
+            renderBodyItem: this.renderBodyItem.bind(this),
             renderBodyCell: this.renderBodyCell.bind(this),
             renderHeadColumn: this.renderHeadColumn.bind(this),
             renderHeadGroup: this.renderHeadGroup.bind(this),
-        });
-        this.initColumns();
+        };
     }
 
-    initColumns () {
+    init () {
+        this.createContainer();
+        this.prepareColumns();
+    }
+
+    createContainer () {
+        this.$content.append(this.renderContainer());
+        this.$head = this.$content.find('.data-grid-head');
+        this.$body = this.$content.find('.data-grid-body');
+        this.$footer = this.$content.find('.data-grid-footer');
+    }
+
+    renderContainer () {
+        return `<div class="table-responsive"><table class="data-grid-table table table-bordered"><thead class="data-grid-head"></thead><tbody class="data-grid-body"></tbody></table></div>`;
+    }
+
+    prepareColumns () {
         for (const column of this.params.columns) {
             if (typeof column.render !== 'function') {
-                column.render = this.defaultCellValueRender.bind(this);
+                column.render = this.defaultValueRender.bind(this);
             }
         }
     }
 
-    findRows (selector) {
-        return this.$tbody.children(selector);
+    findHeadByName (name) {
+        return this.$head.find(`[data-name="${name}"]`);
     }
 
-    findRowById (id) {
-        return this.$tbody.children(`[data-id="${id}"]`);
+    findItems (selector) {
+        return this.$body.children(selector);
     }
 
-    getRowId (data) {
+    findItemById (id) {
+        return this.$body.children(`[data-id="${id}"]`);
+    }
+
+    getItemId (data) {
         return this.params.key ? data[this.params.key] : '';
-    }
-
-    getNameCells (name) {
-        return this.$table.find(`tbody [data-name="${name}"]`);
     }
 
     getDirection ($element) {
@@ -53,54 +70,83 @@ Jam.DataGridRenderer = class DataGridRenderer {
         return direction === 1 ? ' asc' : direction === -1 ? ' desc' : '';
     }
 
+    addItemListener (event, handler) {
+        this.addBodyListener(event, '.data-item', handler);
+    }
+
+    addBodyOrderListener (handler) {
+        this.addBodyListener('click', '.order-toggle', handler);
+    }
+
+    addHeadOrderListener (handler) {
+        this.addHeadListener('click', '.order-toggle', handler);
+    }
+
+    addBodyListener () {
+        this.$body.on(...arguments);
+    }
+
+    addHeadListener () {
+        this.$head.on(...arguments);
+    }
+
+    addListener () {
+        this.$content.on(...arguments);
+    }
+
     toggleOrder ($toggle, direction) {
-        const $cell = $toggle.closest('th');
+        const $cell = $toggle.closest('.sortable');
         const name = $cell.data('name');
         const code = this.getDirectionName(direction);
         $cell.removeClass('asc').removeClass('desc').addClass(code);
         $toggle.attr('title', this.locale[code]);
-        this.getNameCells(name).toggleClass('ordered', !!code);
     }
 
     clearOrder () {
-        this.$thead.find('.asc').removeClass('asc');
-        this.$thead.find('.desc').removeClass('desc');
-        this.$table.find('.ordered').removeClass('ordered');
+        this.$head.find('.asc').removeClass('asc');
+        this.$head.find('.desc').removeClass('desc');
+        this.$content.find('.ordered').removeClass('ordered');
     }
 
-    drawTableFrame () {
+    setColumns () {
         this.columns = this.grid.getVisibleColumns();
-        this.$thead.html(this.renderHead());
-        this.$tfoot.html(this.renderFooter());
+    }
+
+    drawHead () {
+        this.$head.html(this.renderHead());
+    }
+
+    drawFooter () {
+        this.$footer.html(this.renderFooter());
     }
 
     drawBody (data) {
-        const tbody = this.$tbody;
-        tbody.html(this.renderBody(data));
-        Jam.DateHelper.resolveClientDate(tbody);
-        Jam.t(tbody);
-        Jam.Helper.createSerialImageLoading(tbody);
-        Jam.Helper.executeSerialImageLoading(tbody);
+        const content = this.renderBody(data);
+        this.$body.html(content);
+        this.$content.toggleClass('empty', !content);
+        Jam.DateHelper.resolveClientDate(this.$body);
+        Jam.t(this.$body);
+        Jam.Helper.createSerialImageLoading(this.$body);
+        Jam.Helper.executeSerialImageLoading(this.$body);
     }
 
     renderBody (data) {
         this._groupName = this.grid.getGroupName();
         this._groupDirection = this.grid.getGroupDirection() === 1 ? 'asc' : 'desc';
         delete this._lastGroupValue;
-        return data.map(row => this.renderBodyRow(row)).join('');
+        return data.map(item => this.renderBodyItem(item)).join('');
     }
 
-    renderBodyRow (data) {
+    renderBodyItem (data) {
         if (!data) {
             return '';
         }
         let content = '';
-        this._rowValueMap = {};
         for (let i = 0; i < this.columns.length; ++i) {
             content += this.renderBodyCell(data, this.columns[i], i);
         }
-        const id = this.params.getRowId(data);
-        return this.renderBodyGroup(data) + this.renderBodyRowHtml(id, content, ...arguments);
+        const id = this.params.getItemId(data);
+        return this.renderBodyGroup(data) + this.renderBodyItemHtml(id, content, ...arguments);
     }
 
     renderBodyGroup (data) {
@@ -118,14 +164,14 @@ Jam.DataGridRenderer = class DataGridRenderer {
 
     renderBodyGroupHtml (value, {name, label, translate}) {
         const direction = this._groupDirection;
-        const span = this.columns.length;
+        const cols = this.columns.length;
         const sort = '<span class="order-toggle fa" title="Sort"></span>';
         label = Jam.t(label || name, translate);
-        return `<tr class="group ${direction}"><th title="${label}" colspan="${span}">${value}${sort}</th></tr>`;
+        return `<tr class="group ${direction}"><th title="${label}" colspan="${cols}">${value}${sort}</th></tr>`;
     }
 
-    renderBodyRowHtml (id, content) {
-        return `<tr class="item" data-id="${id}">${content}</tr>`;
+    renderBodyItemHtml (id, content) {
+        return `<tr class="data-item" data-id="${id}">${content}</tr>`;
     }
 
     renderBodyCell (data, column, index) {
@@ -134,18 +180,18 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 
     renderBodyCellHtml (value, column) {
-        const height = this.getMaxCellHeight(column);
-        const style = height ? `style="max-height: ${height}px"` : '';
-        const cell = `<div class="cell" ${style}>${value}</div>`;
-        return `<td class="${this.getBodyCellClass(...arguments)}" data-name="${column.name}">${cell}</td>`;
+        const style = this.getBodyValueStyle(...arguments);
+        const css = this.getBodyCellClass(...arguments);
+        return `<td class="${css}" data-name="${column.name}"><div class="value" ${style}>${value}</div></td>`;
     }
 
     renderValue (data, column) {
-        return !this.isForbiddenValue(data, column)
-            ? column.render(data[column.name], column, data)
-            : Jam.ObjectHelper.has(column.name, data)
+        if (this.isForbiddenValue(data, column)) {
+            return Jam.ObjectHelper.has(column.name, data)
                 ? data[column.name]
                 : Jam.FormatHelper.asNoAccess();
+        }
+        return column.render(data[column.name], column, data);
     }
 
     isForbiddenValue ({_forbidden}, {name}) {
@@ -157,13 +203,18 @@ Jam.DataGridRenderer = class DataGridRenderer {
         return column.cssClass ? `${cssClass} ${column.cssClass}` : cssClass;
     }
 
+    getBodyValueStyle (value, column) {
+        const height = this.getMaxCellHeight(column);
+        return height ? `style="max-height: ${height}px"` : '';
+    }
+
     getMaxCellHeight (column) {
         return Number.isSafeInteger(column.maxCellHeight)
             ? column.maxCellHeight
             : this.params.maxCellHeight;
     }
 
-    defaultCellValueRender (value) {
+    defaultValueRender (value) {
         return value;
     }
 
@@ -272,15 +323,15 @@ Jam.DataGridRenderer = class DataGridRenderer {
 
 Jam.TreeGridRenderer = class TreeGridRenderer extends Jam.DataGridRenderer {
 
-    drawNode ($row, items) {
-        const depth = parseInt($row.data('depth')) + 1;
-        $row.after(items.map(item => this.renderBodyRow(item, depth)).join(''));
+    drawNode ($item, items) {
+        const depth = parseInt($item.data('depth')) + 1;
+        $item.after(items.map(item => this.renderBodyItem(item, depth)).join(''));
     }
 
-    renderBodyRowHtml (id, content, data, depth = 0) {
+    renderBodyItemHtml (id, content, data, depth = 0) {
         const css = data._node_hasChildren ? 'has-children' : '';
         const node = data._node_class || '';
-        return `<tr class="item ${css}" data-depth="${depth}" data-id="${id}" data-class="${node}">${content}</tr>`;
+        return `<tr class="data-item ${css}" data-depth="${depth}" data-id="${id}" data-class="${node}">${content}</tr>`;
     }
 
     renderBodyCellHtml (value, column, index) {

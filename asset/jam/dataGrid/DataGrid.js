@@ -11,15 +11,31 @@ Jam.DataGrid = class DataGrid {
         $.extend(true, DataGrid.defaults, params);
     }
 
+    static getRendererClass (view) {
+        switch (view) {
+            case 'cards': return Jam.CardDataGridRenderer;
+        }
+        return Jam.DataGridRenderer;
+    }
+
+    static resolveParams (params) {
+        params = {
+            ...this.defaults,
+            ...params
+        };
+        return {
+            AjaxProvider: Jam.DataGridAjaxProvider,
+            CommonSearch: Jam.DataGridCommonSearch,
+            Pagination: Jam.Pagination,
+            Provider: Jam.DataGridProvider,
+            Renderer: this.getRendererClass(params.view),
+            Tuner: Jam.DataGridTuner,
+            ...params
+        };
+    }
+
     constructor (container, params) {
-        params = $.extend(true, {
-            'AjaxProvider': Jam.DataGridAjaxProvider,
-            'CommonSearch': Jam.DataGridCommonSearch,
-            'Pagination': Jam.Pagination,
-            'Provider': Jam.DataGridProvider,
-            'Renderer': Jam.DataGridRenderer,
-            'Tuner': Jam.DataGridTuner
-        }, Jam.DataGrid.defaults, params);
+        params = this.constructor.resolveParams(params);
         Object.assign(this, params.overridenMethods);
         this.params = params;
         this.order = {...params.order};
@@ -53,9 +69,11 @@ Jam.DataGrid = class DataGrid {
 
     init () {
         this.prepareColumns();
-        this.renderer.drawTableFrame();
-        this.renderer.$thead.on('click', '.order-toggle', this.onToggleOrder.bind(this));
-        this.renderer.$tbody.on('click', '.order-toggle', this.onToggleGroupOrder.bind(this));
+        this.renderer.setColumns(this.getVisibleColumns());
+        this.renderer.drawHead();
+        this.renderer.drawFooter();
+        this.renderer.addHeadOrderListener(this.onOrder.bind(this));
+        this.renderer.addBodyOrderListener(this.onGroupOrder.bind(this));
         setTimeout(this.load.bind(this), 0);
     }
 
@@ -77,16 +95,16 @@ Jam.DataGrid = class DataGrid {
         $.extend(true, this.params, params);
     }
 
-    findRows (selector) {
-        return this.renderer.findRows(selector);
+    findItems (selector) {
+        return this.renderer.findItems(selector);
     }
 
-    findRowById (id) {
-        return this.renderer.findRowById(id);
+    findItemById (id) {
+        return this.renderer.findItemById(id);
     }
 
-    getRowData ($rows, column) {
-        return $rows.map((index, row) => this.getData(row.dataset.id, column)).get();
+    getItemData ($items, column) {
+        return $items.map((index, item) => this.getData(item.dataset.id, column)).get();
     }
 
     getData (id, column) {
@@ -180,8 +198,10 @@ Jam.DataGrid = class DataGrid {
         this.toggleClass('loading', ...arguments);
     }
 
-    drawTable () {
-        this.renderer.drawTableFrame();
+    drawContent () {
+        this.renderer.setColumns(this.getVisibleColumns());
+        this.renderer.drawHead();
+        this.renderer.drawFooter();
         this.drawPage();
     }
 
@@ -208,9 +228,9 @@ Jam.DataGrid = class DataGrid {
         return info;
     }
 
-    onToggleOrder (event) {
+    onOrder (event) {
         const $toggle = $(event.currentTarget);
-        const $cell = $toggle.closest('th');
+        const $cell = $toggle.closest('.sortable');
         const name = $cell.data('name');
         let direction = -this.renderer.getDirection($cell);
         if (event.shiftKey) {
@@ -226,10 +246,18 @@ Jam.DataGrid = class DataGrid {
         this.load();
     }
 
-    onToggleGroupOrder (event) {
-        const $row = $(event.currentTarget).closest('tr');
-        this.setGrouping(this.getGroupName(), -this.renderer.getDirection($row));
+    onGroupOrder (event) {
+        const $group = $(event.currentTarget).closest('.group');
+        this.setGrouping(this.getGroupName(), -this.renderer.getDirection($group));
         this.load();
+    }
+
+    addItemListener () {
+        this.renderer.addItemListener(...arguments);
+    }
+
+    addListener () {
+        this.renderer.addListener(...arguments);
     }
 
     getStorageKey (key) {
@@ -246,6 +274,7 @@ Jam.DataGrid = class DataGrid {
 };
 
 Jam.DataGrid.defaults = {
+
     columns: [
         // {name: 'b', label: 'B', group: 'g1', sortable: true, searchable: true, hidden: false}
     ],

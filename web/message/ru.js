@@ -201,6 +201,7 @@ Jam.I18n.defaults = {
 
     'nested': 'вложенный',
     'no access': 'нет доступа',
+    'no data': 'нет данных',
     'not equal': 'не равно',
     'not set': 'не задано'
 };

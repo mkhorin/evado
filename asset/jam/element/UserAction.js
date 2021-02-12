@@ -65,9 +65,9 @@ Jam.UserAction = class UserAction extends Jam.Element {
         return this.getParam('reload') ? this.reload(alert) : alert();
     }
 
-    reload (callback) {
+    reload (next) {
         const frame = Jam.frameStack.getLast();
-        frame ? frame.reload().done(callback) : location.reload(true);
+        frame ? frame.reload().done(next) : location.reload(true);
     }
 
     onFail (message) {

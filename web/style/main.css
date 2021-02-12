@@ -145,9 +145,6 @@ ul:last-child {
     overflow-y: auto;
     overflow-x: hidden;
 }
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(0,0,0,.04);
-}
 .folder.card + .card {
     margin-top: 1rem;
 }
@@ -649,6 +646,9 @@ select.form-control {
     margin-top: .2rem;
     opacity: .6;
 }
+.form-group .hint-block:empty {
+    display: none;
+}
 .form-group .hint-block:hover {
     opacity: .9;
 }
@@ -808,7 +808,7 @@ hr + .form-columns {
     vertical-align: top;
 }
 .columns + .inline-group-container {
-    margin-top: .25rem;
+    margin-top: .35rem;
 }
 
 /* FORM OVERRIDE */
@@ -988,7 +988,7 @@ hr + .form-columns {
     padding: 1rem;
 }
 .frame-box-body > .form {
-    padding-top: 1rem;
+    padding: 1rem 0;
     min-height: 20rem;
 }
 
@@ -1192,6 +1192,9 @@ form.was-validated select:valid ~ .select2-container .select2-selection {
 }
 .required.blank .select2-container--default .select2-selection {
     background: var(--required-color);
+}
+.input-group .select2 {
+    width: auto !important;
 }
 
 /* TABS */

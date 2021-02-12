@@ -33,17 +33,17 @@ Jam.SortList = class SortList extends Jam.List {
         this.changed = false;
         this.sourceOrderNumbers = [];
         const column = this.getSourceOrderColumn();
-        for (const row of this.findRows()) {
-            this.sourceOrderNumbers.push(this.grid.getData(row.dataset.id, column));
+        for (const item of this.findItems()) {
+            this.sourceOrderNumbers.push(this.grid.getData(item.dataset.id, column));
         }
     }
 
     getChangedOrder () {
         const column = this.getSourceOrderColumn(), data = {};
-        this.findRows().each((index, row) => {
-            const value = this.grid.getData(row.dataset.id, column);
+        this.findItems().each((index, item) => {
+            const value = this.grid.getData(item.dataset.id, column);
             if (value !== this.sourceOrderNumbers[index]) {
-                data[row.dataset.id] = this.sourceOrderNumbers[index];
+                data[item.dataset.id] = this.sourceOrderNumbers[index];
             }
         });
         return Object.values(data).length ? data : null;
@@ -57,27 +57,27 @@ Jam.SortList = class SortList extends Jam.List {
     }
 
     onDown () {
-        const $rows = this.getSelectedRows();
-        if ($rows && this.swapRows($rows.eq(-1).next(), $rows.eq(-1))) {
-            for (let i = $rows.length - 2; i >= 0; --i) {
-                this.swapRows($rows.eq(i).next(), $rows.eq(i));
+        const $items = this.getSelectedItems();
+        if ($items && this.swapItems($items.eq(-1).next(), $items.eq(-1))) {
+            for (let i = $items.length - 2; i >= 0; --i) {
+                this.swapItems($items.eq(i).next(), $items.eq(i));
             }
         }
         this.changed = this.getChangedOrder();
     }
 
     onUp () {
-        const $rows = this.getSelectedRows();
-        if ($rows && this.swapRows($rows.eq(0), $rows.eq(0).prev())) {
-            for (let i = 1; i < $rows.length; ++i) {
-                this.swapRows($rows.eq(i), $rows.eq(i).prev());
+        const $items = this.getSelectedItems();
+        if ($items && this.swapItems($items.eq(0), $items.eq(0).prev())) {
+            for (let i = 1; i < $items.length; ++i) {
+                this.swapItems($items.eq(i), $items.eq(i).prev());
             }
         }
         this.changed = this.getChangedOrder();
     }
 
     onMouseWheel (event) {
-        if (this.findSelectedRows().length) {
+        if (this.findSelectedItems().length) {
             if (event.originalEvent.deltaY < 0) {
                 return this.onUp();
             }
@@ -107,7 +107,7 @@ Jam.SortList = class SortList extends Jam.List {
         this.frame.close();
     }
 
-    swapRows ($1, $2) {
+    swapItems ($1, $2) {
         if (!$2.length || !$1.length) {
             return false;
         }

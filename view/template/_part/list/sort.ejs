@@ -77,12 +77,8 @@ if (data.jam === undefined) {
         <%- include(_view.get('_part/other/render'), {data: tools}) %>
         <% } %>
     </div>
-    <div class="table-responsive">
-        <table class="data-grid-table table table-bordered table-striped">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
-    </div>
+    <div class="data-grid-content"></div>
+
     <%- include(_view.get('_part/list/bottom')) %>
 
     <div class="overlay">

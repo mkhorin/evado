@@ -5,7 +5,6 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     init () {
         super.init();
-        this.multiple = this.params.multiple;
         if (this.params.lazyLoad) {
             this.afterInit();
         } else {
@@ -35,17 +34,17 @@ Jam.AttrList = class AttrList extends Jam.List {
         return new Jam.Alert({container: $alert => this.$grid.prepend($alert)});
     }
 
-    prepareRow (row, data, index) {
+    prepareItem (item, data, index) {
         if (this.changes.getLinks().includes(data[this.params.key])) {
-            $(row).addClass('linked').attr('title', 'Add');
+            $(item).addClass('linked').attr('title', 'Add');
         }
         if (this.changes.getUnlinks().includes(data[this.params.key])) {
-            $(row).addClass('unlinked').attr('title', 'Remove');
+            $(item).addClass('unlinked').attr('title', 'Remove');
         }
         if (this.changes.getDeletes().includes(data[this.params.key])) {
-            $(row).addClass('deleted').attr('title', 'Delete');
+            $(item).addClass('deleted').attr('title', 'Delete');
         }
-        super.prepareRow(row, data, index);
+        super.prepareItem(item, data, index);
     }
 
     beforeXhr (event, data) {
@@ -117,12 +116,12 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     onDelete () {
-        const $rows = this.getSelectedRows();
-        if ($rows) {
+        const $items = this.getSelectedItems();
+        if ($items) {
             const deferred = this.params.confirmDeletion
                 ? Jam.dialog.confirmListDeletion()
                 : null;
-            $.when(deferred).then(() => this.deleteObjects($rows));
+            $.when(deferred).then(() => this.deleteObjects($items));
         }
     }
 
@@ -141,9 +140,9 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     onUnlink () {
-        const $rows = this.getSelectedRows();
-        if ($rows) {
-            this.unlinkObjects($rows);
+        const $items = this.getSelectedItems();
+        if ($items) {
+            this.unlinkObjects($items);
         }
     }
 
@@ -155,21 +154,21 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     linkSingle (ids) {
-        this.changes.linkSingle(ids, this.getObjectIds(this.findRows()), this.params);
+        this.changes.linkSingle(ids, this.getObjectIds(this.findItems()), this.params);
     }
 
     linkMultiple (ids) {
         this.changes.linkMultiple(ids);
     }
 
-    unlinkObjects ($rows) {
-        this.changes.unlinkObjects(this.getObjectIds($rows));
+    unlinkObjects ($items) {
+        this.changes.unlinkObjects(this.getObjectIds($items));
         this.setValue();
         this.redraw();
     }
 
-    deleteObjects ($rows) {
-        this.changes.deleteObjects(this.getObjectIds($rows));
+    deleteObjects ($items) {
+        this.changes.deleteObjects(this.getObjectIds($items));
         this.setValue();
         this.redraw();
     }
@@ -178,7 +177,7 @@ Jam.AttrList = class AttrList extends Jam.List {
      * Revert unlinks or deletes
      */
     revertChanges () {
-        const ids = this.getObjectIds(this.findSelectedRows());
+        const ids = this.getObjectIds(this.findSelectedItems());
         const result = this.multiple
             ? this.changes.revertMultiple(ids)
             : this.changes.revertSingle(ids);
@@ -190,116 +189,11 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     showCommands () {
-        this.$grid.addClass('show-commands');
+        this.toggleClass('show-commands', true);
     }
 
     hideCommands () {
-        this.$grid.removeClass('show-commands');
+        this.toggleClass('show-commands', false);
         this.alert.hide();
-    }
-};
-
-Jam.AttrListChanges = class AttrListChanges {
-
-    constructor (attr) {
-        this.attr = attr;
-        this.clear();
-    }
-
-    isEmpty () {
-        return !this.data.links.length
-            && !this.data.unlinks.length
-            && !this.data.deletes.length;
-    }
-
-    setDefaultValue (value) {
-        if (value) {
-            this.data.links = value.split(',');
-        }
-    }
-
-    hasLinks () {
-        return this.data.links.length > 0;
-    }
-
-    getLinks () {
-        return this.data.links;
-    }
-
-    clear () {
-        this.data = {links: [], unlinks: [], deletes: []};
-    }
-
-    clearLinks () {
-        this.data.links = [];
-    }
-
-    getUnlinks () {
-        return this.data.unlinks;
-    }
-
-    getDeletes () {
-        return this.data.deletes;
-    }
-
-    serialize () {
-        return this.isEmpty() ? '' : JSON.stringify(this.data);
-    }
-
-    linkSingle (ids, currents, params) {
-        if (ids[0] === currents[0]) {
-            return this.clear();
-        }
-        if (this.data.deletes.length || (params.delete && !params.unlink)) {
-            this.data.unlinks = [];
-            this.data.deletes = currents;
-        } else {
-            this.data.unlinks = currents;
-            this.data.deletes = [];
-        }
-        this.data.links = ids;
-    }
-
-    linkMultiple (ids) {
-        this.data.links = this.data.links.concat(Jam.ArrayHelper.exclude(this.data.links, ids));
-        this.data.unlinks = Jam.ArrayHelper.exclude(ids, this.data.unlinks);
-        this.data.deletes = Jam.ArrayHelper.exclude(ids, this.data.deletes);
-    }
-
-    unlinkObjects (ids) {
-        this.data.links = Jam.ArrayHelper.exclude(ids, this.data.links);
-        this.data.unlinks = this.data.unlinks.concat(Jam.ArrayHelper.exclude(this.data.unlinks, ids));
-        this.data.deletes = Jam.ArrayHelper.exclude(ids, this.data.deletes);
-    }
-
-    deleteObjects (ids) {
-        this.data.links = Jam.ArrayHelper.exclude(ids, this.data.links);
-        this.data.unlinks = Jam.ArrayHelper.exclude(ids, this.data.unlinks);
-        this.data.deletes = this.data.deletes.concat(Jam.ArrayHelper.exclude(this.data.deletes, ids));
-    }
-
-    revertMultiple (ids) {
-        return this.revertItems('unlinks', ids) || this.revertItems('deletes', ids);
-    }
-
-    revertSingle (ids) {
-        const reverted = this.revertItems('unlinks', ids) || this.revertItems('deletes', ids);
-        if (reverted) {
-            this.data.unlinks = this.data.links;
-            this.data.links = [];
-        }
-        return reverted;
-    }
-
-    revertItems (key, ids) {
-        let reverted = false;
-        for (const id of ids) {
-            const index = this.data[key].indexOf(id);
-            if (index !== -1) {
-                this.data[key].splice(index, 1);
-                reverted = true;
-            }
-        }
-        return reverted;
     }
 };

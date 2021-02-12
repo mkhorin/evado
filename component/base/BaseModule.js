@@ -7,6 +7,14 @@ const Base = require('areto/base/Module');
 
 module.exports = class BaseModule extends Base {
 
+    static getConstants () {
+        return {
+            INHERITED_UNDEFINED_CONFIGURATION_KEYS: super.INHERITED_UNDEFINED_CONFIGURATION_KEYS.concat([
+                'sideMenu'
+            ])
+        };
+    }
+
     getFileStorage () {
         return this.components.get('fileStorage');
     }
@@ -59,3 +67,4 @@ module.exports = class BaseModule extends Base {
         return this.getObserver().handle(...arguments);
     }
 };
+module.exports.init();

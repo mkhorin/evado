@@ -60,6 +60,10 @@ Jam.ListFilter = class ListFilter {
         this.events.trigger('afterBuild');
     }
 
+    getAttrNames () {
+        return this.params.columns.map(({name}) => name);
+    }
+
     getAttrParams (name) {
         return this.group?.getAttrParams(name);
     }

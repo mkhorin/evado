@@ -6,10 +6,10 @@ Jam.DataGridProvider = class DataGridProvider {
     constructor (grid) {
         this.grid = grid;
         this.params = grid.params;
-        this.initColumns();
+        this.prepareColumns();
     }
 
-    initColumns () {
+    prepareColumns () {
         for (const column of this.params.columns) {
             column.formatFilterValue = typeof column.format === 'function'
                 ? column.format

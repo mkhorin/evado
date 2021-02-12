@@ -3,47 +3,47 @@
  */
 Jam.TreeGridNode = class TreeGridNode {
 
-    static get ({$row}) {
-        return $row.data('node') || Reflect.construct(this, arguments);
+    static get ({$item}) {
+        return $item.data('node') || Reflect.construct(this, arguments);
     }
 
     constructor (config) {
         Object.assign(this, config);
-        this.$row.data('node', this);
+        this.$item.data('node', this);
     }
 
     isOpened () {
-        return this.$row.hasClass('opened');
+        return this.$item.hasClass('opened');
     }
 
     getId () {
-        return this.$row.data('id');
+        return this.$item.data('id');
     }
 
     getDepth () {
-        return parseInt(this.$row.data('depth'));
+        return parseInt(this.$item.data('depth'));
     }
 
     getChildren () {
-        return this.getNestedRows().filter(`[data-depth="${this.getDepth() + 1}"]`);
+        return this.getNestedItems().filter(`[data-depth="${this.getDepth() + 1}"]`);
     }
 
-    getNestedRows () {
+    getNestedItems () {
         const depth = this.getDepth();
-        return this.$row.nextUntil(`[data-depth="${depth}"]`).filter((index, element) => {
+        return this.$item.nextUntil(`[data-depth="${depth}"]`).filter((index, element) => {
             return element.dataset.depth > depth;
         });
     }
 
     toggle (state) {
-        this.$row.toggleClass('opened', state);
+        this.$item.toggleClass('opened', state);
         this.isOpened() ? this.expand() : this.collapse();
     }
 
     collapse () {
         const $children = this.getChildren();
-        for (const row of $children.filter('.opened')) {
-            this.grid.getNodeByRow($(row)).toggle(false);
+        for (const item of $children.filter('.opened')) {
+            this.grid.getNodeByItem($(item)).toggle(false);
         }
         if (this.grid.params.clearCollapsedNode) {
             $children.remove();
@@ -54,7 +54,9 @@ Jam.TreeGridNode = class TreeGridNode {
     }
 
     expand () {
-        this.loaded ? this.$row.after(this._detachedChildren) : this.load();
+        this.loaded
+            ? this.$item.after(this._detachedChildren)
+            : this.load();
     }
 
     load () {

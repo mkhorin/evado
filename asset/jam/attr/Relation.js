@@ -60,7 +60,7 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
 
     getDependencyValue () {
         let data = this.list
-            ? this.list.getObjectIds(this.list.findRows())
+            ? this.list.getObjectIds(this.list.findItems())
             : this.changes.getLinks();
         data = Jam.ArrayHelper.exclude(this.changes.getUnlinks(), data);
         data = Jam.ArrayHelper.exclude(this.changes.getDeletes(), data);
