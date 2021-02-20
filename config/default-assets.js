@@ -6,7 +6,7 @@
 module.exports = {
 
     build: [{
-        Class: 'MergeFiles',
+        Class: 'FileMerger',
         sources: [
             'jam/Jam.js',
             'jam/element/Element.js',
@@ -29,6 +29,6 @@ module.exports = {
         'vendor/moment/locale': 'vendor/node_modules/moment/locale',
         'vendor/moment/min': 'vendor/node_modules/moment/min',
         'vendor/select2': 'vendor/node_modules/select2/dist',
-        'vendor/jam': 'dist/jam.min.js'
+        'vendor': 'dist/jam.min.js'
     }
 };

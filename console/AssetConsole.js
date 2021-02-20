@@ -9,9 +9,9 @@ module.exports = class AssetConsole extends Base {
 
     constructor (config) {
         super({
-            assetBuild: require('./asset/AssetBuild'),
-            assetDeploy: require('./asset/AssetDeploy'),
-            assetInstall: require('./asset/AssetInstall'),
+            assetBuilder: require('./asset/AssetBuilder'),
+            assetDeployer: require('./asset/AssetDeployer'),
+            assetInstaller: require('./asset/AssetInstaller'),
             ...config
         });
         this.params = Object.assign(this.getDefaultParams(), this.params);
@@ -36,23 +36,23 @@ module.exports = class AssetConsole extends Base {
     }
 
     async install () {
-        await this.execute(this.assetInstall, this.getModule());
+        await this.execute(this.assetInstaller, this.getModule());
         this.log('info', 'Assets installed. Deploy assets to publish');
     }
 
     async build () {
-        await this.execute(this.assetBuild, this.getModule());
-        this.log('info', 'Assets built. Deploy assets to publish');
+        await this.execute(this.assetBuilder, this.getModule());
+        this.log('info', 'Assets are built. Deploy assets to publish');
     }
 
     async deploy () {
-        await this.execute(this.assetDeploy, this.getModule());
+        await this.execute(this.assetDeployer, this.getModule());
         this.log('info', 'Assets deployed');
     }
 
     async execute (config, module) {
-        const asset = this.createModuleAsset(config, module);
-        await asset.execute();
+        const executor = this.createAssetExecutor(config, module);
+        await executor.execute();
         if (this.params.withModules) {
             for (const child of module.modules) {
                 await this.execute(config, child);
@@ -60,7 +60,7 @@ module.exports = class AssetConsole extends Base {
         }
     }
 
-    createModuleAsset (config, module) {
+    createAssetExecutor (config, module) {
         return this.spawn(config, {console: this, module});
     }
 

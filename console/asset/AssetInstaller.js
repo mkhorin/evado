@@ -5,7 +5,7 @@
 
 const Base = require('./Asset');
 
-module.exports = class AssetInstall extends Base {
+module.exports = class AssetInstaller extends Base {
 
     getDefaultParams () {
         return Object.assign(super.getDefaultParams(), {
@@ -13,8 +13,12 @@ module.exports = class AssetInstall extends Base {
         });
     }
 
+    getVendorDir () {
+        return this.params.vendorDir;
+    }
+
     async execute () {
-        const dir = this.params.vendorDir;
+        const dir = this.getVendorDir();
         if (typeof dir === 'string') {
             for (const module of this.module.getOriginalHierarchy()) {
                 await this.installVendors(module.getPath(dir));

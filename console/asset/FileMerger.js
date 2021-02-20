@@ -5,11 +5,12 @@
 
 const Base = require('areto/base/Base');
 
-module.exports = class MergeFiles extends Base {
+module.exports = class FileMerger extends Base {
 
     constructor (config) {
         super({
             extensions: ['.js'],
+            logging: false,
             shrinking: true,
             ...config
         });
@@ -17,7 +18,6 @@ module.exports = class MergeFiles extends Base {
 
     async execute () {
         let result = '';
-        this.assetDir = this.asset.getAssetDir();
         this.processedSources = new DataMap;
         const sources = typeof this.sources === 'string' ? [this.sources] : this.sources;
         for (const source of sources) {
@@ -28,16 +28,17 @@ module.exports = class MergeFiles extends Base {
             result += content;
         }
         result = this.prepareContent(result);
-        const target = this.module.getPath(this.assetDir, this.target);
+        const target = path.join(this.assetDir, this.target);
         await fs.promises.mkdir(path.dirname(target), {recursive: true});
         await fs.promises.writeFile(target, result, 'utf8');
         return true;
     }
 
     async mergeSource (source) {
-        const file = this.module.getPath(this.assetDir, source);
+        const file = path.join(this.assetDir, source);
         const stat = await FileHelper.getStat(file);
         if (!stat) {
+            this.log('error', `File not found: ${file}`);
             return false;
         }
         return stat.isDirectory()
@@ -81,12 +82,15 @@ module.exports = class MergeFiles extends Base {
     }
 
     log () {
-        this.asset.log(...arguments);
+        if (this.logging) {
+            CommonHelper.log(this.module, this.constructor.name, ...arguments);
+        }
     }
 };
 
-const fs = require('fs');
-const path = require('path');
+const CommonHelper = require('areto/helper/CommonHelper');
 const DataMap = require('areto/base/DataMap');
 const FileHelper = require('areto/helper/FileHelper');
 const Minifier = require('areto/web/packer/Minifier');
+const fs = require('fs');
+const path = require('path');
