@@ -3,6 +3,21 @@
  */
 Jam.ListDataFormatter = class ListDataFormatter {
 
+    static METHODS = {
+        boolean: 'asBoolean',
+        bytes: 'asBytes',
+        date: 'asDate',
+        datetime: 'asDatetime',
+        label:'asDefault',
+        link:'asLink',
+        relation: 'asRelation',
+        select: 'asSelect',
+        thumbnail: 'asThumbnail',
+        time: 'asTime',
+        timestamp: 'asTimestamp',
+        title: 'asTitle'
+    };
+
     getRenderingMethod (data) {
         const name = typeof data === 'string' ? data : data ? data.name : null;
         const method = this.getFormattingMethod(name);
@@ -13,8 +28,8 @@ Jam.ListDataFormatter = class ListDataFormatter {
         if (!name) {
             return this.asDefault;
         }
-        if (Jam.ObjectHelper.has(name, Jam.ListDataFormatter.METHODS)) {
-            return this[Jam.ListDataFormatter.METHODS[name]];
+        if (Jam.ObjectHelper.has(name, this.constructor.METHODS)) {
+            return this[this.constructor.METHODS[name]];
         }
         console.error(`Formatting method not found: ${name}`);
         return this.asDefault;
@@ -173,20 +188,4 @@ Jam.ListDataFormatter = class ListDataFormatter {
         url += (url.includes('?') ? '&' : '?') + $.param({...format.params, ...params});
         return `<a href="${url}" class="frame-link">${content}</a>`;
     }
-};
-
-Jam.ListDataFormatter.METHODS = {
-
-    boolean: 'asBoolean',
-    bytes: 'asBytes',
-    date: 'asDate',
-    datetime: 'asDatetime',
-    label:'asDefault',
-    link:'asLink',
-    relation: 'asRelation',
-    select: 'asSelect',
-    thumbnail: 'asThumbnail',
-    time: 'asTime',
-    timestamp: 'asTimestamp',
-    title: 'asTitle'
 };

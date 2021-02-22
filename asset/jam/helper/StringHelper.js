@@ -3,9 +3,16 @@
  */
 Jam.StringHelper = class StringHelper {
 
+    static HTML_REGEX = /&(?!#?[a-zA-Z0-9]+;)/g;
+    static TAGS_REGEX = /(<([^>]+)>)/ig;
+    static TAG_START_REGEX = /</g;
+    static TAG_END_REGEX = />/g;
+    static SINGLE_QUOTE_REGEX = /'/g;
+    static DOUBLE_QUOTE_REGEX = /"/g;
+
     static clearTags (text) {
         return typeof text === 'string'
-            ? text.replace(Jam.StringHelper.TAGS_REGEX, '')
+            ? text.replace(this.TAGS_REGEX, '')
             : text;
     }
 
@@ -13,21 +20,21 @@ Jam.StringHelper = class StringHelper {
         if (typeof text !== 'string') {
             return text;
         }
-        text = text.replace(Jam.StringHelper.HTML_REGEX, '&amp;');
+        text = text.replace(this.HTML_REGEX, '&amp;');
         return this.escapeQuotes(this.escapeTags(text));
     }
 
     static escapeTags (text) {
         return typeof text === 'string'
-            ? text.replace(Jam.StringHelper.TAG_START_REGEX, '&lt;')
-                  .replace(Jam.StringHelper.TAG_END_REGEX, '&gt;')
+            ? text.replace(this.TAG_START_REGEX, '&lt;')
+                  .replace(this.TAG_END_REGEX, '&gt;')
             : text;
     }
 
     static escapeQuotes (text) {
         return typeof text === 'string'
-            ? text.replace(Jam.StringHelper.SINGLE_QUOTE_REGEX, '&#39;')
-                  .replace(Jam.StringHelper.DOUBLE_QUOTE_REGEX, '&quot;')
+            ? text.replace(this.SINGLE_QUOTE_REGEX, '&#39;')
+                  .replace(this.DOUBLE_QUOTE_REGEX, '&quot;')
             : text;
     }
 
@@ -43,11 +50,12 @@ Jam.StringHelper = class StringHelper {
         const regex = new RegExp(`{${param}}`, 'g');
         return str.replace(regex, value);
     }
-};
 
-Jam.StringHelper.HTML_REGEX = /&(?!#?[a-zA-Z0-9]+;)/g;
-Jam.StringHelper.TAGS_REGEX = /(<([^>]+)>)/ig;
-Jam.StringHelper.TAG_START_REGEX = /</g;
-Jam.StringHelper.TAG_END_REGEX = />/g;
-Jam.StringHelper.SINGLE_QUOTE_REGEX = /'/g;
-Jam.StringHelper.DOUBLE_QUOTE_REGEX = /"/g;
+    static trimEnd (text, end) {
+        if (typeof text !== 'string' || typeof end !== 'string') {
+            return text;
+        }
+        const index = text.length - end.length;
+        return text.lastIndexOf(end) === index ? text.substring(0, index) : text;
+    }
+};

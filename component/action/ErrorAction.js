@@ -10,7 +10,7 @@ module.exports = class ErrorAction extends Base {
     constructor (config) {
         super({
             ajax: config.controller.isAjax(),
-            serverErrorMessage: 'Something went wrong. We will work on fixing that right away',
+            serverErrorMessage: 'Something went wrong. Internal server error',
             ...config
         })
     }

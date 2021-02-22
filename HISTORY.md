@@ -1,3 +1,14 @@
+## 2.1.0
+
+* asset/jam/dataGrid
+    - refactor data grid render
+* asset/jam/list
+    - load a list on demand       
+* component/meta/MetaModels
+    - remove undefined model creation    
+* console/AssetConsole
+    - refactor asset managers
+
 ## 2.0.0
 
 * console/AssetConsole

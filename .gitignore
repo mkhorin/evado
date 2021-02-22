@@ -2,31 +2,20 @@
 /.idea/*
 
 asset/dist
+config/*.local.js
 web/vendor
 
 *.log
 npm-debug.log*
-temp
 
-# Runtime data
 *.pid
 *.seed
 
-# nyc test coverage
-.nyc_output
-
-# Grunt intermediate storage
-.grunt
-
-# node-waf configuration
-.lock-wscript
-
-# Dependency directories
 node_modules
 jspm_packages
 
-# Optional npm cache directory
-.npm
-
-# Optional REPL history
+.grunt
+.lock-wscript
 .node_repl_history
+.npm
+.nyc_output

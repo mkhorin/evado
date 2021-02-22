@@ -1,30 +1,30 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
  */
-Jam.ModelConditionOperators = {
-    'AND': 'validateAnd',
-    'OR': 'validateOr',
-    'EMPTY': 'validateEmpty',
-    'NOT EMPTY': 'validateNotEmpty',
-    'BETWEEN': 'validateBetween',
-    'NOT BETWEEN': 'validateNotBetween',
-    'IN': 'validateIn',
-    'NOT IN': 'validateNotIn',
-    'REGEX': 'validateRegex',
-    '=': 'validateEqual',
-    '!=': 'validateNotEqual',
-    '>': 'validateGreater',
-    '>=': 'validateGreaterOrEqual',
-    '<': 'validateLess',
-    '<=': 'validateLessOrEqual',
-    'FALSE': 'validateFalse',
-    'TRUE': 'validateTrue',
-    'INITIAL': 'validateInitial',
-    'START TRIGGER': 'validateStartTrigger',
-    'TRIGGER': 'validateTrigger'
-};
-
 Jam.ModelCondition = class ModelCondition {
+
+    static OPERATORS = {
+        'AND': 'validateAnd',
+        'OR': 'validateOr',
+        'EMPTY': 'validateEmpty',
+        'NOT EMPTY': 'validateNotEmpty',
+        'BETWEEN': 'validateBetween',
+        'NOT BETWEEN': 'validateNotBetween',
+        'IN': 'validateIn',
+        'NOT IN': 'validateNotIn',
+        'REGEX': 'validateRegex',
+        '=': 'validateEqual',
+        '!=': 'validateNotEqual',
+        '>': 'validateGreater',
+        '>=': 'validateGreaterOrEqual',
+        '<': 'validateLess',
+        '<=': 'validateLessOrEqual',
+        'FALSE': 'validateFalse',
+        'TRUE': 'validateTrue',
+        'INITIAL': 'validateInitial',
+        'START TRIGGER': 'validateStartTrigger',
+        'TRIGGER': 'validateTrigger'
+    };
 
     constructor (data, model) {
         this.data = data;
@@ -66,8 +66,8 @@ Jam.ModelCondition = class ModelCondition {
         } else {
             data = data.slice(1);
         }
-        if (Jam.ModelConditionOperators.hasOwnProperty(operator)) {
-            return this[Jam.ModelConditionOperators[operator]](operator, data);
+        if (this.constructor.OPERATORS.hasOwnProperty(operator)) {
+            return this[this.constructor.OPERATORS[operator]](operator, data);
         }
         this.log('error', `Operator not found: ${operator}`);
     }

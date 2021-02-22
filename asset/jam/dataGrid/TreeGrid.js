@@ -3,6 +3,11 @@
  */
 Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
 
+    static defaults = {
+        clearCollapsedNode: true,
+        nodeToggle: '<div class="node-toggle"><i class="fas fa-angle-right"></i></div>'
+    };
+
     constructor (container, params) {
         super(container, $.extend(true, {
             'Renderer': Jam.TreeGridRenderer,
@@ -41,10 +46,4 @@ Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
         this.renderer.drawNode(node.$item, this.items);
         this.events.trigger('afterDrawNode', node);
     }
-};
-
-Jam.TreeGrid.defaults = {
-
-    clearCollapsedNode: true,
-    nodeToggle: '<div class="node-toggle"><i class="fas fa-angle-right"></i></div>'
 };
