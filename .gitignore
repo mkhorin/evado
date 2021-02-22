@@ -1,9 +1,9 @@
 /.hg/*
 /.idea/*
 
-asset/dist
-config/*.local.js
-web/vendor
+**/asset/dist/
+**/config/*.local.js
+**/web/vendor/
 
 *.log
 npm-debug.log*

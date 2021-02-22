@@ -54,7 +54,7 @@ class Jam {
             if (Class?.prototype instanceof Jam.Element) {
                 instances.push(this[name].createInstance($(element)));
             } else {
-                console.error(`Invalid Jam.Element: ${name}`);
+                console.error(`Invalid Jam element: ${name}`);
             }
         }
         for (const instance of instances) {

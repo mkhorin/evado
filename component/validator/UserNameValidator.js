@@ -3,6 +3,8 @@
  */
 'use strict';
 
+const USER_NAME_REGEX = /(^[a-z\s-]+$)|(^[а-я\s-]+$)/i;
+
 const Base = require('areto/validator/StringValidator');
 
 module.exports = class UserNameValidator extends Base {
@@ -11,7 +13,7 @@ module.exports = class UserNameValidator extends Base {
         super({
             min: 2,
             max: 32,
-            pattern: /(^[a-z\s-]+$)|(^[а-я\s-]+$)/i,
+            pattern: USER_NAME_REGEX,
             shrinking: true,
             ...config.module.getParam('userNameValidator'),
             ...config

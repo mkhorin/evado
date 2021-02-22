@@ -1,5 +1,6 @@
 
 .data-grid {
+    --content-color: #111;
     --selected-row-color: #fff4e0;
     position: relative;
     margin-top: .1rem;
@@ -10,11 +11,12 @@
 }
 .data-grid-content {
     margin-bottom: .7rem;
-    color: #111;
+    color: var(--content-color);
     -moz-osx-font-smoothing: auto;
     -webkit-font-smoothing: antialiased;
 }
 .data-grid-table {
+    color: var(--content-color);
     margin-bottom: 0;
 }
 .data-grid-table > tbody {

@@ -29,6 +29,7 @@
     min-height: 100%;
 }
 body {
+    --body-color: #111;
     --btn-space: .3rem;
     --header-height: 50px;
     --header-indent: var(--header-height);
@@ -45,6 +46,7 @@ body {
     --title-label-color: #677;
     --required-color: #fff8f8;
 
+    color: var(--body-color);
     height: auto;
     min-height: 100%;
     background-color: #f0f4f8;
@@ -145,20 +147,20 @@ ul:last-child {
     overflow-y: auto;
     overflow-x: hidden;
 }
-.folder.card + .card {
-    margin-top: 1rem;
-}
 .utility-container button.utility-item {
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.languages .nav-btn {
+    text-transform: uppercase;
 }
 
 /* CARDS */
 
 .card {
     --title: #222;
-    --background: rgba(96,128,0,.05);
+    --background: rgba(128,128,128,.05);
     --border: rgba(0,0,0,.125);
 
     border-color: var(--border);
@@ -204,7 +206,9 @@ ul:last-child {
     --border: #d0d0d0;
     --title: #666;
 }
-
+.folder.card + .card {
+    margin-top: 1rem;
+}
 
 /* ERROR PAGE */
 
@@ -630,7 +634,7 @@ body.loading {
 .form-control,
 .form-control-plaintext,
 .form-check-label {
-    color: #111;
+    color: var(--body-color);
     -moz-osx-font-smoothing: auto;
     -webkit-font-smoothing: antialiased;
 }
@@ -892,6 +896,11 @@ hr + .form-columns {
 .user-menu .dropdown-menu {
     width: 20rem;
     padding: 0;
+}
+.user-menu .nav-btn {
+    max-width: 25vw;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .user-menu .user-name {
     margin-bottom: .75rem;
