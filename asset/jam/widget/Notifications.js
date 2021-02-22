@@ -1,7 +1,7 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
  */
-Jam.NotificationWidget = class NotificationWidget extends Jam.Element {
+Jam.Notifications = class Notifications extends Jam.Element {
 
     init () {
         this.setCounter(this.getData('counter'));

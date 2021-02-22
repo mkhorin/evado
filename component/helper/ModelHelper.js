@@ -35,8 +35,27 @@ module.exports = class ModelHelper {
         };
     }
 
+    static getLabelSelectItems (attr, model) {
+        const data = model.constructor.getAttrValueLabels(attr);
+        return SelectHelper.getMapItems(data);
+    }
+
     static formatDefaultRule (attr, model, formatter, type, params) {
         model.setViewAttr(attr, formatter.format(model.get(attr), type, params));
+    }
+
+    static resolveFilterColumns (columns, model) {
+        for (const column of columns) {
+            if (column.label === undefined) {
+                column.label = model.getAttrLabel(column.name);
+            }
+            if (column.items === 'labels') {
+                column.items = this.getLabelSelectItems(column.name, model);
+            }
+            if (column.columns) {
+                this.resolveFilterColumns(column.columns, model.getRelation(column.name).model);
+            }
+        }
     }
 
     static async truncateOverflow ({query, overflow, truncation, inBulk}) {
@@ -51,3 +70,5 @@ module.exports = class ModelHelper {
         }
     }
 };
+
+const SelectHelper = require('./SelectHelper');

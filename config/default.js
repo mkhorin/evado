@@ -102,20 +102,7 @@ module.exports = {
     classes: require('./default-classes'),
     params: require('./default-params'),
     utilities: require('./default-utilities'),
-    widgets: {
-        'commonMenu': {
-            Class: require('../component/widget/CommonMenu')
-        },
-        'sideMenu': {
-            Class: require('evado/component/widget/SideMenu')
-        },
-        'notifications': {
-            Class: require('../component/widget/Notifications')
-        },
-        'user': {
-            Class: require('../component/widget/UserWidget')
-        }
-    },
+    widgets: require('./default-widgets'),
     indexes: [
         'model/RawFile',
         'model/User',

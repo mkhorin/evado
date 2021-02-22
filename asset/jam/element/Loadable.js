@@ -6,7 +6,7 @@ Jam.Loadable = class Loadable extends Jam.Element {
     constructor ($container) {
         super($container);
         this.$container = $container;
-        this.$toggle = $container.find('.loadable-toggle');
+        this.$toggle = this.find('.loadable-toggle');
         this.$toggle.click(this.onToggle.bind(this));
     }
 
@@ -21,7 +21,7 @@ Jam.Loadable = class Loadable extends Jam.Element {
     }
 
     onAlways () {
-        this.$container.addClass('loaded');
+        this.toggleClass('loaded', true);
     }
 
     onDone (data) {
@@ -34,7 +34,8 @@ Jam.Loadable = class Loadable extends Jam.Element {
 
     load () {
         this.abort();
-        this.$container.removeClass('loaded').addClass('loading');
+        this.toggleClass('loaded', false);
+        this.toggleClass('loading', true);
         this.xhr = $[this.getMethod()](this.getUrl(), this.getRequestData())
             .always(this.onAlways.bind(this))
             .done(this.onDone.bind(this))
@@ -43,28 +44,32 @@ Jam.Loadable = class Loadable extends Jam.Element {
 
     abort () {
         this.xhr?.abort();
-        this.$container.removeClass('loading');
+        this.toggleClass('loading', false);
     }
 
     getMethod () {
-        return this.$container.data('method') || 'get';
+        return this.getData('method') || 'get';
     }
 
     getUrl () {
-        return this.$container.data('url');
+        return this.getData('url');
     }
 
     getRequestData () {
         return {
             url: location.pathname,
             params: location.search,
-            ...this.$container.data('params')
+            ...this.getData('params')
         };
+    }
+
+    findContent () {
+        return this.find('.loadable-content');
     }
 
     setContent (data) {
         Jam.resource.resolve(data).then(result => {
-            const $content = this.$container.find('.loadable-content');
+            const $content = this.findContent();
             $content.html(result);
             Jam.t($content);
             Jam.createElements($content);

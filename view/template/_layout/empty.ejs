@@ -8,13 +8,14 @@
     <nav class="navbar navbar-expand-md navbar-dark">
 
         <%- include(_view.get('_part/nav/logo')) %>
-        <%- include(_view.get('_part/nav/commonMenuToggle')) %>
+        <%- include(_view.get('_part/nav/commonMenu')) %>
         <%- include(_view.get('_part/nav/frameStackBack')) %>
 
         <div class="ml-auto"></div>
 
         <%- _view.placeWidget('notifications') %>
-        <%- include(_view.get('_part/nav/userToggle')) %>
+        <%- include(_view.get('_part/nav/user')) %>
+        <%- include(_view.get('_part/nav/language')) %>
     </nav>
 </header>
 

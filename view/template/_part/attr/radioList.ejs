@@ -4,7 +4,7 @@ const p = {
     handler: 'RadioList'
 };
 if (items === 'labels') {
-    items = _controller.getLabelSelectItems(attr, model);
+    items = _view.ModelHelper.getLabelSelectItems(attr, model);
 }
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>

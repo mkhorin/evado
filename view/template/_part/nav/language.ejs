@@ -1,0 +1,13 @@
+<!-- _part/nav/language -->
+<% if (_module.params.languageToggle) { %>
+<div class="languages nav-block" data-jam="Languages" data-url="default/widget?id=languages">
+    <button class="nav-btn nav-btn-primary btn loadable-toggle" data-toggle="dropdown" title="Language">
+        <%= _controller.language %>
+    </button>
+    <div class="dropdown-menu loadable-content dropdown-menu-right">
+        <div class="text-center">
+            <i class="fa fa-spinner fa-spin"></i>
+        </div>
+    </div>
+</div>
+<% } %>

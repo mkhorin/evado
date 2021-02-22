@@ -3,10 +3,10 @@
  */
 'use strict';
 
-const DEFAULT_VALUE_KEY = '_id';
-const DEFAULT_TEXT_KEY = 'name';
-
 module.exports = class SelectHelper {
+
+    static DEFAULT_VALUE_KEY = '_id';
+    static DEFAULT_TEXT_KEY = 'name';
 
     static getMapItems (map) {
         if (!map) {
@@ -62,10 +62,10 @@ module.exports = class SelectHelper {
     static getItems (docs, params) {
         params = params || {};
         if (!params.valueKey) {
-            params.valueKey = DEFAULT_VALUE_KEY;
+            params.valueKey = this.DEFAULT_VALUE_KEY;
         }
         if (!params.textKey) {
-            params.textKey = DEFAULT_TEXT_KEY;
+            params.textKey = this.DEFAULT_TEXT_KEY;
         }
         if (!params.getItemText) {
             params.getItemText = this.getItemText;

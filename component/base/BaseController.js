@@ -7,38 +7,27 @@ const Base = require('areto/base/Controller');
 
 module.exports = class BaseController extends Base {
 
+    static getConstants () {
+        return {
+            ACTION_VIEW: {
+                Class: require('./ActionView')
+            }
+        };
+    }
+
+    getLanguage () {
+        return this.language || this.user.getLanguage() || this.i18n?.language;
+    }
+
     getReferrer () {
         const url = this.isGetRequest()
             ? this.getHttpHeader('referrer')
             : this.getPostParam('referrer');
-        return url ? url : '';
+        return url || '';
     }
 
     redirectToReferrer (url = 'index') {
         this.redirect(this.getPostParam('referrer') || url);
-    }
-
-    getLabelSelectItems (attrName, model) {
-        const data = model.constructor.getAttrValueLabels(attrName);
-        return SelectHelper.getMapItems(data);
-    }
-
-    getMapSelectItems (map) {
-        return SelectHelper.getMapItems(map);
-    }
-
-    resolveFilterColumns (columns, model) {
-        for (const column of columns) {
-            if (column.label === undefined) {
-                column.label = model.getAttrLabel(column.name);
-            }
-            if (column.items === 'labels') {
-                column.items = this.getLabelSelectItems(column.name, model);
-            }
-            if (column.columns) {
-                this.resolveFilterColumns(column.columns, model.getRelation(column.name).model);
-            }
-        }
     }
 
     getSpawnConfig (params) {
@@ -150,7 +139,6 @@ module.exports.init();
 
 const BadRequest = require('areto/error/http/BadRequest');
 const NotFound = require('areto/error/http/NotFound');
-const SelectHelper = require('../helper/SelectHelper');
 const DataGrid = require('../other/DataGrid');
 const TreeGrid = require('../other/TreeGrid');
 const Select2 = require('../other/Select2');

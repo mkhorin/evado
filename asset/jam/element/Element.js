@@ -36,6 +36,10 @@ Jam.Element = class Element {
         return this.$element.find(...arguments);
     }
 
+    findData (key) {
+        return this.find(`[data-${key}]`).data(key);
+    }
+
     findInstanceByClass (instanceClass) {
         return this.constructor.findInstanceByClass(instanceClass, this.$element);
     }

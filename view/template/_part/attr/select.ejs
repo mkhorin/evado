@@ -17,7 +17,7 @@ const p = {
 let content = p.hasEmpty ? `<option value="">${p.emptyText}</option>` : '';
 if (typeof items !== 'undefined' && items) {
     if (items === 'labels') {
-        items = _controller.getLabelSelectItems(attr, model);
+        items = _view.ModelHelper.getLabelSelectItems(attr, model);
     }
     for (const item of items) {
         if (item.separator) {
