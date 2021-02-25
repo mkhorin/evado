@@ -14,7 +14,7 @@
 ### Ready to use
 
 - [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate)
-- [Evado Champ](https://github.com/mkhorin/evado-champ) - a platform for turn-based multiplayer games
+- [Evado Champ](https://github.com/mkhorin/champ) - a platform for multiplayer games
 
 ### Ready to try
 
