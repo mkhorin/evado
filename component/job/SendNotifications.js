@@ -5,7 +5,7 @@
 
 const Base = require('areto/scheduler/Job');
 
-module.exports = class SendNotificationJob extends Base {
+module.exports = class SendNotifications extends Base {
 
     constructor (config) {
         super({
@@ -33,6 +33,5 @@ module.exports = class SendNotificationJob extends Base {
         }
     }
 };
-module.exports.init(module);
 
 const PromiseHelper = require('areto/helper/PromiseHelper');

@@ -1,5 +1,5 @@
 <!-- _part/list/filter -->
 <%
-_controller.resolveFilterColumns(data.columns, model);
+_view.ModelHelper.resolveFilterColumns(data.columns, model);
 %>
 <%- include(_view.get('_part/list/filterContent')) %>

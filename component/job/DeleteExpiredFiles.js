@@ -5,7 +5,7 @@
 
 const Base = require('areto/scheduler/Job');
 
-module.exports = class DeleteExpiredFilesJob extends Base {
+module.exports = class DeleteExpiredFiles extends Base {
 
     constructor (config) {
         super({
@@ -20,13 +20,15 @@ module.exports = class DeleteExpiredFilesJob extends Base {
 
     async deleteFiles () {
         const raw = this.spawn('model/RawFile');
-        const date = new Date(Date.now() - DateHelper.parseDuration(this.lifetime));
-        const files = await raw.findExpired(date).all();
+        const files = await raw.findExpired(this.getEarliestValidCreationDate()).all();
         for (const file of files) {
             await file.delete();
         }
     }
+
+    getEarliestValidCreationDate () {
+        return new Date(Date.now() - DateHelper.parseDuration(this.lifetime));
+    }
 };
-module.exports.init(module);
 
 const DateHelper = require('areto/helper/DateHelper');

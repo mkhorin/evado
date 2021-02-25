@@ -5,8 +5,6 @@
 
 module.exports = {
 
-    commonMenuTitle: 'Home',
-
     components: {
         'logger': {
             level: 'info'
@@ -94,8 +92,7 @@ module.exports = {
     },
     modules: {
         'api': {
-            Class: require('evado/module/api/Module'),
-            hidden: true
+            Class: require('evado/module/api/Module')
         }
     },
     assets: require('./default-assets'),

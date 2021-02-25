@@ -25,28 +25,26 @@ module.exports = class CommonMenu extends Base {
     }
 
     getDefaultItems () {
-        let app = this.module.app;
-        let items = [];
-        let previous = null;
+        const app = this.module.app;
+        const items = [];
         for (const module of app.modules) {
-            if (module.hidden) {
-                continue;
-            }
-            if (previous?.getParam('separateNextCommonMenuItem')) {
-                items.push(this.getSeparatorItem());
-            }
-            items.push(this.getModuleItem(module));
-            previous = module;
+            this.setModuleItem(module, this.modules?.[module.name], items);
         }
-        items.push(this.getSeparatorItem());
-        items.push(this.getModuleItem(app));
+        this.setModuleItem(app, this.app, items);
         return items;
     }
 
-    getModuleItem (module, config) {
-        const url = module.get('urlManager').resolve('');
-        const text = module.getConfig('commonMenuTitle') || module.getTitle();
-        return {url, text, ...config};
+    setModuleItem (module, params, items) {
+        if (params?.hidden) {
+            return;
+        }
+        if (params?.separated) {
+            items.push(this.getSeparatorItem());
+        }
+        items.push({
+            url: module.getRoute(),
+            text: params?.title || module.getTitle()
+        });
     }
 
     getSeparatorItem () {

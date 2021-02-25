@@ -6,7 +6,16 @@
 module.exports = {
 
     'commonMenu': {
-        Class: require('../component/widget/CommonMenu')
+        Class: require('../component/widget/CommonMenu'),
+        app: {
+            title: 'Home',
+            separated: true
+        },
+        modules: {
+            api: {
+                hidden: true
+            }
+        }
     },
     'languages': {
         Class: require('../component/widget/Languages'),
