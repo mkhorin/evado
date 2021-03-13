@@ -3,6 +3,10 @@
  */
 Jam.AsyncHelper = class AsyncHelper {
 
+    static setTimeout (timeout) {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
+
     static promise (callback) {
         return new Promise((resolve, reject) => {
             callback((err, result) => err ? reject(err) : resolve(result));
