@@ -9,9 +9,17 @@ module.exports = class AssetBuilder extends Base {
 
     constructor (config) {
         super({
-            FileMerger: require('./FileMerger'),
+            Packer: require('./Packer'),
             ...config
         });
+    }
+
+    getSourceDir (data) {
+        return data.sourceDir || this.getWebDir();
+    }
+
+    getTargetDir (data) {
+        return data.targetDir || this.getWebDir();
     }
 
     async execute () {
@@ -27,26 +35,27 @@ module.exports = class AssetBuilder extends Base {
     async buildModuleAssets (data) {
         let done = false;
         for (const module of this.module.getOriginalHierarchy()) {
-            const dir = module.getPath(this.getAssetDir());
-            if (await this.buildAsset(data, dir)) {
-                done = module;
+            if (await this.buildAsset(data, module.getPath())) {
+                done = true;
             }
         }
         this.logResult(done, data);
     }
 
     async buildAssets (items, root) {
-        root = path.join(root, this.getAssetDir());
         for (const data of items) {
             const done = await this.buildAsset(data, root);
             this.logResult(done, data);
         }
     }
 
-    buildAsset (data, assetDir) {
+    buildAsset (data, root) {
         try {
             data.Class = this.resolveHandlerClass(data.Class);
-            return this.spawn(data, {assetDir}).execute();
+            return this.spawn(data, {
+                sourceRoot: path.join(root, this.getSourceDir(data)),
+                targetRoot: path.join(root, this.getTargetDir(data))
+            }).execute();
         } catch (err) {
             this.log('error', err);
         }

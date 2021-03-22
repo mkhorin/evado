@@ -37,6 +37,7 @@ Jam.Resource = class Resource {
         const element = document.createElement(selector);
         element[key] = node[key];
         element.rel = node.rel;
+        element.type = node.type;
         document.head.appendChild(element);
         return element;
     }

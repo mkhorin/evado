@@ -1,11 +1,11 @@
-<!-- _part/other/tabs -->
+<!-- _part/misc/tabs -->
 <%
 const p = {
     jam: typeof jam === 'undefined' ? 'Tabs' : jam,
-    cssClass: typeof cssClass === 'undefined' ? '' : cssClass
+    tabsCss: typeof tabsCss === 'undefined' ? '' : tabsCss
 };
 %>
-<div class="<%- p.cssClass %> tabs" data-jam="<%- p.jam %>">
+<div class="<%- p.tabsCss %> tabs" data-jam="<%- p.jam %>">
     <div class="nav-tabs nav" role="tablist">
     <% for (const item of items) { %>
     <a href="#" class="nav-link nav-item <%- item.active ? 'active' : '' %>"

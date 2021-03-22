@@ -73,7 +73,7 @@ Jam.StringListFilterType = class ListFilterStringType extends Jam.ListFilterType
     }
 
     onKeyUp (event) {
-        if (event.keyCode === 13 && this.getValue().length) {
+        if (event.key === 'Enter' && this.getValue().length) {
             this.filter.onApply();
         }
     }

@@ -1,11 +1,19 @@
+## 2.2.0
+
+* console/asset/AssetBuilder
+    - refactor asset building
+* move frontend sources to web
+* remove unused fonts
+* switch language from frontend
+
 ## 2.1.0
 
 * asset/jam/dataGrid
     - refactor data grid render
 * asset/jam/list
-    - load a list on demand       
+    - load a list on demand
 * component/meta/MetaModels
-    - remove undefined model creation    
+    - remove undefined model creation
 * console/AssetConsole
     - refactor asset managers
 
@@ -134,9 +142,9 @@
     
 ## 1.2.0
 
-* component/other/CommonSearch
+* component/misc/CommonSearch
     - add search by object title     
-* component/other/DataGrid
+* component/misc/DataGrid
     - customize query limit    
 * component/security/PasswordAuthService
     - replace messages to keys     
@@ -159,7 +167,7 @@
     - add actual meta class name to item
     - add meta class format
     - fix related thumbnail size         
-* component/other/ListFilter 
+* component/misc/ListFilter 
     - extract item parser to separate method    
 * component/security/rbac/Rbac 
     - inherit metadata permissions ​​from base meta class    
@@ -229,9 +237,9 @@
 
 * component/meta/rbac
     - add multiple targets to metadata permission
-* component/other/DataGrid
+* component/misc/DataGrid
     - extract common search as separate entity
-* component/other/ListFilter
+* component/misc/ListFilter
     - filter by nested values via intermediate relation
 * component/security
     - fix permission restriction by rule
@@ -246,7 +254,7 @@
 
 * component/helper/MetaHelper
     - move common helper from modules
-* component/other/Formatter
+* component/misc/Formatter
     - add translatable format
 * console/SecurityConsole 
     - fix user creation        
@@ -278,9 +286,9 @@
 
 * component/base/BaseController
     - add filter column resolver
-* component/other/DataGrid
+* component/misc/DataGrid
     - make ListFilterCondition configurable
-* component/other/ListFilterCondition
+* component/misc/ListFilterCondition
     - add nested value parser
     - add inline value parser
     - add relation parser

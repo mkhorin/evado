@@ -5,7 +5,7 @@
 
 const Base = require('areto/base/Base');
 
-module.exports = class FileMerger extends Base {
+module.exports = class Packer extends Base {
 
     constructor (config) {
         super({
@@ -17,9 +17,21 @@ module.exports = class FileMerger extends Base {
     }
 
     async execute () {
+        let result = await this.mergeSources(this.sources);
+        if (result === false) {
+            return false;
+        }
+        result = this.prepareContent(result);
+        const target = path.join(this.targetRoot, this.target);
+        await fs.promises.mkdir(path.dirname(target), {recursive: true});
+        await fs.promises.writeFile(target, result, 'utf8');
+        return true;
+    }
+
+    async mergeSources (sources) {
         let result = '';
         this.processedSources = new DataMap;
-        const sources = typeof this.sources === 'string' ? [this.sources] : this.sources;
+        sources = typeof sources === 'string' ? [sources] : sources;
         for (const source of sources) {
             const content = await this.mergeSource(source);
             if (typeof content !== 'string') {
@@ -27,18 +39,14 @@ module.exports = class FileMerger extends Base {
             }
             result += content;
         }
-        result = this.prepareContent(result);
-        const target = path.join(this.assetDir, this.target);
-        await fs.promises.mkdir(path.dirname(target), {recursive: true});
-        await fs.promises.writeFile(target, result, 'utf8');
-        return true;
+        return result;
     }
 
     async mergeSource (source) {
-        const file = path.join(this.assetDir, source);
+        const file = path.join(this.sourceRoot, source);
         const stat = await FileHelper.getStat(file);
         if (!stat) {
-            this.log('error', `File not found: ${file}`);
+            this.log('error', `Not found: ${file}`);
             return false;
         }
         return stat.isDirectory()
@@ -78,7 +86,8 @@ module.exports = class FileMerger extends Base {
     }
 
     shrink (text) {
-        return this.spawn({Class: Minifier, ... this.shrinking}).execute(text);
+        text = Minifier.removeComments(text);
+        return text;
     }
 
     log () {

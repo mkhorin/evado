@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('../other/ListFilter');
+const Base = require('../misc/ListFilter');
 
 module.exports = class MetaListFilter extends Base {
 

@@ -139,6 +139,6 @@ module.exports.init();
 
 const BadRequest = require('areto/error/http/BadRequest');
 const NotFound = require('areto/error/http/NotFound');
-const DataGrid = require('../other/DataGrid');
-const TreeGrid = require('../other/TreeGrid');
-const Select2 = require('../other/Select2');
+const DataGrid = require('../misc/DataGrid');
+const TreeGrid = require('../misc/TreeGrid');
+const Select2 = require('../misc/Select2');

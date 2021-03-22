@@ -5,7 +5,7 @@ Jam.Alert = class Alert {
 
     constructor (params) {
         this.params = {
-            cssClasses: '',
+            css: '',
             scrollSpeed: 'fast',
             ...params
         };
@@ -50,7 +50,7 @@ Jam.Alert = class Alert {
     }
 
     build (type, message) {
-        this.$element.removeClass().addClass(`${this.params.cssClasses} alert-${type} alert`);
+        this.$element.removeClass().addClass(`${this.params.css} alert-${type} alert`);
         this.$element.find('.message').html(message);
     }
 
@@ -78,7 +78,7 @@ Jam.MainAlert = class MainAlert extends Jam.Alert {
 
     constructor (params) {
         super({
-            cssClasses: 'main-alert',
+            css: 'main-alert',
             container: $('.main-container'),
             ...params
         });

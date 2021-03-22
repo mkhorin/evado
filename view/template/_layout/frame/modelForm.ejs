@@ -27,7 +27,7 @@ if (typeof params !== 'undefined') {
                 <button data-command="saveClose" class="btn-primary btn" type="button" title="Save and close">
                     <i class="fas fa-check"></i>
                 </button>
-                <button data-command="save" class="btn-info btn" type="button" title="Save">
+                <button data-command="save" class="btn-outline-info btn" type="button" title="Save">
                     <i class="fas fa-download"></i>
                 </button>
             </div>
@@ -47,7 +47,7 @@ if (typeof params !== 'undefined') {
             <%- include(_view.get('_part/tool/modelHistory')) %>
 
             <% if (blocks.commands) { %>
-            <%- include(_view.get('_part/other/render'), {data: blocks.commands.get()}) %>
+            <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
             <% } %>
 
             <% if (p.help) { %>

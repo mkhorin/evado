@@ -29,17 +29,18 @@
     min-height: 100%;
 }
 body {
+    --body-background: #f0f4f8;
     --body-color: #111;
     --btn-space: .3rem;
     --header-height: 50px;
     --header-indent: var(--header-height);
     --max-modal-width: 1480px;
     --nav-group-space: 1.1rem;
-    --nav-item-acsent-color: #14a600;
-    --navbar-color: #14a600;
+    --nav-item-acsent-color: #88a;
+    --navbar-color: #88a;
     --sidebar-width: 16.5rem;
     --sidebar-toggle-time: .7s;
-    --super-navbar-color: #188600;
+    --super-navbar-color: #668;
     --semi-bold: 500;
 
     --hover-row-color: #fff8e8;
@@ -49,7 +50,7 @@ body {
     color: var(--body-color);
     height: auto;
     min-height: 100%;
-    background-color: #f0f4f8;
+    background-color: var(--body-background);
 }
 
 a {
@@ -106,8 +107,8 @@ ul:last-child {
 
 .btn.disabled,
 .btn:disabled {
-    opacity: .5;
-    filter: grayscale(.5);
+    opacity: .4;
+    filter: grayscale(.6);
     cursor: not-allowed;
 }
 .btn-white:not(:hover):not(active):not(:focus) {
@@ -278,7 +279,7 @@ body.loading {
 }
 .dialog-box {
     position: relative;
-    top: 15%;
+    top: 25%;
     width: 98%;
     max-width: 30rem;
     margin: 0 auto;
@@ -321,8 +322,8 @@ body.loading {
     color: var(--dark-success);
 }
 .dialog-success .btn-submit {
-    background-color: var(--dark-success);
-    border-color: var(--dark-success);
+    background-color: var(--light-success);
+    border-color: var(--light-success);
 }
 .dialog-success .btn-submit:hover,
 .dialog-success .btn-submit:active {

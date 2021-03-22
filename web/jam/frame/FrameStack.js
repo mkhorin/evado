@@ -144,7 +144,7 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
     }
 
     onKeyUp (event) {
-        if (event.keyCode === 27) {
+        if (event.key === 'Escape') {
             this.closeLast();
         }
     }

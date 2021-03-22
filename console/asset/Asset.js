@@ -16,13 +16,18 @@ module.exports = class ModuleAsset extends Base {
         return this.params.assetDir;
     }
 
+    getWebDir () {
+        return this.params.webDir;
+    }
+
     getParams () {
         return Object.assign(this.getDefaultParams(), this.params || this.module.getConfig('assets'));
     }
 
     getDefaultParams () {
         return {
-            assetDir: 'asset'
+            assetDir: 'asset',
+            webDir: 'web'
         };
     }
 

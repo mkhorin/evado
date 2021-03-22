@@ -7,16 +7,6 @@ const Base = require('./Asset');
 
 module.exports = class AssetDeployer extends Base {
 
-    getDefaultParams () {
-        return Object.assign(super.getDefaultParams(), {
-            targetDir: 'web'
-        });
-    }
-
-    getTargetDir () {
-        return this.params.targetDir;
-    }
-
     async execute () {
         const data = this.params.deploy;
         if (data) {
@@ -29,7 +19,7 @@ module.exports = class AssetDeployer extends Base {
     }
 
     async deployModuleAssets (key, data) {
-        const target = path.join(this.getTargetDir(), key);
+        const target = path.join(this.getWebDir(), key);
         const files = typeof data === 'string' ? [data] : data;
         const modules = this.module.getOriginalHierarchy();
         for (const file of files) {
@@ -55,7 +45,7 @@ module.exports = class AssetDeployer extends Base {
 
     async deployAsset (key, data, root) {
         const source = path.join(root, this.getAssetDir());
-        const target = path.join(root, this.getTargetDir(), key);
+        const target = path.join(root, this.getWebDir(), key);
         const files = typeof data === 'string' ? [data] : data;
         for (const file of files) {
             const done = await this.copyFile(path.join(source, file), target);

@@ -28,7 +28,7 @@ if (typeof params !== 'undefined') {
             <%- include(_view.get('_part/tool/modelHistory')) %>
 
             <% if (blocks.commands) { %>
-            <%- include(_view.get('_part/other/render'), {data: blocks.commands.get()}) %>
+            <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
             <% } %>
 
             <% if (p.help) { %>

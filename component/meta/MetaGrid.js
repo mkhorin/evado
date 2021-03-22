@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('../other/DataGrid');
+const Base = require('../misc/DataGrid');
 
 module.exports = class MetaGrid extends Base {
 

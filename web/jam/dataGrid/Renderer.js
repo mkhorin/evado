@@ -199,8 +199,8 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 
     getBodyCellClass (value, column) {
-        const cssClass = this.grid.getOrderDirection(column.name) ? ' ordered' : '';
-        return column.cssClass ? `${cssClass} ${column.cssClass}` : cssClass;
+        const css = this.grid.getOrderDirection(column.name) ? ' ordered' : '';
+        return column.css ? `${css} ${column.css}` : css;
     }
 
     getBodyValueStyle (value, column) {
@@ -223,13 +223,13 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 
     renderHeadColumn ({name, label, hint, translate}, columns, rows) {
-        let cssClass = 'column';
+        let css = 'column';
         if (this.grid.isSortableColumn(name)) {
-            cssClass += ' sortable '+ this.getDirectionName(this.grid.getOrderDirection(name));
+            css += ' sortable '+ this.getDirectionName(this.grid.getOrderDirection(name));
         }
         label = Jam.t(label || name, translate);
         hint = hint ? Jam.t(hint, translate) : label;
-        return '<th class="'+ cssClass +'" rowspan="'+ rows +'" data-name="'+ name +'">'
+        return '<th class="'+ css +'" rowspan="'+ rows +'" data-name="'+ name +'">'
             + '<span class="column-label search-toggle" title="'+ hint +'">'+ label +'</span>'
             + '<span class="order-toggle fa" title="'+ this.locale.orderToggle +'"></span></th>';
     }

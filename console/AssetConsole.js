@@ -42,7 +42,7 @@ module.exports = class AssetConsole extends Base {
 
     async build () {
         await this.execute(this.assetBuilder, this.getModule());
-        this.log('info', 'Assets are built. Deploy assets to publish');
+        this.log('info', 'Assets are built');
     }
 
     async deploy () {

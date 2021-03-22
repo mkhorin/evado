@@ -4,13 +4,15 @@
 Jam.Dialog = class Dialog {
 
     constructor (params) {
-        this.params = {            
+        this.params = {
+            css: 'default',
             submitText: 'OK',
             cancelText: 'Cancel',
             returnCancel: false,
             strictCancel: false,
-            cssClass: 'default',
             beforeSubmit: null,
+            cancelCss: 'btn-outline-secondary',
+            translatable: true,
             ...params
         };
         this.$dialog = $(this.createElement());        
@@ -23,7 +25,7 @@ Jam.Dialog = class Dialog {
         $(document.body).append(this.$dialog);
     }
 
-    isVisible () {
+    isActive () {
         return this.$dialog.is(':visible');
     }
 
@@ -33,24 +35,24 @@ Jam.Dialog = class Dialog {
 
     confirmDeletion (message, data) {
         return this.confirm(message || 'Delete this object permanently?', {
+            css: 'danger',
             submitText: 'Delete',
-            cssClass: 'danger',
             ...data
         });
     }
 
     confirm (message, data) {
         return this.show(message, {
+            css: 'warning',
             title: 'Confirmation',
-            cssClass: 'warning',
             ...data
         });
     }
 
     alert (message, data) {
         return this.show(message, {
+            css: 'warning',
             title: 'Warning',
-            cssClass: 'warning',
             submitText: false,
             cancelText: 'Close',
             returnCancel: true,
@@ -60,8 +62,8 @@ Jam.Dialog = class Dialog {
 
     error (message, data) {
         return this.show(message, {
+            css: 'danger',
             title: 'Error',
-            cssClass: 'danger',
             submitText: false,
             cancelText: 'Close',
             returnCancel: true,
@@ -94,11 +96,17 @@ Jam.Dialog = class Dialog {
     }
 
     build (data) {
-        this.$dialog.removeClass().addClass(`dialog-${data.cssClass} dialog`);
-        this.$dialog.find('.dialog-head').html(Jam.t(data.title));
-        this.$dialog.find('.dialog-body').html(Jam.t(data.message));
-        this.$submit.html(Jam.t(data.submitText)).toggle(!!data.submitText);
-        this.$cancel.html(Jam.t(data.cancelText)).toggle(!!data.cancelText);
+        this.$dialog.removeClass().addClass(`dialog-${data.css} dialog`);
+        this.$dialog.find('.dialog-head').html(this.translate(data.title));
+        this.$dialog.find('.dialog-body').html(this.translate(data.message));
+        this.$submit.html(this.translate(data.submitText)).toggle(!!data.submitText);
+        this.$cancel.html(this.translate(data.cancelText)).toggle(!!data.cancelText);
+        this.setButtonCss(data.submitCss, this.$submit, 'btn-submit btn');
+        this.setButtonCss(data.cancelCss, this.$cancel, 'btn-cancel btn');
+    }
+
+    setButtonCss (css, $element, baseCss) {
+       $element.removeClass().addClass(baseCss).addClass(css);
     }
 
     onAction (status) {
@@ -115,7 +123,7 @@ Jam.Dialog = class Dialog {
     }
 
     onKeyUp (event) {
-        if (event.keyCode === 27 && !this._strictCancel) {
+        if (event.key === 'Escape' && !this._strictCancel) {
             this.onAction(false);
         }
     }
@@ -129,7 +137,7 @@ Jam.Dialog = class Dialog {
     }
 
     execute (status) {
-        if (this.isVisible()) {
+        if (this.isActive()) {
             this.$dialog.hide();
             if (status || this._returnCancel) {
                 this._result.resolve(status);
@@ -138,6 +146,10 @@ Jam.Dialog = class Dialog {
     }
     
     createElement () {
-        return `<div class="dialog"><div class="dialog-box"><div class="dialog-head"></div><div class="dialog-body"></div><div class="dialog-foot"><button class="btn-submit btn" type="button"></button><button class="btn-cancel btn-outline-secondary btn" type="button"></button></div></div></div>`;
+        return `<div class="dialog"><div class="dialog-box"><div class="dialog-head"></div><div class="dialog-body"></div><div class="dialog-foot"><button class="btn-submit btn" type="button"></button><button class="btn-cancel btn" type="button"></button></div></div></div>`;
+    }
+
+    translate (message) {
+        return this.params.translatable ? Jam.t(...arguments) : message;
     }
 };

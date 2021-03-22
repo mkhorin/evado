@@ -6,7 +6,7 @@
 module.exports = {
 
     build: [{
-        Class: 'FileMerger',
+        Class: 'Packer',
         sources: [
             'jam/Jam.js',
             'jam/element/Element.js',
@@ -16,7 +16,7 @@ module.exports = {
             'jam/list/List.js',
             'jam'
         ],
-        target: 'dist/jam.min.js',
+        target: 'vendor/jam.min.js',
         copyright: `/* @copyright Copyright (c) 2021 Maxim Khorin <maksimovichu@gmail.com> */\n`
     }],
 
@@ -28,7 +28,6 @@ module.exports = {
         'vendor/inputmask': 'vendor/node_modules/inputmask/dist',
         'vendor/moment/locale': 'vendor/node_modules/moment/locale',
         'vendor/moment/min': 'vendor/node_modules/moment/min',
-        'vendor/select2': 'vendor/node_modules/select2/dist',
-        'vendor': 'dist/jam.min.js'
+        'vendor/select2': 'vendor/node_modules/select2/dist'
     }
 };

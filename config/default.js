@@ -42,7 +42,7 @@ module.exports = {
             }
         },
         'formatter': {
-            Class: require('../component/other/Formatter')
+            Class: require('../component/misc/Formatter')
         },
         'bodyParser': {
             limit: '10mb'

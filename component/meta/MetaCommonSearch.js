@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const Base = require('../other/CommonSearch');
+const Base = require('../misc/CommonSearch');
 
 module.exports = class MetaCommonSearch extends Base {
 
