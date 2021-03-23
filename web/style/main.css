@@ -712,6 +712,9 @@ hr + .form-columns {
 .form-group .loading .commands {
     display: none;
 }
+.form-group .file-download {
+    margin-top: 0.5rem;
+}
 .form-group .file-download .file-size {
     color: var(--gray);
     margin-left: .3rem;
@@ -1593,7 +1596,7 @@ body.frame-stack-collapsed .frame-stack {
 }
 .uploader-dropzone {
     display: none;
-    height: 2.2rem;
+    height: 2.4rem;
     margin: 0 auto;
     align-items: center;
     justify-content: center;

@@ -1,6 +1,8 @@
 <!-- _part/attr/static -->
 <%
-const p = {};
+const p = {
+    hideEmpty: typeof hideEmpty === 'undefined' ? false : hideEmpty
+};
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 <%
@@ -8,14 +10,19 @@ p.translateValue = typeof translateValue === 'undefined' ? 'none' : translateVal
 if (p.value && typeof url !== 'undefined') {
     p.displayValue = `<a href="${_url(url)}" class="frame-link" tabindex="-1" data-t="${p.translateValue}">${p.displayValue}</a>`;
 }
+if (p.hideEmpty && p.value === '') {
 %>
-<div class="form-attr-static form-attr form-group row">
+<div class="form-attr hidden" data-handler="<%= p.handler %>">
+    <input name="<%- p.name %>" type="hidden" value="" class="form-value">
+</div>
+<% } else { %>
+<div class="form-attr-static form-attr form-group row <%- p.css %>" data-handler="<%= p.handler %>">
     <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" type="hidden" value="<%= p.value %>"
-               class="form-value" readonly="readonly">
+        <input type="hidden" name="<%- p.name %>" value="<%= p.value %>" class="form-value">
         <div class="form-control-plaintext" data-t="<%- p.translateValue %>"><%- p.displayValue %></div>
         <div class="error-block"></div>
     </div>
 </div>
+<% } %>

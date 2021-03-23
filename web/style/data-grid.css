@@ -1,5 +1,6 @@
 
 .data-grid {
+    --border-color: #ddd;
     --content-color: #111;
     --selected-row-color: #fff4e0;
     position: relative;
@@ -23,21 +24,18 @@
     position: relative;
 }
 .data-grid-table > thead > tr > th,
+.data-grid-table > tbody > tr > th,
 .data-grid-table > tbody > tr > td {
-    border-color: #eee;
+    border-color: var(--border-color);
     border-width: 1px;
 }
-.data-grid-table,
 .data-grid-table > thead > tr > th {
-    border-color: #ddd;
-}
-.data-grid-table > thead > tr > th {
-    padding: 0.3rem 0.5rem;
+    padding: 0.4rem 0.5rem;
     font-weight: normal;
     color: #567;
 }
 .data-grid-table > thead {
-    border-bottom: 2px solid #eee;
+    border-bottom-width: 2px;
 }
 .data-grid-table > thead > tr > .group {
     vertical-align: middle;
@@ -72,6 +70,7 @@
 .data-grid-table .sortable .order-toggle,
 .data-grid-table .group:first-child .order-toggle {
     display: block;
+    padding-right: .25rem;
 }
 .data-grid-table .order-toggle:before {
     content: '\f338';
@@ -92,10 +91,11 @@
 }
 .data-grid-table > tbody > tr.group > th {
     position: relative;
-    padding: .5rem;
-    color: #888;
-    background: #f4f6f0;
-    border-top: 2px solid #ccc;
+    padding: .6rem .5rem;
+    color: #789;
+    background: #f0f8ff;
+    border-top-color: #bcd;
+    border-top-width: 2px;
     font-weight: 500;
 }
 .data-grid-table > tbody > tr > td {
@@ -440,7 +440,7 @@
     position: relative;
     margin: 0 0 1rem;
     padding: 1rem 0.5rem;
-    background: rgba(96,128,0,.05);
+    background: #f4f9f9;
 }
 .list-filter .filter-tools {
     display: inline-block;

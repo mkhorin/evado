@@ -14,7 +14,7 @@ const p = {
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input type="hidden" name="<%- p.name %>" value="<%= p.value %>" class="form-value">
-        <div class="uploader show-dropzone form-control-plaintext"
+        <div class="uploader show-dropzone"
              data-options="<%= JSON.stringify(options)%>">
             <div class="uploader-input">
                 <input type="file" class="uploader-input-file">

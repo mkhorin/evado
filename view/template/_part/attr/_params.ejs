@@ -1,49 +1,49 @@
 <%
-    p.name = typeof name === 'undefined' ? model.getFormAttrName(attr) : name;
-    p.label = typeof label === 'undefined' ? model.getAttrLabel(attr) : label;
-    p.hint = typeof hint === 'undefined' ? model.getAttrHint(attr) : hint;
-    p.extHint = typeof extHint === 'undefined' ? null : extHint;
-    p.placeholder = typeof placeholder === 'undefined' ? null : placeholder;
-    p.disabled = typeof disabled === 'undefined' ? null : disabled;
-    p.required = typeof required === 'undefined' ? model.isAttrRequired(attr) : required;
-    p.required = p.required ? 'required' : null
-    p.format = typeof format === 'undefined' ? null : format;
-    p.actionBinder = typeof actionBinder === 'undefined' ? null : JSON.stringify(actionBinder);
-    p.css = typeof css === 'undefined' ? null : css;
-    p.labelCss = typeof labelCss === 'undefined' ? 'col-xl-2 col-lg-3' : labelCss;
-    p.valueCss = typeof valueCss === 'undefined' ? 'col-xl-10 col-lg-9' : valueCss;
-    p.translate = typeof translate === 'undefined' ? null : translate;
-    p.handler = typeof handler === 'undefined' ? p.handler || null : handler;
-    p.behaviors = typeof behaviors === 'undefined' ? null : JSON.stringify(behaviors);
+p.name = typeof name === 'undefined' ? model.getFormAttrName(attr) : name;
+p.label = typeof label === 'undefined' ? model.getAttrLabel(attr) : label;
+p.hint = typeof hint === 'undefined' ? model.getAttrHint(attr) : hint;
+p.extHint = typeof extHint === 'undefined' ? null : extHint;
+p.placeholder = typeof placeholder === 'undefined' ? null : placeholder;
+p.disabled = typeof disabled === 'undefined' ? null : disabled;
+p.required = typeof required === 'undefined' ? model.isAttrRequired(attr) : required;
+p.required = p.required ? 'required' : null
+p.format = typeof format === 'undefined' ? null : format;
+p.actionBinder = typeof actionBinder === 'undefined' ? null : JSON.stringify(actionBinder);
+p.css = typeof css === 'undefined' ? null : css;
+p.labelCss = typeof labelCss === 'undefined' ? 'col-xl-2 col-lg-3' : labelCss;
+p.valueCss = typeof valueCss === 'undefined' ? 'col-xl-10 col-lg-9' : valueCss;
+p.translate = typeof translate === 'undefined' ? null : translate;
+p.handler = typeof handler === 'undefined' ? p.handler || null : handler;
+p.behaviors = typeof behaviors === 'undefined' ? null : JSON.stringify(behaviors);
 
-    p.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
-    if (p.sourceValue === undefined && typeof defaultValue !== 'undefined') {
-        p.sourceValue = defaultValue;
-    }
-    p.value = p.sourceValue;
-    if (p.value instanceof Date) {
-        p.value = p.value.toISOString();
-    }
-    if (_view.MongoHelper.isObjectId(p.value)) {
-        p.value = p.value.toString();
-    }
-    p.displayValue = typeof displayValue === 'undefined' ? p.value : displayValue;
+p.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
+if (p.sourceValue === undefined && typeof defaultValue !== 'undefined') {
+    p.sourceValue = defaultValue;
+}
+p.value = p.sourceValue;
+if (p.value instanceof Date) {
+    p.value = p.value.toISOString();
+}
+if (_view.MongoHelper.isObjectId(p.value)) {
+    p.value = p.value.toString();
+}
+p.displayValue = typeof displayValue === 'undefined' ? p.value : displayValue;
 
-    if (p.format) {
-        switch (p.format) {
-            case 'label':
-                p.displayValue = model.constructor.getAttrValueLabel(attr, p.value) || p.displayValue;
-                break;
-            default:
-                p.displayValue = Array.isArray(p.format)
+if (p.format) {
+    switch (p.format) {
+        case 'label':
+            p.displayValue = model.constructor.getAttrValueLabel(attr, p.value) || p.displayValue;
+            break;
+        default:
+            p.displayValue = Array.isArray(p.format)
                     ? _format(p.displayValue, ...p.format)
                     : _format(p.displayValue, p.format);
-        }
     }
-    if (p.displayValue === undefined || p.displayValue === null) {
-        p.displayValue = _format(null);
-    }
-    if (p.value === null || p.value === undefined) {
-        p.value = '';
-    }
+}
+if (p.displayValue === undefined || p.displayValue === null) {
+    p.displayValue = _format(null);
+}
+if (p.value === null || p.value === undefined) {
+    p.value = '';
+}
 %>
