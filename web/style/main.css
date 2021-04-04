@@ -246,12 +246,6 @@ ul:last-child {
     top: 50%;
     left: 50%;
 }
-.loading {
-    filter: grayscale(75%);
-}
-.loaded {
-    filter: none;
-}
 .global-loader {
     display: none;
     position: fixed;
@@ -290,6 +284,7 @@ body.loading {
 .dialog-head {
     padding: 1rem 1rem;
     font-size: 1.1rem;
+    font-weight: 500;
     color: var(--dark-primary);
 }
 .dialog-body {
@@ -627,7 +622,7 @@ body.loading {
     border-color: var(--danger);
 }
 .form .has-error .form-control:focus {
-    /*box-shadow: 0 0 4px var(--color-error);*/
+    box-shadow: 0 0 0 0.2rem rgba(255,0,0,.2);
 }
 .form .captcha {
     margin-bottom: 1rem;
@@ -638,6 +633,10 @@ body.loading {
     color: var(--body-color);
     -moz-osx-font-smoothing: auto;
     -webkit-font-smoothing: antialiased;
+}
+.form-control[disabled],
+.form-control[readonly] {
+    background-color: #f3f3f3;
 }
 select.form-control {
     padding-left: .5rem;
@@ -737,10 +736,11 @@ hr + .form-columns {
 }
 .form-set-toggle {
     display: inline-block;
+    padding-left: .2rem;
     cursor: pointer;
 }
 .form-set-toggle .icon {
-    margin-right: .2rem;
+    margin-right: .3rem;
 }
 .form-set-body {
     display: none;
@@ -1309,6 +1309,7 @@ form.was-validated select:valid ~ .select2-container .select2-selection {
     background: #e8e8e8;
 }
 .frame-stack-tab.active {
+    top: 1px;
     cursor: default;
     background: #fff;
 }

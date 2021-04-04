@@ -5,7 +5,7 @@ const name = model.getFormAttrName(attr);
 const holder = _t(typeof placeholder === 'undefined' ? model.getAttrLabel(attr) : placeholder);
 const error = _t(model.getFirstError(attr), null, 'areto');
 %>
-<div class="captcha-container" data-jam="Captcha">
+<div class="captcha-container form-group" data-jam="Captcha">
     <div class="captcha">
         <img src="auth/captcha?_=<%- _controller.timestamp %>" class="captcha-image">
         <a href="#" class="captcha-refresh" tabindex="-1">

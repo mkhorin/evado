@@ -1,6 +1,6 @@
 {
   "name": "evado",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Declarative Node.js Framework for rapid web app development",
   "author": {
     "name": "Maxim Khorin",

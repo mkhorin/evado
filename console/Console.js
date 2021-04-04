@@ -31,8 +31,15 @@ module.exports = class Console extends Base {
         this.params = {...this.params};
         this.app = this.app || this.createApplication();
         this.module = this.app;
+        this.setNodeEnvironment();
     }
-    
+
+    setNodeEnvironment () {
+        if (this.params.env) {
+            process.env.NODE_ENV = this.params.env;
+        }
+    }
+
     createApplication () {
         return ClassHelper.spawn(this.Application, {
             configName: this.params.config,
