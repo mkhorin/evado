@@ -23,7 +23,7 @@ Jam.Resource = class Resource {
 
     createElements (selector, key, container, elements) {
         for (const node of container.querySelectorAll(selector)) {
-            const id = node.getAttribute(key);
+            const id = node[key];
             const data = this.getData();
             if (data[id] !== true) {
                 elements.push(this.createElement(selector, key, node));
