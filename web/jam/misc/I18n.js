@@ -90,6 +90,23 @@ Jam.I18n = class I18n {
     }
 
     getMessage (category, message) {
+        return Array.isArray(message)
+            ? this.getFormattedMessage(category, ...message)
+            : this.getRegularMessage(category, message);
+    }
+
+    getFormattedMessage (category, message, params = {}) {
+        let text = this.getRegularMessage(category, message);
+        if (text === undefined) {
+            text = message;
+        }
+        for (const key of Object.keys(params)) {
+            text = text.replace(new RegExp(`{${key}}`,'g'), params[key]);
+        }
+        return text;
+    }
+
+    getRegularMessage (category, message) {
         const data = category ? this._data[category] : this._data.defaults;
         if (Jam.ObjectHelper.has(message, data)) {
             return data[message];
