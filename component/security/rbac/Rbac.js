@@ -174,21 +174,28 @@ module.exports = class Rbac extends Base {
     }
 
     addDescendantClassMetaItems () {
-        const items = [];
-        for (const item of this.metaItems) {
-            const index = item.key.lastIndexOf('.');
-            const prefix = index < 0 ? '' : item.key.substring(0, index + 1);
-            const cls = this.baseMeta.getClass(item.class);
-            if (cls) {
-                for (const {name} of cls.getDescendants()) {
-                    const child = Object.assign({}, item);
-                    child.class = name;
-                    child.key = prefix + name;
-                    items.push(child);
-                }
+        if (this.baseMeta) {
+            for (const item of this.metaItems) {
+                this.metaItems.push(...this.getMetaItemDescendants(item));
             }
         }
-        this.metaItems.push(...items);
+    }
+
+    getMetaItemDescendants (item) {
+        const descendants = [];
+        const index = item.key.lastIndexOf('.');
+        const prefix = index < 0 ? '' : item.key.substring(0, index + 1);
+        const cls = this.baseMeta.getClass(item.class);
+        if (!cls) {
+            return descendants;
+        }
+        for (const {name} of cls.getDescendants()) {
+            const child = Object.assign({}, item);
+            child.class = name;
+            child.key = prefix + name;
+            descendants.push(child);
+        }
+        return descendants;
     }
 
     addParentRoles (items) {
