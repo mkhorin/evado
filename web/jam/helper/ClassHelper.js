@@ -7,7 +7,7 @@ Jam.ClassHelper = class ClassHelper {
         if (!config) {
             return null;
         }
-        let spawn = Jam.Helper.parseJson(config) || {};
+        let spawn = Jam.Helper.parseJson(config) || config;
         if (typeof spawn === 'string') {
             spawn = {Class: spawn};
         }

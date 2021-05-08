@@ -16,7 +16,7 @@ module.exports = class BaseController extends Base {
     }
 
     getLanguage () {
-        return this.language || this.user.getLanguage() || this.i18n?.language;
+        return this.language || this.user?.getLanguage() || this.i18n?.language;
     }
 
     getReferrer () {

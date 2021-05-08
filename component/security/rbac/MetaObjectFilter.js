@@ -77,10 +77,14 @@ module.exports = class MetaObjectFilter extends Base {
     }
 
     getMetadataClass (item) {
-        if (item.class && this.rbac.baseMeta) {
-            return this.rbac.baseMeta.getClass(item.class)
-                || this.log('error', `Item class not found: ${item.key}`);
+        if (!item.class || !this.rbac.baseMeta) {
+            return;
         }
+        const cls = this.rbac.baseMeta.getClass(item.class);
+        if (cls) {
+            return cls;
+        }
+        this.log('error', `Item class not found: ${item.key}`);
     }
 
     log () {

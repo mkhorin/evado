@@ -45,7 +45,9 @@ module.exports = {
             Class: require('../component/misc/Formatter')
         },
         'bodyParser': {
-            limit: '10mb'
+            urlencoded: {
+                limit: '10mb'
+            }
         },
         'scheduler': {
             Class: require('../component/scheduler/Scheduler')

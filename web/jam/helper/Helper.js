@@ -94,12 +94,12 @@ Jam.Helper = class Helper {
     }
 
     static parseJson (data) {
-        if (typeof data === 'string') {
-            try {
-                return JSON.parse(data);
-            } catch {}
+        if (typeof data !== 'string') {
+            return data;
         }
-        return data;
+        try {
+            return JSON.parse(data);
+        } catch {}
     }
 
     static resolveTemplate (text, data = {}) {
