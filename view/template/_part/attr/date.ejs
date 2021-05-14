@@ -19,9 +19,7 @@ const p = {
         <input name="<%- p.name %>" type="hidden" value="<%- p.value %>" class="form-value">
         <div class="input-group">
             <input type="text" <%- p.required %> class="datepicker form-control">
-            <div class="input-group-append">
-                <span class="input-group-text"><i class="far fa-calendar"></i></span>
-            </div>
+            <span class="input-group-text"><i class="far fa-calendar"></i></span>
         </div>
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>

@@ -31,7 +31,7 @@ if (typeof items !== 'undefined' && items) {
 } else if (p.value !== '') {
     content += `<option selected value="${p.value}">${p.displayValue}</option>`;
 }
-content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-control form-value">${content}</select>`;
+content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-select form-value">${content}</select>`;
 %>
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
@@ -44,12 +44,10 @@ content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-cont
         <% if (p.update) { %>
         <div class="input-group">
             <%- content %>
-            <div class="input-group-append">
-                <button class="btn-outline-info btn" type="button" tabindex="-1" data-action="update"
-                        data-url="<%- p.update %>">
-                    <i class="fas fa-pencil-alt"></i>
-                </button>
-            </div>
+            <button class="btn-outline-primary btn" type="button" tabindex="-1" data-action="update"
+                    data-url="<%- p.update %>">
+                <i class="fas fa-pencil-alt"></i>
+            </button>
         </div>
         <% } else { %>
         <%- content %>

@@ -32,7 +32,7 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
             this.$text.val(this.$value.val());
             this.parseError(err);
         }
-        this.$editor.modal();
+        this.modal = Jam.showModal(this.$editor);
     }
 
     onShownModal () {
@@ -46,7 +46,7 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
                 value = JSON.stringify(JSON.parse(value)).replace(/,/g, ', ').replace(/":/g, '": ');
                 this.$value.val(value).change();
             }
-            this.$editor.modal('hide');
+            this.modal.hide();
         } catch (err) {
             this.parseError(err);
         }

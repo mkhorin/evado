@@ -23,11 +23,11 @@ const user = _controller.user;
     <div class="card-footer">
         <form action="auth/sign-out" method="post">
             <input type="hidden" name="csrf" value="<%- _controller.getCsrfToken() %>">
-            <div class="float-left">
+            <div class="float-start">
                 <button type="submit" class="btn-danger btn" data-t="">Sign out</button>
             </div>
             <% if (enablePasswordChange) { %>
-            <div class="float-right">
+            <div class="float-end">
                 <a href="<%- changePasswordUrl %>"
                    class="btn-outline-dark btn" data-t="">Change password</a>
             </div>

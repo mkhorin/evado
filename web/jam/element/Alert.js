@@ -20,7 +20,7 @@ Jam.Alert = class Alert {
         } else if (container) {
             container.prepend(this.$element);
         }
-        this.$element.find('.close').click(this.hide.bind(this));
+        this.$element.on('click', '.btn-close', this.hide.bind(this));
         this.hide();
     }
 
@@ -66,7 +66,7 @@ Jam.Alert = class Alert {
     }
 
     createElement () {
-        return '<div class="alert"><button type="button" class="close">&times;</button><div class="message"></div></div>';
+        return '<div class="alert"><button type="button" class="btn-close"></button><div class="message"></div></div>';
     }
 };
 

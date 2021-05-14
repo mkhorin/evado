@@ -5,14 +5,14 @@ const p = {
     valueCss: typeof valueCss === 'undefined' ? 'col-xl-10 col-lg-9' : valueCss
 };
 %>
-<div class="inline-group-container">
+<div class="inline-group-container form-group">
     <div class="row">
         <div class="<%- p.labelCss %>"></div>
         <div class="<%- p.valueCss %>">
             <%- include(_view.get('_part/group/columns'), {
-                columnCss: typeof columnCss === 'undefined' ? '' : columnCss,
-                labelCss: '',
-                valueCss: ''
+                columnCss: typeof columnCss === 'undefined' ? 'no-gap' : columnCss,
+                labelCss: 'no-gap',
+                valueCss: 'no-gap'
             }) %>
         </div>
     </div>

@@ -1,3 +1,4 @@
+<!-- _part/attr/overridden -->
 <%
 let value = overridden[attr].originalValue;
 if (Array.isArray(value)) {
@@ -18,7 +19,8 @@ if (typeof params !== 'undefined') {
     }
 }
 %>
-<div class="form-override">
+<div class="form-override form-group">
+
     <%- include(template, Object.assign({
         css: 'form-override-target',
         actionBinder: data

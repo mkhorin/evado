@@ -15,7 +15,7 @@
         </div>
         <div class="condition-content row">
             <div class="col-md-5 condition-attr-container">
-                <select class="condition-attr form-control"></select>
+                <select class="condition-attr form-select"></select>
             </div>
         </div>
         <div class="condition-group"></div>
@@ -25,7 +25,7 @@
 
         <div data-id="boolean">
             <div class="col-md-2">
-                <select class="condition-operation form-control">
+                <select class="condition-operation form-select">
                     <option>=</option>
                 </select>
             </div>
@@ -36,7 +36,7 @@
 
         <div data-id="date">
             <div class="col-md-2">
-                <select class="condition-operation form-control">
+                <select class="condition-operation form-select">
                     <option>=</option>
                     <option>!=</option>
                     <option><</option>
@@ -49,16 +49,14 @@
                 <input class="condition-value" type="hidden">
                 <div class="input-group">
                     <input class="form-control datepicker" type="text" placeholder="Select date...">
-                    <div class="input-group-append">
-                        <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
-                    </div>
+                    <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
                 </div>
             </div>
         </div>
 
         <div data-id="datetime">
             <div class="col-md-2">
-                <select class="condition-operation form-control">
+                <select class="condition-operation form-select">
                     <option>=</option>
                     <option>!=</option>
                     <option><</option>
@@ -71,16 +69,14 @@
                 <input class="condition-value" type="hidden">
                 <div class="input-group">
                     <input class="form-control datepicker" type="text" placeholder="Select date and time...">
-                    <div class="input-group-append">
-                        <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
-                    </div>
+                    <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
                 </div>
             </div>
         </div>
 
         <div data-id="id">
             <div class="col-md-2">
-                <select class="condition-operation form-control">
+                <select class="condition-operation form-select">
                     <option value="equal" data-t="">equal</option>
                     <option value="not equal" data-t="">not equal</option>
                     <option value="nested" data-t="">nested</option>
@@ -100,7 +96,7 @@
 
         <div data-id="number">
             <div class="col-md-2">
-                <select class="condition-operation form-control">
+                <select class="condition-operation form-select">
                     <option>=</option>
                     <option>!=</option>
                     <option><</option>
@@ -116,7 +112,7 @@
 
         <div data-id="selector">
             <div class="col-md-2">
-                <select class="condition-operation form-control">
+                <select class="condition-operation form-select">
                     <option value="equal" data-t="">equal</option>
                     <option value="not equal" data-t="">not equal</option>
                     <option value="nested" data-t="">nested</option>
@@ -124,7 +120,7 @@
             </div>
             <div class="col-md-5">
                 <div class="simple-condition-content">
-                    <select class="condition-value form-control"></select>
+                    <select class="condition-value form-select"></select>
                 </div>
                 <div class="nested-condition-content">
                     <button class="add-condition btn-success btn" type="button" title="Add condition">
@@ -136,7 +132,7 @@
 
         <div data-id="string">
             <div class="col-md-2">
-                <select class="condition-operation form-control">
+                <select class="condition-operation form-select">
                     <option value="contains" data-t="">contains</option>
                     <option value="equal" data-t="">equal</option>
                     <option value="begins" data-t="">begins</option>
@@ -162,7 +158,7 @@
         <button data-id="save" class="btn-outline-success btn" type="button" title="Save filter">
             <i class="fa fa-download"></i>
         </button>
-        <button data-id="select" class="btn-outline-info btn" type="button" title="Select filter">
+        <button data-id="select" class="btn-outline-primary btn" type="button" title="Select filter">
             <i class="fa fa-upload"></i>
         </button>
     </div>
@@ -174,17 +170,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" data-t="">Select filter</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="list-group-container">
                         <div class="commands">
-                            <button data-id="apply" class="btn-primary btn" type="button" title="Apply">
+                            <button data-id="apply" class="btn-success btn" type="button" title="Apply">
                                 <i class="fas fa-check"></i>
                             </button>
-                            <button data-id="update" class="btn-outline-info btn" type="button" title="Edit">
+                            <button data-id="update" class="btn-outline-primary btn" type="button" title="Edit">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
                             <button data-id="delete" type="button" class="btn-outline-danger btn" title="Delete">
@@ -204,9 +198,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" data-t="">Save filter</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form">
@@ -218,10 +210,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-primary btn" title="Save" data-id="save">
+                    <button class="btn-success btn" title="Save" data-id="save">
                         <i class="fas fa-download"></i>
                     </button>
-                    <button class="btn-outline-secondary btn" data-dismiss="modal" title="Cancel">
+                    <button class="btn-outline-secondary btn" data-bs-dismiss="modal" title="Cancel">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>

@@ -17,6 +17,12 @@ class Jam {
         $(document.body).toggleClass('loading', state);
     }
 
+    static showModal ($modal, ...params) {
+        const modal = new bootstrap.Modal($modal.get(0));
+        modal.show(...params);
+        return modal;
+    }
+
     static post (url, data) {
         return $.post(url, this.addCsrfToken(data));
     }

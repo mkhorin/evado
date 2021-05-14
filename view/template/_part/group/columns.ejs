@@ -8,13 +8,13 @@ const p = {
     valueCss: typeof valueCss === 'undefined' ? 'col-xl-8 col-lg-9' : valueCss
 };
 %>
-<div class="columns form-columns row <%- p.css %>" data-action-binder="<%= p.actionBinder %>">
+<div class="form-columns form-group row <%- p.css %>" data-action-binder="<%= p.actionBinder %>">
     <% for (const item of items) {
         item.params = item.params || {};
         item.params.labelCss = item.params.labelCss === undefined ? p.labelCss : item.params.labelCss;
         item.params.valueCss = item.params.valueCss === undefined ? p.valueCss : item.params.valueCss;
     %>
-    <div class="column form-column <%- item.css === undefined ? p.columnCss : item.css %>">
+    <div class="form-column <%- item.css === undefined ? p.columnCss : item.css %>">
         <% if (Array.isArray(item.items)) {
             for (const child of item.items) {
                 if (child.template) {

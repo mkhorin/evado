@@ -2,7 +2,7 @@
 
 <div class="commands">
     <% if (data.multiple) { %>
-    <button data-command="selectAll" class="btn-outline-primary btn" type="button" title="Select all">
+    <button data-command="selectAll" class="btn-outline-secondary btn" type="button" title="Select all">
         <i class="fas fa-list"></i>
     </button>
     <% } if (data.create) { %>
@@ -10,7 +10,7 @@
         <i class="fas fa-plus"></i>
     </button>
     <% }  if (data.update) { %>
-    <button data-command="update" class="btn-outline-info btn" type="button" title="Edit">
+    <button data-command="update" class="btn-outline-primary btn" type="button" title="Edit">
         <i class="fas fa-pencil-alt"></i>
     </button>
     <% } if (data.delete) { %>

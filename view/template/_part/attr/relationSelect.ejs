@@ -115,7 +115,7 @@ const related = model.rel(attr);
                 <% } %>
             </div>
             <div class="input-group">
-                <select class="form-control" <% if (d.multiple) { %>multiple<% } %>
+                <select class="form-select" <% if (d.multiple) { %>multiple<% } %>
                         data-params="<%= JSON.stringify(d) %>">
                     <% if (Array.isArray(related)) {
                             for (const item of related) { %>
@@ -125,11 +125,9 @@ const related = model.rel(attr);
                     <% } %>
                 </select>
                 <% if (d.update) { %>
-                <div class="input-group-append">
-                    <button data-command="update" title="Edit" type="button" class="btn-white btn-outline-info btn">
-                        <i class="fas fa-pencil-alt"></i>
-                    </button>
-                </div>
+                <button data-command="update" title="Edit" type="button" class="btn-white btn-outline-primary btn">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
                 <% } %>
             </div>
         </div>

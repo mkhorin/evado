@@ -1,3 +1,15 @@
+## 3.0.0
+
+* component/security/rbac/Rbac
+    - fix undefined base meta model
+* console/Console        
+    - define node environment via console
+* migration to Bootstrap 5
+* web/jam/misc/I18n
+    - add formatted messages with parameters
+* web/jam/misc/Resource
+    - fix resource key
+    
 ## 2.2.0
 
 * console/asset/AssetBuilder

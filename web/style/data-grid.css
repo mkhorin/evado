@@ -8,6 +8,7 @@
 }
 .data-grid .row-bottom {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
 }
 .data-grid-content {
@@ -30,7 +31,7 @@
     border-width: 1px;
 }
 .data-grid-table > thead > tr > th {
-    padding: 0.4rem 0.5rem;
+    padding: .4rem .5rem;
     font-weight: normal;
     color: #567;
 }
@@ -103,7 +104,7 @@
 }
 .data-grid-table > tbody > tr > td > .value {
     overflow: auto;
-    padding: 0.5rem;
+    padding: .5rem;
     max-height: 15rem;
 }
 .data-grid-body .img-thumbnail {
@@ -215,27 +216,27 @@
 .active-advanced-search .data-grid-common-search .advanced-toggle {
     color: #f88;
 }
-.data-grid-common-search .input-group-append {
+.data-grid-common-search .advanced-toggle {
     display: none;
 }
-.has-advanced-search .data-grid-common-search .input-group-append {
-    display: flex;
+.has-advanced-search .data-grid-common-search .advanced-toggle {
+    display: inline-block;
 }
 
 /* PAGE SIZE */
 
 .data-grid .data-grid-page-size {
-    float:right;
+    float: right;
     margin-bottom: 1rem;
+}
+.data-grid .data-grid-page-size select {
+    padding-left: .5rem;
+    padding-right: 2.2rem;
 }
 .data-grid .data-grid-page-size label {
     font-weight: normal;
-    margin-right: 0.5rem;
+    margin-right: .5rem;
     color: #aaa;
-}
-.data-grid .data-grid-page-size select {
-    padding: 0.3rem;
-    width: auto;
 }
 
 /* TUNER */
@@ -243,7 +244,7 @@
 .data-grid-tuner {
     position: relative;
     float:right;
-    margin: 0 0 1rem 0.5rem;
+    margin: 0 0 1rem .5rem;
 }
 .data-grid-tuner .toggle {
     vertical-align: baseline;
@@ -253,7 +254,7 @@
     position: absolute;
     max-height: 25rem;
     overflow: auto;
-    padding: 0.25rem 0;
+    padding: .25rem 0;
     background: #fff;
     border:1px solid #ccc;
     z-index: 2002;
@@ -266,7 +267,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     margin:0;
-    padding: 0.25rem 1rem 0.25rem 2rem;
+    padding: .25rem 1rem .25rem 2rem;
     white-space: nowrap;
     font-weight: normal;
 }
@@ -276,14 +277,14 @@
 .data-grid-tuner-menu .item-label input.show,
 .data-grid-tuner-menu .item-label input.group {
     position: absolute;
-    left: 0.7rem;
+    left: .7rem;
     top: 50%;
-    margin-top: -0.41rem;
+    margin-top: -.41rem;
 }
 .data-grid-tuner-menu .item-label input.group {
     display: none;
     left: auto;
-    right: 0.7rem;
+    right: .7rem;
 }
 .data-grid-tuner-menu.grouping .item-label {
     padding-right: 2rem;
@@ -297,15 +298,18 @@
 .data-grid-pager {
     display: none;
 }
+.data-grid-pagination {
+    margin-right: 1rem;
+}
 .data-grid-pagination .btn {
-    padding: 0.25rem 0.7rem;
+    padding: .25rem .7rem;
     border-color: #ced4da;
 }
 .data-grid-pagination .gap {
     float: left;
     display: inline-block;
     line-height: 1.2rem;
-    padding: 0.4rem 0.5rem;
+    padding: .4rem .5rem;
     color: #888;
     border: 1px solid #ddd;
     border-left: none;
@@ -319,16 +323,13 @@
 }
 .data-grid.has-page-toggle .data-grid-pager {
     display: flex;
+    flex-wrap: wrap;
 }
-.data-grid.has-page-toggle .data-grid-info {
-    margin-left: 1rem;
-}
-
 .data-grid .data-grid-page-jumper {
     height: auto;
     width: auto;
-    padding: 0.3rem;
-    margin-left: 1rem;
+    padding: .25rem 2.25rem .25rem .5rem;
+    margin-right: 1rem;
 }
 
 /* TREE VIEW */
@@ -345,7 +346,7 @@
 .tree-data-grid .node-toggle {
     display: none;
     position: absolute;
-    top: 0.5rem;
+    top: .5rem;
     font-size: 1rem;
     color: #222;
 }
@@ -439,7 +440,7 @@
     display: none;
     position: relative;
     margin: 0 0 1rem;
-    padding: 1rem 0.5rem;
+    padding: 1rem .5rem;
     background: #f4f9f9;
 }
 .list-filter .filter-tools {
@@ -458,10 +459,10 @@
 }
 .list-filter .filter-condition .condition-group {
     display: none;
-    margin-top: 1rem;
     position: relative;
     left: 2.6rem;
-    width: calc(100% - 0.65rem);
+    margin-top: .75rem;
+    width: calc(100% - .65rem);
 }
 .list-filter .filter-condition.has-nested .condition-group {
     display: block;
@@ -470,8 +471,8 @@
     position:absolute;
     text-align: center;
     left: 0;
-    top: 0.5rem;
-    opacity: 0.8;
+    top: .5rem;
+    opacity: .8;
     cursor: pointer;
     user-select: none;
     z-index: 1;
@@ -501,16 +502,16 @@
 }
 .list-filter .delete-condition {
     position: absolute;
-    right: 0.35rem;
-    top: 0.7rem;
+    right: .35rem;
+    top: .7rem;
     font-size: 1rem;
     line-height: 1rem;
     cursor: pointer;
-    opacity: 0.5;
-    color: var(--danger);
+    opacity: .7;
+    color: var(--light-danger);
 }
 .list-filter .delete-condition:hover {
-    opacity: 0.8;
+    opacity: 1.0;
 }
 .list-filter .condition-attr + .condition-attr {
     margin: 5px 0 0 5%;
@@ -541,7 +542,7 @@
     display: block;
 }
 .list-filter input[type=checkbox].condition-value {
-    margin-top: 0.8rem;
+    margin-top: .8rem;
 }
 .list-filter .list-group:last-child {
     margin-bottom: 0;
@@ -568,29 +569,12 @@
     .data-grid .table-responsive {
         margin-bottom: 0;
     }
-    .has-page-toggle .data-grid-pager {
-        margin-top: 1rem;
-        display: block;
-    }
-    .data-grid .row-bottom {
-        display: block;
-    }
-    .data-grid .data-grid-pager {
-        text-align: center;
-    }
-    .data-grid .data-grid-info {
-        text-align: center;
-        margin: 1rem 0 0 0;
-    }
-    .data-grid .data-grid-page-jumper {
-        margin: 1rem auto 0;
-    }
     .list-filter .filter-condition {
         margin-bottom: 1.5rem;
     }
     .list-filter .condition-attr-container,
     .list-filter .condition-operation {
-        margin-bottom: 0.5rem;
+        margin-bottom: .5rem;
     }
 }
 @media print {
@@ -614,6 +598,6 @@
         display: none !important;
     }
     .data-grid-table > thead > tr > .column.sortable {
-        padding-right: 0.5rem;
+        padding-right: .5rem;
     }
 }

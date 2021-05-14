@@ -55,11 +55,19 @@ Jam.ListFilterStorage = class ListFilterStorage {
     }
 
     toggleSave (state) {
-        this.$saveModal.modal(state ? undefined : 'hide');
+        if (state) {
+            this.saveModal = Jam.showModal(this.$saveModal);
+        } else {
+            this.saveModal?.hide();
+        }
     }
 
     toggleSelect (state) {
-        this.$selectModal.modal(state ? undefined : 'hide');
+        if (state) {
+            this.selectModal = Jam.showModal(this.$selectModal);
+        } else {
+            this.selectModal?.hide();
+        }
     }
 
     onToggleSelect () {

@@ -14,11 +14,9 @@ const p = {
     <div class="input-group">
         <input name="<%- p.name %>" type="<%- p.type %>" value="<%- p.value %>" class="form-control" <%- p.required %>
                placeholder="<%- _t(p.label) %>" autocomplete="<%- p.autocomplete %>">
-        <div class="input-group-append">
-            <span class="input-group-text text-muted">
-                <i class="<%- p.iconClass %>"></i>
-            </span>
-        </div>
+        <span class="input-group-text text-muted">
+            <i class="<%- p.iconClass %>"></i>
+        </span>
     </div>
     <div class="error-block"><%= p.error %></div>
 </div>

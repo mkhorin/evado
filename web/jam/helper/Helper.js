@@ -13,9 +13,10 @@ Jam.Helper = class Helper {
     }
 
     static bindLabelsToInputs ($container) {
-        let base = this.getRandom(1, Number.MAX_SAFE_INTEGER);
         let index = 0;
-        for (const input of $container.find('.form-check-input')) {
+        let base = this.getRandom(1, Number.MAX_SAFE_INTEGER);
+        let $inputs = $container.find('.form-check-input').add($container.find('.btn-check'));
+        for (const input of $inputs) {
             input.id = input.id || base + index++;
             input.nextElementSibling.setAttribute('for', input.id);
         }

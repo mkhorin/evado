@@ -16,11 +16,9 @@ const error = _t(model.getFirstError(attr), null, 'areto');
         <div class="input-group">
             <input name="<%- name %>" type="search" class="form-control" required
                    placeholder="<%- holder %>" autocomplete="off">
-            <div class="input-group-append">
-                <span class="input-group-text text-muted">
-                    <i class="fas fa-check"></i>
-                </span>
-            </div>
+            <span class="input-group-text text-muted">
+                <i class="fas fa-check"></i>
+            </span>
         </div>
         <div class="error-block"><%- error %></div>
     </div>
