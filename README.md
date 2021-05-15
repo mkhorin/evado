@@ -15,6 +15,7 @@
 
 - [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate)
 - [E-Champ](https://github.com/mkhorin/e-champ) - a platform for online games
+- [Neural Net](https://github.com/mkhorin/neural-net) - neural networks for digit recognition
 
 ### Ready to try
 
