@@ -164,7 +164,7 @@ Jam.StackFrame = class StackFrame {
         if (this.stack.isActiveLast(this.$frame)) {
             return true;
         }
-        Jam.dialog.alert('Close the last stack frame first');
+        Jam.dialog.alert('Close the last stack tab first');
     }
 
     find () {

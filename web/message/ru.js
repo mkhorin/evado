@@ -48,7 +48,7 @@ Jam.I18n.defaults = {
     'Change password': 'Изменить пароль',
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
-    'Close the last stack frame first': 'Сначала закройте последний фрейм стека',
+    'Close the last stack tab first': 'Закройте последнюю вкладку стека',
     'Close without saving?': 'Закрыть без сохранения?',
     'Confirm': 'Подтвердить',
     'Confirmation': 'Подтверждение',

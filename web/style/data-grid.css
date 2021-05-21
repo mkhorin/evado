@@ -186,14 +186,14 @@
 .required.blank .data-grid-table > thead > tr > th {
     background: var(--required-color);
 }
-.data-grid .btn-lazy-load,
-.data-grid.lazy-load .row-top,
-.data-grid.lazy-load .row-bottom,
-.data-grid.lazy-load .data-grid-content,
+.data-grid .btn-demand-load,
+.data-grid.demand-load .row-top,
+.data-grid.demand-load .row-bottom,
+.data-grid.demand-load .data-grid-content,
 .data-grid-placeholder {
     display: none;
 }
-.data-grid.lazy-load .btn-lazy-load {
+.data-grid.demand-load .btn-demand-load {
     display: inline-block;
 }
 .data-grid-content.empty .data-grid-placeholder {

@@ -19,7 +19,7 @@ Jam.DateHelper = class DateHelper {
      * If UTC then delete Z suffix 
      */
     static formatByUtc (isoDate, utc) {
-        return utc ? isoDate.slice(0, -1) : isoDate; 
+        return utc && typeof isoDate === 'string' ? isoDate.slice(0, -1) : isoDate;
     }
 
     static resolveClientDate ($container) {

@@ -5,7 +5,7 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     init () {
         super.init();
-        if (this.params.lazyLoad) {
+        if (this.params.loadOnDemand) {
             this.afterInit();
         } else {
             this.grid.events.one('afterLoad', this.onAfterLoad.bind(this));

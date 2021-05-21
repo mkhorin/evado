@@ -30,12 +30,14 @@ Jam.List = class List extends Jam.Element {
         this.createDataFormatter();
         this.setDataGridParams();
         this.createDataGrid();
-        if (this.params.lazyLoad) {
-            this.toggleClass('lazy-load', true);
-            this.$grid.on('click', '.btn-lazy-load', this.activate.bind(this));
-        } else {
-            this.activate();
-        }
+        this.params.loadOnDemand
+            ? this.setLoadOnDemand()
+            : this.activate();
+    }
+
+    setLoadOnDemand () {
+        this.$grid.on('click', '.btn-demand-load', this.activate.bind(this));
+        this.toggleClass('demand-load', true);
     }
 
     activate () {
@@ -45,7 +47,7 @@ Jam.List = class List extends Jam.Element {
         this.grid.init();
         this.grid.addItemListener('click', this.onClickItem.bind(this));
         this.grid.addItemListener('dblclick', this.onDoubleClickItem.bind(this));
-        this.toggleClass('lazy-load', false);
+        this.toggleClass('demand-load', false);
     }
 
     prepareCommands () {

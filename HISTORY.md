@@ -1,3 +1,9 @@
+## 3.1.0
+
+* web/jam/helper/DateHelper
+    - check invalid date format 
+* upgrade dependencies    
+    
 ## 3.0.0
 
 * component/security/rbac/Rbac

@@ -25,6 +25,7 @@ module.exports = class MetaHub extends Base {
         });
         this.basePath = this.module.getPath(this.basePath);
         this.User = this.getClass('model/User');
+        this.logger = this.spawn(MetaLogger, {meta: this});
     }
 
     init () {
@@ -57,11 +58,9 @@ module.exports = class MetaHub extends Base {
     // LOAD
 
     async load () {
+        this.logger.clearErrors();
         this.moduleNames = this.module.modules.keys();
-        this.loadErrors = [];
-        this._logHandler = this.logLoadError;
         await this.models.load();
-        this._logHandler = null;
         await this.afterLoad();
     }
 
@@ -99,22 +98,13 @@ module.exports = class MetaHub extends Base {
 
     // LOG
 
-    logLoadError (type, message) {
-        if (type === 'error') {
-            this.loadErrors.push(message);
-        }
-    }
-
     log () {
-        if (this._logHandler) {
-            this._logHandler.apply(this, arguments);
-        }
-        CommonHelper.log(this.module, 'META', ...arguments);
+        this.logger.log(...arguments);
     }
 };
 module.exports.init();
 
 const path = require('path');
-const CommonHelper = require('areto/helper/CommonHelper');
 const PromiseHelper = require('areto/helper/PromiseHelper');
+const MetaLogger = require('./MetaLogger');
 const MetaHelper = require('../helper/MetaHelper');
