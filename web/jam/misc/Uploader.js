@@ -49,7 +49,6 @@ Jam.Uploader = class Uploader {
             delete: 'file/delete', // or function
             doneMessage: 'Upload done',
             failedMessage: 'Upload failed'
-
         };
     }
 
@@ -298,12 +297,18 @@ Jam.UploaderFile = class UploaderFile {
 
     validate () {
         this.image = new Image;
-        this.image.onload = this.startValidate.bind(this);
-        this.image.onerror = () => {
-            this.image = null;
-            this.startValidate();
-        };
+        this.image.addEventListener('load', this.onLoadImage.bind(this));
+        this.image.addEventListener('error', this.onErrorImage.bind(this));
         this.image.src = window.URL.createObjectURL(this.file);
+    }
+
+    onLoadImage () {
+        this.startValidate();
+    }
+
+    onErrorImage () {
+        this.image = null;
+        this.startValidate();
     }
 
     startValidate () {
@@ -399,10 +404,9 @@ Jam.UploaderFile = class UploaderFile {
     upload () {
         this.xhr = new XMLHttpRequest;
         this.xhr.open('POST', this.uploader.getUploadUrl());
-        if (this.xhr.upload) {
-            this.xhr.upload.addEventListener('progress', this.progressUploading.bind(this), false);
-        }
-        this.xhr.onreadystatechange = this.changeReadyState.bind(this);
+        this.xhr.upload?.addEventListener('progress', this.onProgress.bind(this), false);
+        this.xhr.addEventListener('load', this.onLoad.bind(this));
+        this.xhr.addEventListener('error', this.onError.bind(this));
         const data = new FormData;
         data.append(this.uploader.options.attrName, this.file.name);
         data.append(this.uploader.options.attrName, this.file);
@@ -411,7 +415,7 @@ Jam.UploaderFile = class UploaderFile {
         this.xhr.send(data);
     }
 
-    progressUploading (event) {
+    onProgress (event) {
         // can be FALSE if server never sent Content-Length header to response
         if (event.lengthComputable) {
             this.percent = Math.round(event.loaded * 100 / event.total);
@@ -419,17 +423,20 @@ Jam.UploaderFile = class UploaderFile {
         }
     }
 
-    changeReadyState () {
-        if (this.xhr.readyState === XMLHttpRequest.DONE) {
-            const message = this.xhr.response;
-            if (this.xhr.status === 200) {
-                this.status = 'done';
-                this.info = message || this.uploader.doneMessage;
-                this.trigger('upload');
-            } else {
-                this.setError(message || this.uploader.failedMessage);
-            }
-            this.uploader.processNext();
+    onLoad (event) {
+        const message = this.xhr.response;
+        if (this.xhr.status === 200) {
+            this.status = 'done';
+            this.info = message || this.uploader.options.doneMessage;
+            this.trigger('upload');
+        } else {
+            this.setError(message || this.uploader.options.failedMessage);
         }
+        this.uploader.processNext();
+    }
+
+    onError () {
+        this.setError(this.uploader.options.failedMessage);
+        this.uploader.processNext();
     }
 };
