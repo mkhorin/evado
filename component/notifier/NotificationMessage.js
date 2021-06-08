@@ -65,7 +65,7 @@ module.exports = class NotificationMessage extends Base {
         }
         const recipients = await this.resolveRecipients();
         if (!recipients.length) {
-            return this.log('warn', 'No recipients found');
+            return this.log('error', 'No recipients found');
         }
         for (const method of notification.get('methods')) {
             switch (method) {

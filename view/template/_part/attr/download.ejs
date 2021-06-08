@@ -1,11 +1,12 @@
 <!-- _part/attr/download -->
 <%
 const p = {
-    thumbnail: typeof thumbnail === 'undefined' ? 'large' : thumbnail,
+    preload: typeof preload === 'undefined' ? '' : preload,
+    thumbnail: typeof thumbnail === 'undefined' ? 'lg' : thumbnail,
     thumbnailPath: typeof thumbnailPath === 'undefined' ? 'file/thumbnail' : thumbnailPath,
     url: `${typeof downloadPath === 'undefined' ? 'file/download' : downloadPath}?id=${model.getId()}`
 };
-const src = model.isImage()
+const thumbnailUrl = p.thumbnail && model.isImage()
     ? `${p.thumbnailPath}?id=${model.getId()}&s=${p.thumbnail}&t=${_controller.timestamp}`
     : null;
 %>
@@ -16,12 +17,11 @@ const src = model.isImage()
            data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <p class="form-control-plaintext">
-            <a href="<%- p.url %>" target="_blank" title="Download" tabindex="-1">
-                <%= model.getTitle() %>
-            </a>
+            <a href="<%- p.url %>" target="_blank" title="Download" tabindex="-1"
+               data-preload="<%- p.preload %>"><%= model.getTitle() %></a>
         </p>
-        <% if (src) { %>
-        <img src="<%- src %>" class="img-thumbnail img-fluid" alt="<%= model.getTitle() %>">
+        <% if (thumbnailUrl) { %>
+        <img src="<%- thumbnailUrl %>" class="img-thumbnail img-fluid" alt="<%= model.getTitle() %>">
         <% } %>
     </div>
 </div>

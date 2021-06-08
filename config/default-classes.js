@@ -16,6 +16,7 @@ module.exports = {
     'model/File': require('../model/File'),
     'model/RateLimit': require('../model/RateLimit'),
     'model/RawFile': require('../model/RawFile'),
+    'model/S3File': require('../model/S3File'),
     'model/Task': require('../model/Task'),
     'model/User': require('../model/User'),
     'model/UserFilter': require('../model/UserFilter'),
@@ -37,5 +38,6 @@ module.exports = {
     'security/WebUser': require('../component/security/WebUser'),
 
     'validator/PasswordValidator': require('../component/validator/PasswordValidator'),
+    'validator/UploadLimitValidator': require('../component/validator/UploadLimitValidator'),
     'validator/UserNameValidator': require('../component/validator/UserNameValidator')
 };

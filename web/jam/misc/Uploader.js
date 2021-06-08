@@ -26,11 +26,11 @@ Jam.Uploader = class Uploader {
             minSize: 1,
             maxSize: null,
             extensions: null,
-            mimeTypes: null,
+            types: null,
             tooSmall: 'File size cannot be smaller than {limit}',
             tooBig: 'File size cannot exceed {limit}',
             wrongExtension: 'Only these file extensions are allowed: {extensions}',
-            wrongMimeType: 'Only these file MIME types are allowed: {mimeTypes}',
+            wrongType: 'Only these media types are allowed: {types}',
             imageOnly: false,
             maxHeight: null,
             maxWidth: null,
@@ -43,12 +43,15 @@ Jam.Uploader = class Uploader {
             underWidth: 'Width cannot be smaller than {limit} px',
             tooMany: 'Too many files',
             alreadyExists: 'This file has already been selected',
+            deletionConfirm: null,
             deletionConfirmStatuses: ['done', 'uploading'],
-            attrName: 'file',
             upload: 'file/upload', // or function
             delete: 'file/delete', // or function
-            doneMessage: 'Upload done',
-            failedMessage: 'Upload failed'
+            doneMessage: 'Upload completed',
+            failedMessage: 'Upload failed',
+            abortedMessage: 'Upload aborted',
+            uploadMethod: 'POST',
+            prepareUploadData: data => data
         };
     }
 
@@ -75,9 +78,9 @@ Jam.Uploader = class Uploader {
     }
 
     setInputAccept () {
-        let {accept, mimeTypes} = this.options;
-        if (!accept && mimeTypes) {
-            accept = mimeTypes.join();
+        let {accept, types} = this.options;
+        if (!accept && types) {
+            accept = types.join();
         }
         if (accept) {
             this.$input.attr('accept', accept);
@@ -134,16 +137,6 @@ Jam.Uploader = class Uploader {
         for (const file of this.files) {
             file.abort();
         }
-    }
-
-    getDeleteUrl () {
-        const url = this.options.delete;
-        return typeof url === 'function' ? url(this) : url;
-    }
-
-    getUploadUrl () {
-        const url = this.options.upload;
-        return typeof url === 'function' ? url(this) : url;
     }
 
     setFiles (files) {
@@ -246,6 +239,16 @@ Jam.UploaderFile = class UploaderFile {
         return !this.deleted && !this.failed && !this.isDone();
     }
 
+    getDeleteUrl () {
+        const url = this.uploader.options.delete;
+        return typeof url === 'function' ? url(this) : url;
+    }
+
+    getUploadUrl () {
+        const url = this.uploader.options.upload;
+        return typeof url === 'function' ? url(this) : url;
+    }
+
     setSaved () {
         this.status = 'done';
         this.info = this.file;
@@ -334,9 +337,9 @@ Jam.UploaderFile = class UploaderFile {
                 });
             }
         }
-        if (options.mimeTypes && !options.mimeTypes.includes(file.type)) {
-            return this.createMessage(options.wrongMimeType, {
-                mimeTypes: options.mimeTypes.join(', ')
+        if (options.types && !options.types.includes(file.type)) {
+            return this.createMessage(options.wrongType, {
+                types: options.types.join(', ')
             });
         }
         if (options.maxSize && options.maxSize < file.size) {
@@ -402,14 +405,22 @@ Jam.UploaderFile = class UploaderFile {
     }
 
     upload () {
+        $.when(this.getUploadUrl())
+            .then(this.onStartUpload.bind(this))
+            .catch(this.onError.bind(this));
+    }
+
+    onStartUpload (url) {
         this.xhr = new XMLHttpRequest;
-        this.xhr.open('POST', this.uploader.getUploadUrl());
+        this.xhr.open(this.uploader.options.uploadMethod, url);
         this.xhr.upload?.addEventListener('progress', this.onProgress.bind(this), false);
         this.xhr.addEventListener('load', this.onLoad.bind(this));
         this.xhr.addEventListener('error', this.onError.bind(this));
-        const data = new FormData;
-        data.append(this.uploader.options.attrName, this.file.name);
-        data.append(this.uploader.options.attrName, this.file);
+        this.xhr.addEventListener('abort', this.onAbort.bind(this));
+        let data = new FormData;
+        data.append('file', this.file.name);
+        data.append('file', this.file);
+        data = this.uploader.options.prepareUploadData(data, this);
         this.status = 'uploading';
         this.trigger('start');
         this.xhr.send(data);
@@ -423,7 +434,7 @@ Jam.UploaderFile = class UploaderFile {
         }
     }
 
-    onLoad (event) {
+    onLoad () {
         const message = this.xhr.response;
         if (this.xhr.status === 200) {
             this.status = 'done';
@@ -435,8 +446,13 @@ Jam.UploaderFile = class UploaderFile {
         this.uploader.processNext();
     }
 
-    onError () {
-        this.setError(this.uploader.options.failedMessage);
+    onError (data) {
+        this.setError(data || this.uploader.options.failedMessage);
+        this.uploader.processNext();
+    }
+
+    onAbort () {
+        this.setError(this.uploader.options.abortedMessage);
         this.uploader.processNext();
     }
 };

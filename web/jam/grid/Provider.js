@@ -33,7 +33,7 @@ Jam.DataGridProvider = class DataGridProvider {
     }
 
     useCommonSearch (data) {
-        const value = this.grid.commonSearch.getValue();
+        const value = this.grid.search.getValue();
         if (value === null) {
             return data;
         }
@@ -94,7 +94,7 @@ Jam.DataGridProvider = class DataGridProvider {
     }
 
     createColumnFilterValues (column, data) {
-        const key = '_jamDataGridFilter_'+ column.name;
+        const key = '_dataGridFilter_'+ column.name;
         if (data.length && !data[0].hasOwnProperty(key)) {
             for (const doc of data) {
                 doc[key] = column.formatFilterValue(doc[column.name], column, doc)

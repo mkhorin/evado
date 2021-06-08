@@ -20,6 +20,7 @@ module.exports = {
     'Home': 'Домой',
 
     'Invalid authentication': 'Неверная аутентификация',
+    'Invalid enum value': 'Неверное перечислимое значение',
     'Invalid requested parameters': 'Неверные запрошенные параметры',
 
     'Name': 'Имя',
@@ -50,7 +51,12 @@ module.exports = {
     'Sign up': 'Регистрация',
     'Something went wrong': 'Что-то пошло не так',
 
-    'Upload limit reached': 'Достигнут предел загрузки',
+    'Too many files': 'Слишком много файлов',
+    'Too many uploaded files': 'Слишком много загруженных файлов',
+    'Total file size cannot be smaller than {limit}': 'Общий размер файлов не может быть менее {limit}',
+    'Total file size cannot exceed {limit}': 'Общий размер файлов не может превышать {limit}',
+    'Total file size exceeded': 'Превышен общий размер файлов',
+
     'User not found': 'Пользователь не найден',
 
     'Verification code': 'Проверочный код',

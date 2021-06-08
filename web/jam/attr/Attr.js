@@ -3,6 +3,20 @@
  */
 Jam.ModelAttr = class ModelAttr {
 
+    static createAll ($container, model) {
+        const attrs = [];
+        for (let attr of $container.find('.form-attr')) {
+            attr = Jam.ModelAttr.create($(attr), model);
+            if (attr) {
+                attrs.push(attr);
+            }
+        }
+        for (const attr of attrs) {
+            attr.init();
+        }
+        return attrs;
+    }
+
     static create ($attr, model) {
         const name = $attr.data('handler');
         const config = name
@@ -19,18 +33,18 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     static get ($elem) {
-        return $elem.closest('.form-attr').data('model-attr');
+        return $elem.closest('.form-attr').data('modelAttr');
     }
 
     static getAttrs ($container) {
-        return $container.find('.form-attr').map((index, element) => $(element).data('model-attr')).get();
+        return $container.find('.form-attr').map((index, element) => $(element).data('modelAttr')).get();
     }
 
     constructor ($attr, model) {
         this.$attr = $attr;
         this.model = model;
         this.$value = model.findAttrValue(this.$attr);
-        this.$attr.data('model-attr', this);
+        this.$attr.data('modelAttr', this);
         this.params = this.getData('params') || {};
         this.initialValue = this.getValue();
     }

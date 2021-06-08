@@ -11,8 +11,9 @@ module.exports = {
             'jam/Jam.js',
             'jam/element/Element.js',
             'jam/attr/Attr.js',
-            'jam/dataGrid/DataGrid.js',
-            'jam/dataGrid/Renderer.js',
+            'jam/attr/File.js',
+            'jam/grid/DataGrid.js',
+            'jam/grid/Renderer.js',
             'jam/list/List.js',
             'jam'
         ],

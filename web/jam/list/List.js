@@ -37,7 +37,7 @@ Jam.List = class List extends Jam.Element {
 
     setLoadOnDemand () {
         this.$grid.on('click', '.btn-demand-load', this.activate.bind(this));
-        this.toggleClass('demand-load', true);
+        this.addClass('demand-load');
     }
 
     activate () {
@@ -47,7 +47,7 @@ Jam.List = class List extends Jam.Element {
         this.grid.init();
         this.grid.addItemListener('click', this.onClickItem.bind(this));
         this.grid.addItemListener('dblclick', this.onDoubleClickItem.bind(this));
-        this.toggleClass('demand-load', false);
+        this.removeClass('demand-load');
     }
 
     prepareCommands () {
@@ -82,7 +82,7 @@ Jam.List = class List extends Jam.Element {
         this.filter = new Jam.ListFilter(this, this.params.filter);
         this.grid.events.on('toggleAdvancedSearch', this.filter.toggle.bind(this.filter, null));
         if (this.filter.isExists()) {
-            this.toggleClass('has-advanced-search', true);
+            this.addClass('has-advanced-search');
             this.filter.events.on('afterBuild', this.onBuildFilter.bind(this));
         }
     }

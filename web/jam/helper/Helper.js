@@ -14,7 +14,7 @@ Jam.Helper = class Helper {
 
     static bindLabelsToInputs ($container) {
         let index = 0;
-        let base = this.getRandom(1, Number.MAX_SAFE_INTEGER);
+        let base = this.random(1, Number.MAX_SAFE_INTEGER);
         let $inputs = $container.find('.form-check-input').add($container.find('.btn-check'));
         for (const input of $inputs) {
             input.id = input.id || base + index++;
@@ -76,14 +76,14 @@ Jam.Helper = class Helper {
         return items;
     }
 
+    static random (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     static getCookie (name) {
         const data = name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1');
         const matches = document.cookie.match(new RegExp(`(?:^|; )${data}=([^;]*)`));
         return matches ? decodeURIComponent(matches[1]) : undefined;
-    }
-
-    static getRandom (min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     static getTemplate (id, $container) {
@@ -175,5 +175,16 @@ Jam.Helper = class Helper {
 
     static validateWithBrowser (form) {
         return !form.checkValidity || form.checkValidity();
+    }
+
+    static handlePreloadLinks ($container = $(document.body)) {
+        $container.on('click', 'a[data-preload="true"]', event => {
+            event.preventDefault();
+            event.target.removeAttribute('data-preload');
+            $.get(event.target.href).done(url => {
+                event.target.href = url;
+                event.target.click();
+            });
+        });
     }
 };

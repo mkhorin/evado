@@ -27,15 +27,15 @@ module.exports = class FileController extends Base {
 
     async actionUpload () {
         const model = this.spawn('model/RawFile');
-        if (await model.isLimitReached(this.user)) {
-            return this.sendText(this.translate('Upload limit reached'), 400);
+        if (!await model.validateUserLimit(this.user)) {
+            return this.sendText(this.translate(model.getFirstError()), 409);
         }
         if (!await model.upload(this.req, this.res)) {
             return this.sendText(this.translate(model.getFirstError()), 400);
         }
         this.sendJson({
             id: model.getId(),
-            mime: model.getMime(),
+            type: model.getMediaType(),
             size: model.getSize()
         });
     }

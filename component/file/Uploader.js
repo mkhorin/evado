@@ -10,7 +10,7 @@ module.exports = class Uploader extends Base {
     constructor (config) {
         super({
             basePath: '/',
-            fieldName: 'file',
+            fileAttr: 'file',
             ...config
         });
     }
@@ -18,13 +18,18 @@ module.exports = class Uploader extends Base {
     async execute (req, res) {
         const dir = this.generateDirectory();
         const upload = this.createSingleMulter(dir);
-        await PromiseHelper.promise(upload.bind(this, req, res));
-        const file = req.file;
+        await PromiseHelper.promise(upload, this, req, res);
+        return req.file
+            ? this.getFileStat(req.file, dir)
+            : null;
+    }
+
+    getFileStat (file, dir) {
         return {
             name: file.originalname,
             filename: `${dir}/${file.filename}`,
             size: file.size,
-            mime: file.mimetype || '',
+            type: file.mimetype || '',
             extension: path.extname(file.originalname).substring(1).toLowerCase()
         };
     }
@@ -33,9 +38,9 @@ module.exports = class Uploader extends Base {
         return multer({
             storage: multer.diskStorage({
                 destination: this.generateDestination.bind(this, dir),
-                filename: this.generateFileName.bind(this)
+                filename: this.generateFilename.bind(this)
             })
-        }).single(this.fieldName);
+        }).single(this.fileAttr);
     }
 
     /**
@@ -51,13 +56,13 @@ module.exports = class Uploader extends Base {
         fs.mkdir(dir, {recursive: true}, err => callback(err, dir));
     }
 
-    generateFileName (req, file, callback) {
+    generateFilename (req, file, callback) {
         callback(null, MongoHelper.createObjectId().toString());
     }
 };
 
+const MongoHelper = require('areto/helper/MongoHelper');
+const PromiseHelper = require('areto/helper/PromiseHelper');
 const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
-const MongoHelper = require('areto/helper/MongoHelper');
-const PromiseHelper = require('areto/helper/PromiseHelper');

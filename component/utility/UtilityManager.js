@@ -16,20 +16,20 @@ module.exports = class UtilityManager extends Base {
 
     async init () {
         this._utilityMap = this.resolveUtilityMap(this.utilities) || {};
-        this.resolveUtilityConfigurations();
+        this.resolveUtilityConfigs();
         this._utilities = Object.values(this._utilityMap);
         ObjectHelper.addKeyAsNestedValue('id', this._utilityMap);
     }
 
     resolveUtilityMap (data) {
-        return typeof data === 'string' ? this.resolveFromConfiguration(data) : data;
+        return typeof data === 'string' ? this.resolveFromConfig(data) : data;
     }
 
-    resolveFromConfiguration (key) {
+    resolveFromConfig (key) {
         return this.module.config.mergeWithParents(key);
     }
 
-    resolveUtilityConfigurations () {
+    resolveUtilityConfigs () {
         const data = this._utilityMap;
         for (const key of Object.keys(data)) {
             try {

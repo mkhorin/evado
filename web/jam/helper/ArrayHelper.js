@@ -29,10 +29,6 @@ Jam.ArrayHelper = class ArrayHelper {
         return data;
     }
 
-    static getRandom (items) {
-        return items.length ? items[Math.floor(Math.random() * items.length)] : null;
-    }
-
     static index (key, items) {
         const data = {};
         if (Array.isArray(items)) {
@@ -109,6 +105,10 @@ Jam.ArrayHelper = class ArrayHelper {
                 return;
             }
         }
+    }
+
+    static random (items) {
+        return items.length ? items[Math.floor(Math.random() * items.length)] : null;
     }
 
     static shuffle (items) {

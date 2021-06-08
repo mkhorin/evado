@@ -1,3 +1,18 @@
+## 4.0.0
+
+* component/base/CrudController
+    - loadable groups and tabs
+* component/file/FileStorage
+    - add file hashing
+* component/file/S3Storage
+    - add S3 storage    
+* config/default
+    - rename thumbnail sizes
+* model/RawFile
+    - add file hashing        
+* web/jam/misc/Uploader
+    - fix event handlers  
+
 ## 3.1.0
 
 * web/jam/helper/DateHelper
@@ -298,7 +313,7 @@
 * web/jam/list/ListFilter
     - fix selector type
 * web/jam/util/Uploader
-    - add input accept from mime type validator
+    - add input accept from media type validator
 
 ## 0.1.11
 

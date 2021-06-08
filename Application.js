@@ -7,6 +7,10 @@ const Base = require('areto/base/Application');
 
 module.exports = class EvadoApplication extends Base {
 
+    getFileStorage () {
+        return this.components.get('fileStorage');
+    }
+
     getI18n () {
         return this.components.get('i18n');
     }

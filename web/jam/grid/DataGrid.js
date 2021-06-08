@@ -25,10 +25,10 @@ Jam.DataGrid = class DataGrid {
         };
         return {
             AjaxProvider: Jam.DataGridAjaxProvider,
-            CommonSearch: Jam.DataGridCommonSearch,
             Pagination: Jam.Pagination,
             Provider: Jam.DataGridProvider,
             Renderer: this.getRendererClass(params.view),
+            Search: Jam.DataGridSearch,
             Tuner: Jam.DataGridTuner,
             ...params
         };
@@ -48,7 +48,7 @@ Jam.DataGrid = class DataGrid {
             : new params.Provider(this);
         this.renderer = new params.Renderer(this);
         this.pagination = this.createPagination();
-        this.commonSearch = new params.CommonSearch(this);
+        this.search = new params.Search(this);
         this.columnGroupMap = Jam.ArrayHelper.index('name', params.columnGroups);
         this.columnMap = Jam.ArrayHelper.index('name', params.columns);
         this.tuner = params.Tuner ? new params.Tuner(this) : null;

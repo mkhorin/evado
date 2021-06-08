@@ -104,7 +104,7 @@ module.exports = class MetaHub extends Base {
 };
 module.exports.init();
 
-const path = require('path');
 const PromiseHelper = require('areto/helper/PromiseHelper');
 const MetaLogger = require('./MetaLogger');
 const MetaHelper = require('../helper/MetaHelper');
+const path = require('path');

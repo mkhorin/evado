@@ -13,8 +13,9 @@ module.exports = class File extends Base {
             ATTRS: [
                 'name',
                 'size',
-                'mime',
+                'type',
                 'file',
+                'hash',
                 'createdAt',
                 'creator',
                 'updatedAt',
@@ -34,7 +35,7 @@ module.exports = class File extends Base {
                 }
             },
             ATTR_LABELS: {
-                mime: 'MIME type'
+                type: 'Media type'
             }
         };
     }
@@ -44,11 +45,11 @@ module.exports = class File extends Base {
     }
 
     isImage () {
-        return this.get('mime').indexOf('image') === 0;
+        return this.get('type').indexOf('image') === 0;
     }
 
     isSvg () {
-        return this.get('mime').indexOf('image/svg+xml') === 0;
+        return this.get('type').indexOf('image/svg+xml') === 0;
     }
 
     getTitle () {
@@ -63,16 +64,20 @@ module.exports = class File extends Base {
         return this.get('file');
     }
 
+    getHash () {
+        return this.get('hash');
+    }
+
     getSize () {
         return this.get('size');
     }
 
-    getMime () {
-        return this.get('mime');
+    getMediaType () {
+        return this.get('type');
     }
 
     getStorage () {
-        return this.module.get('fileStorage');
+        return this.module.getFileStorage();
     }
 
     getPath () {
@@ -80,21 +85,22 @@ module.exports = class File extends Base {
     }
 
     getFileHeaders () {
-        return this.getStorage().getHeaders(this.getName(), this.getMime());
+        return this.getStorage().getHeaders(this.getName(), this.getMediaType());
     }
 
     getThumbnailHeaders () {
         return this.getStorage().thumbnail.getHeaders(this.getName());
     }
 
-    getRawFile () {
+    getRawClass () {
         return this.getClass('model/RawFile');
     }
 
     assignRawData (rawFile) {
         if (rawFile) {
             this.setFromModel('file', rawFile);
-            this.setFromModel('mime', rawFile);
+            this.setFromModel('hash', rawFile);
+            this.setFromModel('type', rawFile);
             this.setFromModel('size', rawFile);
             if (!this.get('name')) {
                 this.setFromModel('name', rawFile);
@@ -103,9 +109,13 @@ module.exports = class File extends Base {
     }
 
     async deleteRawFile () {
-        const RawFile = this.getRawFile();        
-        const models = await this.spawn(RawFile).find({owner: this.getId()}).all();
-        return RawFile.delete(models);
+        const RawClass = this.getRawClass();
+        const models = await this.spawn(RawClass).find({owner: this.getId()}).all();
+        return RawClass.delete(models);
+    }
+
+    calculateHash () {
+        return this.getStorage().getHash(this.getFilename());
     }
 
     ensureThumbnail (key) {
@@ -117,7 +127,7 @@ module.exports = class File extends Base {
         if (value === this.getOldAttr(attr)) {
             return true;
         }
-        const model = this.spawn(this.getRawFile());
+        const model = this.spawn(this.getRawClass());
         const query = model.findPending(value, this.user);
         this.rawFile = await query.one();
         if (!this.rawFile) {

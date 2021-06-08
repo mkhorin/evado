@@ -35,7 +35,7 @@ module.exports = class SecurityExportConsole extends Base {
     async saveData (data, file) {
         await FileHelper.createDirectory(path.dirname(file));
         data = JSON.stringify(data, null, parseInt(this.params.space) || 2);
-        return fs.promises.writeFile(file, data);
+        await fs.promises.writeFile(file, data);
     }
 
     getItems (type) {
@@ -183,8 +183,8 @@ module.exports = class SecurityExportConsole extends Base {
     }
 };
 
-const fs = require('fs');
-const path = require('path');
 const FileHelper = require('areto/helper/FileHelper');
 const IndexHelper = require('areto/helper/IndexHelper');
 const ObjectHelper = require('areto/helper/ObjectHelper');
+const fs = require('fs');
+const path = require('path');

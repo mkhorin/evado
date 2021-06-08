@@ -3,9 +3,19 @@
  */
 Jam.ModelGrouping = class ModelGrouping {
 
+    static URL_PATTERNS = [];
+
+    static getActiveLoadableGroups (url) {
+        return Jam.localStorage.get(this.getStorageKey(url))?.[2];
+    }
+
+    static getStorageKey (url) {
+        return `model-grouping-${Jam.UrlHelper.getKey(url, this.URL_PATTERNS)}`;
+    }
+
     constructor (model) {
         this.model = model;
-        this.$groups = this.model.$form.find('.form-base-group');
+        this.$groups = this.model.$form.find('.model-group');
         this.maxDepth = 0;
         this.init();
     }
@@ -16,8 +26,12 @@ Jam.ModelGrouping = class ModelGrouping {
         this.initHandlers();
     }
 
+    getGroup (id) {
+        return Jam.ObjectHelper.has(id, this.groupMap) ? this.groupMap[id] : null;
+    }
+
     getTabGroups () {
-        return this.filterGroups(Jam.ModelTabGroup);
+        return this.filterGroups(Jam.ModelTab);
     }
 
     filterGroups (Class) {
@@ -31,7 +45,7 @@ Jam.ModelGrouping = class ModelGrouping {
             const $element = $(element);
             const Class = $element.hasClass('form-set')
                 ? Jam.ModelGroup
-                : Jam.ModelTabGroup;
+                : Jam.ModelTab;
             const group = new Class($element, this);
             this.groups.push(group);
             this.groupMap[group.id] = group;
@@ -40,26 +54,34 @@ Jam.ModelGrouping = class ModelGrouping {
 
     loadStates () {
         const data = Jam.localStorage.get(this.getStorageKey());
-        if (data) {
-            for (const id of Object.keys(data)) {
-                if (Jam.ObjectHelper.has(id, this.groupMap)) {
-                    this.groupMap[id].toggleActive(data[id]);
-                }
-            }
-        }
+        this.loadState(data?.[0], true);
+        this.loadState(data?.[1], false);
         this.getTabGroups().forEach(group => group.activeDefaults());
     }
 
-    saveStates () {
-        const data = {};
-        for (const group of this.groups) {
-            data[group.id] = group.isActive();
+    loadState (names, active) {
+        if (Array.isArray(names)) {
+            for (const name of names) {
+                this.getGroup(name)?.toggleActive(active);
+            }
         }
-        Jam.localStorage.set(this.getStorageKey(), data);
+    }
+
+    saveStates () {
+        const active = [];
+        const activeLoadable = [];
+        const inactive = [];
+        for (const group of this.groups) {
+            (group.isActive() ? active : inactive).push(group.id);
+            if (group.loadable && group.isActive() ) {
+                activeLoadable.push(group.id);
+            }
+        }
+        Jam.localStorage.set(this.getStorageKey(), [active, inactive, activeLoadable]);
     }
 
     getStorageKey () {
-        return `model-grouping-${this.model.params.className}`;
+        return this.constructor.getStorageKey(this.model.frame.url);
     }
 
     setMaxDepth (depth) {
@@ -80,25 +102,25 @@ Jam.ModelGrouping = class ModelGrouping {
     }
 
     initHandlers () {
-        this.model.$form.on('click', '.form-set-toggle', this.onSetGroup.bind(this));
-        this.model.$form.on('click', '.tabs > .nav .nav-link', this.onTabGroup.bind(this));
+        this.model.$form.on('click', '.form-set-toggle', this.onSet.bind(this));
+        this.model.$form.on('click', '.tabs > .nav .nav-link', this.onTab.bind(this));
     }
 
-    onSetGroup (event) {
-        const $group = $(event.currentTarget).closest('.form-set').toggleClass('active');
-        $group.data('group').update();
+    onSet (event) {
+        $(event.currentTarget).closest('.form-set').data('group')?.toggleActive();
+        this.saveStates();
     }
 
-    onTabGroup (event) {
+    onTab (event) {
         event.preventDefault();
         const $nav = $(event.currentTarget);
+        const id = $nav.data('id');
         const $content = $nav.closest('.tabs').children('.tab-content');
-        $nav.parent().children('.active').removeClass('active');
-        $content.children('.active').removeClass('active');
-        $nav.addClass('active');
-        const $group = $content.children(`[data-id="${$nav.data('id')}"]`).addClass('active');
-        // Jam.Model.get($nav.closest('.form')).onAttrParentActive($content);
-        $group.data('group').update();
+        for (const element of $content.children()) {
+            const tab = $(element).data('group');
+            tab?.toggleActive(tab?.id === id);
+        }
+        this.saveStates();
     }
 };
 
@@ -107,10 +129,12 @@ Jam.ModelGroup = class ModelGroup {
     constructor ($group, grouping) {
         this.grouping = grouping;
         this.id = $group.data('id');
+        this.loadable = $group.data('loadable');
+        this.loaded = $group.data('loaded');
         this.$group = $group;
         this.$group.data('group', this);
-        this.$content = $group.children('.form-base-group-body');
-        this.depth = this.$group.parents('.form-base-group').length;
+        this.$content = $group.children('.model-group-body');
+        this.depth = this.$group.parents('.model-group').length;
         this.init();
     }
 
@@ -128,11 +152,13 @@ Jam.ModelGroup = class ModelGroup {
 
     toggleActive (state) {
         this.$group.toggleClass('active', state);
-    }
-
-    update () {
-        this.grouping.saveStates();
-        Jam.ModelAttr.getAttrs(this.$group).forEach(attr => attr.activate());
+        if (!this.isActive()) {
+            return;
+        }
+        if (this.loadable && !this.loaded && !this.loading) {
+            this.load();
+        }
+        this.activateAttrs();
     }
 
     /**
@@ -146,9 +172,28 @@ Jam.ModelGroup = class ModelGroup {
         const $children = this.$content.children();
         return $children.filter('.hidden, .empty-group').length === $children.length;
     }
+
+    load () {
+        this.loading = true;
+        const model = this.grouping.model;
+        const id = model.id;
+        const group = this.id;
+        return $.get(model.frame.url, {id, group}).done(this.onLoad.bind(this));
+    }
+
+    onLoad (data) {
+        return Jam.insertContent(data, this.$content).then(() => {
+            this.grouping.model.appendAttrs(this.$content);
+            this.activateAttrs();
+        });
+    }
+
+    activateAttrs () {
+        Jam.ModelAttr.getAttrs(this.$content).forEach(attr => attr.activate());
+    }
 };
 
-Jam.ModelTabGroup = class ModelTabGroup extends Jam.ModelGroup {
+Jam.ModelTab = class ModelTab extends Jam.ModelGroup {
 
     init () {
         super.init();
@@ -174,13 +219,13 @@ Jam.ModelTabGroup = class ModelTabGroup extends Jam.ModelGroup {
     }
 
     toggle (visible) {
-        this.$group.toggleClass('hidden', !visible);
+        super.toggle(visible);
         this.getNav().toggleClass('hidden', !visible);
     }
 
     toggleActive (state) {
+        super.toggleActive(state);
         this.getNav().toggleClass('active', state);
-        this.$group.toggleClass('active', state);
     }
 
     toggleEmpty () {

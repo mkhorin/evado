@@ -3,11 +3,6 @@
  */
 Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
 
-    init () {
-        super.init();
-        this.activated = false;
-    }
-
     activate () {
         if (this.canActivate()) {
             this.$editor = this.find('.json-editor');

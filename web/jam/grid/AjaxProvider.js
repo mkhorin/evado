@@ -65,7 +65,7 @@ Jam.DataGridAjaxProvider = class DataGridAjaxProvider {
             length,
             columns: this.params.columns,
             start: this.grid.pagination.page * length,
-            search: this.grid.commonSearch.getValue(),
+            search: this.grid.search.getValue(),
             order: this.getOrder(),
             dependency: this.params.dependency,
             ...data

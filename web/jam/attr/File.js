@@ -53,14 +53,14 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         this.$uploader.find('.uploader-overflow').hide();
     }
 
-    onOverflowFile (event, data) {
-        this.$uploader.find('.uploader-overflow').text(data).show();
+    onOverflowFile (event, message) {
+        this.$uploader.find('.uploader-overflow').text(message).show();
     }
 
-    onAppendFile (event, data) {
-        data.$item.find('.uploader-filename').text(`${data.file.name} (${Jam.FormatHelper.asBytes(data.file.size)})`);
-        this.setNameAttr(data.file.name);
-        this.events.trigger('append', data);
+    onAppendFile (event, item) {
+        item.$item.find('.uploader-filename').text(`${item.file.name} (${Jam.FormatHelper.asBytes(item.file.size)})`);
+        this.setNameAttr(item.file.name);
+        this.events.trigger('append', item);
     }
 
     setNameAttr (value) {
@@ -71,68 +71,69 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         }
     }
 
-    onValidateFile (event, data) {
-        if (data.image) {
-            data.$item.addClass('with-thumbnail');
-            data.$item.find('.uploader-thumbnail').css('background-image', `url(${data.image.src})`);
+    onValidateFile (event, item) {
+        if (item.image) {
+            item.$item.addClass('with-thumbnail');
+            item.$item.find('.uploader-thumbnail').css('background-image', `url(${item.image.src})`);
         }
     }
 
-    onStartFile (event, data) {
-        data.$item.removeClass('pending').addClass('processing');
-        data.$item.find(this.fileMessageSelector).text('Uploading...');
+    onStartFile (event, item) {
+        item.$item.removeClass('pending').addClass('processing');
+        item.$item.find(this.fileMessageSelector).text('Uploading...');
     }
 
-    onProgressFile (event, data) {
-        data.$item.find('.progress-bar').css('width', `${data.percent}%`);
+    onProgressFile (event, item) {
+        item.$item.find('.progress-bar').css('width', `${item.percent}%`);
     }
 
-    onUploadFile (event, data) {
-        data.info = Jam.Helper.parseJson(data.info) || {};
-        data.$item.removeClass('pending processing').addClass('done');
-        const message = Jam.t(data.info.message || 'Upload completed');
-        data.$item.find(this.fileMessageSelector).html(message);
+    onUploadFile (event, item) {
+        const data = Jam.Helper.parseJson(item.info) || {};
+        item.$item.removeClass('pending processing').addClass('done');
+        const message = Jam.t(data.message || 'Upload completed');
+        item.$item.find(this.fileMessageSelector).html(message);
+        item.id = data.id;
         const value = this.uploader.options.maxFiles > 1
-            ? Jam.Helper.addCommaValue(data.info.id, this.$value.val())
-            : data.info.id;
+            ? Jam.Helper.addCommaValue(item.id, this.$value.val())
+            : item.id;
         this.$value.val(value).change();
     }
 
-    onErrorFile (event, data) {
-        const msg = Jam.Helper.parseJson(data.error);
-        data.$item.removeClass('pending processing').addClass('failed');
-        data.$item.find(this.fileMessageSelector).text(msg?.file || data.error);
+    onErrorFile (event, item) {
+        const message = Jam.Helper.parseJson(item.error);
+        item.$item.removeClass('pending processing').addClass('failed');
+        item.$item.find(this.fileMessageSelector).text(message?.file || item.error);
     }
 
-    onConfirmFileDeletion (event, data) {
+    onConfirmFileDeletion (event, item) {
         const message = this.$uploader.data('deletionConfirm');
         const deferred = message ? Jam.dialog.confirmDeletion(message) : null;
-        $.when(deferred).then(() => data.delete());
+        $.when(deferred).then(() => item.delete());
     }
 
-    onDeleteFile (event, {info}) {
-        if (info) {
-            const value = Jam.Helper.removeCommaValue(info.id, this.$value.val());
+    onDeleteFile (event, {id}) {
+        if (id) {
+            const value = Jam.Helper.removeCommaValue(id, this.$value.val());
             this.$value.val(value).change();
             if (this.uploader.options.delete) {
-                $.post(this.uploader.options.delete, {id: info.id});
+                $.post(this.uploader.options.delete, {id});
             }
         }
     }
 
-    onSaveFile (event, data) {
-        data.$item.removeClass('pending').addClass('saved');
-        let name = data.file.name;
+    onSaveFile (event, item) {
+        item.$item.removeClass('pending').addClass('saved');
+        let name = item.file.name;
         let download = this.uploader.options.download;
         if (download) {
-            name = `<a href="${download}${data.file.id}" target="_blank">${data.file.name}</a>`;
+            name = `<a href="${download}${item.file.id}" target="_blank">${item.file.name}</a>`;
         }
-        data.$item.find('.uploader-filename').html(`${name} (${data.file.size})`);
-        data.$item.find(this.fileMessageSelector).html(data.file.message);
+        item.$item.find('.uploader-filename').html(`${name} (${item.file.size})`);
+        item.$item.find(this.fileMessageSelector).html(item.file.message);
         const thumbnail = this.uploader.options.thumbnail;
-        if (data.file.isImage && thumbnail) {
-            data.$item.addClass('with-thumbnail');
-            data.$item.find('.uploader-thumbnail').css('background-image', `url(${thumbnail}${data.file.id})`);
+        if (item.file.isImage && thumbnail) {
+            item.$item.addClass('with-thumbnail');
+            item.$item.find('.uploader-thumbnail').css('background-image', `url(${thumbnail}${item.file.id})`);
         }
     }
 };

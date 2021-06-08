@@ -11,6 +11,7 @@ module.exports = class MetaSecurity extends Base {
         super(config);
         this.rbac = this.controller.module.getRbac();
         this.params = {controller: this.controller};
+        this.user = this.controller.user;
     }
 
     getForbiddenAttrs (action) {
@@ -22,7 +23,7 @@ module.exports = class MetaSecurity extends Base {
     }
 
     resolveAccess (data, params) {
-        return this.rbac.resolveAccess(this.controller.user.assignments, data, this.mergeParams(params));
+        return this.rbac.resolveAccess(this.user.assignments, data, this.mergeParams(params));
     }
 
     resolveAccessOnDelete (model) {
@@ -147,21 +148,22 @@ module.exports = class MetaSecurity extends Base {
         if (!params || !params.skipAccessException) {
             throw new Forbidden('Access denied', `${data.targetType}: ${data.target}`);
         }
+        return false;
     }
 
     resolveTransitions (data, params) {
         params = this.mergeParams(params);
-        return this.rbac.resolveTransitionAccess(this.controller.user.assignments, data, params);
+        return this.rbac.resolveTransitionAccess(this.user.assignments, data, params);
     }
 
     async resolveAttrs (data, params) {
         params = this.mergeParams(params);
-        this.attrAccess = await this.rbac.resolveAttrAccess(this.controller.user.assignments, data, params);
+        this.attrAccess = await this.rbac.resolveAttrAccess(this.user.assignments, data, params);
     }
 
     async resolveRelations (view, params) {
         const data = {};
-        const assignments = this.controller.user.assignments;
+        const assignments = this.user.assignments;
         params = this.mergeParams(params);
         this.relationAccessMap = {};
         for (const attr of view.relationAttrs) {

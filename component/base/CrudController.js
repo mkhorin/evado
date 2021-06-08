@@ -65,8 +65,7 @@ module.exports = class CrudController extends Base {
         model.scenario = params.scenario;
         await model.setDefaultValues();
         if (this.isGetRequest()) {
-            const _layout = this.getViewLayout();
-            return this.render(params.template, {model, _layout, ...params.templateData});
+            return this.renderModel(model, params);
         }
         this.checkCsrfToken();
         model.load(this.getPostParams());
@@ -88,18 +87,11 @@ module.exports = class CrudController extends Base {
         if (this.isPostRequest()) {
             this.checkCsrfToken();
             model.load(this.getPostParams());
-            if (params.beforeUpdate) {
-                await params.beforeUpdate.call(this, model);
-            }
+            await params.beforeUpdate?.call(this, model);
             return this.saveModel(model, this.afterUpdate);
         }
-        let data = {};
-        if (params.beforeUpdate) {
-            await params.beforeUpdate.call(this, model);
-        }
-        const _layout = this.getViewLayout();
-        Object.assign(data, {model, _layout}, params.templateData);
-        await this.render(params.template, data);
+        await params.beforeUpdate?.call(this, model);
+        return this.renderModel(model, params);
     }
 
     async actionClone (params, sampleParams) {
@@ -139,14 +131,14 @@ module.exports = class CrudController extends Base {
         this.sendText(model.getId());
     }
 
-    async actionDeleteList () {
+    async actionDeleteList (condition) {
         const ids = this.getPostParam('ids');
         if (!ids) {
             throw new BadRequest;
         }
         this.checkCsrfToken();
         const Class = this.getModelClass();
-        const models = await this.spawn(Class).findById(ids.split(',')).all();
+        const models = await this.createDeletionQuery(ids.split(','), Class).all();
         await Class.delete(models);
         this.sendStatus(200);
     }
@@ -170,7 +162,7 @@ module.exports = class CrudController extends Base {
         params = {
             pid: this.getQueryParam('pid'),
             relation: relation,
-            viewModel: relation,
+            viewModel: `list/${relation}`,
             with: this.getListRelatedWith(relation),
             ...params
         };
@@ -200,6 +192,10 @@ module.exports = class CrudController extends Base {
 
     // METHOD
 
+    createDeletionQuery (ids, Class) {
+        return this.spawn(Class).findById(ids);
+    }
+
     getListRelatedWith () {
         return null;
     }
@@ -208,6 +204,14 @@ module.exports = class CrudController extends Base {
         return this.isAjax()
             ? '_layout/frame/modelForm'
             : '_layout/empty';
+    }
+
+    renderModel (model, data) {
+        const _layout = this.getViewLayout();
+        const {groups, group} = this.getQueryParams();
+        const loadedGroups = Array.isArray(groups) ? groups : null;
+        const template = group ? `group/${group}` : data.template;
+        return this.render(template, {model, _layout, loadedGroups, ...data.templateData});
     }
 
     async saveModel (model, afterSave) {

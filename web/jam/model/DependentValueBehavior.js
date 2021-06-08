@@ -1,7 +1,7 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
  */
-Jam.SetAttrValueBehavior = class SetAttrValueBehavior {
+Jam.DependentValueBehavior = class DependentValueBehavior {
 
     constructor (params) {
         this.model = params.owner;

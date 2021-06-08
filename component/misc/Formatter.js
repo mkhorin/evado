@@ -52,5 +52,5 @@ module.exports = class Formatter extends Base {
 };
 module.exports.init();
 
-const moment = require('moment');
 const I18n = require('areto/i18n/I18n');
+const moment = require('moment');

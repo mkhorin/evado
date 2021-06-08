@@ -94,7 +94,7 @@ module.exports = class DataImportConsole extends Base {
     }
 };
 
-const path = require('path');
 const FileHelper = require('areto/helper/FileHelper');
 const MongoHelper = require('areto/helper/MongoHelper');
 const PromiseHelper = require('areto/helper/PromiseHelper');
+const path = require('path');

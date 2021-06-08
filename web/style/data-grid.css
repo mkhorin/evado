@@ -205,21 +205,21 @@
 
 /* SEARCH */
 
-.data-grid-common-search {
+.data-grid-search {
     position: relative;
     margin-bottom: 1rem;
     user-select: none;
 }
-.data-grid-common-search.filtered input {
+.data-grid-search.filtered input {
     background: #fff8e8;
 }
-.active-advanced-search .data-grid-common-search .advanced-toggle {
+.active-advanced-search .data-grid-search .advanced-toggle {
     color: #f88;
 }
-.data-grid-common-search .advanced-toggle {
+.data-grid-search .advanced-toggle {
     display: none;
 }
-.has-advanced-search .data-grid-common-search .advanced-toggle {
+.has-advanced-search .data-grid-search .advanced-toggle {
     display: inline-block;
 }
 

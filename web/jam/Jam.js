@@ -67,4 +67,14 @@ class Jam {
             instance.init();
         }
     }
+
+    static insertContent (content, $container) {
+        return Jam.resource.resolve(content).then(content => {
+            $container.html(content);
+            Jam.t($container);
+            Jam.Helper.bindLabelsToInputs($container);
+            Jam.DateHelper.resolveClientDate($container);
+            Jam.createElements($container);
+        });
+    }
 }

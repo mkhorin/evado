@@ -5,28 +5,51 @@ Jam.ActionBinder = class ActionBinder {
 
     constructor (model) {
         this.model = model;
-        this.elements = [];
         this.events = new Jam.Events(this.constructor.name);
         this.init();
     }
 
     init () {
-        for (const item of this.model.$form.find('[data-action-binder]')) {
-            const $item = $(item);
-            const data = $item.data('actionBinder');
-            if (data) {
-                this.elements.push(new Jam.ActionBinderElement($item, data, this));
+        this.elements = this.createElements(this.model.$form);
+        this.model.events.on('change', this.onChange.bind(this));
+        this.updateInitially();
+    }
+
+    createElements ($container) {
+        const elements = [];
+        for (const item of $container.find('[data-action-binder]')) {
+            const element = this.createElement($(item));
+            if (element) {
+                elements.push(element);
             }
         }
-        this.model.events.on('change', this.update.bind(this));
-        this.initial = true;
+        return elements;
+    }
+
+    createElement ($item) {
+        const data = $item.data('actionBinder');
+        return data ? new Jam.ActionBinderElement($item, data, this) : null;
+    }
+
+    appendElements ($container) {
+        const elements = this.createElements($container);
+        this.elements.push(...elements);
+        this.updateInitially(elements);
+    }
+
+    onChange () {
         this.update();
+    }
+
+    updateInitially () {
+        this.initial = true;
+        this.update(...arguments);
         this.initial = false;
     }
 
-    update () {
+    update (elements = this.elements) {
         const value = this.model.stringifyAttrs();
-        for (const element of this.elements) {
+        for (const element of elements) {
             element.update();
         }
         value === this.model.stringifyAttrs()
@@ -47,12 +70,15 @@ Jam.ActionBinderElement = class ActionBinderElement {
     }
 
     init () {
+        this.createActions();
+    }
+
+    createActions () {
         for (const id of Object.keys(this.data)) {
-            const action = this.createAction(id, this.data[id]);
-            if (action) {
-                this.actions[id] = action;
-            } else {
+            this.actions[id] = this.createAction(id, this.data[id]);
+            if (!this.actions[id]) {
                 console.error(`${this.constructor.name}: Invalid action: ${id}`);
+                delete this.actions[id];
             }
         }
     }

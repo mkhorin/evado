@@ -90,7 +90,31 @@ module.exports = {
         'utility': {
             Class: require('../component/utility/UtilityManager')
         },
-        'fileStorage': require('./default-fileStorage')
+        'fileStorage': {
+            Class: require('../component/file/FileStorage'),
+            basePath: 'upload/file',
+            thumbnail: {
+                basePath: 'upload/thumbnail',
+                sizes: {
+                    xs: {
+                        width: 64,
+                        height: 64
+                    },
+                    sm: {
+                        width: 256,
+                        height: 256
+                    },
+                    md: {
+                        width: 512,
+                        height: 512
+                    },
+                    lg: {
+                        width: 1024,
+                        height: 1024
+                    }
+                }
+            }
+        }
     },
     modules: {
         'api': {

@@ -3,13 +3,24 @@
  */
 'use strict';
 
-const Base = require('./BaseFileStorage');
+const Base = require('areto/base/Component');
 
 module.exports = class FileStorage extends Base {
+
+    static getHeaders (name, type) {
+        return {
+            'Content-Disposition': `attachment; filename=${encodeURIComponent(name)}`,
+            'Content-Transfer-Encoding': 'binary',
+            'Content-Type': type
+        };
+    }
 
     constructor (config) {
         super({
             basePath: 'upload/file',
+            hashingAlgorithm: 'md5',
+            maxTotalUserFileSize: null, // 1000 * 1024 * 1024 // bytes
+            maxTotalUserFiles: null, // 1000
             ...config
         });
         this.basePath = this.resolvePath(this.basePath);
@@ -25,8 +36,8 @@ module.exports = class FileStorage extends Base {
         return FileHelper.getStat(this.getPath(filename));
     }
 
-    isThumbnailEnabled () {
-        return Object.values(this.thumbnail.sizes).length > 0;
+    isThumbnails () {
+        return this.thumbnail.hasSizes();
     }
 
     spawnThumbnail (config) {
@@ -44,8 +55,24 @@ module.exports = class FileStorage extends Base {
         });
     }
 
+    getHash (filename) {
+        return SecurityHelper.hashFile(this.getPath(filename), this.hashingAlgorithm);
+    }
+
+    getHeaders () {
+        return this.constructor.getHeaders(...arguments);
+    }
+
     getPath (filename) {
         return path.join(this.basePath, filename);
+    }
+
+    resolvePath (target) {
+        return path.isAbsolute(target) ? target : this.module.getPath(target);
+    }
+
+    upload () {
+        return this.uploader.execute(...arguments);
     }
 
     ensureThumbnail (key, filename) {
@@ -65,11 +92,9 @@ module.exports = class FileStorage extends Base {
         }
     }
 
-    async delete (filename) {
-        if (filename && typeof filename === 'string') {
-            await FileHelper.delete(this.getPath(filename));
-            await this.thumbnail.delete(filename);
-        }
+    async deleteFile (filename) {
+        await FileHelper.delete(this.getPath(filename));
+        await this.thumbnail.delete(filename);
     }
 
     async deleteAll () {
@@ -79,5 +104,6 @@ module.exports = class FileStorage extends Base {
 };
 module.exports.init();
 
-const path = require('path');
 const FileHelper = require('areto/helper/FileHelper');
+const SecurityHelper = require('areto/helper/SecurityHelper');
+const path = require('path');

@@ -56,6 +56,18 @@ Jam.Element = class Element {
         return Jam.Helper.findAndResolveTemplate(name, this.$element, data);
     }
 
+    hasClass () {
+        return this.$element.hasClass(...arguments);
+    }
+
+    addClass () {
+        return this.$element.addClass(...arguments);
+    }
+
+    removeClass () {
+        return this.$element.removeClass(...arguments);
+    }
+
     toggleClass () {
         return this.$element.toggleClass(...arguments);
     }

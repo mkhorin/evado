@@ -10,22 +10,21 @@ module.exports = class Packer extends Base {
     constructor (config) {
         super({
             extensions: ['.js'],
-            logging: false,
             shrinking: true,
             ...config
         });
+        this.errors = [];
     }
 
     async execute () {
         let result = await this.mergeSources(this.sources);
         if (result === false) {
-            return false;
+            return this.errors;
         }
         result = this.prepareContent(result);
         const target = path.join(this.targetRoot, this.target);
         await fs.promises.mkdir(path.dirname(target), {recursive: true});
         await fs.promises.writeFile(target, result, 'utf8');
-        return true;
     }
 
     async mergeSources (sources) {
@@ -46,8 +45,7 @@ module.exports = class Packer extends Base {
         const file = path.join(this.sourceRoot, source);
         const stat = await FileHelper.getStat(file);
         if (!stat) {
-            this.log('error', `Not found: ${file}`);
-            return false;
+            return this.addError(`Not found: ${file}`);
         }
         return stat.isDirectory()
             ? await this.resolveSourceDirectory(file)
@@ -90,10 +88,12 @@ module.exports = class Packer extends Base {
         return text;
     }
 
+    addError () {
+        this.errors.push(arguments);
+    }
+
     log () {
-        if (this.logging) {
-            CommonHelper.log(this.module, this.constructor.name, ...arguments);
-        }
+        CommonHelper.log(this.module, this.constructor.name, ...arguments);
     }
 };
 

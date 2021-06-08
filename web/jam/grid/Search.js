@@ -1,12 +1,12 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
  */
-Jam.DataGridCommonSearch = class DataGridCommonSearch {
+Jam.DataGridSearch = class DataGridSearch {
 
     constructor (grid) {
-        this._value = '';
+        this.value = '';
         this.grid = grid;
-        this.$container = grid.$container.find('.data-grid-common-search');
+        this.$container = grid.$container.find('.data-grid-search');
         if (this.isExists())  {
             this.init();
         }
@@ -17,8 +17,6 @@ Jam.DataGridCommonSearch = class DataGridCommonSearch {
     }
 
     init () {
-        this.$clear = this.$container.find('.clear');
-        this.$clear.click(this.onClear.bind(this));
         this.$advancedToggle = this.$container.find('.advanced-toggle');
         this.$advancedToggle.click(this.onToggleAdvancedSearch.bind(this));
         this.$input = this.$container.find('input');
@@ -27,12 +25,7 @@ Jam.DataGridCommonSearch = class DataGridCommonSearch {
     }
 
     getValue () {
-        return this._value;
-    }
-
-    onClear () {
-        this.$input.val('');
-        this.execute('');
+        return this.value;
     }
 
     onToggleAdvancedSearch () {
@@ -45,14 +38,14 @@ Jam.DataGridCommonSearch = class DataGridCommonSearch {
         }
     }
 
-    onInput (event) {
+    onInput () {
         const value = this.$input.val();
         value ? this.toggleHasValue(value) : this.execute(value);
     }
 
     execute (value) {
-        if (value !== this._value) {
-            this._value = value;
+        if (value !== this.value) {
+            this.value = value;
             this.toggleFiltered(value);
             this.grid.load({resetPage: true});
         }

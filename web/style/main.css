@@ -26,7 +26,7 @@
     --bg-light-danger: #feeaee;
     --border-light-danger: #edc0c0;
 
-    --form-row-space: 1.3rem;
+    --form-row-space: 1.35rem;
     --text-monospace: Consolas,"Liberation Mono","Courier New",monospace;
 
     font-size: 14px;
@@ -459,6 +459,7 @@ body.loading {
 }
 .nav-group {
     display: inline-flex;
+    align-items: center;
 }
 .nav-group:not(.btn-group) .btn + .btn {
     margin-left: var(--btn-space);
@@ -467,6 +468,59 @@ body.loading {
 .nav-group + .btn,
 .nav-group + .nav-group {
     margin-left: var(--nav-group-space);
+}
+
+/* NAV SEARCH */
+
+.nav-search {
+    margin-top: .5rem;
+}
+.nav-search-head {
+    position: relative;
+    padding: 0 2px 0 0;
+}
+.nav-search-head i {
+    position: absolute;
+    left: .55rem;
+    top: .65rem;
+    color: #999;
+}
+.nav-search-input {
+    width: 100%;
+    padding: .35rem .35rem .35rem 2.15rem;
+    background: #122;
+    border: none;
+    color: #ff8;
+}
+.nav-search.has-value input,
+.nav-search-input:active,
+.nav-search-input:focus,
+.nav-search-input:hover {
+    background: var(--body-background);
+    color: #000;
+}
+.nav-search-result {
+    display: none;
+    background: #000;
+}
+.nav-search-result .nav-link {
+    color: #dde;
+}
+.nav-search-empty {
+    display: none;
+    padding: .5rem 1rem;
+    color: #eaa;
+}
+.nav-search-loader {
+    display: none;
+    padding: .5rem 1rem;
+    text-align: center;
+    color: #ccc;
+}
+.nav-search.found .nav-search-result,
+.nav-search.not-found .nav-search-empty,
+.nav-search.loading .nav-search-loader {
+    display: block;
 }
 
 /* MAIN HEADER */
@@ -526,7 +580,7 @@ body.loading {
     color: #d0d7db;
 }
 .main-sidebar > .nav-tree {
-    padding: 10px 0;
+    padding: .5rem 0;
 }
 
 /* MAIN TRANSITION */
@@ -783,9 +837,6 @@ select.form-select {
 .form-set.active > .form-set-body {
     display: block;
 }
-.form-base-group.empty-group {
-    display: none;
-}
 .form-divider {
     margin: 2rem 0;
     background: none;
@@ -795,7 +846,6 @@ select.form-select {
 .form .relation-select .select2-selection--multiple .select2-selection__choice__remove {
     display: none !important;
 }
-
 .form-control::placeholder {
     color: #888;
 }
@@ -820,6 +870,14 @@ select.form-select {
 .inline-group-container .form-group {
     display: inline-block;
     vertical-align: top;
+}
+
+.model-group.empty-group {
+    display: none;
+}
+.model-group-loader {
+    text-align: center;
+    color: #ccc;
 }
 
 /* FORM OVERRIDE */
@@ -928,8 +986,10 @@ select.form-select {
 
 .commands {
     display: flex;
-    margin-bottom: 1rem;
     flex-wrap: wrap;
+}
+.commands > * {
+    margin-bottom: 1rem;
 }
 .commands > .btn + .btn {
     margin-left: var(--btn-space);
@@ -989,11 +1049,11 @@ select.form-select {
 }
 
 .frame-box-header {
-    padding: .75rem;
+    padding: .75rem .75rem 0;
     border-bottom: 1px solid #f0f0f0;
 }
-.frame-box-header .commands {
-    margin-bottom: 0;
+.frame-box-header .commands > * {
+    margin-bottom: .75rem;
 }
 .frame-box-body {
     position: relative;
@@ -1382,20 +1442,21 @@ form.was-validated select:valid ~ .select2-container .select2-selection {
     font-size: 1.2rem;
 }
 .stack-frame-title {
-    font-size: 1.1rem;
     margin: 0 .75rem;
     padding: 1rem .75rem 1rem 0;
     color: var(--dark-info);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 1.1rem;
+    font-weight: normal;
 }
 .stack-frame-title.required:after {
     content: "*";
     margin-left: .2rem;
     color: var(--light-danger);
 }
-.stack-frame-body {
+.stack-frame-content {
     overflow: auto;
 }
 .stack-frame-error {
@@ -1497,7 +1558,7 @@ body.frame-stack-collapsed .frame-stack {
 }
 .uploader-signs {
     float: left;
-    margin: 16px 0 0 0;
+    margin: 1.2rem 0 0 0;
 }
 .uploader-signs > div {
     display: none;
@@ -1567,7 +1628,7 @@ body.frame-stack-collapsed .frame-stack {
 }
 .uploader-delete {
     float: right;
-    margin: 1rem 0 0 0;
+    margin: 1.16rem 0 0 0;
     font-size: 15px;
     color: #999;
 }
@@ -1706,7 +1767,7 @@ body.frame-stack-collapsed .frame-stack {
         margin: 0;
         max-width: none;
     }
-    .stack-frame-body,
+    .stack-frame-content,
     .scroll-body {
         max-height: none !important;
         overflow-x: visible;

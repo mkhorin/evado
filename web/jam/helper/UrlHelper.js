@@ -45,4 +45,19 @@ Jam.UrlHelper = class UrlHelper {
         const index = url.indexOf('?');
         return index === -1 ? url : url.substring(0, index);
     }
+
+    static getKey (url, patterns = []) {
+        let key = this.getPath(url);
+        for (let [regex, names] of patterns) {
+            if (regex.test(url)) {
+                let params = this.getParams(url);
+                for (let name of names) {
+                    if (params[name]) {
+                        key += `/${params[name]}`;
+                    }
+                }
+            }
+        }
+        return key;
+    }
 };

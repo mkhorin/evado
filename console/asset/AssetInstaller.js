@@ -34,6 +34,6 @@ module.exports = class AssetInstaller extends Base {
     }
 };
 
-const path = require('path');
 const FileHelper = require('areto/helper/FileHelper');
 const SystemHelper = require('areto/helper/SystemHelper');
+const path = require('path');

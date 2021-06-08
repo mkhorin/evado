@@ -11,7 +11,7 @@ Jam.Loadable = class Loadable extends Jam.Element {
     }
 
     isLoading () {
-        return this.$container.hasClass('loading');
+        return this.hasClass('loading');
     }
 
     onToggle () {
@@ -21,7 +21,7 @@ Jam.Loadable = class Loadable extends Jam.Element {
     }
 
     onAlways () {
-        this.toggleClass('loaded', true);
+        this.addClass('loaded');
     }
 
     onDone (data) {
@@ -34,8 +34,8 @@ Jam.Loadable = class Loadable extends Jam.Element {
 
     load () {
         this.abort();
-        this.toggleClass('loaded', false);
-        this.toggleClass('loading', true);
+        this.removeClass('loaded');
+        this.addClass('loading');
         this.xhr = $[this.getMethod()](this.getUrl(), this.getRequestData())
             .always(this.onAlways.bind(this))
             .done(this.onDone.bind(this))
@@ -44,7 +44,7 @@ Jam.Loadable = class Loadable extends Jam.Element {
 
     abort () {
         this.xhr?.abort();
-        this.toggleClass('loading', false);
+        this.removeClass('loading');
     }
 
     getMethod () {

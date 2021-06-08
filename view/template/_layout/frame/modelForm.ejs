@@ -43,18 +43,10 @@ if (typeof params !== 'undefined') {
                     <i class="far fa-clone"></i>
                 </button>
             <% }} %>
-
             <%- include(_view.get('_part/tool/modelHistory')) %>
-
             <% if (blocks.commands) { %>
             <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
-            <% } %>
-
-            <% if (p.help) { %>
-            <span class="model-help fa fa-question-circle" title="<%= p.help %>"></span>
-            <% } %>
-
-            <% if (p.id && p.delete) { %>
+            <% } if (p.id && p.delete) { %>
             <button data-command="delete" class="ms-auto btn-outline-danger btn" type="button" title="Delete">
                 <i class="far fa-trash-alt"></i>
             </button>

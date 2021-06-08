@@ -9,7 +9,5 @@ Jam.ModelValidation = class ModelValidation {
         this.init();
     }
 
-    init () {
-
-    }
+    init () {}
 };

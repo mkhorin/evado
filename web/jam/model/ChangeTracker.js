@@ -1,4 +1,6 @@
-
+/**
+ * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ */
 Jam.ModelChangeTracker = class ModelChangeTracker {
 
     constructor (model) {

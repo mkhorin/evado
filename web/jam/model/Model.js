@@ -19,7 +19,6 @@ Jam.Model = class Model extends Jam.Element {
         this.id = this.params.id;
         this.childFrame = Jam.frameStack.createFrame();
         this.frame = Jam.frameStack.getFrame(this.$container);
-        Jam.Helper.bindLabelsToInputs($form);
     }
 
     init () {
@@ -64,15 +63,18 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     createAttrs () {
-        this.attrs = [];
-        for (let attr of this.$form.find('.form-attr')) {
-            attr = Jam.ModelAttr.create($(attr), this);
-            if (attr) {
-                this.attrs.push(attr);
-            }
-        }        
-        for (const attr of this.attrs) {
-            attr.init();
+        this.attrs = Jam.ModelAttr.createAll(this.$form, this);
+    }
+
+    appendAttrs ($container) {
+        const changed = this.isChanged();
+        this.attrs.push(...Jam.ModelAttr.createAll($container, this));
+        this.actionBinder.appendElements($container);
+        if (this.params.hideEmptyGroups) {
+            this.grouping.toggleEmpty();
+        }
+        if (!changed) {
+            this.changeTracker.reset();
         }
     }
 
@@ -221,8 +223,7 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     onReload () {
-        this.frame.off('beforeClose', this.beforeCloseMethod);
-        this.frame.reload();
+        this.reload();
     }
 
     onCopyId () {
@@ -231,6 +232,11 @@ Jam.Model = class Model extends Jam.Element {
 
     onShowHistory () {
         this.childFrame.load(this.findCommand('history').data('url'));
+    }
+
+    reload () {
+        this.frame.off('beforeClose', this.beforeCloseMethod);
+        this.frame.reload();
     }
 
     validate () {

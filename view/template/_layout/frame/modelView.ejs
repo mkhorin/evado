@@ -30,10 +30,6 @@ if (typeof params !== 'undefined') {
             <% if (blocks.commands) { %>
             <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
             <% } %>
-
-            <% if (p.help) { %>
-            <span class="model-help fa fa-question-circle" title="<%= p.help %>"></span>
-            <% } %>
         </div>
     </div>
     <div class="frame-box-body scroll-body">

@@ -52,15 +52,26 @@ Jam.StackFrame = class StackFrame {
         this.abort();
         this.toggleLoading(true);
         this.$frame.addClass('tabbed');
-        this.$frame.toggleClass('reopen', this.$body.children().length > 0);
+        this.$frame.toggleClass('reopen', this.$content.children().length > 0);
         this.url = url;
-        this.loadParams = params;
-        this.xhr = $.get(url, params)
+        this.initData = initData;
+        this.loadParams = this.prepareLoadParams(params);
+        this.xhr = $.get(url, this.loadParams)
             .always(this.onAlways.bind(this))
-            .done(data => this.onDone(data, initData))
+            .done(this.onDone.bind(this))
             .fail(this.onFail.bind(this));
         this.result = $.Deferred();
         return this.result;
+    }
+
+    prepareLoadParams (params) {
+        params = this.prepareActiveGroupParams(params);
+        return params;
+    }
+
+    prepareActiveGroupParams (params) {
+        const groups = Jam.ModelGrouping.getActiveLoadableGroups(this.url);
+        return Array.isArray(groups) ? {...params, groups} : params;
     }
 
     onAlways () {
@@ -69,16 +80,11 @@ Jam.StackFrame = class StackFrame {
         this.xhr = null;
     }
 
-    onDone (content, initData) {
-        this.initData = initData;
-        Jam.resource.resolve(content).then(result => {
-            this.$body.empty().append(result);
-            const $container = this.$body.children().first();
-            Jam.t(this.$body);
+    onDone (data) {
+        Jam.insertContent(data, this.$content).then(() => {
+            const $container = this.$content.children().first();
             this.createTitle($container);
             this.createTabTitle($container);
-            Jam.DateHelper.resolveClientDate(this.$body);
-            Jam.createElements($container);
             this.resize();
             this.stack.afterLoad(this);
             this.updateCsrfToken();
@@ -87,7 +93,7 @@ Jam.StackFrame = class StackFrame {
     }
 
     updateCsrfToken () {
-        for (const holder of this.$body.find('[data-csrf]')) {
+        for (const holder of this.$content.find('[data-csrf]')) {
             $(document.body).data('csrf', holder.dataset.csrf);
         }
     }
@@ -107,7 +113,7 @@ Jam.StackFrame = class StackFrame {
     }
 
     onFail (data) {
-        this.$body.html(`<div class="stack-frame-error"><pre>${data.responseText}</pre></div>`);
+        this.$content.html(`<div class="stack-frame-error"><pre>${data.responseText}</pre></div>`);
         this.title = Jam.t(data.statusText || 'Error');
         this.tabTitle = data.status;
         const url = Jam.UrlHelper.getPageFrameUrl(this.getLoadUrl());
@@ -141,7 +147,7 @@ Jam.StackFrame = class StackFrame {
         data = data || {};
         this.abort();
         if (!data.reopen) {
-            this.$body.empty();
+            this.$content.empty();
         }
         this.stack.afterClose(this, data);
         this.trigger('afterClose', data);
@@ -176,7 +182,7 @@ Jam.StackFrame = class StackFrame {
     }
 
     findScroll () {
-        return this.$body.children('.scroll-container');
+        return this.$content.children('.scroll-container');
     }
 
     findScrollHeader () {
@@ -191,7 +197,7 @@ Jam.StackFrame = class StackFrame {
         if (!this.$frame) {
             this.$frame = this.stack.buildFrame(this);
             this.$container = this.$frame.children('.stack-frame-container');
-            this.$body = this.$container.children('.stack-frame-body');
+            this.$content = this.$container.children('.stack-frame-content');
             this.$header = this.$container.children('.stack-frame-header');
             this.$title = this.$header.children('.stack-frame-title');
         }
@@ -201,7 +207,7 @@ Jam.StackFrame = class StackFrame {
     resize () {
         const top = this.$container.offset().top - $(window).scrollTop();
         const maxHeight = $(window).height() - top - this.$header.outerHeight();
-        this.$body.css('max-height', maxHeight);
+        this.$content.css('max-height', maxHeight);
         if (this.findScroll().length) {
             const headerHeight = this.findScrollHeader().outerHeight();
             this.findScrollBody().css('max-height', maxHeight - headerHeight);

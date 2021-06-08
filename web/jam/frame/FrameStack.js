@@ -3,11 +3,6 @@
  */
 Jam.FrameStack = class FrameStack extends Jam.Element {
 
-    static getClosestBody ($element) {
-        const $body = $element.closest('.stack-frame-body');
-        return $body.length ? $body : $(document.body);
-    }
-
     static load (frame, url, params, afterClose) {
         return frame.load(url, params).done(() => {
             frame.one('afterClose', (event, data) => {
@@ -103,12 +98,14 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
         $frame = $(this.template);
         this.$pool.append($frame);
         $frame.on('click', '.frame-stack-tabs .close', () => frame.close());
-        $frame.click(event => {
-            if (event.target === event.currentTarget) {
-                frame.close();
-            }
-        });
+        $frame.click(this.onFrame.bind(this, frame));
         return $frame;
+    }
+
+    onFrame (frame, event) {
+        if (event.target === event.currentTarget) {
+            frame.close();
+        }
     }
 
     onLoad (fn) {

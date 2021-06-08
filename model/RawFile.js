@@ -11,16 +11,17 @@ module.exports = class RawFile extends Base {
         return {
             TABLE: 'sys_rawFile',
             ATTRS: [
-                'name',
-                'mime',
-                'size',
                 'file',
+                'name',
+                'size',
+                'type',
                 'createdAt',
                 'creator',
                 'owner'
             ],
             RULES: [
-                ['file', 'required']
+                ['file', 'required'],
+                ['file', 'validator/UploadLimitValidator']
             ],
             BEHAVIORS: {
                 'timestamp': {
@@ -32,16 +33,20 @@ module.exports = class RawFile extends Base {
             },
             INDEXES: [
                 [{owner: 1}, {unique: false}]
-            ]
+            ],
+            ATTR_LABELS: {
+                type: 'Media type'
+            },
+            STORAGE: 'fileStorage'
         };
     }
 
     isImage () {
-        return this.get('mime').indexOf('image') === 0;
+        return this.get('type')?.indexOf('image') === 0;
     }
 
     isSvg () {
-        return this.get('mime').indexOf('image/svg+xml') === 0;
+        return this.get('type')?.indexOf('image/svg+xml') === 0;
     }
 
     getName () {
@@ -56,8 +61,8 @@ module.exports = class RawFile extends Base {
         return this.get('size');
     }
 
-    getMime () {
-        return this.get('mime');
+    getMediaType () {
+        return this.get('type');
     }
 
     getOwner () {
@@ -69,7 +74,7 @@ module.exports = class RawFile extends Base {
     }
 
     getStorage () {
-        return this.module.get('fileStorage');
+        return this.module.get(this.STORAGE);
     }
 
     getPath () {
@@ -77,7 +82,7 @@ module.exports = class RawFile extends Base {
     }
 
     getFileHeaders () {
-        return this.getStorage().getHeaders(this.getName(), this.getMime());
+        return this.getStorage().getHeaders(this.getName(), this.getMediaType());
     }
 
     getThumbnailHeaders () {
@@ -99,58 +104,59 @@ module.exports = class RawFile extends Base {
         return this.getStorage().ensureThumbnail(key, this.getFilename());
     }
 
-    async isLimitReached (user) {
-        const {maxTotalUserFileSize, maxTotalUserFiles} = this.getStorage();
-        if (!maxTotalUserFileSize && !maxTotalUserFiles) {
-            return false;
-        }
-        const sizes = await this.find({creator: user.getId()}).column('size');
-        if (maxTotalUserFiles && sizes.length >= maxTotalUserFiles) {
-            return true;
-        }      
-        if (!maxTotalUserFileSize) {
-            return false;
-        }
-        const totalSize = sizes.reduce((total, value) => total + value, 0);
-        return totalSize >= maxTotalUserFileSize;
-    }
-
     async upload (req, res) {
-        const data = await this.getStorage().upload(req, res);
+        const storage = this.getStorage();
+        const data = await storage.upload(req, res);
+        if (!data) {
+            return this.addError('file', 'File not found');
+        }
+        data.path = storage.getPath(data.filename);
         this.setAttrs(data);
-        this.set('file', { // for validation
-            path: this.getStorage().getPath(data.filename),
-            filename: data.filename,
-            size: data.size,
-            mime: data.mime,
-            extension: data.extension
-        });
+        this.set('file', data);
         return this.save();
     }
 
     createValidators () {
         const validators = super.createValidators();
-        const rule = this.getStorage().getValidatorRule('file'); // from storage configuration
+        this.createFileValidators(validators);
+        return validators;
+    }
+
+    createFileValidators (validators) {
+        this.addValidatorByRule(this.getStorage().rule, validators);
+        this.addValidatorByRule(this.customRule, validators);
+    }
+
+    addValidatorByRule (rule, validators) {
         if (rule) {
             const validator = this.createValidator(rule);
             if (validator) {
                 validators.push(validator);
             }
         }
-        return validators;
     }
 
     async afterValidate () {
-        this.set('file', this.get('file').filename);
-        if (this.hasError()) {
-            await this.getStorage().delete(this.getFilename());
-        }
+        this.prepareFilename();
+        await this.deleteInvalidFile();
         return super.afterValidate();
     }
 
+    prepareFilename () {
+        this.set('file', this.get('file').filename);
+    }
+
+    deleteInvalidFile () {
+        return this.hasError() ? this.deleteFile() : null;
+    }
+
     async afterDelete () {
-        await this.getStorage().delete(this.getFilename());
+        await this.deleteFile();
         return super.afterDelete();
+    }
+
+    deleteFile () {
+        return this.getStorage().deleteFile(this.getFilename());
     }
 
     // RELATIONS

@@ -14,6 +14,7 @@ Jam.i18n.translateDocument();
 Jam.createElements();
 Jam.Helper.executeSerialImageLoading();
 Jam.Helper.fixMultipleBootstrapModals();
+Jam.Helper.handlePreloadLinks();
 Jam.FrameStack.attachFrameLinks();
 
 if (Jam.frameStack) {

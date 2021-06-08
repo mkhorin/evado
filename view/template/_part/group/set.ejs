@@ -6,7 +6,7 @@ const p = {
     translate: typeof translate === 'undefined' ? '' : translate
 };
 %>
-<fieldset class="form-base-group form-set <%- p.active %>"
+<fieldset class="form-set model-group <%- p.active %>"
           data-id="<%- id %>"
           data-action-binder="<%= p.actionBinder %>">
     <legend>
@@ -15,7 +15,7 @@ const p = {
             <span data-t="<%- p.translate %>"><%- title %></span>
         </div>
     </legend>
-    <div class="form-set-body form-base-group-body">
+    <div class="form-set-body model-group-body">
     <% for (const item of items) {
         if (item.template) { %>
         <%- include(item.template, item.params) %>

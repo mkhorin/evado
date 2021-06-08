@@ -189,11 +189,11 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     showCommands () {
-        this.toggleClass('show-commands', true);
+        this.addClass('show-commands');
     }
 
     hideCommands () {
-        this.toggleClass('show-commands', false);
+        this.removeClass('show-commands');
         this.alert.hide();
     }
 };

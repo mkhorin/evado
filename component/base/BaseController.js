@@ -51,16 +51,12 @@ module.exports = class BaseController extends Base {
     // MODEL
 
     async getModel (params = {}) {
-        if (!params.id) {
-            params.id = this.getQueryParam('id') || this.getPostParam('id');
-        }
-        params.Class = params.Class || this.getModelClass();
-        let model = this.spawn(params.Class);
-        params.id = model.getDb().normalizeId(params.id);
-        if (!params.id) {
+        let model = this.spawn(params.Class || this.getModelClass());
+        let id = model.getDb().normalizeId(params.id || this.getQueryParam('id') || this.getPostParam('id'));
+        if (!id) {
             throw new BadRequest('Invalid ID');
         }
-        model = await model.findById(params.id).with(params.with).one();
+        model = await model.findById(id).with(params.with).one();
         if (!model) {
             throw new NotFound('Object not found');
         }
@@ -69,14 +65,15 @@ module.exports = class BaseController extends Base {
 
     getModelByClassName (params) {
         const file = params.className;
-        if (file) {
-            try {
-                params.Class = this.module.require(file) || require(file);
-            } catch {
-                throw new NotFound(`Model class not found: ${file}`);
-            }
+        if (!file) {
+            return this.getModel(params);
         }
-        return this.getModel(params);
+        try {
+            params.Class = this.module.require(file) || require(file);
+            return this.getModel(params);
+        } catch {
+            throw new NotFound(`Model class not found: ${file}`);
+        }
     }
 
     // ERROR

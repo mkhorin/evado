@@ -50,7 +50,7 @@ Jam.ModelError = class ModelError {
             }
         }
         const $errorAttrs = this.$form.find('.has-error');
-        $errorAttrs.parents('.form-base-group').addClass('has-group-error');
+        $errorAttrs.parents('.model-group').addClass('has-group-error');
         for (const pane of this.$form.find('.tab-pane.has-group-error')) {
             $(pane).closest('.form-tabs')
                 .children('.nav-tabs').find(`[data-id="${pane.dataset.id}"]`)

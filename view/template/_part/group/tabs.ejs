@@ -2,7 +2,8 @@
 <%
 const p = {
     actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
-    translate: typeof translate === 'undefined' ? '' : translate
+    translate: typeof translate === 'undefined' ? '' : translate,
+    loadedGroups: typeof loadedGroups === 'undefined' ? null : loadedGroups
 };
 %>
 <div class="tabs" data-action-binder="<%= p.actionBinder %>">
@@ -13,22 +14,31 @@ const p = {
         <% } %>
     </div>
     <div class="tab-content">
-        <% for (const item of items) { %>
-        <div class="form-base-group tab-pane <%- item.active ? 'active' : '' %>" role="tabpanel"
+        <% for (const item of items) {
+            const loaded = !item.loadable || (p.loadedGroups ? p.loadedGroups.includes(item.id) : item.active);
+            const content = item.content;
+        %>
+        <div class="tab-pane model-group <%- item.active ? 'active' : '' %>" role="tabpanel"
              data-id="<%- item.id %>"
-             data-action-binder="<%= item.actionBinder === undefined ? '' : JSON.stringify(item.actionBinder) %>">
+             data-action-binder="<%= item.actionBinder === undefined ? '' : JSON.stringify(item.actionBinder) %>"
+             data-loadable="<%- item.loadable %>"
+             data-loaded="<%- loaded %>">
             <div class="tab-pane-title" data-t="<%- p.translate %>"><%- item.label || item.id %></div>
-            <div class="form-base-group-body">
-            <% if (typeof item.content === 'string') { %>
-                <%- include(item.content) %>
-            <% } else if (Array.isArray(item.content)) {
-                 for (const data of item.content) {
-                   if (data.template) { %>
+            <div class="model-group-body">
+            <% if (!loaded) { %>
+                <div class="model-group-loader">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </div>
+            <% } else if (typeof content === 'string') { %>
+                <%- include(content) %>
+            <% } else if (Array.isArray(content)) {
+                for (const data of content) {
+                    if (data.template) { %>
                     <%- include(data.template, data) %>
                     <% } else { %>
                     <%- data %>
-                <% }}} else { %>
-                <%- include(item.content.template, item.content) %>
+             <% }}} else if (content) { %>
+                <%- include(content.template, content) %>
             <% } %>
             </div>
         </div>

@@ -11,7 +11,7 @@ module.exports = class Thumbnail extends Base {
         super({
             basePath: 'upload/thumbnail',
             defaultSizeKey: 'small',
-            mime: 'image/png',
+            type: 'image/png',
             extension: 'png',
             ThumbnailSize: require('./ThumbnailSize'),
             ...config
@@ -23,11 +23,15 @@ module.exports = class Thumbnail extends Base {
         await this.createSizes();
     }
 
+    hasSizes () {
+        return Object.values(this.sizes).length > 0;
+    }
+
     getHeaders (name) {
         return {
             'Content-Disposition': `inline; filename=${encodeURIComponent(`${name}.${this.extension}`)}`,
             'Content-Transfer-Encoding': 'binary',
-            'Content-Type': this.mime
+            'Content-Type': this.type
         };
     }
 
@@ -113,6 +117,6 @@ module.exports = class Thumbnail extends Base {
     }
 };
 
-const path = require('path');
 const CommonHelper = require('areto/helper/CommonHelper');
 const FileHelper = require('areto/helper/FileHelper');
+const path = require('path');

@@ -18,11 +18,11 @@ Jam.Notifications = class Notifications extends Jam.Element {
     }
 
     isOpen () {
-        return this.$element.hasClass('open');
+        return this.hasClass('open');
     }
 
     hasUnread () {
-        return this.$element.hasClass('has-unread');
+        return this.hasClass('has-unread');
     }
 
     onShowDropdown () {

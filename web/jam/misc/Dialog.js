@@ -76,6 +76,7 @@ Jam.Dialog = class Dialog {
         return this.show(message, {
             title: 'Information',
             cancelText: false,
+            returnCancel: true,
             ...data
         });
     }
