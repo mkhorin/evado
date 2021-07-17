@@ -8,7 +8,7 @@ Jam.StackFrame = class StackFrame {
     }
 
     setActive () {
-        this.$frame.addClass('active');
+        this.$frame.addClass('active').focus();
     }
 
     isLoading () {

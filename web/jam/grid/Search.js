@@ -32,8 +32,9 @@ Jam.DataGridSearch = class DataGridSearch {
         this.grid.events.trigger('toggleAdvancedSearch');
     }
 
-    onKeyUp ({key}) {
-        if (key === 'Enter' || key === 'Escape') {
+    onKeyUp (event) {
+        if (event.key === 'Enter' || event.key === 'Escape') {
+            event.stopPropagation();
             this.execute(this.$input.val());
         }
     }

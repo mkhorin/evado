@@ -40,7 +40,7 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
         this.template = Jam.Helper.getTemplate('frame', $container);
         this.handlers = [];
         this.tabs = new Jam.StackTabs(this);
-        $(document.body).on('keyup', this.onKeyUp.bind(this));
+        this.$container.on('keyup', this.onKeyUp.bind(this));
     }
 
     init () {
@@ -125,8 +125,9 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
 
     afterClose (frame) {
         frame.$frame.removeClass('tabbed active');
-        const $last = this.getTabbed().last().addClass('active');
-        $(document.body).toggleClass('frame-stack-active', $last.length > 0);
+        const last = this.getLast();
+        last?.setActive();
+        $(document.body).toggleClass('frame-stack-active', !!last);
         this.tabs.detach(frame);
     }
 
