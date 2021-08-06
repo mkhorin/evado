@@ -119,7 +119,7 @@ ul:last-child {
     cursor: not-allowed;
     pointer-events: none;
 }
-.btn-white:not(:hover):not(active):not(:focus) {
+.btn-white:not(:hover):not(:active) {
     background: #fff;
 }
 .bootstrap-datetimepicker-widget a {
