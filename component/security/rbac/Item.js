@@ -60,19 +60,20 @@ module.exports = class Item extends Base {
 
     async resolveRelations () {
         const result = await super.resolveRelations();
-        await this.resolveAssignmentRuleRelation(result);
+        result.assignmentRules = await this.resolveAssignmentRuleRelation();
         return result;
     }
 
-    async resolveAssignmentRuleRelation (result) {
-        const data = this.data.assignmentRules;
-        if (!Array.isArray(data) || !data.length) {
-            return result.assignmentRules = [];
+    async resolveAssignmentRuleRelation () {
+        const names = this.data.assignmentRules;
+        if (!Array.isArray(names) || !names.length) {
+            return [];
         }
-        result.assignmentRules = await this.store.findAssignmentRuleByName(data).column(this.store.key);
-        if (result.assignmentRules.length !== data.length) {
+        const result = await this.store.findAssignmentRuleByName(names).column(this.store.key);
+        if (result.length !== names.length) {
             throw new Error(`Assignment rule not found for item: ${this.name}`);
         }
+        return result;
     }
 
     async createMeta () {
@@ -86,8 +87,8 @@ module.exports = class Item extends Base {
             description: this.data.description,
             type: this.data.type,
             actions: this.data.actions,
-            rule: this._meta.rule,
-            roles: this._meta.roles
+            roles: this._meta.roles,
+            rules: this._meta.rules
         });
         const targets = [];
         for (const target of this.data.targets) {
@@ -123,20 +124,27 @@ module.exports = class Item extends Base {
         return item.type === this.data.type
             && this.isEqualActions(item.actions)
             && this.isEqualRoles(item.roles)
-            && this.isEqualRule(item.rule);
+            && this.isEqualRules(item.rules);
     }
 
     isEqualActions (actions) {
-        return (actions.length === 4 && this.data.actions[0] === this.store.rbac.ALL)
-            || !ArrayHelper.hasDiff(actions, this.data.actions);
+        return actions.length === this.store.rbac.ALL_ACTIONS.length
+            && this.data.actions[0] === this.store.rbac.ALL
+            || ArrayHelper.hasDiff(actions, this.data.actions) === false;
     }
 
     isEqualRoles (roles) {
-        return !ArrayHelper.hasDiff(roles, this.data.roles).length;
+        return !ArrayHelper.hasDiff(roles, this.data.roles);
     }
 
-    isEqualRule (rule) {
-        return rule ? rule.sourceName === this.data.rule : !this.data.rule;
+    isEqualRules (rules) {
+        if (!rules) {
+            return !this.data.rules;
+        }
+        if (!this.data.rules) {
+            return false;
+        }
+        return !ArrayHelper.hasDiff(rules, this.data.rules);
     }
 
     filterTargets (item) {
@@ -158,14 +166,18 @@ module.exports = class Item extends Base {
     // VALIDATION
 
     async validateMeta () {
+        this._meta = {};
+        await this.validateMetaType();
+        await this.validateMetaActions();
+        await this.validateMetaTargets();
+        this._meta.roles = await this.resolveMetaRoles();
+        this._meta.rules = await this.resolveMetaRules();
+    }
+
+    validateMetaType () {
         if (!this.store.rbac.constructor.isMetaItemType(this.data.type)) {
             throw new Error(this.getMetaError('Invalid type'));
         }
-        this._meta = {};
-        await this.validateMetaActions();
-        await this.validateMetaRoles();
-        await this.validateMetaTargets();
-        await this.validateMetaRule();
     }
 
     validateMetaActions () {
@@ -182,35 +194,41 @@ module.exports = class Item extends Base {
         }
     }
 
-    async validateMetaRoles () {
-        if (typeof this.data.roles === 'string') {
-            this.data.roles = [this.data.roles];
+    async resolveMetaRoles () {
+        let names = this.data.roles;
+        if (typeof names === 'string') {
+            this.data.roles = names = [names];
         }
-        const roles = this.data.roles;
-        if (!Array.isArray(roles)) {
+        if (!Array.isArray(names)) {
             throw new Error(this.getMetaError('Roles must be array'));
         }
-        this._meta.roles = [];
-        if (!roles.length) {
-            return false;
+        if (!names.length) {
+            return names;
         }
-        const roleMap = await this.store.findRoleItem().and({name: roles}).index('name').all();
-        for (const name of roles) {
+        const roleMap = await this.store.findRoleItem().and({name: names}).index('name').all();
+        const result = [];
+        for (const name of names) {
             if (!roleMap.hasOwnProperty(name)) {
                 throw new Error(this.getMetaError(`Role not found: ${name}`));
             }
-            this._meta.roles.push(roleMap[name][this.store.key]);
+            result.push(roleMap[name][this.store.key]);
         }
+        return result;
     }
 
-    async validateMetaRule () {
-        if (!this.data.rule) {
-            return this._meta.rule = null;
+    async resolveMetaRules () {
+        let names = this.data.rules;
+        if (!names) {
+            return null;
         }
-        this._meta.rule = await this.store.findRuleByName(this.data.rule).scalar(this.store.key);
-        if (!this._meta.rule) {
+        if (!Array.isArray(names)) {
+            this.data.rules = names = [names];
+        }
+        const result = await this.store.findRuleByName(names).column(this.store.key);
+        if (result.length !== names.length) {
             throw new Error(this.getMetaError('Rule not found'));
         }
+        return result.length ? result : null;
     }
 
     validateMetaTargets () {

@@ -99,18 +99,30 @@ module.exports = class DatabaseStore extends Base {
         return result;
     }
 
-    prepareMetaItem (item, {itemMap, ruleMap}) {
+    prepareMetaItem (item, data) {
+        item.roles = this.prepareMetaItemRoles(item, data);
+        item.actions = this.prepareMetaItemActions(item, data);
+        item.rules = this.prepareMetaItemRules(item, data);
+    }
+
+    prepareMetaItemRoles (item, {itemMap}) {
         const roles = [];
         if (Array.isArray(item.roles)) {
             for (const key of item.roles) {
-                if (Object.prototype.hasOwnProperty.call(itemMap, key)) {
-                    roles.push(itemMap[key].name);
-                }
+                Object.prototype.hasOwnProperty.call(itemMap, key)
+                    ? roles.push(itemMap[key].name)
+                    : this.log('error', `Role not found: ${key}`);
             }
         }
-        item.roles = roles;
-        item.actions = Array.isArray(item.actions) ? item.actions : [];
-        item.rule = Object.prototype.hasOwnProperty.call(ruleMap, item.rule) ? ruleMap[item.rule].name : null;
+        return roles;
+    }
+
+    prepareMetaItemActions ({actions}) {
+        return Array.isArray(actions) ? actions : [];
+    }
+
+    prepareMetaItemRules (item, {ruleMap}) {
+        return this.getItemRules(item, ruleMap);
     }
 
     prepareMetaTarget (data) {

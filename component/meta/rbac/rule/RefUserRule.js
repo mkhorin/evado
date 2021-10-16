@@ -11,7 +11,7 @@ module.exports = class RefUserRule extends Base {
 
     constructor (config) {
         super({
-            refAttr: 'executor', // reference attribute to class with user attribute
+            // refAttr: 'attrName', // reference attribute name to class with user attribute
             userAttr: 'user', // user attribute
             objectFilter: true, // filter objects in list
             ...config
@@ -36,8 +36,9 @@ module.exports = class RefUserRule extends Base {
 
     async resolveRefUser () {
         if (!this._refUser) {
-            const cls = this.getTarget().class.getAttr(this.refAttr).getRefClass();
-            this._refUser = await cls.find({[this.userAttr]: this.getUserId()}).id();
+            const refClass = this.getTarget().class.getAttr(this.refAttr).getRefClass();
+            const condition = {[this.userAttr]: this.getUserId()};
+            this._refUser = await refClass.find(condition).id();
         }
         return this._refUser;
     }

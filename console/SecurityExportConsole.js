@@ -44,7 +44,7 @@ module.exports = class SecurityExportConsole extends Base {
             if (item.type === type) {
                 item.children = this.getItemChildren(item);
                 item.assignmentRules = this.getItemAssignmentRuleNames(item);
-                item.rule = this.getItemRuleName(item);
+                item.rules = this.getItemRuleNames(item);
                 result[item.name] = item;
             }
         }
@@ -52,20 +52,6 @@ module.exports = class SecurityExportConsole extends Base {
     }
 
     getItemChildren (item) {
-        const children = this.childMap[item[this.getKey()]];
-        if (Array.isArray(children)) {
-            const result = [];
-            for (const id of children) {
-                const child = this.data.itemMap[id];
-                if (child) {
-                    result.push(child.name);
-                }
-            }
-            return result;
-        }
-    }
-
-    getItemAssignmentRules (item) {
         const children = this.childMap[item[this.getKey()]];
         if (Array.isArray(children)) {
             const result = [];
@@ -112,7 +98,7 @@ module.exports = class SecurityExportConsole extends Base {
             if (targets) {
                 item.targets = targets;
                 item.roles = item.roles.map(id => this.data.itemMap[id].name);
-                item.rule = this.getItemRuleName(item);
+                item.rules = this.getItemRuleNames(item);
                 item.assignmentRules = this.getItemAssignmentRuleNames(item);
                 delete item.targetType;
                 delete item[key];
@@ -136,22 +122,36 @@ module.exports = class SecurityExportConsole extends Base {
         return targets;
     }
 
-    getItemRuleName (item) {
-        const rule = this.data.ruleMap[item.rule];
-        return rule ? rule.name : undefined;
+    getItemRuleNames (item) {
+        if (!Array.isArray(item.rules)) {
+            return;
+        }
+        const names = [];
+        for (const id of item.rules) {
+            const rule = this.data.ruleMap[id];
+            if (rule) {
+                names.push(rule.name);
+            }
+        }
+        if (names.length) {
+            return names;
+        }
     }
 
     getItemAssignmentRuleNames ({assignmentRules}) {
-        const result = [];
-        if (Array.isArray(assignmentRules)) {
-            for (const id of assignmentRules) {
-                const rule = this.assignmentRuleMap[id];
-                if (rule) {
-                    result.push(rule.name);
-                }
+        if (!Array.isArray(assignmentRules)) {
+            return;
+        }
+        const names = [];
+        for (const id of assignmentRules) {
+            const rule = this.assignmentRuleMap[id];
+            if (rule) {
+                names.push(rule.name);
             }
         }
-        return result.length ? result : undefined;
+        if (names.length) {
+            return names;
+        }
     }
 
     getAssignments () {

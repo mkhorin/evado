@@ -7,10 +7,17 @@ const Base = require('areto/base/Action');
 
 module.exports = class SortRelatedAction extends Base {
 
+    static getConstants () {
+        return {
+            LIST_TEMPLATE: 'sort'
+        };
+    }
+
     async execute () {
         const {pid, rel} = this.getQueryParams();
         await this.setParentModel(pid);
-        await this.setRelation(rel);
+        this.setRelation(rel);
+        this.setOrderBehavior();
         if (this.isGetRequest()) {
             this.setRelationWith(rel);
             return this.renderOrder();
@@ -31,15 +38,18 @@ module.exports = class SortRelatedAction extends Base {
         if (!this.relation) {
             throw new BadRequest('Relation not found');
         }
-        this.sortOrderBehavior = this.relation.model.getBehavior('sortOrder');
-        if (!(this.sortOrderBehavior instanceof SortOrderBehavior)) {
-            throw new BadRequest('Invalid sort order behavior');
-        }
     }
 
     setRelationWith (name) {
         if (this.with?.hasOwnProperty(name)) {
             this.relation.with(this.with[name]);
+        }
+    }
+
+    setOrderBehavior () {
+        this.sortOrderBehavior = this.relation.model.getBehavior('sortOrder');
+        if (!this.sortOrderBehavior) {
+            throw new BadRequest('Invalid sort order behavior');
         }
     }
 
@@ -58,19 +68,23 @@ module.exports = class SortRelatedAction extends Base {
 
     async renderOrder () {
         let data = {
-            'parentModel': this.parentModel,
-            'relModel': this.relation.model,
-            'models': await this.relation.order({[this.sortOrderBehavior.orderAttr]: 1}).all(),
-            'orderAttr': this.sortOrderBehavior.orderAttr
+            parentModel: this.parentModel,
+            relModel: this.relation.model,
+            models: await this.findModels().all(),
+            orderAttr: this.sortOrderBehavior.orderAttr
         };
         await this.filterModels(data);
         data.relController = data.relModel.createController().assignSource(this.controller);
-        const model = data.relController.createViewModel('sort', {data});
+        const model = data.relController.createViewModel(this.LIST_TEMPLATE, {data});
         if (model) {
             await model.prepareModels(data.models);
             data = await model.getTemplateData();
         }
-        this.send(await data.relController.renderTemplate('sort', data));
+        this.send(await data.relController.renderTemplate(this.LIST_TEMPLATE, data));
+    }
+
+    findModels () {
+        return this.relation.order({[this.sortOrderBehavior.orderAttr]: 1});
     }
 
     filterModels (data) {
@@ -92,6 +106,6 @@ module.exports = class SortRelatedAction extends Base {
         return result;
     }
 };
+module.exports.init();
 
 const BadRequest = require('areto/error/http/BadRequest');
-const SortOrderBehavior = require('areto/behavior/SortOrderBehavior');

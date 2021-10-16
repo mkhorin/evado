@@ -219,12 +219,14 @@ module.exports = class Rbac extends Base {
 
     resolveMetaItemRules () {
         for (const item of Object.values(this.metaItems)) {
-            const rule = this.ruleMap[item.rule];
-            if (rule && Object.prototype.hasOwnProperty.call(this.ruleMap, item.rule)) {
-                item.rule = this.constructor.getItemRuleData(item, rule);
-            } else if (item.rule) {
-                this.log('error', `Rule not found: ${item.rule}`);
-                item.rule = null;
+            if (Array.isArray(item.rules)) {
+                const rules = [];
+                for (const id of item.rules) {
+                    const rule = this.ruleMap[id];
+                    rule ? rules.push(this.constructor.getItemRuleData(item, rule))
+                         : this.log('error', `Rule not found: ${id}`);
+                }
+                item.rules = rules.length ? rules : null;
             }
         }
     }
@@ -318,7 +320,9 @@ module.exports = class Rbac extends Base {
     setMetaNavMap () {
         const targets = [this.TARGET_SECTION, this.TARGET_NODE];
         const items = this.metaItems.filter(item => {
-            return item.type === this.DENY && item.actions[0] === this.READ && targets.includes(item.targetType);
+            return item.type === this.DENY
+                && item.actions[0] === this.READ
+                && targets.includes(item.targetType);
         });
         const data = IndexHelper.indexObjectArrays(items, ['roles', 'key']);
         this.metaNavMap = Object.values(data).length ? data : null;
@@ -327,7 +331,7 @@ module.exports = class Rbac extends Base {
     setItemUserMap () {
         this.itemUserMap = {};
         for (let user of Object.keys(this.assignmentMap)) {
-            user = MongoHelper.createObjectId(user);
+            user = MongoHelper.createId(user);
             for (const item of this.assignmentMap[user]) {
                 ObjectHelper.push(user, item, this.itemUserMap);
             }

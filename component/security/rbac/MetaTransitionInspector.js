@@ -97,8 +97,8 @@ module.exports = class MetaTransitionInspector extends Base {
     }
 
     async checkItems (items) {
-        for (const item of items) {
-            if (!item.rule || await this.checkRule(item.rule)) {
+        for (const {rules} of items) {
+            if (!rules || await this.checkRules(rules)) {
                 return true;
             }
         }

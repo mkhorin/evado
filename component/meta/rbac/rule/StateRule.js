@@ -1,38 +1,20 @@
 /**
- * @copyright Copyright (c) 2020 Maxim Khorin <maksimovichu@gmail.com>
+ * @copyright Copyright (c) 2021 Maxim Khorin <maksimovichu@gmail.com>
  *
  * Check object state
  */
 'use strict';
 
-const Base = require('./BaseRule');
+const Base = require('./ValueRule');
 
 module.exports = class StateRule extends Base {
 
     constructor (config) {
         super({
-            // state: 'name' or ['name1', ...]
-            objectFilter: true, // filter objects in list
+            // value: 'state' or ['state1', 'state2', ...]
+            valueAttr: Class.STATE_ATTR,
             ...config
         });
-    }
-
-    execute () {
-        return this.isObjectTarget()
-            ? this.checkState()
-            : this.isAllowType(); // pass rule: need to allow - true, need to deny - false
-    }
-
-    checkState () {
-        const state = this.getTarget().getStateName();
-        const matched = Array.isArray(this.state)
-            ? this.state.includes(state)
-            : this.state === state;
-        return this.isAllowType() ? matched : !matched;
-    }
-
-    getObjectFilter () {
-        return this.objectFilter ? {[Class.STATE_ATTR]: this.state} : null;
     }
 };
 

@@ -168,11 +168,11 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     async checkAttrItems (items, forbiddenAttrs) {
-        for (const item of items) {
-            if (!item.rule) {
-                forbiddenAttrs.push(item.attr);
-            } else if (await this.checkRule(item.rule)) {
-                forbiddenAttrs.push(item.attr);
+        for (const {attr, rules} of items) {
+            if (!rules) {
+                forbiddenAttrs.push(attr);
+            } else if (await this.checkRules(rules)) {
+                forbiddenAttrs.push(attr);
             }
         }
     }
