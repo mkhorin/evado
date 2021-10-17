@@ -1,7 +1,7 @@
 <!-- _part/list/sort -->
 <%
-block('tab', 'Sort');
-block('title', 'Sorting');
+block('tab').defaults('Sort');
+block('title').defaults('Sorting');
 
 if (!data.id) {
     data.id = data.list;
@@ -9,10 +9,12 @@ if (!data.id) {
 if (data.update !== null) {
     data.update = relController.createUrl(data.update === undefined ? 'update' : data.update);
 }
+if (data.order === undefined) {
+    data.order = {[orderAttr]: 1};
+}
 data.key = relModel.PK;
 data.multiple = true;
 data.url = _controller.getOriginalUrl();
-data.order = {[orderAttr]: 1};
 data.pageSize = 0;
 
 let hasKeyColumn = false;

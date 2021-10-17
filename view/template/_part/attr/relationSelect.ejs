@@ -6,13 +6,15 @@ const p = {handler: 'RelationSelect'};
 <%
 const d = {
     relName: attr,
-    order: {[model.PK]: -1},
     key: model.PK,
     delete: false,
     unlink: true,
     confirmDeletion: true,
     ...data
 };
+if (d.order === undefined && !d.modalSortArray) {
+    d.order = {[model.PK]: -1};
+}
 d.attr = attr;
 d.relName = d.relName || attr;
 
@@ -74,7 +76,7 @@ if (d.link === undefined || d.link === true) {
 }
 if (d.modalSort) {
     if (d.modalSort === true) {
-        d.modalSort = _url('sort-related', urlParams);
+        d.modalSort = _url(d.modalSortArray ? 'sort-related-array' : 'sort-related', urlParams);
     } else if (Array.isArray(d.modalSort)) {
         d.modalSort = _url(d.modalSort);
     }
