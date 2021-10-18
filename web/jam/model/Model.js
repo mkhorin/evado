@@ -187,7 +187,6 @@ Jam.Model = class Model extends Jam.Element {
             case 'update': return this.onUpdate;
             case 'delete': return this.onDelete;
             case 'reload': return this.onReload;
-            case 'sort': return this.onSort;
             case 'copyId': return this.onCopyId;
             case 'history': return this.onShowHistory;
         }

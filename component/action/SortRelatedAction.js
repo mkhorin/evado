@@ -7,10 +7,11 @@ const Base = require('areto/base/Action');
 
 module.exports = class SortRelatedAction extends Base {
 
-    static getConstants () {
-        return {
-            LIST_TEMPLATE: 'sort'
-        };
+    constructor (config) {
+        super({
+            template: 'sort',
+            ...config
+        });
     }
 
     async execute () {
@@ -75,12 +76,12 @@ module.exports = class SortRelatedAction extends Base {
         };
         await this.filterModels(data);
         data.relController = data.relModel.createController().assignSource(this.controller);
-        const model = data.relController.createViewModel(this.LIST_TEMPLATE, {data});
+        const model = data.relController.createViewModel(this.template, {data});
         if (model) {
             await model.prepareModels(data.models);
             data = await model.getTemplateData();
         }
-        this.send(await data.relController.renderTemplate(this.LIST_TEMPLATE, data));
+        this.send(await data.relController.renderTemplate(this.template, data));
     }
 
     findModels () {
@@ -106,6 +107,5 @@ module.exports = class SortRelatedAction extends Base {
         return result;
     }
 };
-module.exports.init();
 
 const BadRequest = require('areto/error/http/BadRequest');

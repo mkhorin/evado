@@ -99,16 +99,23 @@ Jam.StackFrame = class StackFrame {
     }
 
     createTitle ($container) {
-        this.title = Jam.t($container.data('title'), $container.data('t-title'));
-        this.title = Jam.escape(this.title);
-        const url = $container.data('url') || this.getLoadUrl();
+        const data = $container.data();
+        if (data.htmlTitle) {
+            this.title = data.title;
+        } else {
+            this.title = Jam.t(data.title, data.tTitle);
+            this.title = Jam.escape(this.title);
+        }
+        const url = data.url || this.getLoadUrl();
         this.$title.html(`<a href="${Jam.UrlHelper.getPageFrameUrl(url)}" target="_blank">${this.title}</a>`);
+        Jam.t(this.$title);
     }
 
     createTabTitle ($container) {
-        this.tabTitle = $container.data('tab');
-        this.tabTitle = this.tabTitle
-            ? Jam.escape(Jam.t(this.tabTitle, $container.data('t-tab')))
+        const data = $container.data();
+        this.tabTitle = data.tab;
+        this.tabTitle = this.tabTitle && !this.htmlTabTitle
+            ? Jam.escape(Jam.t(this.tabTitle, data.tTab))
             : this.title;
     }
 
@@ -139,7 +146,7 @@ Jam.StackFrame = class StackFrame {
             return false;
         }
         // event.data can be set by listener handler
-        data = event.data || data;
+        data = $.extend({}, data, event.data);
         return $.when(event.deferred).then(() => this.forceClose(data));
     }
 

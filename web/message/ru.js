@@ -169,6 +169,8 @@ Jam.I18n.defaults = {
     'Sign in': 'Войти',
     'Sign out': 'Выйти',
     'Sort': 'Сортировать',
+    'Sort by': 'Сортировать по',
+    'Sort related objects': 'Сортировать связанные объекты',
     'Sorting': 'Сортировка',
     'Status': 'Статус',
     'Studio': 'Студия',
