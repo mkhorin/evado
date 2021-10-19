@@ -216,19 +216,16 @@ module.exports = class Item extends Base {
         return result;
     }
 
-    async resolveMetaRules () {
-        let names = this.data.rules;
-        if (!names) {
-            return null;
+    resolveMetaRules () {
+        return this.resolveRuleRelation();
+    }
+
+    async getRuleIdByName (name) {
+        const id = await super.getRuleIdByName(name);
+        if (!id) {
+            throw new Error(this.getMetaError(`Rule not found: ${name}`));
         }
-        if (!Array.isArray(names)) {
-            this.data.rules = names = [names];
-        }
-        const result = await this.store.findRuleByName(names).column(this.store.key);
-        if (result.length !== names.length) {
-            throw new Error(this.getMetaError('Rule not found'));
-        }
-        return result.length ? result : null;
+        return id;
     }
 
     validateMetaTargets () {
