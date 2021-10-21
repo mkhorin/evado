@@ -21,7 +21,7 @@ module.exports = class MetaObjectFilter extends Base {
             }
             const rules = this.getRules(allow);
             // skip all if at least one rule is missing
-            this.allowRules = rules && rules.length !== allow.length ? null : rules;
+            this.allowRules = rules?.length === allow.length ? rules : null;
         }
         this.condition = allowConditions && denyConditions
             ? ['AND', allowConditions, denyConditions]
@@ -67,13 +67,27 @@ module.exports = class MetaObjectFilter extends Base {
     }
 
     getRules (items) {
-        const rules = [];
-        for (const {rule} of items) {
-            if (rule?.Class.prototype.getObjectFilter) {
-                rules.push(rule);
+        const result = [];
+        for (const item of items) {
+            const rules = this.getRulesByItem(item);
+            if (rules) {
+                result.push(rules);
             }
         }
-        return rules.length ? rules : null;
+        return result.length ? result : null;
+    }
+
+    getRulesByItem (item) {
+        if (!Array.isArray(item.rules)) {
+            return null;
+        }
+        const result = [];
+        for (const rule of item.rules) {
+            if (rule.Class.prototype.getObjectFilter) {
+                result.push(rule);
+            }
+        }
+        return result.length ? result : null;
     }
 
     getMetadataClass (item) {

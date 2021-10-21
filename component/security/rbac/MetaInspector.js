@@ -308,26 +308,11 @@ module.exports = class MetaInspector extends Base {
             if (!filter || filter.skipped) {
                 return null;
             }
-            let roleConditions = ['AND'];
-            if (filter.condition) {
-                roleConditions.push(filter.condition);
-            }
-            if (filter.denyRules) {
-                const items = await this.getRuleObjectFilters(filter.denyRules, 'NOR');
-                if (items) {
-                    roleConditions.push(items);
-                }
-            }
-            if (filter.allowRules) {
-                const items = await this.getRuleObjectFilters(filter.allowRules, 'OR');
-                if (items) {
-                    roleConditions.push(items.length === 2 ? items[1] : items);
-                }
-            }
-            if (roleConditions.length === 1) {
+            const roleConditions = await this.getRoleConditions(filter);
+            if (!roleConditions) {
                 return null;
             }
-            conditions.push(roleConditions.length === 2 ? roleConditions[1] : roleConditions);
+            conditions.push(roleConditions);
         }
         if (conditions.length === 1) {
             return null;
@@ -336,19 +321,49 @@ module.exports = class MetaInspector extends Base {
         return PromiseHelper.setImmediate();
     }
 
+    async getRoleConditions ({condition, denyRules, allowRules}) {
+        const result = ['AND'];
+        if (condition) {
+            result.push(condition);
+        }
+        if (denyRules) {
+            const conditions = await this.getRuleObjectFilters(denyRules, 'NOR');
+            if (conditions) {
+                result.push(conditions);
+            }
+        }
+        if (allowRules) {
+            const conditions = await this.getRuleObjectFilters(allowRules, 'OR');
+            if (conditions) {
+                result.push(conditions.length === 2 ? conditions[1] : conditions);
+            }
+        }
+        return result.length === 1 ? null : result.length === 2 ? result[1] : result;
+    }
+
     async getRuleObjectFilters (rules, operation) {
-        const conditions = [operation];
-        const cache = this._metaObjectRuleCache;
+        const result = [operation];
+        for (const itemRules of rules) {
+            const conditions = await this.getItemRuleObjectFilters(itemRules);
+            if (conditions) {
+                result.push(conditions);
+            }
+        }
+        return result.length !== 1 ? result : null;
+    }
+
+    async getItemRuleObjectFilters (rules) {
+        const result = ['AND'];
         for (const config of rules) {
-            const condition = Object.prototype.hasOwnProperty.call(cache, config.name)
-                ? cache[config.name]
+            const condition = Object.prototype.hasOwnProperty.call(this._metaObjectRuleCache, config.name)
+                ? this._metaObjectRuleCache[config.name]
                 : await this.getRuleObjectFilter(config);
             if (condition) {
-                conditions.push(condition);
+                result.push(condition);
             }
-            cache[config.name] = condition;
+            this._metaObjectRuleCache[config.name] = condition;
         }
-        return conditions.length !== 1 ? conditions : null;
+        return result.length === 2 ? result[1] : result.length === 1 ? null : result;
     }
 
     getRuleObjectFilter (config) {
