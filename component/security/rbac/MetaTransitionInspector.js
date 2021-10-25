@@ -1,24 +1,22 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
  *
- * transition is denied if transition is denied
- * transition is allowed if transition is allowed
- * transitions is allowed if model update is allowed
+ * Transition is forbidden if transition is denied by permissions
+ * Transition is allowed if transition is allowed by permissions
+ * Transitions are allowed if model update is allowed by permissions
+ *
+ * metaTransitionData
+ *  role
+ *    allow
+ *      key [items]
+ *    deny
+ *      key [items]
  */
 'use strict';
 
 const Base = require('areto/security/rbac/Inspector');
 
 module.exports = class MetaTransitionInspector extends Base {
-
-    /**
-     * metaTransitionData
-     * role
-     *   allow
-     *     key [items]
-     *   deny
-     *     key [items]
-     */
 
     static concatHierarchyItems (items, data) {
         for (const item of items) {
@@ -41,15 +39,18 @@ module.exports = class MetaTransitionInspector extends Base {
     async execute () {
         this._transitions = this.target.transitions;
         if (!this._transitions || !this._transitions.length || !this.rbac.metaTransitionMap) {
+            if (!this.editableTarget) { // transitions are denied if the target is read-only
+                this.target.transitions = [];
+            }
             return;
         }
         this._result = {};
         this._objectKey = `.${this.target.getId()}.${this.target.class.id}`;
         this._classKey = `..${this.target.class.id}`;
-        if (this.editableTarget) { // transitions is allowed if model update is allowed
+        if (this.editableTarget) { // transitions are allowed if the target can be modified
             for (const role of this.assignments) {
                 if (!Object.prototype.hasOwnProperty.call(this.rbac.metaTransitionMap, role)) {
-                    return; // all transitions ia allowed for role
+                    return; // all transitions are allowed for the role
                 }
             }
         }
