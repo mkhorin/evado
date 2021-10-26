@@ -1,10 +1,6 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
  *
- * Transition is forbidden if transition is denied by permissions
- * Transition is allowed if transition is allowed by permissions
- * Transitions are allowed if model update is allowed by permissions
- *
  * metaTransitionData
  *  role
  *    allow
@@ -18,42 +14,44 @@ const Base = require('areto/security/rbac/Inspector');
 
 module.exports = class MetaTransitionInspector extends Base {
 
-    static concatHierarchyItems (items, data) {
-        for (const item of items) {
-            if (item.transition && item.object) {
-                this.concatHierarchyItem(item, data, `${item.transition}..${item.class}`);
+    static concatHierarchyData (data) {
+        for (const role of Object.keys(data)) {
+            for (const type of Object.keys(data[role])) {
+                this.concatHierarchyTypeData(data[role][type]);
             }
         }
     }
 
-    static concatHierarchyItem (item, data, ...keys) {
-        for (const role of Object.keys(data)) {
-            for (const type of Object.keys(data[role])) {
-                if (Array.isArray(data[role][type][item.key])) {
-                    Rbac.concatFirstArrayItems(item.key, data[role][type], ...keys);
-                }
+    static concatHierarchyTypeData (data) {
+        const items = [];
+        for (const values of Object.values(data)) {
+            items.push(...values);
+        }
+        for (const item of items) {
+            if (item.key === '..') {
+                Rbac.concatFirstArrayItems(item.key, data, '');
+            }
+        }
+        for (const item of items) {
+            if (item.class && !item.transition && !item.object) {
+                Rbac.concatFirstArrayItems(item.key, data, '..', '');
+            }
+        }
+        for (const item of items) {
+            if (item.transition || item.object) {
+                Rbac.concatFirstArrayItems(item.key, data, `..${item.class}`, '..', '');
             }
         }
     }
 
     async execute () {
         this._transitions = this.target.transitions;
-        if (!this._transitions || !this._transitions.length || !this.rbac.metaTransitionMap) {
-            if (!this.editableTarget) { // transitions are denied if the target is read-only
-                this.target.transitions = [];
-            }
+        if (!this._transitions?.length || !this.rbac.metaTransitionMap) {
             return;
         }
         this._result = {};
         this._objectKey = `.${this.target.getId()}.${this.target.class.id}`;
         this._classKey = `..${this.target.class.id}`;
-        if (this.editableTarget) { // transitions are allowed if the target can be modified
-            for (const role of this.assignments) {
-                if (!Object.prototype.hasOwnProperty.call(this.rbac.metaTransitionMap, role)) {
-                    return; // all transitions are allowed for the role
-                }
-            }
-        }
         for (const role of this.assignments) {
             if (Object.prototype.hasOwnProperty.call(this.rbac.metaTransitionMap, role)) {
                 await this.resolveTransitionsByRole(this.rbac.metaTransitionMap[role]);
@@ -65,21 +63,15 @@ module.exports = class MetaTransitionInspector extends Base {
     async resolveTransitionsByRole (data) {
         const result = {};
         if (data[Rbac.ALLOW]) {
-            const commonAllowed = await this.checkCommonItems(data[Rbac.ALLOW]);
-            if (commonAllowed) {
-                this.indexNewTransitions(result);
-            } else {
-                await this.indexAllowedTransitions(data[Rbac.ALLOW], result, commonAllowed);
+            for (const transition of this._transitions) {
+                if (await this.checkTransition(transition, data[Rbac.ALLOW])) {
+                    result[transition.name] = transition;
+                }
             }
-        } else if (this.editableTarget) {
-            this.indexNewTransitions(result);
         }
         if (data[Rbac.DENY]) {
-            if (await this.checkCommonItems(data[Rbac.DENY])) {
-                return;
-            }
             for (const transition of Object.values(result)) {
-                if (await this.checkTransitionItems(transition, data[Rbac.DENY])) {
+                if (await this.checkTransition(transition, data[Rbac.DENY])) {
                     delete result[transition.name];
                 }
             }
@@ -87,14 +79,14 @@ module.exports = class MetaTransitionInspector extends Base {
         Object.assign(this._result, result);
     }
 
-    checkCommonItems (data) {
-        const items = data[this._objectKey] || data[this._classKey] || data['..'];
-        return items ? this.checkItems(items) : undefined;
-    }
-
-    checkTransitionItems (transition, data) {
-        const items = data[transition.name + this._objectKey] || data[transition.name + this._classKey];
-        return items ? this.checkItems(items) : undefined;
+    async checkTransition ({name}, data) {
+        const items = data[name + this._objectKey]
+            || data[name + this._classKey]
+            || data[this._objectKey]
+            || data[this._classKey]
+            || data['..']
+            || data[''];
+        return items ? this.checkItems(items) : false;
     }
 
     async checkItems (items) {
@@ -104,26 +96,6 @@ module.exports = class MetaTransitionInspector extends Base {
             }
         }
         return false;
-    }
-
-    indexNewTransitions (result) {
-        for (const transition of this._transitions) {
-            if (!Object.prototype.hasOwnProperty.call(this._result, transition.name)) {
-                result[transition.name] = transition;
-            }
-        }
-    }
-
-    async indexAllowedTransitions (data, result, commonAllowed) {
-        commonAllowed = commonAllowed === undefined && this.editableTarget;
-        for (const transition of this._transitions) {
-            if (!Object.prototype.hasOwnProperty.call(this._result, transition.name)) {
-                const allowed = await this.checkTransitionItems(transition, data);
-                if (allowed || (commonAllowed && allowed === undefined)) {
-                    result[transition.name] = transition;
-                }
-            }
-        }
     }
 };
 

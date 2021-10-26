@@ -1,23 +1,21 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ *
+ * metaMap
+ *   role
+ *     deny
+ *       read
+ *         all: []
+ *         class
+ *           id: []
+ *         view
+ *           id: []
  */
 'use strict';
 
 const Base = require('areto/security/rbac/Inspector');
 
 module.exports = class MetaInspector extends Base {
-
-    /**
-     * metaMap
-     * role
-     *   deny
-     *      read
-     *          all: []
-     *          class
-     *              id: []
-     *          view
-     *              id: []
-     */
 
     canRead () {
         return this.can(Rbac.READ);
@@ -156,21 +154,25 @@ module.exports = class MetaInspector extends Base {
 
     checkSectionTarget (section, data) {
         data = data[Rbac.TARGET_SECTION];
-        return data?.[section.id] ? this.checkItems(data[section.id]) : false;
+        data = data && (data[section.id] || data[Rbac.ANY]);
+        return data ? this.checkItems(data) : false;
     }
 
     checkNodeTarget (item, data) {
         data = data[Rbac.TARGET_NODE];
-        return data?.[item.id] ? this.checkItems(data[item.id]) : false;
+        data = data && (data[item.id] || data[Rbac.ANY]);
+        return data ? this.checkItems(data) : false;
     }
 
     checkClassTarget (cls, data) {
-        data = data[Rbac.TARGET_CLASS] && data[Rbac.TARGET_CLASS][cls.id];
+        data = data[Rbac.TARGET_CLASS];
+        data = data && (data[cls.id] || data[Rbac.ANY]);
         return data ? this.checkItems(data) : false;
     }
 
     checkViewTarget (view, data) {
-        data = data[Rbac.TARGET_VIEW] && data[Rbac.TARGET_VIEW][view.id];
+        data = data[Rbac.TARGET_VIEW];
+        data = data && (data[view.id] || data[Rbac.ANY]);
         return data ? this.checkItems(data) : false;
     }
 
@@ -183,15 +185,19 @@ module.exports = class MetaInspector extends Base {
         if (!state) {
             return false;
         }
-        let key = `${state.name}..${model.class.id}`;
-        if (data[key] && await this.checkItems(data[key])) {
+        let items = data[`${state.name}..${model.class.id}`] || data[`..${model.class.id}`];
+        if (items && await this.checkItems(items)) {
+            return true;
+        }
+        items = data[`..${model.class.id}`];
+        if (items && await this.checkItems(items)) {
             return true;
         }
         if (model.view === model.class) {
             return false;
         }
-        key = `${state.name}.${model.view.id}`;
-        return data[key] ? this.checkItems(data[key]) : false;
+        items = data[`${state.name}.${model.view.id}`] || data[`.${model.view.id}`];
+        return items ? this.checkItems(items) : false;
     }
 
     async checkNewObjectTarget (model, data) {
@@ -199,19 +205,19 @@ module.exports = class MetaInspector extends Base {
         if (!data) {
             return false;
         }
-        let key = `...${model.class.id}`;
-        if (data[key] && await this.checkItems(data[key])) {
+        let items = data[`...${model.class.id}`];
+        if (items && await this.checkItems(items)) {
             return true;
         }
         const state = model.getState();
         if (model.view !== model.class) {
-            key = `..${model.view.id}`;
-            if (data[key] && await this.checkItems(data[key])) {
+            items = data[`..${model.view.id}`];
+            if (items && await this.checkItems(items)) {
                 return true;
             }
             if (state) {
-                key = `.${state.name}.${model.view.id}`;
-                if (data[key] && await this.checkItems(data[key])) {
+                items = data[`.${state.name}.${model.view.id}`];
+                if (items && await this.checkItems(items)) {
                     return true;
                 }
             }
@@ -219,8 +225,8 @@ module.exports = class MetaInspector extends Base {
         if (!state) {
             return false;
         }
-        key = `.${state.name}..${model.class.id}`;
-        if (data[key] && await this.checkItems(data[key])) {
+        items = data[`.${state.name}..${model.class.id}`];
+        if (items && await this.checkItems(items)) {
             return true;
         }
     }
@@ -230,37 +236,37 @@ module.exports = class MetaInspector extends Base {
         if (!data) {
             return false;
         }
-        let key = `...${model.class.id}`;
-        if (data[key] && await this.checkItems(data[key])) {
+        let items = data[`...${model.class.id}`];
+        if (items && await this.checkItems(items)) {
             return true;
         }
         const oid = model.isNew() ? false : model.getId().toString();
         if (oid) {
-            key = `${oid}...${model.class.id}`;
-            if (data[key] && await this.checkItems(data[key])) {
+            items = data[`${oid}...${model.class.id}`];
+            if (items && await this.checkItems(items)) {
                 return true;
             }
         }
         const state = model.getState();
         if (model.view !== model.class) {
-            key = `..${model.view.id}`;
-            if (data[key] && await this.checkItems(data[key])) {
+            items = data[`..${model.view.id}`];
+            if (items && await this.checkItems(items)) {
                 return true;
             }
             if (oid) {
-                key = `${oid}..${model.view.id}`;
-                if (data[key] && await this.checkItems(data[key])) {
+                items = data[`${oid}..${model.view.id}`];
+                if (items && await this.checkItems(items)) {
                     return true;
                 }
             }
             if (state) {
-                key = `.${state.name}.${model.view.id}`;
-                if (data[key] && await this.checkItems(data[key])) {
+                items = data[`.${state.name}.${model.view.id}`];
+                if (items && await this.checkItems(items)) {
                     return true;
                 }
                 if (oid) {
-                    key = `${oid}.${state.name}.${model.view.id}`;
-                    if (data[key] && await this.checkItems(data[key])) {
+                    items = data[`${oid}.${state.name}.${model.view.id}`];
+                    if (items && await this.checkItems(items)) {
                         return true;
                     }
                 }
@@ -269,13 +275,13 @@ module.exports = class MetaInspector extends Base {
         if (!state) {
             return false;
         }
-        key = `.${state.name}..${model.class.id}`;
-        if (data[key] && await this.checkItems(data[key])) {
+        items = data[`.${state.name}..${model.class.id}`];
+        if (items && await this.checkItems(items)) {
             return true;
         }
         if (oid) {
-            key = `${oid}.${state.name}..${model.class.id}`;
-            if (data[key] && await this.checkItems(data[key])) {
+            items = data[`${oid}.${state.name}..${model.class.id}`];
+            if (items && await this.checkItems(items)) {
                 return true;
             }
         }

@@ -9,6 +9,7 @@ module.exports = class Rbac extends Base {
 
     static getConstants () {
         return {
+            ANY: '',
             ALL: 'all',
             ALLOW: 'allow',
             DENY: 'deny',
@@ -45,9 +46,9 @@ module.exports = class Rbac extends Base {
                     class: 'Class',
                     view: 'View',
                     state: 'State',
-                    object: 'Object',
                     transition: 'Transition',
                     attr: 'Attribute',
+                    object: 'Object',
                     section: 'Navigation section',
                     node: 'Navigation node'
                 }
@@ -83,11 +84,11 @@ module.exports = class Rbac extends Base {
         }
     }
 
-    static indexMetaItemsByTarget (items) {
+    static indexMetaItemsByTargetType (items) {
         const data = IndexHelper.indexObjectArrays(items, 'targetType');
-        for (const target of Object.keys(data)) {
-            if (target !== this.ALL) {
-                data[target] = IndexHelper.indexObjectArrays(data[target], 'key');
+        for (const type of Object.keys(data)) {
+            if (type !== this.ALL) {
+                data[type] = IndexHelper.indexObjectArrays(data[type], 'key');
             }
         }
         return data;
@@ -122,6 +123,17 @@ module.exports = class Rbac extends Base {
         for (const item of items) {
             if (item.actions && item.actions[0] === this.ALL) {
                 item.actions = this.ALL_ACTIONS;
+            }
+        }
+    }
+
+    static expandMetaItemsWithAny (data) {
+        const any = data[this.ANY];
+        if (any) {
+            for (const key of Object.keys(data)) {
+                if (key !== this.ANY) {
+                    data[key].push(...any);
+                }
             }
         }
     }
@@ -200,7 +212,7 @@ module.exports = class Rbac extends Base {
 
     addParentRoles (items) {
         for (const item of items) {
-            if (item.type === Rbac.ALLOW && Array.isArray(item.roles)) {
+            if (item.type === this.ALLOW && Array.isArray(item.roles)) {
                 item.roles = this.getParentRoles(item.roles);
             }
         }
@@ -232,9 +244,7 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaMap () {
-        const items = this.metaItems.filter(({targetType}) => {
-            return targetType !== this.TARGET_TRANSITION && targetType !== this.TARGET_ATTR
-        });
+        const items = this.metaItems.filter(this.filterMetaItem, this);
         this.constructor.expandAllAction(items);
         const data = this.indexMetaItemsByRole(items);
         for (const role of Object.keys(data)) {
@@ -242,7 +252,10 @@ module.exports = class Rbac extends Base {
             for (const type of Object.keys(data[role])) {
                 const items = IndexHelper.indexObjectArrays(data[role][type], 'actions');
                 for (const action of Object.keys(items)) {
-                    items[action] = this.constructor.indexMetaItemsByTarget(items[action]);
+                    items[action] = this.constructor.indexMetaItemsByTargetType(items[action]);
+                    for (const data of Object.values(items[action])) {
+                        this.constructor.expandMetaItemsWithAny(data);
+                    }
                 }
                 data[role][type] = items;
             }
@@ -250,13 +263,13 @@ module.exports = class Rbac extends Base {
         this.metaMap = data;
     }
 
+    filterMetaItem ({targetType}) {
+        return targetType !== this.TARGET_TRANSITION && targetType !== this.TARGET_ATTR;
+    }
+
     setMetaReadAllowedMap () {
-        const items = this.metaItems.filter(item => {
-            return item.type === this.ALLOW
-                && (item.targetType === this.TARGET_STATE || item.targetType === this.TARGET_OBJECT)
-                && item.actions.includes(this.READ);
-        });
         const result = {};
+        const items = this.metaItems.filter(this.filterMetaReadAllowedItem, this);
         for (const item of items) {
             for (const role of item.roles) {
                 const key = item.view ? `${item.view}.${item.class}` : item.class;
@@ -267,10 +280,14 @@ module.exports = class Rbac extends Base {
         this.metaReadAllowedMap = items.length ? result : null;
     }
 
+    filterMetaReadAllowedItem ({type, actions, targetType}) {
+        return type === this.ALLOW
+            && (targetType === this.TARGET_STATE || targetType === this.TARGET_OBJECT)
+            && actions.includes(this.READ);
+    }
+
     setMetaAttrMap () {
-        let items = this.metaItems.filter(item => {
-            return item.type === this.DENY && item.targetType === this.TARGET_ATTR;
-        });
+        let items = this.metaItems.filter(this.filterMetaAttrItem, this);
         this.constructor.expandAllAction(items);
         let data = this.indexMetaItemsByRoleAction(items);
         this.metaAttrMap = this.targetMetaAttrMap = this.objectTargetMetaAttrMap = null;
@@ -283,14 +300,12 @@ module.exports = class Rbac extends Base {
         }
     }
 
+    filterMetaAttrItem ({type, targetType}) {
+        return type === this.DENY && targetType === this.TARGET_ATTR;
+    }
+
     setMetaObjectFilterMap () {
-        const items = this.metaItems.filter(({targetType, actions}) => {
-            return actions.includes(Rbac.READ) && (targetType === this.ALL
-                || targetType === this.TARGET_CLASS
-                || targetType === this.TARGET_VIEW
-                || targetType === this.TARGET_STATE
-                || targetType === this.TARGET_OBJECT);
-        });
+        const items = this.metaItems.filter(this.filterMetaObjectFilterItem, this);
         const data = this.indexMetaItemsByRole(items);
         for (const role of Object.keys(data)) {
             data[role] = this.constructor.indexMetaObjectFilterItems(data[role]);
@@ -298,6 +313,15 @@ module.exports = class Rbac extends Base {
         }
         ObjectHelper.deleteEmptyObjectProperties(data);
         this.metaObjectFilterMap = Object.values(data).length ? data : null;
+    }
+
+    filterMetaObjectFilterItem ({actions, targetType}) {
+        return (targetType === this.ALL
+            || targetType === this.TARGET_CLASS
+            || targetType === this.TARGET_VIEW
+            || targetType === this.TARGET_STATE
+            || targetType === this.TARGET_OBJECT)
+            && actions.includes(this.READ);
     }
 
     setRoleMetaObjectFilterMap (data) {
@@ -309,23 +333,27 @@ module.exports = class Rbac extends Base {
     }
 
     setMetaTransitionMap () {
-        const items = this.metaItems.filter(item => {
-            return item.targetType === this.TARGET_TRANSITION;
-        });
+        const items = this.metaItems.filter(this.filterMetaTransitionItem, this);
         const data = IndexHelper.indexObjectArrays(items, ['roles', 'type', 'key']);
-        this.MetaTransitionInspector.concatHierarchyItems(items, data);
+        this.MetaTransitionInspector.concatHierarchyData(data);
         this.metaTransitionMap = Object.values(data).length ? data : null;
+    }
+
+    filterMetaTransitionItem ({actions, targetType}) {
+        return (targetType === this.ALL || targetType === this.TARGET_TRANSITION) && actions.includes(this.UPDATE);
     }
 
     setMetaNavMap () {
         const targets = [this.TARGET_SECTION, this.TARGET_NODE];
-        const items = this.metaItems.filter(item => {
-            return item.type === this.DENY
-                && item.actions[0] === this.READ
-                && targets.includes(item.targetType);
-        });
+        const items = this.metaItems.filter(this.filterMetaNavItem.bind(this, targets));
         const data = IndexHelper.indexObjectArrays(items, ['roles', 'key']);
         this.metaNavMap = Object.values(data).length ? data : null;
+    }
+
+    filterMetaNavItem (targets, item) {
+        return item.type === this.DENY
+            && item.actions[0] === this.READ
+            && targets.includes(item.targetType);
     }
 
     setItemUserMap () {
