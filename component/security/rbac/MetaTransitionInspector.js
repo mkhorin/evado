@@ -28,18 +28,13 @@ module.exports = class MetaTransitionInspector extends Base {
             items.push(...values);
         }
         for (const item of items) {
-            if (item.key === '..') {
-                Rbac.concatFirstArrayItems(item.key, data, '');
-            }
-        }
-        for (const item of items) {
             if (item.class && !item.transition && !item.object) {
-                Rbac.concatFirstArrayItems(item.key, data, '..', '');
+                Rbac.concatFirstArrayItems(item.key, data, Rbac.ANY);
             }
         }
         for (const item of items) {
             if (item.transition || item.object) {
-                Rbac.concatFirstArrayItems(item.key, data, `..${item.class}`, '..', '');
+                Rbac.concatFirstArrayItems(item.key, data, `..${item.class}`, Rbac.ANY);
             }
         }
     }
@@ -64,8 +59,10 @@ module.exports = class MetaTransitionInspector extends Base {
         const result = {};
         if (data[Rbac.ALLOW]) {
             for (const transition of this._transitions) {
-                if (await this.checkTransition(transition, data[Rbac.ALLOW])) {
-                    result[transition.name] = transition;
+                if (!Object.prototype.hasOwnProperty.call(this._result, transition.name)) {
+                    if (await this.checkTransition(transition, data[Rbac.ALLOW])) {
+                        result[transition.name] = transition;
+                    }
                 }
             }
         }
@@ -84,8 +81,7 @@ module.exports = class MetaTransitionInspector extends Base {
             || data[name + this._classKey]
             || data[this._objectKey]
             || data[this._classKey]
-            || data['..']
-            || data[''];
+            || data[Rbac.ANY];
         return items ? this.checkItems(items) : false;
     }
 
