@@ -64,7 +64,7 @@ module.exports = class MetaSecurity extends Base {
         return this.resolve({
             targetType: Rbac.TARGET_VIEW,
             target: view,
-            actions: params && params.actions || [Rbac.READ]
+            actions: [Rbac.READ]
         }, params);
     }
 
@@ -108,11 +108,19 @@ module.exports = class MetaSecurity extends Base {
         }, params);
     }
 
+    resolveOnEdit (model, params) {
+        return this.resolve({
+            targetType: Rbac.TARGET_OBJECT,
+            target: model,
+            actions: [Rbac.READ, Rbac.UPDATE, Rbac.DELETE, Rbac.HISTORY]
+        }, params);
+    }
+
     resolveOnUpdate (model, params) {
         return this.resolve({
             targetType: Rbac.TARGET_OBJECT,
             target: model,
-            actions: [Rbac.READ, Rbac.UPDATE, Rbac.DELETE]
+            actions: [Rbac.READ, Rbac.UPDATE]
         }, params);
     }
 
@@ -132,20 +140,28 @@ module.exports = class MetaSecurity extends Base {
         }, params);
     }
 
-    resolveModelTransitions (model, readOnly) {
-        return this.resolveTransitions({
+    resolveOnHistory (model, params) {
+        return this.resolve({
             targetType: Rbac.TARGET_OBJECT,
             target: model,
-            editableTarget: !readOnly
+            actions: [Rbac.HISTORY]
+        }, params);
+    }
+
+    resolveModelTransitions (model) {
+        return this.resolveTransitions({
+            targetType: Rbac.TARGET_OBJECT,
+            target: model
         });
     }
 
     async resolve (data, params) {
+        data.actions = params?.actions || data.actions;
         this.access = await this.resolveAccess(data, params);
         if (this.access.can(data.actions[0])) {
             return true;
         }
-        if (!params || !params.skipAccessException) {
+        if (!params?.skipAccessException) {
             throw new Forbidden('Access denied', `${data.targetType}: ${data.target}`);
         }
         return false;

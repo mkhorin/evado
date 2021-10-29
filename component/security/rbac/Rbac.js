@@ -18,7 +18,8 @@ module.exports = class Rbac extends Base {
             CREATE: 'create',
             UPDATE: 'update',
             DELETE: 'delete',
-            ALL_ACTIONS: ['read', 'create', 'update', 'delete'],
+            HISTORY: 'history',
+            ALL_ACTIONS: ['read', 'create', 'update', 'delete', 'history'],
 
             TARGET_CLASS: 'class',
             TARGET_VIEW: 'view',
@@ -39,7 +40,8 @@ module.exports = class Rbac extends Base {
                     read: 'Read',
                     create: 'Create',
                     update: 'Update',
-                    delete: 'Delete'
+                    delete: 'Delete',
+                    history: 'View history'
                 },
                 'targets': {
                     all: 'All',
@@ -174,6 +176,7 @@ module.exports = class Rbac extends Base {
         this.addParentRoles(this.metaItems);
         this.resolveMetaItemRules();
         this.addDescendantClassMetaItems();
+        this.constructor.expandAllAction(this.metaItems);
         this.setMetaMap();
         this.setMetaReadAllowedMap();
         this.setMetaAttrMap();
@@ -245,7 +248,6 @@ module.exports = class Rbac extends Base {
 
     setMetaMap () {
         const items = this.metaItems.filter(this.filterMetaItem, this);
-        this.constructor.expandAllAction(items);
         const data = this.indexMetaItemsByRole(items);
         for (const role of Object.keys(data)) {
             data[role] = IndexHelper.indexObjectArrays(data[role], 'type');
@@ -288,7 +290,6 @@ module.exports = class Rbac extends Base {
 
     setMetaAttrMap () {
         let items = this.metaItems.filter(this.filterMetaAttrItem, this);
-        this.constructor.expandAllAction(items);
         let data = this.indexMetaItemsByRoleAction(items);
         this.metaAttrMap = this.targetMetaAttrMap = this.objectTargetMetaAttrMap = null;
         if (Object.values(data).length) {
