@@ -9,11 +9,15 @@ const Base = require('./RefValueRule');
 
 module.exports = class RefStateRule extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string} config.refAttr - Reference attribute to class with states
+     * @param {string|string[]} config.value - State name or names
+     * @param {string} config.valueAttr - State attribute
+     */
     constructor (config) {
         super({
-            // refAttr: 'attrName', // reference attribute to class with states
-            // value: 'state' or ['state1', 'state2', ...]
-            valueAttr: Class.STATE_ATTR, // state attribute
+            valueAttr: Class.STATE_ATTR,
             ...config
         });
     }

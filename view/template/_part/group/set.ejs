@@ -10,10 +10,10 @@ const p = {
           data-id="<%- id %>"
           data-action-binder="<%= p.actionBinder %>">
     <legend>
-        <div class="form-set-toggle">
+        <span class="form-set-toggle">
             <span class="icon fas fa-chevron-right"></span>
             <span data-t="<%- p.translate %>"><%- title %></span>
-        </div>
+        </span>
     </legend>
     <div class="form-set-body model-group-body">
     <% for (const item of items) {

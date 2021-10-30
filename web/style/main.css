@@ -27,6 +27,7 @@
     --border-light-danger: #edc0c0;
 
     --form-row-space: 1.35rem;
+    --form-set-space: 2.7rem;
     --text-monospace: Consolas,"Liberation Mono","Courier New",monospace;
 
     font-size: 14px;
@@ -114,8 +115,8 @@ ul:last-child {
 
 .btn.disabled,
 .btn:disabled {
-    opacity: .5;
-    filter: grayscale(.5);
+    opacity: .3;
+    filter: grayscale(.7);
     cursor: not-allowed;
     pointer-events: none;
 }
@@ -454,6 +455,16 @@ body.loading {
 .show > .nav-btn-primary {
     background: rgba(0,0,0,.15);
 }
+.nav-btn-dark {
+    background: rgba(0,0,0,.15);
+}
+.nav-btn-dark:active,
+.nav-btn-dark:focus,
+.nav-btn-dark:hover,
+.show > .nav-btn-dark {
+    background: rgba(0,0,0,.3);
+}
+
 .nav-block {
     position: relative;
 }
@@ -696,8 +707,18 @@ body.loading {
     -moz-osx-font-smoothing: auto;
     -webkit-font-smoothing: antialiased;
 }
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: #f4f6f8;
+}
 select.form-select {
     padding-left: .5rem;
+}
+.form-group {
+    margin-bottom: var(--form-row-space);
+}
+.form-group:last-child {
+    margin-bottom: 0;
 }
 .form-group.required .col-form-label:before {
     content: "*";
@@ -715,10 +736,7 @@ select.form-select {
     opacity: .9;
 }
 .form-columns {
-    margin-bottom: calc(-1 * var(--form-row-space));
-}
-.form-columns + .form-tabs {
-    margin-top: 1rem;
+    margin-bottom: 0;
 }
 .form-column {
     margin-bottom: var(--form-row-space);
@@ -739,10 +757,16 @@ select.form-select {
 }
 .form .row + .tabs,
 .form-group + .tabs {
-    margin-top: 2rem;
+    margin-top: var(--form-set-space);
 }
-.form-columns + .tabs {
-    margin-top: 1rem;
+.form .form-columns + .tabs {
+    margin-top: var(--form-row-space);
+}
+.form .tabs {
+    margin-bottom: var(--form-set-space);
+}
+.form .tabs:last-child {
+    margin-bottom: 0;
 }
 .form .tabs .nav {
     margin-bottom: 2rem;
@@ -782,12 +806,20 @@ select.form-select {
     font-size: 1.1rem;
     border-bottom: 1px solid #e5e5e5;
 }
-.form-group + .form-group {
-    margin-top: var(--form-row-space);
+.form-set {
+    margin-bottom: var(--form-row-space);
 }
-.form-group + .form-set,
-.form-set.active + .form-set {
-    margin-top: 2rem;
+.form-set.active {
+    margin-bottom: var(--form-set-space);
+}
+.form-set:last-child {
+    margin-bottom: 0;
+}
+.form-group + .form-set {
+    margin-top: var(--form-set-space);
+}
+.form-columns + .form-set {
+    margin-top: var(--form-row-space);
 }
 .form-set-toggle {
     display: inline-block;
@@ -819,9 +851,6 @@ select.form-select {
     margin-bottom: 2rem;
     padding-bottom: .2rem;
     border-color: #c8c8c8;
-}
-.form-set.active {
-    margin-bottom: 1rem;
 }
 .form-set.active > legend {
     border-color: #e0e0e0;
@@ -855,7 +884,8 @@ select.form-select {
 }
 
 .inline-group-container {
-    margin-top: var(--form-row-space);
+    margin-top: 0;
+    margin-bottom: 0;
 }
 .inline-group-container .row .row,
 .inline-group-container .form-group {
@@ -884,9 +914,7 @@ select.form-select {
 
 .form-override {
     position: relative;
-    margin-bottom: 1rem;
 }
-.form-override:last-child,
 .form-override .form-group {
     margin-bottom: 0;
 }
@@ -1060,7 +1088,7 @@ select.form-select {
     padding: 1.3rem .75rem;
 }
 .frame-box-body > .form {
-    padding: 1rem 0;
+    padding: 1.1rem 0;
     min-height: 20rem;
 }
 

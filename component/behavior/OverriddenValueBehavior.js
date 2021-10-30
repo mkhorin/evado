@@ -7,9 +7,12 @@ const Base = require('areto/base/Behavior');
 
 module.exports = class OverriddenValueBehavior extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string[]} config.attrs - Overridden attributes
+     */
     constructor (config) {
         super({
-            // attrs: []
             attrPrefix: 'override-',
             originalAttr: 'original',
             originalValueMethodMap: {},

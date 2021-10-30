@@ -7,6 +7,13 @@ const Base = require('areto/view/Widget');
 
 module.exports = class Notifications extends Base {
 
+    constructor (config) {
+        super({
+            unreadLimit: 5,
+            ...config
+        });
+    }
+
     execute () {
         this.user = this.controller.user.identity;
         if (!this.user) {
@@ -40,22 +47,24 @@ module.exports = class Notifications extends Base {
     }
 
     async getUnreadMessages () {
-        const items = [];
         const ids = await this.user.findUnreadMessages().column('message');
         const counter = ids.length;
-        if (counter > 0) {
-            const message = this.spawn('notifier/NotificationMessage');
-            const models = await message.findById(ids).order({[message.PK]: -1}).limit(5).all();
-            for (const model of models) {
-                items.push({
-                    id: model.getId(),
-                    title: model.get('subject')
-                });
-            }
-        }
+        const items = counter ? await this.getUnreadMessageItems(ids) : [];
         return {counter, items};
     }
 
+    async getUnreadMessageItems (ids) {
+        const message = this.spawn('notifier/NotificationMessage');
+        const models = await message.findById(ids).order({[message.PK]: -1}).limit(this.unreadLimit).all();
+        return models.map(this.getUnreadMessageItem, this);
+    }
+
+    getUnreadMessageItem (model) {
+        return {
+            id: model.getId(),
+            title: model.get('subject')
+        };
+    }
 };
 
 const BadRequest = require('areto/error/http/BadRequest');

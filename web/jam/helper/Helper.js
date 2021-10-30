@@ -61,7 +61,7 @@ Jam.Helper = class Helper {
     }
 
     static fixMultipleBootstrapModals () {
-        const $body = $(document.body).on('hidden.bs.modal', '.modal', event => {
+        const $body = $(document.body).on('hidden.bs.modal', '.modal', () => {
             $body.toggleClass('modal-open', $body.children('.modal-backdrop').length > 0);
         });
     }

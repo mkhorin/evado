@@ -9,10 +9,15 @@ const Base = require('./BaseRule');
 
 module.exports = class UserRule extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string} config.userAttr - User attribute name
+     * @param {boolean} config.objectFilter - Filter objects in list
+     */
     constructor (config) {
         super({
-            userAttr: 'user', // user attribute
-            objectFilter: true, // filter objects in list
+            userAttr: 'user',
+            objectFilter: true,
             ...config
         });
     }
@@ -20,12 +25,12 @@ module.exports = class UserRule extends Base {
     execute () {
         return this.isObjectTarget()
             ? this.checkUser()
-            : this.isAllowType(); // pass rule: need to allow - true, need to deny - false
+            : this.isAllow(); // pass rule: need to allow - true, need to deny - false
     }
 
     checkUser () {
         const matched = this.isUser(this.getTarget().get(this.userAttr));
-        return this.isAllowType() ? matched : !matched;
+        return this.isAllow() ? matched : !matched;
     }
 
     getObjectFilter () {

@@ -15,11 +15,14 @@ module.exports = class DataGrid extends Base {
         };
     }
 
+    /**
+     * @param {Object} config
+     * @param {Object} config.controller - Controller instance
+     * @param {Object} config.query - Query instance
+     * @param {Object[]} config.formatRules - Server data formatting: [[attrName, type, {params}], ...]
+     */
     constructor (config) {
         super({
-            // controller:
-            // query: [Query]
-            // formatRules: [[attrName, type, {params}], ...] // server data formatting
             request: config.controller.getPostParams(),
             CommonSearch,
             ListFilter,

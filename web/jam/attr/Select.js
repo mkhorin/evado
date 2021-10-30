@@ -159,7 +159,7 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
     }
 
     processResults (data, params) {
-        const items = data.items || data;
+        const items = typeof data.items === 'object' ? data.items : data;
         const more = ((params.page || 1) * this.select2Params.pageSize) < data.total;
         return {
             pagination: {more},

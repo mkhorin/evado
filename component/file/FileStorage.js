@@ -15,12 +15,17 @@ module.exports = class FileStorage extends Base {
         };
     }
 
+    /**
+     * @param {Object} config
+     * @param {number} config.maxTotalUserFileSize - Size in bytes
+     * @param {number} config.maxTotalUserFiles
+     */
     constructor (config) {
         super({
             basePath: 'upload/file',
             hashingAlgorithm: 'md5',
-            maxTotalUserFileSize: null, // 1000 * 1024 * 1024 // bytes
-            maxTotalUserFiles: null, // 1000
+            maxTotalUserFileSize: null,
+            maxTotalUserFiles: null,
             ...config
         });
         this.basePath = this.resolvePath(this.basePath);

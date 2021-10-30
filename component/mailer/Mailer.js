@@ -14,12 +14,16 @@ module.exports = class Mailer extends Base {
         };
     }
 
+    /**
+     * @param {Object} config
+     * @param {string} config.defaultSender - Format: "System" <system@system.sys>
+     */
     constructor (config) {
         super({
             engine: require('nodemailer'),
             settings: {},
             senderMap: {},
-            defaultSender: '', // '"System" <system@system.sys>'
+            defaultSender: '',
             defaultMessageSource: 'mail',
             ...config
         });

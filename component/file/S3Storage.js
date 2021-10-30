@@ -67,7 +67,7 @@ module.exports = class S3Storage extends Base {
     generateFilename () {
         const now = new Date;
         const month = ('0' + (now.getMonth() + 1)).slice(-2);
-        return `${now.getFullYear()}-${month}/${MongoHelper.createObjectId()}`;
+        return `${now.getFullYear()}-${month}/${MongoHelper.createId()}`;
     }
 
     async deleteFile (filename) {

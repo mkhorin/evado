@@ -7,10 +7,14 @@ const Base = require('areto/base/Behavior');
 
 module.exports = class CloneBehavior extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string[]} config.excludedAttrs - Excluded attributes
+     * @param {string[]} config.relations - Relation names
+     */
     constructor (config) {
         super({
             excludedAttrs: [],
-            // relations: [],
             ...config
         });
         this.setHandler(ActiveRecord.EVENT_AFTER_INSERT, this.afterInsert);

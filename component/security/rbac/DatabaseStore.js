@@ -136,26 +136,29 @@ module.exports = class DatabaseStore extends Base {
 
     getItemKey (data) {
         const empty = '';
-        const view = `${data.view || empty}.${data.class}`;
+        const cls = data.class || empty;
+        const view = cls ? `${data.view || empty}.${cls}` : empty;
+        const state = data.state || empty;
+        const object = data.object || empty;
         switch (data.type) {
             case this.rbac.ALL:
-                return this.rbac.ALL;
+                return empty;
             case this.rbac.TARGET_CLASS:
-                return `${data.class}`;
+                return cls;
             case this.rbac.TARGET_VIEW:
-                return `${view}`;
+                return view;
             case this.rbac.TARGET_STATE:
-                return `${data.state}.${view}`;
+                return view ? `${state}.${view}` : empty;
             case this.rbac.TARGET_OBJECT:
-                return `${data.object || empty}.${data.state || empty}.${view}`;
+                return view ? `${object}.${state}.${view}` : empty;
             case this.rbac.TARGET_TRANSITION:
-                return `${data.transition || empty}.${data.object || empty}.${data.class}`;
+                return cls ? `${data.transition || empty}.${object}.${cls}` : empty;
             case this.rbac.TARGET_ATTR:
-                return `${data.attr}.${data.object || empty}.${data.state || empty}.${view}`;
+                return `${data.attr}.${object}.${state}.${view}`;
             case this.rbac.TARGET_SECTION:
-                return `${data.section}`;
+                return data.section || empty;
             case this.rbac.TARGET_NODE:
-                return `${data.node}.${data.section}`;
+                return data.section ? `${data.node || empty}.${data.section}` : empty;
         }
     }
 

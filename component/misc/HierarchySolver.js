@@ -11,9 +11,12 @@ module.exports = class HierarchySolver extends Base {
         return this.wrapClassMessage(`Circular inheritance in ${model.constructor.name}`);
     }
 
+    /**
+     * @param {Object} config
+     * @param {Object} config.model - ActiveRecord instance
+     */
     constructor (config) {
         super({
-            // model: new ActiveRecord
             parentAttr: 'parent',
             ...config
         });

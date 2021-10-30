@@ -10,11 +10,16 @@ const Base = require('./BaseRule');
 
 module.exports = class RefUserChainRule extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string[]} config.refAttrs - Reference attribute names to class with user attribute
+     * @param {string} config.userAttr - User attribute name
+     * @param {boolean} config.objectFilter - Filter objects in list
+     */
     constructor (config) {
         super({
-            // refAttrs: ['attrName1', ...], // reference attribute names to class with user attribute
-            userAttr: 'user', // user attribute
-            objectFilter: true, // filter objects in list
+            userAttr: 'user',
+            objectFilter: true,
             ...config
         });
     }
@@ -22,20 +27,14 @@ module.exports = class RefUserChainRule extends Base {
     execute () {
         return this.isObjectTarget()
             ? this.checkRefUser()
-            : this.isAllowType();
+            : this.isAllow();
     }
 
     async checkRefUser () {
-        const values = await this.resolveRefValue();
+        const values = await this.resolveRefValues();
         const value = this.getTarget().get(this.refAttrs[0]);
         const matched = MongoHelper.includes(value, values);
-        return this.isAllowType() ? matched : !matched;
-    }
-
-    async getObjectFilter () {
-        if (this.objectFilter) {
-            return {[this.refAttr]: await this.resolveRefValues()};
-        }
+        return this.isAllow() ? matched : !matched;
     }
 
     async resolveRefValues () {
@@ -56,6 +55,12 @@ module.exports = class RefUserChainRule extends Base {
 
     getUserCondition () {
         return {[this.userAttr]: this.getUserId()};
+    }
+
+    async getObjectFilter () {
+        if (this.objectFilter) {
+            return {[this.refAttrs[0]]: await this.resolveRefValues()};
+        }
     }
 };
 

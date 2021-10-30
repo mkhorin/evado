@@ -96,7 +96,6 @@ Jam.DataGridRenderer = class DataGridRenderer {
 
     toggleOrder ($toggle, direction) {
         const $cell = $toggle.closest('.sortable');
-        const name = $cell.data('name');
         const code = this.getDirectionName(direction);
         $cell.removeClass('asc').removeClass('desc').addClass(code);
         $toggle.attr('title', this.locale[code]);

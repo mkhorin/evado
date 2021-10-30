@@ -1,21 +1,19 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ *
+ * metaAttrMap (only DENY and TARGET_ATTR data)
+ *  reader:
+ *    *
+ *    read
+ *      [] attr data
+ *    create
+ *    update
  */
 'use strict';
 
 const Base = require('areto/security/rbac/Inspector');
 
 module.exports = class MetaAttrInspector extends Base {
-
-    /**
-     * metaAttrMap - only DENY and TARGET_ATTR data
-     * reader:
-     *    *
-     *    read
-     *        [] attr data
-     *    create
-     *    update
-     */
 
     static concatHierarchyItems (items) {
         const data = {};

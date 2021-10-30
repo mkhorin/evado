@@ -29,7 +29,7 @@ if (typeof params !== 'undefined') {
     <%- include(_view.get('_part/attr/checkbox'), {
         attr: overridden[attr].attr,
         label: null,
-        hint: 'Override',
+        extHint: 'Override',
         name: overridden[attr].name,
         value: overridden[attr].overridden,
         css: 'form-override-toggle'

@@ -9,9 +9,12 @@ const Base = require('./ValueRule');
 
 module.exports = class StateRule extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string|string[]} config.value - State name or names
+     */
     constructor (config) {
         super({
-            // value: 'state' or ['state1', 'state2', ...]
             valueAttr: Class.STATE_ATTR,
             ...config
         });

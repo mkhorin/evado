@@ -7,10 +7,15 @@ const Base = require('areto/base/Component');
 
 module.exports = class Notifier extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string[]} config.tasks - Message sending tasks
+     * @param {string} config.messageSource - Message translation source
+     */
     constructor (config) {
         super({
-            tasks: [], // message sending task
-            messageSource: 'notification', // message translation source
+            tasks: [],
+            messageSource: 'notification',
             ...config
         });
     }

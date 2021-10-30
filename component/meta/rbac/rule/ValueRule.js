@@ -9,12 +9,16 @@ const Base = require('./BaseRule');
 
 module.exports = class ValueRule extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string} config.valueAttr - Value attribute name
+     * @param {string|string[]} config.value
+     * @param {boolean} config.not - Invert comparison
+     * @param {boolean} config.objectFilter - Filter objects in list
+     */
     constructor (config) {
         super({
-            // valueAttr: 'attrName', // value attribute name
-            // value: 'value' or ['value1', 'value2', ...]
-            // not: false, // invert comparison (not value)
-            objectFilter: true, // filter objects in list
+            objectFilter: true,
             ...config
         });
     }
@@ -22,7 +26,7 @@ module.exports = class ValueRule extends Base {
     execute () {
         return this.isObjectTarget()
             ? this.checkValue()
-            : this.isAllowType(); // pass rule: need to allow - true, need to deny - false
+            : this.isAllow(); // pass rule: need to allow - true, need to deny - false
     }
 
     checkValue () {
@@ -31,7 +35,7 @@ module.exports = class ValueRule extends Base {
         if (this.not) {
             matched = !matched;
         }
-        return this.isAllowType() ? matched : !matched;
+        return this.isAllow() ? matched : !matched;
     }
 
     compareValue (value) {

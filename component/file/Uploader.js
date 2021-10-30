@@ -57,7 +57,7 @@ module.exports = class Uploader extends Base {
     }
 
     generateFilename (req, file, callback) {
-        callback(null, MongoHelper.createObjectId().toString());
+        callback(null, MongoHelper.createId().toString());
     }
 };
 

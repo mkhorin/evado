@@ -31,7 +31,7 @@ Jam.NavTree = class NavTree extends Jam.Element {
         $item.add($item.parents('.nav-item')).addClass('active open');
     }
 
-    getCurrentActive ($item) {
+    getCurrentActive () {
         return this.find('.nav-link').filter(this.isCurrentItem, this).first();
     }
 
@@ -55,7 +55,7 @@ Jam.NavTree = class NavTree extends Jam.Element {
 
 Jam.LoadableNavTree = class LoadableNavTree extends Jam.NavTree {
 
-    getCurrentActive ($item) {
+    getCurrentActive () {
         return this.find('.active').last();
     }
 

@@ -21,6 +21,10 @@ module.exports = class MetaInspector extends Base {
         return this.can(Rbac.READ);
     }
 
+    canReadHistory () {
+        return this.can(Rbac.HISTORY);
+    }
+
     canCreate () {
         return this.can(Rbac.CREATE);
     }

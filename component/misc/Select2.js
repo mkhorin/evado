@@ -13,10 +13,13 @@ module.exports = class Select2 extends Base {
         };
     }
 
+    /**
+     * @param {Object} config
+     * @param {Object} config.controller - Controller instance
+     * @param {Object} config.query - Query instance
+     */
     constructor (config) {
         super({
-            // controller
-            // query: [new Query]
             request: config.controller.getPostParams(),
             ...config
         });

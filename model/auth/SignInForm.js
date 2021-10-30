@@ -26,9 +26,12 @@ module.exports = class SignInForm extends Base {
         };
     }
 
+    /**
+     * @param {Object} config
+     * @param {Object} config.user - WebUser instance
+     */
     constructor (config) {
         super({
-            // user: [WebUser]
             rateLimit: config.module.get('rateLimit'),
             rateLimitType: 'signIn',
             rememberPeriod: 7 * 24 * 3600,

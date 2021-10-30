@@ -12,7 +12,7 @@ const p = {};
            title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="number" placeholder="<%- p.placeholder %>"
-               value="<%= p.value %>" <%- p.required %> class="form-control form-value">
+               value="<%= p.value %>" <%- p.required %> class="form-control form-value" step="any">
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
     </div>

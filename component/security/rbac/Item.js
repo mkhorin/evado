@@ -266,15 +266,17 @@ module.exports = class Item extends Base {
     }
 
     validateMetadataClass (data) {
-        this._target.class = this.getBaseMeta().getClass(data.class);
-        if (this._target.class) {
-            return true;
+        if (data.class) {
+            this._target.class = this.getBaseMeta().getClass(data.class);
+            if (this._target.class) {
+                return true;
+            }
+            this._targetError = `Invalid class: ${data.class}`;
         }
-        this._targetError = `Invalid class: ${data.class}`;
     }
 
     validateMetadataView (data) {
-        if (this.validateMetadataClass(data)) {
+        if (this.validateMetadataClass(data) && data.view) {
             this._target.view = this._target.class.getView(data.view);
             if (this._target.view) {
                 return true;
@@ -284,8 +286,10 @@ module.exports = class Item extends Base {
     }
 
     validateMetadataState (data) {
-        if (this.validateMetadataClass(data) && !this._target.class.getState(data.state)) {
-            this._targetError = `Invalid state: ${data.state}`;
+        if (this.validateMetadataClass(data) && data.state) {
+            if (!this._target.class.getState(data.state)) {
+                this._targetError = `Invalid state: ${data.state}`;
+            }
         }
     }
 
@@ -293,9 +297,10 @@ module.exports = class Item extends Base {
     }
 
     validateMetadataTransition (data) {
-        if (this.validateMetadataClass(data)
-            && data.transition && !this._target.class.getTransition(data.transition)) {
-            this._targetError = `Invalid transition: ${data.transition}`;
+        if (this.validateMetadataClass(data) && data.transition) {
+            if (!this._target.class.getTransition(data.transition)) {
+                this._targetError = `Invalid transition: ${data.transition}`;
+            }
         }
     }
 
@@ -308,16 +313,20 @@ module.exports = class Item extends Base {
     }
 
     validateMetadataSection (data) {
-        this._target.section = this.getNavMeta().getSection(data.section);
-        if (this._target.section) {
-            return true;
+        if (data.section) {
+            this._target.section = this.getNavMeta().getSection(data.section);
+            if (this._target.section) {
+                return true;
+            }
+            this._targetError = `Invalid navigation section: ${data.section}`;
         }
-        this._targetError = `Invalid navigation section: ${data.section}`;
     }
 
     validateMetadataNode (data) {
-        if (this.validateMetadataSection(data) && !this._target.section.getNode(data.node)) {
-            this._targetError = `Invalid navigation node: ${data.node}`;
+        if (this.validateMetadataSection(data) && data.node) {
+            if (!this._target.section.getNode(data.node)) {
+                this._targetError = `Invalid navigation node: ${data.node}`;
+            }
         }
     }
 

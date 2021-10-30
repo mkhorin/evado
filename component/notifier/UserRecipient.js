@@ -7,9 +7,13 @@ const Base = require('areto/base/Base');
 
 module.exports = class UserRecipient extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {Object} config.userAttr - User attribute name: order.author.user
+     */
     constructor (config) {
         super({
-            userAttr: 'user', // order.author.user
+            userAttr: 'user',
             ...config
         });
     }

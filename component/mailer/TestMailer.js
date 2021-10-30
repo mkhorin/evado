@@ -9,10 +9,14 @@ module.exports = class TestMailer extends Base {
 
     constructor (config) {
         super(config);
-        this.settings = Object.assign({
+        this.settings = Object.assign(htis.getDefaultSettings(), this.settings);
+    }
+
+    getDefaultSettings () {
+        return {
             host: 'smtp.ethereal.email',
             port: 587
-        }, this.settings);
+        };
     }
 
     async init () {

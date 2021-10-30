@@ -75,6 +75,7 @@ Jam.I18n.defaults = {
     'Drop or select file here': 'Выберите или бросьте файл здесь',
 
     'Edit': 'Редактировать',
+    'Editor': 'Редактор',
     'Email': 'Email',
     'Error': 'Ошибка',
     'Export': 'Экспортировать',
@@ -172,6 +173,7 @@ Jam.I18n.defaults = {
     'Sort by': 'Сортировать по',
     'Sort related objects': 'Сортировать связанные объекты',
     'Sorting': 'Сортировка',
+    'State': 'Состояние',
     'Status': 'Статус',
     'Studio': 'Студия',
 

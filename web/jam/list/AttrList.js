@@ -20,6 +20,7 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     addFrameCommands () {
+        // clear parent implementation
     }
 
     clearLinks () {

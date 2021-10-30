@@ -10,13 +10,17 @@ const Base = require('./BaseRule');
 
 module.exports = class RefValueChainRule extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string[]} config.refAttrs - Reference attribute names to class with value attribute
+     * @param {string} config.valueAttr - Value attribute name
+     * @param {number|number[]|string|string[]} config.value
+     * @param {boolean} config.not - Invert comparison
+     * @param {boolean} config.objectFilter - Filter objects in list
+     */
     constructor (config) {
         super({
-            // refAttrs: ['attrName1', ...], // reference attribute names to class with value attribute
-            // valueAttr: 'attrName', // value attribute name
-            // value: 'value' or ['value1', 'value2', ...]
-            // not: false, // invert comparison (not value)
-            objectFilter: true, // filter objects in list
+            objectFilter: true,
             ...config
         });
     }
@@ -24,7 +28,7 @@ module.exports = class RefValueChainRule extends Base {
     execute () {
         return this.isObjectTarget()
             ? this.checkRefValue()
-            : this.isAllowType();
+            : this.isAllow();
     }
 
     async checkRefValue () {
@@ -34,7 +38,7 @@ module.exports = class RefValueChainRule extends Base {
         if (this.not) {
             matched = !matched;
         }
-        return this.isAllowType() ? matched : !matched;
+        return this.isAllow() ? matched : !matched;
     }
 
     async resolveRefValues () {
@@ -56,7 +60,7 @@ module.exports = class RefValueChainRule extends Base {
     async getObjectFilter () {
         if (this.objectFilter) {
             const values = await this.resolveRefValues();
-            return [this.not ? 'NOT IN' : 'IN', this.refAttr, values];
+            return [this.not ? 'NOT IN' : 'IN', this.refAttrs[0], values];
         }
     }
 };

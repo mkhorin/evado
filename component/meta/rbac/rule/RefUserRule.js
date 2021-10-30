@@ -9,11 +9,16 @@ const Base = require('./BaseRule');
 
 module.exports = class RefUserRule extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string} config.refAttr - Reference attribute name to class with user attribute
+     * @param {string} config.refAttr - User attribute
+     * @param {boolean} config.objectFilter - Filter objects in list
+     */
     constructor (config) {
         super({
-            // refAttr: 'attrName', // reference attribute name to class with user attribute
-            userAttr: 'user', // user attribute
-            objectFilter: true, // filter objects in list
+            userAttr: 'user',
+            objectFilter: true,
             ...config
         });
     }
@@ -21,25 +26,30 @@ module.exports = class RefUserRule extends Base {
     execute () {
         return this.isObjectTarget()
             ? this.checkRefUser()
-            : this.isAllowType();
+            : this.isAllow();
     }
 
     async checkRefUser () {
-        const user = await this.resolveRefUser();
-        const matched = this.isEqual(this.getTarget().get(this.refAttr), user);
-        return this.isAllowType() ? matched : !matched;
+        const value = await this.resolveRefValue();
+        const matched = this.isEqual(this.getTarget().get(this.refAttr), value);
+        return this.isAllow() ? matched : !matched;
     }
 
     async getObjectFilter () {
-        return this.objectFilter ? {[this.refAttr]: await this.resolveRefUser()} : null;
+        if (this.objectFilter) {
+            return {[this.refAttr]: await this.resolveRefValue()};
+        }
     }
 
-    async resolveRefUser () {
-        if (!this._refUser) {
+    async resolveRefValue () {
+        if (!this._refValue) {
             const refClass = this.getTarget().class.getAttr(this.refAttr).getRefClass();
-            const condition = {[this.userAttr]: this.getUserId()};
-            this._refUser = await refClass.find(condition).id();
+            this._refValue = await refClass.find(this.getUserCondition()).id();
         }
-        return this._refUser;
+        return this._refValue;
+    }
+
+    getUserCondition () {
+        return {[this.userAttr]: this.getUserId()};
     }
 };

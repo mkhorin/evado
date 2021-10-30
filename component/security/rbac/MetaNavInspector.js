@@ -1,17 +1,15 @@
 /**
  * @copyright Copyright (c) 2019 Maxim Khorin <maksimovichu@gmail.com>
+ *
+ * metaNavMap (only DENY and READ and [SECTION, NODE])
+ *  role
+ *    id: []
  */
 'use strict';
 
 const Base = require('areto/security/rbac/Inspector');
 
 module.exports = class MetaNavInspector extends Base {
-
-    /**
-     * metaNavMap  [only DENY and READ and [SECTION, NODE]]
-     * role
-     *    id: []
-     */
 
     static intersectData (d1, d2) {
         const result = {};

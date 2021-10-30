@@ -19,9 +19,12 @@ module.exports = class MetaGrid extends Base {
         };
     }
 
+    /**
+     * @param {Object} config
+     * @param {Object} config.query - Query instance
+     */
     constructor (config) {
         super({
-            // query: new Query
             meta: config.controller.meta,
             security: config.controller.security,
             actionView: config.controller.getView(),

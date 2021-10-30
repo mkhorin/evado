@@ -11,6 +11,13 @@ const Base = require('areto/base/Base');
 
 module.exports = class ThumbnailSize extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string} config.flatten - Merge alpha transparency channel
+     * @param {Object[]} config.composite
+     * @param {Object} config.composite[].input - Watermark path: asset/watermark/large.png
+     * @param {Object} config.composite[].gravity - Watermark position: southeast
+     */
     constructor (config) {
         super({
             width: 256,
@@ -23,11 +30,7 @@ module.exports = class ThumbnailSize extends Base {
             outputParams: {
                 quality: 70
             },
-            flatten: '#ffffff', // merge alpha transparency channel
-            // composite: [{
-            //  input: 'asset/watermark/large.png',
-            //  gravity: 'southeast'
-            // }],
+            flatten: '#ffffff',
             ...config
         });
     }

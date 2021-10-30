@@ -21,8 +21,9 @@
     color: var(--content-color);
     margin-bottom: 0;
 }
-.data-grid-table > tbody {
+.data-grid-table > .data-grid-body {
     position: relative;
+    border-top: none;
 }
 .data-grid-table > thead > tr > th,
 .data-grid-table > tbody > tr > th,
@@ -105,7 +106,7 @@
 .data-grid-table > tbody > tr > td > .value {
     overflow: auto;
     padding: .5rem;
-    max-height: 15rem;
+    max-height: 24rem;
 }
 .data-grid-body .img-thumbnail {
     max-width: 64px;
@@ -158,7 +159,9 @@
     background-color: #ffe0e0 !important;
 }
 .data-grid .data-grid-table tbody tr.deleted td,
-.data-grid-cards .data-item.deleted {
+.data-grid .data-grid-table tbody tr.unlinked td,
+.data-grid-cards .data-item.deleted,
+.data-grid-cards .data-item.unlinked {
     position: relative;
     color: #a00;
 }

@@ -131,7 +131,7 @@ module.exports = class CrudController extends Base {
         this.sendText(model.getId());
     }
 
-    async actionDeleteList (condition) {
+    async actionDeleteList () {
         const ids = this.getPostParam('ids');
         if (!ids) {
             throw new BadRequest;

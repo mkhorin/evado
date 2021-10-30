@@ -130,8 +130,7 @@ Jam.ListFilterStorage = class ListFilterStorage {
     }
 
     addError ($input, message) {
-        message = Jam.t(message);
-        $input.closest('.form-group').addClass('has-error').find('.error-block').html(message);
+        $input.closest('.form-group').addClass('has-error').find('.error-block').html(Jam.t(message));
     }
 
     onApply () {

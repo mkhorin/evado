@@ -239,7 +239,7 @@ Jam.SelectorListFilterType = class SelectorListFilterType extends Jam.ListFilter
 
     processResults (data, params) {
         params.page = params.page || 1;
-        const items = data.items || data;
+        const items = typeof data.items === 'object' ? data.items : data;
         const more = params.page * this.params.pageSize < data.total;
         return {
             pagination: {more},

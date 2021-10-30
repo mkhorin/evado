@@ -7,6 +7,10 @@ const Base = require('areto/base/Base');
 
 module.exports = class MetadataClassInstantiation extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {string} config.className - Metadata class name
+     */
     constructor (config) {
         super({
             userAttr: 'user',

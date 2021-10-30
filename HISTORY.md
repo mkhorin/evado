@@ -1,3 +1,26 @@
+## 5.0.0
+
+* component/action/SortRelatedArrayAction
+    - fix related object sorting
+* component/meta/rbac/rule
+    - add rules to check reference chains    
+* component/security/rbac
+    - add multiple rules to one permission
+    - add view history of model changes as security action
+    - fix order of imported rules
+    - optimize security check of metadata transitions
+    - refactor metadata transition security    
+* test/run/component/helper/select
+    - add tests for the select helper
+* upgrade Node.js version    
+* upgrade dependencies    
+* view/template/_part/attr/checkbox
+    - fix hints for checkboxes
+* web/jam/frame
+    - fix closing stack frames with escape    
+* web/style/main
+    - fix white button       
+
 ## 4.0.0
 
 * component/base/CrudController

@@ -67,11 +67,7 @@ module.exports = {
             Class: require('../component/security/Auth'),
             loginUrl: '/auth/sign-in',
             returnUrl: '/',
-            enableAutoLogin: true,
-            identityCookie: {
-                'httpOnly': true,
-                'path': '/'
-            }
+            enableAutoLogin: true
         },
         'metaHub': {
             Class: require('../component/meta/MetaHub'),            

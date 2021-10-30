@@ -7,11 +7,11 @@ const Base = require('areto/security/rbac/Rule');
 
 module.exports = class BaseRule extends Base {
 
-    isAllowType () {
+    isAllow () {
         return this.item.type === Rbac.ALLOW;
     }
 
-    isDenyType () {
+    isDeny () {
         return this.item.type === Rbac.DENY;
     }
 
