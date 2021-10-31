@@ -44,7 +44,7 @@ Jam.StackFrame = class StackFrame {
         this.one('afterClose', () => this.off('beforeClose', handler));
     }
 
-    load (url, params, initData) {
+    load (url, params, initParams) {
         if (!this.checkLastActive()) {
             return $.Deferred().reject();
         }
@@ -54,7 +54,7 @@ Jam.StackFrame = class StackFrame {
         this.$frame.addClass('tabbed');
         this.$frame.toggleClass('reopen', this.$content.children().length > 0);
         this.url = url;
-        this.initData = initData;
+        this.initParams = initParams;
         this.loadParams = this.prepareLoadParams(params);
         this.xhr = $.get(url, this.loadParams)
             .always(this.onAlways.bind(this))
@@ -165,7 +165,7 @@ Jam.StackFrame = class StackFrame {
             return $.Deferred().reject();
         }
         this.forceClose({reload: true, ...data});
-        return this.load(this.url, this.loadParams, this.initData);
+        return this.load(this.url, this.loadParams, this.initParams);
     }
 
     abort () {

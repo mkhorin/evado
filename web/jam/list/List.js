@@ -438,7 +438,7 @@ Jam.MainList = class MainList extends Jam.List {
 Jam.FrameList = class FrameList extends Jam.List {
 
     init() {
-        Object.assign(this.params, this.frame.initData);
+        Object.assign(this.params, this.frame.initParams);
         super.init();
         this.frame.findScrollHeader().append(this.$commands);
     }
