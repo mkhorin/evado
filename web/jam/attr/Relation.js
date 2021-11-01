@@ -55,7 +55,8 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
     }
 
     getDependencyNames () {
-        return this.list?.params.depends;
+        const names = this.list?.params.depends;
+        return Array.isArray(names) ? names : names ? [names] : [];
     }
 
     getDependencyValue () {

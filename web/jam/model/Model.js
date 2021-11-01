@@ -290,22 +290,23 @@ Jam.Model = class Model extends Jam.Element {
         const attrs = attr ? [attr] : this.attrs;
         for (const attr of attrs) {
             const names = attr.getDependencyNames();
-            if (Array.isArray(names)) {
-                this.setDependencyValues(names, data);
-            }
+            this.setDependencyValues(names, data);
         }
         return data;
     }
 
     setDependencyValues (names, data) {
         for (const name of names) {
-            const attr = this.getAttr(name);
-            if (attr) {
-                data[name] = attr.getDependencyValue();
-            } else {
-                console.error(`Dependency attribute not found: ${name}`);
-            }
+            this.setDependencyValue(name, data);
         }
+    }
+
+    setDependencyValue (name, data) {
+        const attr = this.getAttr(name);
+        if (!attr) {
+            return console.error(`Dependency attribute not found: ${name}`);
+        }
+        data[name] = attr.getDependencyValue();
     }
 
     toggleLoader (state) {

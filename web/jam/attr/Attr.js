@@ -120,7 +120,8 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     getDependencyNames () {
-        return this.params.depends;
+        const names = this.params.depends;
+        return Array.isArray(names) ? names : names ? [names] : [];
     }
 
     getDependencyValue () {
@@ -169,15 +170,11 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     bindDependencyChange () {
-        const names = this.getDependencyNames();
-        if (Array.isArray(names)) {
-            for (const name of names) {
-                const attr = this.model.getAttr(name);
-                if (attr) {
-                    attr.$value.change(this.onDependencyChange.bind(this));
-                }
-            }
-        }
+        this.getDependencyNames().forEach(this.bindDependencyChangeByName, this);
+    }
+
+    bindDependencyChangeByName (name) {
+        this.model.getAttr(name)?.$value.change(this.onDependencyChange.bind(this));
     }
 
     onDependencyChange () {

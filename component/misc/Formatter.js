@@ -20,7 +20,7 @@ module.exports = class Formatter extends Base {
 
     asInherited (value, {translate} = {}) {
         translate = typeof translate === 'string' ? `data-t="${translate}"` : '';
-        return `<span class="inherited-value" ${translate} title="Inherited value">${this.format(value)}</span>`
+        return `<span class="inherited-value" ${translate} title="Inherited value">${this.format(value)}</span>`;
     }
 
     asFrameLink (value, params) {

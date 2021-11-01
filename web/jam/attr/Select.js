@@ -6,7 +6,6 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
     constructor () {
         super(...arguments);
         this.select2Params = this.getData('select2');
-        this.depends = this.getData('depends');
         this.$update = this.findByData('action', 'update');
         this.$update.click(this.onUpdate.bind(this));
         this.cache = new Map;
@@ -19,10 +18,8 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         if (this.select2Params) {
             this.createSelect2();
         }
-        if (this.depends) {
-            this.createDependencies();
-        }
         this.activated = true;
+        this.createDependencies();
         this.toggleBlank();
     }
 
@@ -62,13 +59,18 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
     }
 
     createDependencies () {
-        for (const master of this.depends) {
-            master.name = master.attr;
-            master.$value = this.model.findAttrValueByName(master.name);
-            master.attr = Jam.ModelAttr.get(master.$value);
-            master.value = master.attr.getValue();
-        }
+        let items = this.getData('depends');
+        items = Array.isArray(items) ? items : items ? [items] : [];
+        items.forEach(this.createDependency, this);
+        this.depends = items;
         this.model.events.on('change', this.onChangeModel.bind(this));
+    }
+
+    createDependency (data) {
+        data.name = data.attr;
+        data.$value = this.model.findAttrValueByName(data.name);
+        data.attr = Jam.ModelAttr.get(data.$value);
+        data.value = data.attr.getValue();
     }
 
     onChangeModel () {
@@ -144,16 +146,14 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
             page: data.page,
             pageSize: this.select2Params.pageSize,
             ...this.select2Params.queryData,
-            ...this.getMasterData()
+            ...this.getDependencyData()
         };
     }
 
-    getMasterData () {
+    getDependencyData () {
         const data = {};
-        if (Array.isArray(this.depends)) {
-            for (const {attr, name, param} of this.depends) {
-                data[param || name] = attr.getValue();
-            }
+        for (const {attr, name, param} of this.depends) {
+            data[param || name] = attr.getValue();
         }
         return data;
     }
