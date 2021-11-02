@@ -60,13 +60,15 @@ Jam.ModelError = class ModelError {
     }
 
     processOne (className, attrName, message, errors) {
-        const attr = this.model.getAttr(attrName, className);
+        let attr = this.model.getAttr(attrName, className);
+        let category = Array.isArray(message) ? message[2] : null;
         if (attr) {
-            const $block = attr.$attr.addClass('has-error').find('.error-block');
-            message = Jam.t(message, $block?.data('t'));
+            let $block = attr.$attr.addClass('has-error').find('.error-block');
+            category = category === undefined || category === null ? $block?.data('t') : category;
+            message = Jam.t(message, category);
             $block.html(message);
         } else {
-            message = Jam.t(message);
+            message = Jam.t(message, category);
             errors.unassigned += `<p>${attrName}: ${message}</p>`;
         }
         errors.all += `<p>${attrName}: ${message}</p>`;
