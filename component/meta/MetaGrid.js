@@ -71,16 +71,28 @@ module.exports = class MetaGrid extends Base {
             return false;
         }
         for (const name of Object.keys(order)) {
-            const attr = this.meta.view.getAttr(name);
-            if (attr ? !attr.isSortable() : (name !== this.meta.class.getKey())) {
-                throw new BadRequest(`Not sortable attribute: ${name}`);
-            }
-            if (order[name] !== 1 && order[name] !== -1) {
-                throw new BadRequest(`Invalid order: ${name}`);
-            }
+            this.checkOrderData(name, order);
         }
         if (Object.values(order).length) {
             this.query.order(order);
+        }
+    }
+
+    checkOrderData (name, data) {
+        const attr = this.meta.view.getAttr(name);
+        if (attr) {
+            if (!attr.isSortable()) {
+                throw new BadRequest(`Not sortable attribute: ${name}`);
+            }
+        } else if (name !== this.meta.class.getKey()) {
+            if (this.meta.view !== this.meta.class) {
+                if (!this.meta.class.getAttr(name)?.isSortable()) {
+                    throw new BadRequest(`Not sortable class attribute: ${name}`);
+                }
+            }
+        }
+        if (data[name] !== 1 && data[name] !== -1) {
+            throw new BadRequest(`Invalid order value: ${name}: ${data[name]}`);
         }
     }
 
