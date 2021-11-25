@@ -62,6 +62,9 @@ module.exports = class DataGrid extends Base {
 
     setOffset () {
         this.offset = parseInt(this.request.start) || 0;
+        if (this.offset < 0) {
+            throw new BadRequest('Invalid offset');
+        }
         this.query.offset(this.offset);
     }
 
@@ -69,7 +72,7 @@ module.exports = class DataGrid extends Base {
         this.limit = parseInt(this.request.length) || this.DEFAULT_LIMIT;
         // in mongodb limit 0 (null) or -N means no limit
         if (isNaN(this.limit) || this.limit < 1) {
-            throw new BadRequest('Invalid length param');
+            throw new BadRequest('Invalid limit');
         }
         if (this.limit > this.getMaxLimit()) {
             throw new BadRequest('Length exceeds limit');
