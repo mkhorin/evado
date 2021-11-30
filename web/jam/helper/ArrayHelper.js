@@ -3,6 +3,13 @@
  */
 Jam.ArrayHelper = class ArrayHelper {
 
+    static normalize (data) {
+        if (Array.isArray(data)) {
+            return data;
+        }
+        return data === null && data === undefined ? [] : [data];
+    }
+
     static equals (a, b) {
         if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
             return false;

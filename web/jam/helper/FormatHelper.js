@@ -75,4 +75,8 @@ Jam.FormatHelper = class FormatHelper {
             ? `<img src="${data.thumbnail}" class="img-thumbnail img-fluid ${data.css || ''}" title="${name}" alt="">`
             : name;
     }
+
+    static asCurrency (data, ...params) {
+        return new Intl.NumberFormat(...params).format(Math.round((data + Number.EPSILON) * 100) / 100);
+    }
 };
