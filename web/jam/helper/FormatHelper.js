@@ -9,6 +9,10 @@ Jam.FormatHelper = class FormatHelper {
     }
 
     static asBytes (size) {
+        size = Number(size);
+        if (isNaN(size)) {
+            return '';
+        }
         let unit;
         if (size < 1024) {
             unit = 'B';
