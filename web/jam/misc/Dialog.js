@@ -87,7 +87,7 @@ Jam.Dialog = class Dialog {
         this.build(data);
         this.$dialog.show();
         if (!data.strictCancel) {
-            this.$cancel.focus();
+            this.focusCancel();
         }
         this._returnCancel = data.returnCancel;
         this._strictCancel = data.strictCancel;
@@ -108,6 +108,13 @@ Jam.Dialog = class Dialog {
 
     setButtonCss (css, $element, baseCss) {
        $element.removeClass().addClass(baseCss).addClass(css);
+    }
+
+    focusCancel () {
+        this.$cancel.focus();
+        if (!this.$cancel.is(document.activeElement)) {
+            document.activeElement?.blur();
+        }
     }
 
     onAction (status) {
