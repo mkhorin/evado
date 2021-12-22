@@ -50,7 +50,7 @@ body {
     --semi-bold: 500;
 
     --hover-row-color: #fff8e8;
-    --title-label-color: #677;
+    --title-label-color: #667;
     --required-color: #fff9f9;
 
     color: var(--body-color);
@@ -673,10 +673,18 @@ body.loading {
 /* FORM */
 
 .col-form-label {
-    color: #568;
-}
-.col-form-label[title]:not([title=""]) {
     color: var(--title-label-color);
+}
+.col-form-label[title]:not([title=""]):after {
+    content: "";
+    display: inline-block;
+    margin-left: .3rem;
+    width: 12px;
+    height: 12px;
+    background-image: url(./question.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.6;
 }
 .form .empty-group {
     display: none;
