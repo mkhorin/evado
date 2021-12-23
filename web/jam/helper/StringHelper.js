@@ -3,6 +3,8 @@
  */
 Jam.StringHelper = class StringHelper {
 
+    static AZ_REGEX = /([A-Z]+)/g;
+    static DASH_REGEX = /^-/;
     static HTML_REGEX = /&(?!#?[a-zA-Z0-9]+;)/g;
     static TAGS_REGEX = /(<([^>]+)>)/ig;
     static TAG_START_REGEX = /</g;
@@ -13,12 +15,12 @@ Jam.StringHelper = class StringHelper {
     static clearTags (text) {
         return typeof text === 'string'
             ? text.replace(this.TAGS_REGEX, '')
-            : text;
+            : this.toString(text);
     }
 
     static escapeHtml (text) {
         if (typeof text !== 'string') {
-            return text;
+            return this.toString(text);
         }
         text = text.replace(this.HTML_REGEX, '&amp;');
         return this.escapeQuotes(this.escapeTags(text));
@@ -28,34 +30,46 @@ Jam.StringHelper = class StringHelper {
         return typeof text === 'string'
             ? text.replace(this.TAG_START_REGEX, '&lt;')
                   .replace(this.TAG_END_REGEX, '&gt;')
-            : text;
+            : this.toString(text);
     }
 
     static escapeQuotes (text) {
         return typeof text === 'string'
             ? text.replace(this.SINGLE_QUOTE_REGEX, '&#39;')
                   .replace(this.DOUBLE_QUOTE_REGEX, '&quot;')
-            : text;
+            : this.toString(text);
     }
 
-    static capitalize (str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
+    static camelToKebab (text) {
+        return typeof text === 'string'
+            ? text.replace(this.AZ_REGEX, '-$1').replace(this.DASH_REGEX, '').toLowerCase()
+            : this.toString(text);
     }
 
-    static toLowerCaseFirstLetter (str) {
-        return str.charAt(0).toLowerCase() + str.slice(1);
+    static capitalize (text) {
+        return text.charAt(0).toUpperCase() + text.slice(1);
     }
 
-    static replaceParam (str, param, value) {
+    static toLowerCaseFirstLetter (text) {
+        return text.charAt(0).toLowerCase() + text.slice(1);
+    }
+
+    static replaceParam (text, param, value) {
         const regex = new RegExp(`{${param}}`, 'g');
-        return str.replace(regex, value);
+        return text.replace(regex, value);
     }
 
     static trimEnd (text, end) {
         if (typeof text !== 'string' || typeof end !== 'string') {
-            return text;
+            return this.toString(text);
         }
         const index = text.length - end.length;
-        return text.lastIndexOf(end) === index ? text.substring(0, index) : text;
+        return text.lastIndexOf(end) === index
+            ? text.substring(0, index)
+            : text;
+    }
+
+    static toString (text) {
+        return text === null || text === undefined ? '' : String(text);
     }
 };
