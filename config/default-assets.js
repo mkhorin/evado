@@ -10,6 +10,7 @@ module.exports = {
         sources: [
             'jam/Jam.js',
             'jam/element/Element.js',
+            'jam/actionBinder/ActionBinderAction.js',
             'jam/attr/Attr.js',
             'jam/attr/File.js',
             'jam/grid/DataGrid.js',
