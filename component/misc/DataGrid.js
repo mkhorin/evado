@@ -124,7 +124,7 @@ module.exports = class DataGrid extends Base {
 
     resolveFilter () {
         const items = this.request.filter;
-        if (Array.isArray(items)) {
+        if (items) {
             return this.spawn(this.ListFilter, {items}).resolve(this.query);
         }
     }

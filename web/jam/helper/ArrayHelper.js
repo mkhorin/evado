@@ -150,9 +150,9 @@ Jam.ArrayHelper = class ArrayHelper {
 
     static searchByNestedValue (value, key, items) {
         if (Array.isArray(items)) {
-            for (let index = 0; index < items.length; ++index) {
-                if (Jam.ObjectHelper.getNestedValue(key, items[index]) === value) {
-                    return index;
+            for (let i = 0; i < items.length; ++i) {
+                if (Jam.ObjectHelper.getNestedValue(key, items[i]) === value) {
+                    return i;
                 }
             }
         }

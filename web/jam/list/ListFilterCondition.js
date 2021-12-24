@@ -116,6 +116,6 @@ Jam.ListFilterCondition = class ListFilterCondition {
         this.setLogical(data.or);
         this.$attrSelect.val(data.attr).change();
         this.setOperation(data.op);
-        this.type.changeValue(data.value, data.text);
+        this.type?.changeValue(data.value, data.text);
     }
 };

@@ -38,9 +38,10 @@ module.exports = class ListFilter extends Base {
     }
 
     normalizeItems (items) {
-        return Array.isArray(items)
-            ? items.filter(item => item)
-            : this.throwBadRequest('Invalid items');
+        if (!Array.isArray(items)) {
+            items = [items];
+        }
+        return items.filter(item => item);
     }
 
     parse (data) {
