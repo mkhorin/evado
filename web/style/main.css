@@ -679,6 +679,7 @@ body.loading {
     content: "";
     display: inline-block;
     margin-left: .3rem;
+    margin-right: -1px;
     width: 12px;
     height: 12px;
     background-image: url(./question.svg);
@@ -698,6 +699,7 @@ body.loading {
     display: block;
 }
 .form .has-error .form-control,
+.form .has-error .data-grid-table,
 .form .has-error .input-group-text,
 .form .has-error .select2-container .select2-selection {
     border-color: var(--light-danger);
