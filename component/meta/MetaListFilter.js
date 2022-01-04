@@ -7,11 +7,6 @@ const Base = require('../misc/ListFilter');
 
 module.exports = class MetaListFilter extends Base {
 
-    resolve (query) {
-        this.class = query.view.class;
-        return super.resolve(query);
-    }
-
     parse (data) {
         if (data.items) {
             return this.parseNestedItems(data);
@@ -19,6 +14,9 @@ module.exports = class MetaListFilter extends Base {
         if (this.class.key.name === data.attr) {
             data.type = this.class.key.type;
             return super.parse(data);
+        }
+        if (data.type === 'descendant') {
+            return this.parseDescendant(data);
         }
         const attr = this.class.getAttr(data.attr);
         if (!this.class.searchAttrs.includes(attr)) {
@@ -29,12 +27,23 @@ module.exports = class MetaListFilter extends Base {
         }
         if (attr.relation) {
             data.relation = true;
-            data.valueType = attr.relation.getRefAttrType();
         }
         if (attr.isClass()) {
             data.type = 'class';
         }
         return super.parse(data);
+    }
+
+    parseDescendant (data) {
+        const descendant = this.class.meta.getClass(data.class);
+        if (!descendant) {
+            return this.throwBadRequest(`Class not found: ${data.class}`);
+        }
+        const filter = new this.constructor({
+            class: descendant,
+            query: this.query
+        });
+        return filter.resolveItems(data.value);
     }
 
     parseByType (data) {
@@ -67,11 +76,11 @@ module.exports = class MetaListFilter extends Base {
                 return condition;
             }
             return op === 'equal'
-                ? ['OR', condition, {[attr]: []}]
-                : ['AND', condition, ['NOT EQUAL', attr, []]];
+                ? ['or', condition, {[attr]: []}]
+                : ['and', condition, ['notEqual', attr, []]];
         }
         if (!value) {
-            return ['FALSE'];
+            return ['false'];
         }
         const query = relation.refClass.find({[relation.refClass.getKey()]: value});
         value = await this.getRelationValue(relation, query);
@@ -82,7 +91,12 @@ module.exports = class MetaListFilter extends Base {
     async parseNested ({attr, value}) {
         const relation = this.getRelation(attr);
         const query = relation.refClass.createQuery();
-        await (new this.constructor({items: value})).resolve(query);
+        const filter = new this.constructor({
+            class: relation.refClass,
+            items: value,
+            query
+        });
+        await filter.resolve();
         if (relation.isBackRef()) {
             attr = relation.linkAttrName;
             value = await this.getRelationValue(relation, query);

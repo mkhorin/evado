@@ -119,7 +119,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     createSelect2 () {
         const data = {
             allowClear: this.params.allowClear,
-            placeholder: this.params.placeholder,
+            placeholder: Jam.t(this.params.placeholder),
             minimumInputLength: this.params.minInputLength,
             maximumInputLength: this.params.maxInputLength,
             maximumSelectionLength: this.params.maxSelectionLength,

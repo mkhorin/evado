@@ -96,11 +96,17 @@ module.exports = class MetaGrid extends Base {
         }
     }
 
+    createFilter () {
+        return super.createFilter({
+            class: this.query.view.class
+        });
+    }
+
     async setModels () {
         let links = this.request.changes && this.request.changes.links;
         if (Array.isArray(links) && links.length) {
-            this._models = await this.query.and(['NOT ID', this.query.view.getKey(), links]).all();
-            links = await this.query.where(['ID', this.query.view.getKey(), links]).offset(0).all();
+            this._models = await this.query.and(['notId', this.query.view.getKey(), links]).all();
+            links = await this.query.where(['id', this.query.view.getKey(), links]).offset(0).all();
             this._models = links.concat(this._models);
         } else {
             this._models = await this.query.all();

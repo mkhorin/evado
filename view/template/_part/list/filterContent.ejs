@@ -74,11 +74,27 @@
             </div>
         </div>
 
+        <div data-id="descendant">
+            <div class="col-md-7">
+                <input class="condition-operation" type="hidden" value="nested">
+                <div class="row">
+                    <div class="col-10">
+                        <select class="condition-value form-select"></select>
+                    </div>
+                    <div class="col-2">
+                        <button class="add-condition btn-success btn" type="button" title="Add condition">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div data-id="id">
             <div class="col-md-2">
                 <select class="condition-operation form-select">
                     <option value="equal" data-t="">equal</option>
-                    <option value="not equal" data-t="">not equal</option>
+                    <option value="notEqual" data-t="">not equal</option>
                     <option value="nested" data-t="">nested</option>
                 </select>
             </div>
@@ -106,7 +122,7 @@
                 </select>
             </div>
             <div class="col-md-5">
-                <input class="condition-value form-control default-focus" type="number" placeholder="Input number...">
+                <input class="condition-value form-control default-focus" type="number" step="any" placeholder="Input number...">
             </div>
         </div>
 
@@ -114,7 +130,7 @@
             <div class="col-md-2">
                 <select class="condition-operation form-select">
                     <option value="equal" data-t="">equal</option>
-                    <option value="not equal" data-t="">not equal</option>
+                    <option value="notEqual" data-t="">not equal</option>
                     <option value="nested" data-t="">nested</option>
                 </select>
             </div>

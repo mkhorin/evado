@@ -14,9 +14,8 @@ module.exports = class ListFilter extends Base {
         };
     }
 
-    async resolve (query) {
-        this.query = query;
-        query.and(await this.resolveItems(this.items));
+    async resolve () {
+        this.query.and(await this.resolveItems(this.items));
     }
 
     async resolveItems (items) {
@@ -24,17 +23,25 @@ module.exports = class ListFilter extends Base {
         for (const item of items) {
             item.condition = await this.parse(item);
         }
-        let and = ['AND'], or = ['OR', and]; // AND has priority over OR
+        let and = ['and'], or = ['or', and];
         for (const item of items) {
             if (item.condition) {
                 if (item.or && and.length > 1) {
-                    and = ['AND'];
+                    and = ['and'];
                     or.push(and);
                 }
                 and.push(item.condition);
             }
         }
-        return or.length > 2 ? or : and.length > 1 ? and : null;
+        if (or.length > 2) {
+            return or;
+        }
+        if (and.length === 2) {
+            return and[1];
+        }
+        if (and.length > 2) {
+            return and;
+        }
     }
 
     normalizeItems (items) {
@@ -81,10 +88,10 @@ module.exports = class ListFilter extends Base {
         return {[this.query.model.PK]: result};
     }
 
-    async parseNested ({attr, value, relation}) {
+    async parseNested ({attr, relation, value: items}) {
         let rel = this.getRelation(attr, this.query.model);
         let query = rel.model.createQuery();
-        await this.spawnSelf({items: value}).resolve(query);
+        await this.spawnSelf({items, query}).resolve();
         if (!relation) {
             return {[rel.linkKey]: await query.column(rel.refKey)};
         }
@@ -162,8 +169,8 @@ module.exports = class ListFilter extends Base {
         date.setHours(0, 0, 0, 0);
         const next = new Date(date.getTime() + 86400000);
         switch (op) {
-            case '=': return ['AND', ['>=', attr, date], ['<', attr, next]];
-            case '!=': return ['OR', ['<', attr, date], ['>=', attr, next]];
+            case '=': return ['and', ['>=', attr, date], ['<', attr, next]];
+            case '!=': return ['or', ['<', attr, date], ['>=', attr, next]];
             case '<': return ['<', attr, date];
             case '<=': return ['<', attr, next];
             case '>': return ['>=', attr, next];
@@ -192,7 +199,7 @@ module.exports = class ListFilter extends Base {
         value = this.query.getDb().normalizeId(value);
         switch (op) {
             case 'equal': return {[attr]: value};
-            case 'not equal': return ['!=', attr, value];
+            case 'notEqual': return ['!=', attr, value];
         }
         this.throwInvalidOperation(op);
     }
@@ -214,7 +221,7 @@ module.exports = class ListFilter extends Base {
             return this.throwInvalidValue(value);
         }
         if (value === '') {
-            return ['OR', {[attr]: ''}, {[attr]: null}]
+            return ['or', {[attr]: ''}, {[attr]: null}]
         }
         value = EscapeHelper.escapeRegex(value);
         switch (op) {
@@ -238,8 +245,8 @@ module.exports = class ListFilter extends Base {
     }
 
     getEmptyValueCondition (attr, op) {
-        return op === '!=' || op === 'not equal'
-            ? ['NOT EQUAL', attr, null]
+        return op === '!=' || op === 'notEqual'
+            ? ['notEqual', attr, null]
             : {[attr]: null};
     }
 
@@ -256,8 +263,8 @@ module.exports = class ListFilter extends Base {
         if (op === 'equal') {
             return {[attr]: value};
         }
-        if (op === 'not equal') {
-            return ['NOT EQUAL', attr, value];
+        if (op === 'notEqual') {
+            return [Array.isArray(value) ? 'notIn' : op, attr, value];
         }
         this.throwInvalidOperation(op);
     }

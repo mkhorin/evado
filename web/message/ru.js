@@ -39,6 +39,7 @@ Jam.I18n.defaults = {
     'Advanced search': 'Расширенный поиск',
     'All notifications': 'Все уведомления',
     'Apply': 'Применить',
+    'Attributes of descendant classes': 'Атрибуты классов-потомков',
 
     'Back to page tabs': 'Вернуться к вкладкам страниц',
     'Blocked': 'Блокирован',
@@ -155,6 +156,7 @@ Jam.I18n.defaults = {
     'Save filter': 'Сохранить фильтр',
     'Search...': 'Искать...',
     'Select': 'Выбрать',
+    'Select a descendant class...': 'Выберите класс-потомок...',
     'Select all': 'Выбрать все',
     'Select box': 'Выпадающий список',
     'Select column to sort': 'Выберите колонку для сортировки',

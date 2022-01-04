@@ -108,13 +108,21 @@ Jam.Helper = class Helper {
     }
 
     static renderSelectOptions (data) {
-        let result = data.hasEmpty ? `<option value="">${data.emptyText || ''}</option>` : '';
-        for (const item of this.formatSelectItems(data.items)) {
-            const selected = data.defaultValue === item.value ? ' selected' : '';
-            const text = data.translate !== false
-                ? Jam.t(item.text, data.translate)
-                : item.text;
-            result += `<option value="${item.value}" ${selected}>${text}</option>`;
+        const items = [];
+        if (data.hasEmpty) {
+            items.push({
+                text: data.emptyText || '',
+                value: data.emptyValue || ''
+            });
+        }
+        items.push(...this.formatSelectItems(data.items));
+        let result = '';
+        for (let {text, value} of items) {
+            const selected = value === data.defaultValue ? ' selected' : '';
+            if (data.translate !== false) {
+                text = Jam.t(text, data.translate);
+            }
+            result += `<option value="${value}" ${selected}>${text}</option>`;
         }
         return result;
     }

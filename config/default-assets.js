@@ -16,6 +16,8 @@ module.exports = {
             'jam/grid/DataGrid.js',
             'jam/grid/Renderer.js',
             'jam/list/List.js',
+            'jam/listFilter/ListFilterType.js',
+            'jam/listFilter/ListFilterTypeString.js',
             'jam'
         ],
         target: 'vendor/jam.min.js',

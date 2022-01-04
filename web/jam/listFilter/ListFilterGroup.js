@@ -37,7 +37,7 @@ Jam.ListFilterGroup = class ListFilterGroup {
         return new Jam.ListFilterCondition(this);
     }
 
-    reset () {
+    clear () {
         this.conditions = [];
         this.$container.empty();
     }

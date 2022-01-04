@@ -463,7 +463,7 @@
 .list-filter .filter-condition .condition-group {
     display: none;
     position: relative;
-    left: 2.6rem;
+    left: 2.76rem;
     margin-top: .75rem;
     width: calc(100% - .65rem);
 }

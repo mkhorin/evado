@@ -51,15 +51,9 @@ Jam.ListFilterCondition = class ListFilterCondition {
     }
 
     createType (params) {
-        let type = 'String';
-        switch (params.type) {
-            case 'boolean': type = 'Boolean'; break;
-            case 'date': type = 'Date'; break;
-            case 'datetime': type = 'Datetime'; break;
-            case 'id': type = 'Id'; break;
-            case 'selector': type = 'Selector'; break;
-        }
-        return new Jam[`${type}ListFilterType`](params, this);
+        const name = `ListFilterType${Jam.StringHelper.capitalize(params.type || 'string')}`;
+        const constructor = Jam[name] || Jam.ListFilterTypeString;
+        return new constructor(params, this);
     }
 
     getOperation () {
@@ -78,7 +72,7 @@ Jam.ListFilterCondition = class ListFilterCondition {
         return this.type ? this.type.getValue() : undefined;
     }
 
-    getValueItem () {
+    getValueElement () {
         return this.$container.children('.condition-content').find('.condition-value');
     }
 
@@ -108,7 +102,7 @@ Jam.ListFilterCondition = class ListFilterCondition {
         if (op && value !== undefined) {
             const or = this.or;
             const attr = this.getAttr();
-            return this.type.getRequestData({or, attr, op, value});
+            return this.type.serialize({or, attr, op, value});
         }
     }
 
@@ -116,6 +110,10 @@ Jam.ListFilterCondition = class ListFilterCondition {
         this.setLogical(data.or);
         this.$attrSelect.val(data.attr).change();
         this.setOperation(data.op);
-        this.type?.changeValue(data.value, data.text);
+        this.type?.changeValue(data.value, data);
+    }
+
+    removeOperation (value) {
+        return this.getOperationItem().children(`[value="${value}"]`).remove();
     }
 };

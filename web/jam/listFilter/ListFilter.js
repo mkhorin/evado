@@ -83,7 +83,7 @@ Jam.ListFilter = class ListFilter {
     }
 
     onReset () {
-        this.group.reset();
+        this.group.clear();
         this.$container.hide();
         this.triggerActive();
         if (this._applied) {
@@ -107,7 +107,7 @@ Jam.ListFilter = class ListFilter {
     }
 
     parse (items) {
-        this.group.reset();
+        this.group.clear();
         for (const item of items) {
             this.group.addCondition().parse(item);
         }
