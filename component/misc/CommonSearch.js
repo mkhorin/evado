@@ -35,7 +35,7 @@ module.exports = class CommonSearch extends Base {
             }
         }
         if (this.conditions.length) {
-            query.and(['OR', ...this.conditions]);
+            query.and(['or', ...this.conditions]);
         }
     }
 
@@ -60,13 +60,13 @@ module.exports = class CommonSearch extends Base {
 
     getDefaultTypeCondition (attr, value) {
         value = EscapeHelper.escapeRegex(value);
-        return ['LIKE', attr, new RegExp(value, 'i')];
+        return ['like', attr, new RegExp(value, 'i')];
     }
 
     getDateTypeCondition (attr, value) {
         value = DateHelper.parse(value, this.controller.language);
         value = DateHelper.getDayInterval(value);
-        return value ? ['AND', ['>=', attr, value[0]], ['<', attr, value[1]]] : null;
+        return value ? ['and', ['>=', attr, value[0]], ['<', attr, value[1]]] : null;
     }
 
     getIdTypeCondition (attr, value) {
@@ -81,7 +81,7 @@ module.exports = class CommonSearch extends Base {
 
     getTitleTypeCondition (attr, value) {
         value = new RegExp(EscapeHelper.escapeRegex(value), 'i');
-        return ['OR', ['LIKE', 'name', value], ['LIKE', 'label', value]];
+        return ['or', ['like', 'name', value], ['like', 'label', value]];
     }
 };
 module.exports.init();

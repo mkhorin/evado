@@ -34,7 +34,7 @@ module.exports = class HierarchySolver extends Base {
             descendants = await this.getDescendantIds([id]);
             descendants.push(id);
         }
-        return this.model.find(['NOT IN', this.model.PK, descendants], ...arguments);
+        return this.model.find(['notIn', this.model.PK, descendants], ...arguments);
     }
 
     async getDescendantIds (parentIds) {

@@ -91,7 +91,7 @@ module.exports = class DatabaseStore extends Base {
         const result = {};
         for (const item of data.metaItems) {
             this.prepareMetaItem(item, data);
-            if (item.actions.length && item.roles.length) {
+            if (item.actions?.length && item.roles?.length) {
                 result[item._id] = item;
                 delete item._id;
             }

@@ -1,3 +1,30 @@
+## 5.1.0
+
+* component/meta/MetaGrid
+    - order objects by class attribute
+* component/misc/ClientMessage
+    - create parameterized messages for translation on the client side
+* component/misc/DataGrid
+    - check negative offset
+* config/default-assets
+    - separate action binder sources
+* filter by attributes of descendant classes    
+* model/AutoIncrement
+    - move auto increment table to model
+* web/jam/attr/Attr
+    - normalize dependency names
+* web/jam/frame/StackFrame
+    - fix name of frame params
+* web/jam/helper/FormatHelper
+    - check number type before formatting
+* web/jam/helper/StringHelper
+    - convert non-string data to string
+* web/jam/misc/Dialog
+    - reset focus when focusing on an unwanted element
+* web/style/main
+    - add attribute label icon for an extended hint
+    - prevent from wrapping icon to next line
+
 ## 5.0.0
 
 * component/action/SortRelatedArrayAction

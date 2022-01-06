@@ -308,7 +308,7 @@ module.exports = class MetaInspector extends Base {
             return null;
         }
         this._metaObjectRuleCache = {};
-        const conditions = ['OR'];
+        const conditions = ['or'];
         for (const role of this.assignments) {
             if (!this.rbac.metaObjectFilterMap.hasOwnProperty(role)) {
                 return null; // no filter to role
@@ -332,18 +332,18 @@ module.exports = class MetaInspector extends Base {
     }
 
     async getRoleConditions ({condition, denyRules, allowRules}) {
-        const result = ['AND'];
+        const result = ['and'];
         if (condition) {
             result.push(condition);
         }
         if (denyRules) {
-            const conditions = await this.getRuleObjectFilters(denyRules, 'NOR');
+            const conditions = await this.getRuleObjectFilters(denyRules, 'not');
             if (conditions) {
                 result.push(conditions);
             }
         }
         if (allowRules) {
-            const conditions = await this.getRuleObjectFilters(allowRules, 'OR');
+            const conditions = await this.getRuleObjectFilters(allowRules, 'or');
             if (conditions) {
                 result.push(conditions.length === 2 ? conditions[1] : conditions);
             }
@@ -363,7 +363,7 @@ module.exports = class MetaInspector extends Base {
     }
 
     async getItemRuleObjectFilters (rules) {
-        const result = ['AND'];
+        const result = ['and'];
         for (const config of rules) {
             const condition = Object.prototype.hasOwnProperty.call(this._metaObjectRuleCache, config.name)
                 ? this._metaObjectRuleCache[config.name]

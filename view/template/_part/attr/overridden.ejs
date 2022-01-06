@@ -14,7 +14,7 @@ if (typeof actionBinder !== 'undefined') {
 if (typeof params !== 'undefined') {
     const binder = params.actionBinder;
     if (binder) {
-        binder.enable = binder.enable ? ['AND', data.enable, binder.enable] : data.enable;
+        binder.enable = binder.enable ? ['and', data.enable, binder.enable] : data.enable;
         binder.value = data.value;
     }
 }

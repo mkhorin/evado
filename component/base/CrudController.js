@@ -173,7 +173,7 @@ module.exports = class CrudController extends Base {
         if (!query) {
             throw new BadRequest('Relation not found');
         }
-        params.pid ? query.with(params.with) : query.where(['FALSE']);
+        params.pid ? query.with(params.with) : query.where(['false']);
         return this.sendGridList(query, params);
     }
 

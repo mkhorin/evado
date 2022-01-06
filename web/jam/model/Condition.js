@@ -4,26 +4,26 @@
 Jam.ModelCondition = class ModelCondition {
 
     static OPERATORS = {
-        'AND': 'validateAnd',
-        'OR': 'validateOr',
-        'EMPTY': 'validateEmpty',
-        'NOT EMPTY': 'validateNotEmpty',
-        'BETWEEN': 'validateBetween',
-        'NOT BETWEEN': 'validateNotBetween',
-        'IN': 'validateIn',
-        'NOT IN': 'validateNotIn',
-        'REGEX': 'validateRegex',
+        'and': 'validateAnd',
+        'or': 'validateOr',
+        'empty': 'validateEmpty',
+        'notEmpty': 'validateNotEmpty',
+        'between': 'validateBetween',
+        'notBetween': 'validateNotBetween',
+        'in': 'validateIn',
+        'notIn': 'validateNotIn',
+        'regex': 'validateRegex',
         '=': 'validateEqual',
         '!=': 'validateNotEqual',
         '>': 'validateGreater',
         '>=': 'validateGreaterOrEqual',
         '<': 'validateLess',
         '<=': 'validateLessOrEqual',
-        'FALSE': 'validateFalse',
-        'TRUE': 'validateTrue',
-        'INITIAL': 'validateInitial',
-        'START TRIGGER': 'validateStartTrigger',
-        'TRIGGER': 'validateTrigger'
+        'false': 'validateFalse',
+        'true': 'validateTrue',
+        'initial': 'validateInitial',
+        'startTrigger': 'validateStartTrigger',
+        'trigger': 'validateTrigger'
     };
 
     constructor (data, model) {
@@ -62,7 +62,7 @@ Jam.ModelCondition = class ModelCondition {
         }
         let operator = data[0];
         if (operator && typeof operator === 'object') {
-            operator = 'AND';
+            operator = 'and';
         } else {
             data = data.slice(1);
         }

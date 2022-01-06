@@ -60,7 +60,7 @@ module.exports = class RefValueChainRule extends Base {
     async getObjectFilter () {
         if (this.objectFilter) {
             const values = await this.resolveRefValues();
-            return [this.not ? 'NOT IN' : 'IN', this.refAttrs[0], values];
+            return [this.not ? 'notIn' : 'in', this.refAttrs[0], values];
         }
     }
 };

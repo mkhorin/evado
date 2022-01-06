@@ -125,7 +125,7 @@ module.exports = class User extends Base {
     }
 
     readMessage (id) {
-        return this.relPopupNotifications().and(['ID', 'message', id]).updateAll({read: true});
+        return this.relPopupNotifications().and(['id', 'message', id]).updateAll({read: true});
     }
 
     // RELATIONS

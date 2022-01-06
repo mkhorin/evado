@@ -23,8 +23,8 @@ module.exports = class MetaCommonSearch extends Base {
             }
         }
         conditions.length
-            ? query.and(['OR', ...conditions])
-            : query.where(['FALSE']);
+            ? query.and(['or', ...conditions])
+            : query.where(['false']);
     }
 
     getAttrCondition (attr, value) {

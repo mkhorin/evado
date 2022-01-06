@@ -11,11 +11,11 @@ module.exports = class MetaObjectFilter extends Base {
         let {allow, deny} = IndexHelper.indexObjectArrays(this.items, 'type');
         let allowConditions, denyConditions;
         if (deny) {
-            denyConditions = this.getConditions(deny, 'NOR');
+            denyConditions = this.getConditions(deny, 'not');
             this.denyRules = this.getRules(deny);
         }
         if (allow) {
-            allowConditions = this.getConditions(allow, 'OR');
+            allowConditions = this.getConditions(allow, 'or');
             if (allowConditions?.length === 2) {
                 allowConditions = allowConditions[1];
             }
@@ -24,7 +24,7 @@ module.exports = class MetaObjectFilter extends Base {
             this.allowRules = rules?.length === allow.length ? rules : null;
         }
         this.condition = allowConditions && denyConditions
-            ? ['AND', allowConditions, denyConditions]
+            ? ['and', allowConditions, denyConditions]
             : (allowConditions || denyConditions);
         this.skipped = !this.allowRules && !this.denyRules && !this.condition;
     }
