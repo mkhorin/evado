@@ -8,48 +8,33 @@ const Base = require('./Asset');
 module.exports = class AssetDeployer extends Base {
 
     async execute () {
-        const data = this.params.deploy;
-        if (data) {
-            this.log('info', 'Deploying assets...');
-            for (const key of Object.keys(data)) {
-                await PromiseHelper.setTimeout(10);
-                await this.deployModuleAssets(key, data[key]);
+        for (const module of this.module.getOriginalHierarchy()) {
+            const params = this.getParams(module);
+            if (params.deploy) {
+                const root = module.getPath();
+                this.log('info', `Deploying assets: ${root}`);
+                await this.deployAssets(params.deploy, root, params);
             }
         }
     }
 
-    async deployModuleAssets (key, data) {
-        const target = path.join(this.getWebDir(), key);
-        const files = typeof data === 'string' ? [data] : data;
-        const modules = this.module.getOriginalHierarchy();
-        for (const file of files) {
-            let source = path.join(this.getAssetDir(), file);
-            let done = false;
-            for (const module of modules) {
-                const sourceFile = module.getPath(source);
-                const targetFile = module.getPath(target);
-                if (await this.copyFile(sourceFile, targetFile)) {
-                    done = module;
-                }
-            }
-            this.logResult(done, key, file);
-        }
-    }
-
-    async deployAssets (data, root) {
+    async deployAssets (data, root, params = this.getParams()) {
         for (const key of Object.keys(data)) {
             await PromiseHelper.setTimeout(10);
-            await this.deployAsset(key, data[key], root);
+            await this.deployAsset(key, data[key], root, params);
         }
     }
 
-    async deployAsset (key, data, root) {
-        const source = path.join(root, this.getAssetDir());
-        const target = path.join(root, this.getWebDir(), key);
+    async deployAsset (key, data, root, params) {
+        const source = path.join(root, params.assetDir);
+        const target = path.join(root, params.webDir, key);
         const files = typeof data === 'string' ? [data] : data;
         for (const file of files) {
-            const done = await this.copyFile(path.join(source, file), target);
-            this.logResult(done, key, file);
+            if (await this.copyFile(path.join(source, file), target)) {
+                this.log('info', `Deployed ${file} to ${key}`);
+            } else {
+                this.log('error', `Not deployed ${file} to ${key}`);
+            }
         }
     }
 
@@ -67,11 +52,6 @@ module.exports = class AssetDeployer extends Base {
         } catch (err) {
             this.log('error', err);
         }
-    }
-
-    logResult (done, key, file) {
-        done ? this.log('info', `Deployed ${file} to ${key}`)
-             : this.log('error', `Not deployed ${file} to ${key}`);
     }
 };
 

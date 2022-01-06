@@ -9,19 +9,11 @@ module.exports = class ModuleAsset extends Base {
 
     constructor (config) {
         super(config);
-        this.params = this.getParams();
+        this.params = this.getParams(this.module);
     }
-
-    getAssetDir () {
-        return this.params.assetDir;
-    }
-
-    getWebDir () {
-        return this.params.webDir;
-    }
-
-    getParams () {
-        return Object.assign(this.getDefaultParams(), this.params || this.module.getConfig('assets'));
+    
+    getParams (module = this.module) {
+        return Object.assign(this.getDefaultParams(), module.config.getOwn('assets'));
     }
 
     getDefaultParams () {

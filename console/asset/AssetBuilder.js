@@ -14,64 +14,40 @@ module.exports = class AssetBuilder extends Base {
         });
     }
 
-    getSourceDir (data) {
-        return data.sourceDir || this.getWebDir();
-    }
-
-    getTargetDir (data) {
-        return data.targetDir || this.getWebDir();
-    }
-
     async execute () {
-        if (this.params.build) {
-            this.log('info', 'Building assets...');
-            for (const data of this.params.build) {
-                await PromiseHelper.setImmediate();
-                await this.buildModuleAssets(data);
+        for (const module of this.module.getOriginalHierarchy()) {
+            const params = this.getParams(module);
+            if (params.build) {
+                const root = module.getPath();
+                this.log('info', `Building assets: ${root}`);
+                await this.buildAssets(params.build, root, params);
             }
         }
     }
 
-    async buildModuleAssets (data) {
-        let done = false;
-        let allErrors = [];
-        for (let module of this.module.getOriginalHierarchy()) {
-            let errors = await this.buildAsset(data, module.getPath());
-            if (errors) {
-                allErrors.push(...errors);
-            } else {
-                done = true;
-            }
-        }
-        this.logResult(done, data, allErrors);
-    }
-
-    async buildAssets (items, root) {
+    async buildAssets (items, root, params = this.getParams()) {
         for (const data of items) {
-            const errors = await this.buildAsset(data, root);
-            this.logResult(!errors, data, errors);
+            await PromiseHelper.setTimeout(10);
+            const errors = await this.buildAsset(data, root, params);
+            this.logResult(data, errors);
         }
     }
 
-    buildAsset (data, root) {
-        try {
-            data.Class = this.resolveHandlerClass(data.Class);
-            return this.spawn(data, {
-                sourceRoot: path.join(root, this.getSourceDir(data)),
-                targetRoot: path.join(root, this.getTargetDir(data))
-            }).execute();
-        } catch (error) {
-            return [error];
-        }
+    buildAsset (data, root, params) {
+        data.Class = this.resolveHandlerClass(data.Class);
+        return this.spawn(data, {
+            sourceRoot: path.join(root, data.sourceDir || params.webDir),
+            targetRoot: path.join(root, data.targetDir || params.webDir)
+        }).execute();
     }
 
     resolveHandlerClass (name) {
         return this.hasOwnProperty(name) ? this[name] : name;
     }
 
-    logResult (done, {target}, errors) {
-        if (done) {
-            return this.log('info', `Done: ${target}`);
+    logResult ({target}, errors) {
+        if (!Array.isArray(errors)) {
+            return this.log('info', `Built: ${target}`);
         }
         for (const error of errors) {
             this.log('error', ...error);
