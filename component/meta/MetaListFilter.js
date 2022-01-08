@@ -67,9 +67,9 @@ module.exports = class MetaListFilter extends Base {
         return this.formatSelectorCondition(attr, op, value);
     }
 
-    async parseRelation ({attr, op}) {
-        let relation = this.getRelation(attr);
-        let value = this.formatByValueType(...arguments) || null;
+    async parseRelation ({attr, op, value}) {
+        value = this.formatByValueType(value, 'id') || null;
+        const relation = this.getRelation(attr);
         if (relation.isRef()) {
             let condition = this.formatSelectorCondition(attr, op, value);
             if (!relation.multiple || value !== null) {

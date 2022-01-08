@@ -236,11 +236,11 @@ module.exports = class ListFilter extends Base {
         return {[attr]: new RegExp(value, 'i')};
     }
 
-    parseSelector ({attr, op, value}) {
+    parseSelector ({attr, op, value, valueType}) {
         if (value === '') {
             return this.getEmptyValueCondition(attr, op);
         }
-        value = this.formatByValueType(...arguments);
+        value = this.formatByValueType(value, valueType);
         return value ? this.formatSelectorCondition(attr, op, value) : null;
     }
 
@@ -250,7 +250,7 @@ module.exports = class ListFilter extends Base {
             : {[attr]: null};
     }
 
-    formatByValueType ({value, valueType}) {
+    formatByValueType (value, valueType) {
         switch (valueType) {
             case 'id': return this.query.getDb().normalizeId(value);
             case 'integer': return parseInt(value);
