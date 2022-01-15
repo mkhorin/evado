@@ -22,9 +22,14 @@ module.exports = class HierarchySolver extends Base {
         });
     }
 
+    async getDescendantAndParentQuery () {
+        const ids = await this.getDescendantAndParentIds([this.model.getId()]);
+        return this.model.find({[this.model.PK]: ids}, ...arguments);
+    }
+
     async getDescendantQuery () {
-        const descendants = await this.getDescendantIds([this.model.getId()]);
-        return this.model.find({[this.model.PK]: descendants}, ...arguments);
+        const ids = await this.getDescendantIds([this.model.getId()]);
+        return this.model.find({[this.model.PK]: ids}, ...arguments);
     }
 
     async getParentQuery () {
@@ -35,6 +40,12 @@ module.exports = class HierarchySolver extends Base {
             descendants.push(id);
         }
         return this.model.find(['notIn', this.model.PK, descendants], ...arguments);
+    }
+
+    async getDescendantAndParentIds (parentIds) {
+        const descendants = await this.getDescendantIds(parentIds);
+        descendants.push(...parentIds);
+        return descendants;
     }
 
     async getDescendantIds (parentIds) {
