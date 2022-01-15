@@ -41,8 +41,9 @@ Jam.Alert = class Alert {
     }
 
     show (type, message) {
-        if (typeof message === 'string') {
-            this.build(type, Jam.t(message));
+        message = Jam.t(message);
+        if (typeof message === 'string' && message) {
+            this.build(type, message);
             this.$element.show();
             this.scrollTo();
         }
