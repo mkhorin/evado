@@ -281,7 +281,8 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     onFailDeletion (data) {
-        this.alert.danger(data.responseText || data.statusText);
+        const message = data.responseText || data.statusText;
+        this.alert.danger(Jam.Helper.parseJson(message) || message);
         this.toggleLoader(false);
     }
 

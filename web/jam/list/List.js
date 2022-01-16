@@ -295,13 +295,20 @@ Jam.List = class List extends Jam.Element {
 
     deleteObjects ($items) {
         const ids = this.serializeObjectIds($items);
-        this.post(this.getDeleteUrl($items), {ids}).done(this.onDoneDeletion.bind(this, ids));
+        this.post(this.getDeleteUrl($items), {ids}).done(this.onDoneDeletion.bind(this));
     }
 
-    onDoneDeletion (ids) {
-        ids = ids.split(',');
-        this.events.trigger('afterDelete', {ids});
+    onDoneDeletion (data) {
+        data = Jam.Helper.parseJson(data);
+        this.alert.danger(this.parseErrors(data?.errors));
+        this.events.trigger('afterDelete', data);
         this.reload();
+    }
+
+    parseErrors (items) {
+        return Array.isArray(items)
+            ? items.map(item => `<div class="error-item">${Jam.t(item)}</div>`).join('')
+            : null;
     }
 
     openFrame (url, params, afterClose, frameParams) {
@@ -429,39 +436,5 @@ Jam.List = class List extends Jam.Element {
 
     onSelectAll () {
         this.toggleItemSelect(this.grid.findItems(), true);
-    }
-};
-
-Jam.MainList = class MainList extends Jam.List {
-};
-
-Jam.FrameList = class FrameList extends Jam.List {
-
-    init() {
-        Object.assign(this.params, this.frame.initParams);
-        super.init();
-        this.frame.findScrollHeader().append(this.$commands);
-    }
-};
-
-Jam.TreeList = class TreeList extends Jam.List {
-
-    createDataGrid () {
-        this.grid = new Jam.TreeGrid(this.$grid, this.params);
-    }
-};
-
-Jam.MainTreeList = class MainTreeList extends Jam.TreeList {
-
-    onCreate (event) {
-        const $item = this.findSelectedItems();
-        if ($item.length !== 1) {
-            return super.onCreate(event);
-        }
-        const node = this.grid.getNodeByItem($item);
-        super.onCreate(event, {
-            node: node.getId(),
-            depth: node.getDepth()
-        });
     }
 };

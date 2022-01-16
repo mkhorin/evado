@@ -27,7 +27,7 @@ module.exports = class MetaParams {
 
     getMasterId () {
         return this.master.model
-            ? `${this.master.attr.name}.${this.master.model.getMetaId()}`
+            ? `${this.master.attr.name}.${this.master.model}`
             : '';
     }
 };

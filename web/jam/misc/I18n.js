@@ -95,13 +95,15 @@ Jam.I18n = class I18n {
             : this.getRegularMessage(category, message);
     }
 
-    getFormattedMessage (category, message, params = {}) {
+    getFormattedMessage (category, message, params) {
         let text = this.getRegularMessage(category, message);
         if (text === undefined) {
             text = message;
         }
-        for (const key of Object.keys(params)) {
-            text = text.replace(new RegExp(`{${key}}`,'g'), params[key]);
+        if (params) {
+            for (const key of Object.keys(params)) {
+                text = text.replace(new RegExp(`{${key}}`,'g'), params[key]);
+            }
         }
         return text;
     }

@@ -16,6 +16,7 @@ module.exports = {
             'jam/grid/DataGrid.js',
             'jam/grid/Renderer.js',
             'jam/list/List.js',
+            'jam/list/TreeList.js',
             'jam/listFilter/ListFilterType.js',
             'jam/listFilter/ListFilterTypeString.js',
             'jam'

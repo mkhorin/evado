@@ -125,6 +125,8 @@ Jam.I18n.defaults = {
     'Notification': 'Уведомление',
     'Notifications': 'Уведомления',
 
+    'Object {id} locked by link {link}': 'Объект {id} заблокирован связью {link}',
+    'Object {id}: {err}': 'Объект {id}: {err}',
     'Object select box': 'Выпадающий список объектов',
     'Office': 'Офис',
     'Only these file extensions are allowed: {extensions}': 'Допустимы только эти расширения файлов: {extensions}',

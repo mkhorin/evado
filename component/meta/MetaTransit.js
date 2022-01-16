@@ -18,18 +18,18 @@ module.exports = class MetaTransit extends Base {
 
     async execute (model, name) {
         if (model.isTransiting()) {
-            throw new Locked(`Transition in progress: ${name}.${model.getMetaId()}`);
+            throw new Locked(`Transition in progress: ${name}.${model}`);
         }
         await model.resolveTransitions(name);
         if (!model.transitions.length) {
-            throw new BadRequest(`Invalid transition: ${name}.${model.getMetaId()}`);
+            throw new BadRequest(`Invalid transition: ${name}.${model}`);
         }
         await this.security.resolveModelTransitions(model);
         const transition = model.transitions[0];
         if (transition instanceof Transition) {
             return model.transit(transition);
         }
-        throw new Forbidden(`Transition is forbidden: ${name}.${model.getMetaId()}`);
+        throw new Forbidden(`Transition is forbidden: ${name}.${model}`);
     }
 };
 
