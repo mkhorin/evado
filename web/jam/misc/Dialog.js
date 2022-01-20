@@ -13,6 +13,7 @@ Jam.Dialog = class Dialog {
             beforeSubmit: null,
             cancelCss: 'btn-outline-secondary',
             translatable: true,
+            escaping: true,
             ...params
         };
         this.$dialog = $(this.createElement());        
@@ -98,10 +99,10 @@ Jam.Dialog = class Dialog {
 
     build (data) {
         this.$dialog.removeClass().addClass(`dialog-${data.css} dialog`);
-        this.$dialog.find('.dialog-head').html(this.translate(data.title));
-        this.$dialog.find('.dialog-body').html(this.translate(data.message));
-        this.$submit.html(this.translate(data.submitText)).toggle(!!data.submitText);
-        this.$cancel.html(this.translate(data.cancelText)).toggle(!!data.cancelText);
+        this.$dialog.find('.dialog-head').html(this.prepareText(data.title));
+        this.$dialog.find('.dialog-body').html(this.prepareText(data.message));
+        this.$submit.html(this.prepareText(data.submitText)).toggle(!!data.submitText);
+        this.$cancel.html(this.prepareText(data.cancelText)).toggle(!!data.cancelText);
         this.setButtonCss(data.submitCss, this.$submit, 'btn-submit btn');
         this.setButtonCss(data.cancelCss, this.$cancel, 'btn-cancel btn');
     }
@@ -155,6 +156,14 @@ Jam.Dialog = class Dialog {
     
     createElement () {
         return `<div class="dialog"><div class="dialog-box"><div class="dialog-head"></div><div class="dialog-body"></div><div class="dialog-foot"><button class="btn-submit btn" type="button"></button><button class="btn-cancel btn" type="button"></button></div></div></div>`;
+    }
+
+    prepareText () {
+        return this.escape(this.translate(...arguments));
+    }
+
+    escape (message) {
+        return this.params.escaping ? Jam.StringHelper.escapeTags(message) : message;
     }
 
     translate (message) {
