@@ -47,6 +47,7 @@ Jam.EnumModelAttr = class EnumModelAttr extends Jam.ModelAttr {
             this.$select.val(value);
             if (value !== this.$select.val()) {
                 this.$value.val('');
+                this.$select.val(null);
                 this.triggerChange();
             }
         }
