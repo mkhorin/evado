@@ -70,18 +70,3 @@ Jam.Alert = class Alert {
         return '<div class="alert"><button type="button" class="btn-close"></button><div class="message"></div></div>';
     }
 };
-
-Jam.MainAlert = class MainAlert extends Jam.Alert {
-
-    static clear () {
-        $('.main-alert').remove();
-    }
-
-    constructor (params) {
-        super({
-            css: 'main-alert',
-            container: $('.main-container'),
-            ...params
-        });
-    }
-};

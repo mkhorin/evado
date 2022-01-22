@@ -28,7 +28,7 @@ module.exports = class ThumbnailSize extends Base {
             },
             output: 'jpeg',
             outputParams: {
-                quality: 70
+                quality: 90
             },
             flatten: '#ffffff',
             ...config

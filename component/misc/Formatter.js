@@ -18,9 +18,10 @@ module.exports = class Formatter extends Base {
         return `<a href="${value}" class="download-link" target="_blank">${params?.text || value}</a>`;
     }
 
-    asInherited (value, {translate} = {}) {
-        translate = typeof translate === 'string' ? `data-t="${translate}"` : '';
-        return `<span class="inherited-value" ${translate} title="Inherited value">${this.format(value)}</span>`;
+    asInherited (value, params) {
+        const translate = typeof params.translate === 'string' ? `data-t="${params.translate}"` : '';
+        value = this.format(value, null, params);
+        return `<span class="inherited-value" ${translate} title="Inherited value" data-t-title="">${value}</span>`;
     }
 
     asFrameLink (value, params) {

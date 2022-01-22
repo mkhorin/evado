@@ -61,6 +61,12 @@ module.exports = class MetaGrid extends Base {
         return this._result;
     }
 
+    setLimit () {
+        if (!this.query.getLimit()) {
+            super.setLimit();
+        }
+    }
+
     getMaxLimit () {
         return this.meta.view.options.listLimit || this.MAX_LIMIT;
     }

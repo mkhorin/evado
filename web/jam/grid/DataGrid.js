@@ -13,7 +13,7 @@ Jam.DataGrid = class DataGrid {
 
     static getRendererClass (view) {
         switch (view) {
-            case 'cards': return Jam.CardDataGridRenderer;
+            case 'cards': return Jam.CardGridRenderer;
         }
         return Jam.DataGridRenderer;
     }

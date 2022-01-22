@@ -23,8 +23,8 @@ Applications built on Evado Framework:
 
 - [Blog](https://github.com/mkhorin/evado-app-blog)
 - [Bug Tracking System](https://github.com/mkhorin/evado-app-bugs)
-- [Cinema management](https://github.com/mkhorin/evado-app-cinema)
-- [Distance learning](https://github.com/mkhorin/evado-app-elearning)
+- [Cinema Management](https://github.com/mkhorin/evado-app-cinema)
+- [Distance Learning](https://github.com/mkhorin/evado-app-elearning)
 - [E-government](https://github.com/mkhorin/evado-app-egov)
 - [Expert System](https://github.com/mkhorin/evado-app-expert)
 - [Online Shop](https://github.com/mkhorin/evado-app-shop)

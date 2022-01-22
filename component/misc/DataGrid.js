@@ -69,15 +69,15 @@ module.exports = class DataGrid extends Base {
     }
 
     setLimit () {
-        this.limit = parseInt(this.request.length) || this.DEFAULT_LIMIT;
+        const limit = parseInt(this.request.length) || this.DEFAULT_LIMIT;
         // in mongodb limit 0 (null) or -N means no limit
-        if (isNaN(this.limit) || this.limit < 1) {
+        if (isNaN(limit) || limit < 1) {
             throw new BadRequest('Invalid limit');
         }
-        if (this.limit > this.getMaxLimit()) {
+        if (limit > this.getMaxLimit()) {
             throw new BadRequest('Length exceeds limit');
         }
-        this.query.limit(this.limit);
+        this.query.limit(limit);
     }
 
     getMaxLimit () {

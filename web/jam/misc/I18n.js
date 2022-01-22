@@ -3,6 +3,8 @@
  */
 Jam.I18n = class I18n {
 
+    static DEFAULT_ATTRIBUTES = ['title', 'placeholder'];
+
     constructor () {
         this._data = this.constructor;
     }
@@ -73,16 +75,18 @@ Jam.I18n = class I18n {
     }
 
     getAttributes ($container) {
-        let names = $container.data('tAttributes');
-        names = typeof names !== 'string' ? names : names ? names.split(',') : [];
-        if (!this._attributes) {
-            this._attributes = names || ['title', 'placeholder'];
+        const names = $container.data('tAttrs');
+        if (names === undefined) {
+            return this.constructor.DEFAULT_ATTRIBUTES;
         }
-        return names || this._attributes;
+        if (names && typeof names === 'string') {
+            return names.split(',');
+        }
+        return [];
     }
 
     translateAttribute (name, category, element) {
-        category = element.dataset[category] || element.dataset.t;
+        category = element.dataset[category] ?? element.dataset.t;
         const message = this.getMessage(category, element.getAttribute(name));
         if (message !== undefined) {
             element.setAttribute(name, message);

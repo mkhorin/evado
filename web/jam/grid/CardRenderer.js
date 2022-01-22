@@ -1,7 +1,7 @@
 /**
  * @copyright Copyright (c) 2021 Maxim Khorin <maksimovichu@gmail.com>
  */
-Jam.CardDataGridRenderer = class CardDataGridRenderer extends Jam.DataGridRenderer {
+Jam.CardGridRenderer = class CardGridRenderer extends Jam.DataGridRenderer {
 
     renderContainer () {
         return `<div class="data-grid-cards"><div class="data-grid-body"></div><div class="data-grid-placeholder">[${Jam.t('no data')}]</div></div>`;

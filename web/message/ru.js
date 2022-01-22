@@ -63,7 +63,6 @@ Jam.I18n.defaults = {
     'Customize columns': 'Настроить колонки',
 
     'Data': 'Данные',
-    'Data does not match condition': 'Данные не соответствуют условию',
     'Data history': 'История данных',
     'Default value': 'Значение по умолчанию',
     'Delete': 'Удалить',
@@ -100,6 +99,7 @@ Jam.I18n.defaults = {
     'Index definitions not found in class:': 'Определения индексов не найдены в классе',
     'Indexing': 'Индексирование',
     'Initial data': 'Исходные данные',
+    'Inherited value': 'Унаследованное значение',
     'Input ID...': 'Введите ID...',
     'Input number...': 'Введите число...',
     'Input value...': 'Введите значение...',    
@@ -197,6 +197,7 @@ Jam.I18n.defaults = {
 
     'Value': 'Значение',
     'Value cannot be blank': 'Значение не может быть пустым',
+    'Value does not match condition': 'Значение не соответствуют условию',
     'View': 'Просмотр',
 
     'Warning': 'Предупреждение',
