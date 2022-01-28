@@ -17,8 +17,8 @@ Jam.CardGridRenderer = class CardGridRenderer extends Jam.DataGridRenderer {
 
     renderBodyCellHtml (value, {name, label, hint, translate}) {
         const css = this.getBodyCellClass(...arguments);
-        label = Jam.t(label || name, translate);
-        hint = hint ? `title="${Jam.t(hint, column.translate)}"` : '';
+        label = Jam.escape(Jam.t(label || name, translate));
+        hint = hint ? `title="${Jam.escape(Jam.t(hint, column.translate))}"` : '';
         return `<div class="card-row ${css} row" data-name="${name}"><label class="card-label col-xl-2 col-lg-3" ${hint}>${label}</label><div class="col-xl-10 col-lg-9"><div class="value">${value}</div></div></div>`;
     }
 

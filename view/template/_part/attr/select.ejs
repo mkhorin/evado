@@ -24,12 +24,13 @@ if (typeof items !== 'undefined' && items) {
             const text = item[p.textKey] === undefined ? '------' : item[p.textKey];
             content += `<option disabled>${text}</option>`;
         } else {
+            const text = p.escape ? _escape(item[p.textKey]) : item[p.textKey];
             const selected = item[p.valueKey] == p.value ? 'selected' : '';
-            content += `<option ${selected} value="${item[p.valueKey]}" data-t="${p.itemTranslate}">${item[p.textKey]}</option>`;
+            content += `<option ${selected} value="${item[p.valueKey]}" data-t="${p.itemTranslate}">${text}</option>`;
         }
     }
 } else if (p.value !== '') {
-    content += `<option selected value="${p.value}">${p.displayValue}</option>`;
+    content += `<option selected value="${p.value}">${p.escape ? _escape(p.displayValue) : p.displayValue}</option>`;
 }
 content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-select form-value">${content}</select>`;
 %>

@@ -10,10 +10,9 @@ const p = {handler: 'Checkbox'};
     <div class="<%- p.labelCss %>"></div>
     <div class="<%- p.valueCss %>">
         <input class="form-value" name="<%- p.name %>" type="hidden" value="<%- p.value %>">
-        <div class="form-check">
+        <div class="form-check" title="<%= p.extHint %>">
             <input class="form-check-input"<%- p.value ? ' checked' : '' %> type="checkbox">
-            <label class="form-check-label" title="<%- p.extHint %>"
-                   data-t="<%- p.translate %>"><%- p.label %></label>
+            <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label>
         </div>
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>

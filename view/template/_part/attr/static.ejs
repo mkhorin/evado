@@ -7,6 +7,9 @@ const p = {
 <%- include(_view.get('_part/attr/_params'), {p}) %>
 <%
 p.translateValue = typeof translateValue === 'undefined' ? 'none' : translateValue;
+if (p.escape) {
+    p.displayValue = _escape(p.displayValue);
+}
 if (p.value && typeof url !== 'undefined') {
     p.displayValue = `<a href="${_url(url)}" class="frame-link" tabindex="-1" data-t="${p.translateValue}">${p.displayValue}</a>`;
 }

@@ -165,7 +165,7 @@ Jam.DataGridRenderer = class DataGridRenderer {
         const direction = this._groupDirection;
         const cols = this.columns.length;
         const sort = '<span class="order-toggle fa" title="Sort"></span>';
-        label = Jam.t(label || name, translate);
+        label = Jam.escape(Jam.t(label || name, translate));
         return `<tr class="group ${direction}"><th title="${label}" colspan="${cols}">${value}${sort}</th></tr>`;
     }
 
@@ -229,15 +229,15 @@ Jam.DataGridRenderer = class DataGridRenderer {
         if (this.grid.isSortableColumn(name)) {
             css += ' sortable '+ this.getDirectionName(this.grid.getOrderDirection(name));
         }
-        label = Jam.t(label || name, translate);
-        hint = hint ? Jam.t(hint, translate) : label;
+        label = Jam.escape(Jam.t(label || name, translate));
+        hint = hint ? Jam.escape(Jam.t(hint, translate)) : label;
         return '<th class="'+ css +'" rowspan="'+ rows +'" data-name="'+ name +'">'
             + '<span class="column-label search-toggle" title="'+ hint +'">'+ label +'</span>'
             + '<span class="order-toggle fa" title="'+ this.locale.orderToggle +'"></span></th>';
     }
 
     renderHeadGroup ({name, label, translate}, columns, rows) {
-        label = Jam.t(label || name, translate);
+        label = Jam.escape(Jam.t(label || name, translate));
         return `<th class="group" colspan="${columns}" rowspan="${rows}" data-name="${name}">${label}</th>`;
     }
 

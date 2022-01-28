@@ -38,12 +38,12 @@ Jam.DataGridTuner = class DataGridTuner {
         const show = this.createInput(name, 'Show', 'show', !hidden);
         const checked = this._groupName === name;
         const group = grouping ? this.createInput(name, 'Group', 'group', checked) : '';
-        label = Jam.t(label || name, translate);
-        return `<label class="item-label" title="${name}">${show}${group}${label}</label>`;
+        label = Jam.escape(Jam.t(label || name, translate));
+        return `<label class="item-label" title="${Jam.escape(name)}">${show}${group}${label}</label>`;
     }
 
     createInput (name, title, css, checked) {
-        title = Jam.t(title);
+        title = Jam.escape(Jam.t(title));
         checked = checked ? 'checked' : '';
         return `<input class="${css}" title="${title}" type="checkbox" ${checked} value="${name}">`;
     }

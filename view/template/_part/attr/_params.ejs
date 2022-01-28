@@ -15,6 +15,7 @@ p.valueCss = typeof valueCss === 'undefined' ? 'col-xl-10 col-lg-9' : valueCss;
 p.translate = typeof translate === 'undefined' ? null : translate;
 p.handler = typeof handler === 'undefined' ? p.handler || null : handler;
 p.behaviors = typeof behaviors === 'undefined' ? null : JSON.stringify(behaviors);
+p.escape = typeof escape !== 'boolean' ? true : escape;
 
 p.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
 if (p.sourceValue === undefined && typeof defaultValue !== 'undefined') {
