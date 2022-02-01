@@ -23,7 +23,8 @@ if (typeof params !== 'undefined') {
                     <i class="fa fa-redo-alt"></i>
                 </button>
             </div>
-            <button data-command="copyId" class="btn-outline-secondary btn" type="button" title="Copy ID">ID</button>
+            <button data-command="copyId" class="btn-outline-secondary btn" type="button"
+                    title="Copy <%- p.id %>">ID</button>
 
             <%- include(_view.get('_part/tool/modelHistory')) %>
 

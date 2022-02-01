@@ -37,7 +37,8 @@ if (typeof params !== 'undefined') {
                 </button>
             </div>
             <% if (p.id) { %>
-                <button data-command="copyId" class="btn-outline-secondary btn" type="button" title="Copy ID">ID</button>
+                <button data-command="copyId" class="btn-outline-secondary btn" type="button"
+                        title="Copy <%- p.id %>">ID</button>
                 <% if (p.clone) { %>
                 <button data-command="clone" class="btn-outline-success btn" type="button" title="Clone">
                     <i class="far fa-clone"></i>
