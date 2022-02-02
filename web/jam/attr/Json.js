@@ -35,11 +35,10 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
     }
 
     onSave () {
-        let value = this.$text.val();
+        const value = this.$text.val();
         try {
             if (value) {
-                value = JSON.stringify(JSON.parse(value)).replace(/,/g, ', ').replace(/":/g, '": ');
-                this.$value.val(value).change();
+                this.$value.val(JSON.stringify(JSON.parse(value), null, 1)).change();
             }
             this.modal.hide();
         } catch (err) {
