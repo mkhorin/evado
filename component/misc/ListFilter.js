@@ -23,18 +23,31 @@ module.exports = class ListFilter extends Base {
         for (const item of items) {
             item.condition = await this.parse(item);
         }
-        let and = ['and'], or = ['or', and];
+        let and = ['and'], or, prev;
         for (const item of items) {
-            if (item.condition) {
-                if (item.or && and.length > 1) {
-                    and = ['and'];
-                    or.push(and);
-                }
-                and.push(item.condition);
+            if (!item.condition) {
+                continue;
             }
+            if (item.or) {
+                if (!or) {
+                    or = ['or'];
+                    if (prev) {
+                        or.push(prev.condition);
+                    }
+                }
+                or.push(item.condition);
+            } else if (or) {
+                and.push(or);
+                or = null;
+            } else if (prev) {
+                and.push(prev.condition);
+            }
+            prev = item;
         }
-        if (or.length > 2) {
-            return or;
+        if (or) {
+            and.push(or);
+        } else if (prev) {
+            and.push(prev.condition);
         }
         if (and.length === 2) {
             return and[1];
