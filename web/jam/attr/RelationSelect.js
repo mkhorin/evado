@@ -26,18 +26,11 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     activate () {
         if (!this.canActivate()) {
-            return false;
+            return;
         }
         this.activated = true;
         this.childFrame = Jam.frameStack.createFrame();
-        this.params = {
-            pageSize: 10,
-            inputDelay: 500,
-            minInputLength: 0,
-            maxInputLength: 10,
-            placeholder: '',
-            ...this.selectParams
-        };
+        this.params = Object.assign(this.getDefaultParams(), this.selectParams);
         this.params.allowClear = !!this.params.unlink;
         this.$container = this.$value.closest('.relation-select');
         this.$commands = this.$container.children('.commands');
@@ -53,6 +46,16 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         // this.getDefaultTitles();
         this.toggleBlank();
         this.bindDependencyChange();
+    }
+
+    getDefaultParams () {
+        return {
+            pageSize: 10,
+            inputDelay: 500,
+            minInputLength: 0,
+            maxInputLength: 10,
+            placeholder: ''
+        };
     }
 
     getDefaultTitles () {

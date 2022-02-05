@@ -43,13 +43,15 @@ Jam.ModelGrouping = class ModelGrouping {
         this.groupMap = {};
         this.$groups.each((index, element) => {
             const $element = $(element);
-            const Class = $element.hasClass('form-set')
-                ? Jam.ModelGroup
-                : Jam.ModelTab;
+            const Class = this.getGroupClass($element);
             const group = new Class($element, this);
             this.groups.push(group);
             this.groupMap[group.id] = group;
         });
+    }
+
+    getGroupClass ($element) {
+        return $element.hasClass('tab-pane') ? Jam.ModelTab : Jam.ModelGroup;
     }
 
     loadStates () {

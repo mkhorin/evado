@@ -45,8 +45,12 @@ Jam.ModelAttr = class ModelAttr {
         this.model = model;
         this.$value = model.findAttrValue(this.$attr);
         this.$attr.data('modelAttr', this);
-        this.params = this.getData('params') || {};
+        this.params = Object.assign(this.getDefaultParams(), this.getData('params'));
         this.initialValue = this.getValue();
+    }
+
+    getDefaultParams () {
+        return {};
     }
 
     init () {

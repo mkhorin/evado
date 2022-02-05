@@ -28,7 +28,7 @@ module.exports = class MetaListFilter extends Base {
         if (attr.relation) {
             data.relation = true;
         }
-        if (attr.isClass()) {
+        if (attr.isClassView()) {
             data.type = 'class';
         }
         return super.parse(data);

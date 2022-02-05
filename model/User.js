@@ -93,7 +93,7 @@ module.exports = class User extends Base {
         if (!this.assignments) {
             this.assignments = await this.module.getRbac().getUserAssignments(this.getId());
         }
-        return this.assignments;        
+        return this.assignments;
     }
 
     unlock () {

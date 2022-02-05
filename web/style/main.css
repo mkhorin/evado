@@ -131,8 +131,12 @@ ul:last-child {
     font-size: 1.3rem;
     margin-bottom: 1rem;
 }
-.content-header:empty {
+.content-header:empty,
+.content-description:empty {
     display: none;
+}
+.content-description {
+    margin-bottom: 1rem;
 }
 .intro-header {
     font-size: 1.5rem;
@@ -912,6 +916,17 @@ select.form-select {
     vertical-align: top;
 }
 
+.form-set-invisible > legend {
+    display: none;
+}
+.form-set-invisible.active {
+    margin-bottom: var(--form-row-space);
+}
+.form-columns + .form-set-invisible,
+.form-group + .form-set-invisible {
+    margin-top: 0;
+}
+
 .model-group.empty-group {
     display: none;
 }
@@ -958,7 +973,7 @@ select.form-select {
     display: none;
     padding: .5rem 0;
     overflow: auto;
-    max-height: calc(100vh - var(--header-height) - 5rem);
+    max-height: calc(100vh - var(--header-height) - 4rem);
 }
 .notification-menu .no-notifications {
     padding: 1rem 1.25rem;
@@ -1076,7 +1091,7 @@ select.form-select {
 .box {
     position: relative;
     background: #fff;
-    border-top: 3px solid #d2d6de;
+    border-top: 2px solid #d2d6de;
     box-shadow: 0 1px 1px rgba(0,0,0,.1);
 }
 .box-body {
@@ -1179,7 +1194,7 @@ select.form-select {
     line-height: 1.4rem;
 }
 .select2-container .select2-selection--multiple .select2-selection__choice__remove:hover {
-    color: #343a40;
+    color: #f43a40;
 }
 .select2-container .select2-selection--multiple .select2-selection__clear {
     float: none;

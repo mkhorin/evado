@@ -210,12 +210,12 @@ module.exports = class MetaGrid extends Base {
         }
         if (attr.isEmbeddedModel()) {
             result[this._columnMap[attr.name].titleName] = model.related.getTitle(attr);
-        } else if (attr.isState()) {
-            const state = model.class.getState(value);
-            result[this._columnMap[attr.name].titleName] = state ? state.title : null;
-        } else if (attr.isClass()) {
-            const cls = model.class.meta.getClass(value);
-            result[this._columnMap[attr.name].titleName] = cls ? cls.title : null;
+        } else if (attr.isStateView()) {
+            result[this._columnMap[attr.name].titleName] = model.class.getState(value)?.title;
+        } else if (attr.isClassView()) {
+            result[this._columnMap[attr.name].titleName] = model.class.meta.getClass(value)?.title;
+        } else if (attr.isClassesView()) {
+            result[this._columnMap[attr.name].titleName] = model.class.meta.getClassTitles(value);
         }
         return value;
     }

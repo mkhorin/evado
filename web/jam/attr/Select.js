@@ -11,9 +11,15 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         this.cache = new Map;
     }
 
+    getDefaultParams () {
+        return {
+            stringifyValue: true
+        };
+    }
+
     activate () {
         if (!this.canActivate()) {
-            return false;
+            return;
         }
         if (this.select2Params) {
             this.createSelect2();
@@ -99,13 +105,7 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
     }
 
     createSelect2 () {
-        const params = {
-            pageSize: 10,
-            minimumInputLength: 0,
-            maximumInputLength: 24,
-            minimumResultsForSearch: 10,
-            ...this.select2Params
-        };
+        const params = Object.assign(this.getDefaultSelect2Params(), this.select2Params);
         if (params.ajax) {
             params.ajax = this.getAjaxParams(params.ajax);
         }
@@ -115,6 +115,15 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         this.select2Params = params;
         this.$value.select2(params).change(this.onChangeSelect.bind(this));
         this.getSelect2().on('query', this.onQuery.bind(this));
+    }
+
+    getDefaultSelect2Params () {
+        return {
+            pageSize: 10,
+            minimumInputLength: 0,
+            maximumInputLength: 24,
+            minimumResultsForSearch: 10
+        };
     }
 
     onQuery () {
@@ -165,5 +174,12 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
             pagination: {more},
             results: Jam.Helper.formatSelectItems(items)
         };
+    }
+
+    serialize () {
+        const value = this.getValue();
+        return this.params.stringifyValue && Array.isArray(value)
+            ? JSON.stringify(value)
+            : value;
     }
 };

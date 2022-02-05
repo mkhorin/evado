@@ -4,6 +4,7 @@
 Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
 
     static defaults = {
+        ...Jam.DataGrid.defaults,
         clearCollapsedNode: true,
         nodeToggle: '<div class="node-toggle"><i class="fas fa-angle-right"></i></div>'
     };

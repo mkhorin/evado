@@ -36,12 +36,11 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
     }
 
     activate () {
-        if (!this.canActivate()) {
-            return false;
+        if (this.canActivate()) {
+            this.activated = true;
+            Jam.deferred.add(this.createList.bind(this));
+            this.bindDependencyChange();
         }
-        this.activated = true;
-        Jam.deferred.add(this.createList.bind(this));
-        this.bindDependencyChange();
     }
 
     createList (afterInit) {

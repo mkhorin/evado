@@ -8,7 +8,7 @@ const Base = require('areto/base/Base');
 module.exports = class BaseAssignmentRule extends Base {
 
     async execute (item, userId) {
-        return true;  // can assign item to user
+        return true; // can assign item to user
     }
 
     async getUsers (item) {

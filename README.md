@@ -21,6 +21,7 @@
 
 Applications built on Evado Framework:
 
+- [Auction](https://github.com/mkhorin/evado-app-auction)
 - [Blog](https://github.com/mkhorin/evado-app-blog)
 - [Bug Tracking System](https://github.com/mkhorin/evado-app-bugs)
 - [Cinema Management](https://github.com/mkhorin/evado-app-cinema)

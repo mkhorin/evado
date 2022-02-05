@@ -8,6 +8,7 @@ Jam.ListDataFormatter = class ListDataFormatter {
         bytes: 'asBytes',
         date: 'asDate',
         datetime: 'asDatetime',
+        json: 'asJson',
         label:'asDefault',
         link:'asLink',
         relation: 'asRelation',
@@ -59,9 +60,6 @@ Jam.ListDataFormatter = class ListDataFormatter {
         if (value === undefined || value === null) {
             return this.asNotSet(value, params);
         }
-        if (Array.isArray(value) && !value.length) {
-            return this.asNotSet(null, params);
-        }
         if (params.escape === undefined) {
             params.escape = true;
         }
@@ -81,13 +79,16 @@ Jam.ListDataFormatter = class ListDataFormatter {
         if (!Array.isArray(value)) {
             return handler.call(this, value, params, data);
         }
+        if (!value.length) {
+            return this.asNotSet(null, params);
+        }
         let separator = '<br>';
         if (params.format?.hasOwnProperty('separator')) {
             separator = params.format.separator;
         } else if (params.hasOwnProperty('separator')) {
             separator = params.separator;
         }
-        return value.map(value => handler.call(this, value, params, data)).join(separator);
+        return value.map((value, index) => handler.call(this, value, params, data, index)).join(separator);
     }
 
     asDefault (value, params) {
@@ -112,6 +113,10 @@ Jam.ListDataFormatter = class ListDataFormatter {
         return this.join((value, {momentFormat, utc}) => {
             return Jam.FormatHelper.asDatetime(Jam.DateHelper.formatByUtc(value, utc), momentFormat);
         }, ...arguments);
+    }
+
+    asJson (data, params) {
+        return this.escape(JSON.stringify(data, null, 1), params);
     }
 
     asEmbeddedModel (data, params) {
@@ -149,8 +154,8 @@ Jam.ListDataFormatter = class ListDataFormatter {
     }
 
     asTitle (value, params) {
-        return this.join((value, params, data) => {
-            value = data[params.titleName] || value;
+        return this.join((value, params, data, index) => {
+            value = data[params.titleName]?.[index] || value;
             return this.escape(this.translate(value, params), params);
         }, ...arguments);
     }

@@ -9,11 +9,13 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
     }
 
     activate () {
-        this.$picker = this.find('.datepicker');
-        if (this.$picker.length) {
-            this.createPicker();
+        if (this.canActivate()) {
+            this.$picker = this.find('.datepicker');
+            if (this.$picker.length) {
+                this.createPicker();
+            }
+            this.activated = true;
         }
-        this.activated = true;
     }
 
     createPicker () {

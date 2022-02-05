@@ -40,7 +40,7 @@ module.exports = class ChangePasswordForm extends Base {
             const user = this.user.getIdentity();
             const old = await service.changePassword(this.get('newPassword'), user);
             await this.user.log('changePassword', old, user);
-            return true;            
+            return true;
         } catch (err) {
             this.addError('newPassword', err);
         }       

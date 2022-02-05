@@ -16,7 +16,7 @@ Jam.Dialog = class Dialog {
             escaping: true,
             ...params
         };
-        this.$dialog = $(this.createElement());        
+        this.$dialog = $(this.createElement());
         this.$submit = this.$dialog.find('.btn-submit');
         this.$cancel = this.$dialog.find('.btn-cancel');
         this.$submit.click(this.onAction.bind(this, true));

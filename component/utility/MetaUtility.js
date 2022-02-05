@@ -49,13 +49,13 @@ module.exports = class MetaUtility extends Base {
 
     async parseBaseMeta (meta = this.postParams.meta, model = this.postParams.model) {
         if (!meta) {
-            return {};    
+            return {};
         }
-        const result = {view: this.getBaseMeta().getView(meta)};        
+        const result = {view: this.getBaseMeta().getView(meta)};
         if (!result.view) {
-            throw new BadRequest('View not found');                
+            throw new BadRequest('View not found');
         }        
-        result.class = result.view.class;        
+        result.class = result.view.class;
         if (model) {
             result.model = await this.findModel(result.view, model).one();
             if (!result.model) {
