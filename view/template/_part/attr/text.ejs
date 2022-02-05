@@ -1,7 +1,8 @@
 <!-- _part/attr/text -->
 <% 
 const p = {
-    rows: typeof rows === 'undefined' ? 3 : rows
+    rows: typeof rows === 'undefined' ? 18 : rows,
+    handler: 'Text'
 }; 
 %>
 <%- include(_view.get('_part/attr/_params'), {p}) %>
