@@ -13,10 +13,13 @@ module.exports = class BaseMenu extends Base {
         const activeItem = this.controller.meta?.node;
         const openedItems = activeItem?.getParents() || [];
         const items = [...openedItems, ...section.children];
+        if (activeItem?.children) {
+            items.push(...activeItem.children);
+        }
         const forbiddenAccess = await this.resolveAccess({section, items});
         return this.renderTemplate('_part/nav/sideMenu', {
             section,
-            activeItem,            
+            activeItem,
             openedItems,
             forbiddenAccess
         });
@@ -31,12 +34,19 @@ module.exports = class BaseMenu extends Base {
     }
 
     getItemModule (item) {
-        return item.data.class ? 'office' : item.data.report ? 'report' : this.module.getRouteName();
+        if (item.data.class) {
+            return 'office';
+        }
+        if (item.data.report) {
+            return 'report';
+        }
+        return this.module.getRouteName();
     }
 
-    resolveAccess (data) {
+    resolveAccess (data, params) {
         return this.module.getRbac().resolveNavAccess(this.controller.user.assignments, data, {
-            controller: this.controller
+            controller: this.controller,
+            ...params
         });
     }
 
@@ -44,7 +54,7 @@ module.exports = class BaseMenu extends Base {
         return this.renderTemplate('_part/nav/sideMenuItems', {
             activeItem: null,
             openedItems: [],
-            forbiddenAccess: await this.resolveAccess({section, items}),
+            forbiddenAccess: await this.resolveAccess({section, items}, {checkParents: true}),
             items
         });
     }

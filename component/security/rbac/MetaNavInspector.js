@@ -33,17 +33,51 @@ module.exports = class MetaNavInspector extends Base {
         if (forbiddenSection) {
             return {[this.section.id]: true};
         }
-        const forbiddenAccess = {};
+        return this.params.checkParents
+            ? this.getForbiddenAccessByParents(data)
+            : this.getForbiddenAccess(data);
+    }
+
+    async getForbiddenAccessByParents (data) {
+        const result = {};
         for (const item of this.items) {
-            if (data[item.id]) {
-                forbiddenAccess[item.id] = await this.checkItems(data[item.id]);
+            if (item.parent) {
+                result[item.id] = await this.checkParents(item.getParents(), data, result);
+            }
+            if (!result[item.id] && data[item.id]) {
+                result[item.id] = await this.checkItems(data[item.id]);
             }
         }
-        return forbiddenAccess;
+        return result;
+    }
+
+    async checkParents (parents, data, forbiddenAccess) {
+        for (let i = parents.length - 1; i >= 0; --i) { // start from the root
+            let id = parents[i].id;
+            if (!forbiddenAccess.hasOwnProperty(id)) {
+                forbiddenAccess[id] = data[id]
+                    ? await this.checkItems(data[id])
+                    : false;
+            }
+            if (forbiddenAccess[id]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    async getForbiddenAccess (data) {
+        const result = {};
+        for (const item of this.items) {
+            if (data[item.id]) {
+                result[item.id] = await this.checkItems(data[item.id]);
+            }
+        }
+        return result;
     }
 
     filterMeta (data) {
-        let result;
+        let result = null;
         for (const role of this.assignments) {
             if (!Object.prototype.hasOwnProperty.call(data, role)) {
                 return null; // no role data
@@ -52,7 +86,7 @@ module.exports = class MetaNavInspector extends Base {
                 ? this.constructor.intersectData(result, data[role])
                 : data[role];
         }
-        return Object.values(result).length ? result : null;
+        return result && Object.values(result).length ? result : null;
     }
 
     async checkItems (items) {
@@ -63,6 +97,7 @@ module.exports = class MetaNavInspector extends Base {
                 }
             }
         }
+        return false;
     }
 };
 
