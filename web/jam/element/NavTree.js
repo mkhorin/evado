@@ -7,6 +7,7 @@ Jam.NavTree = class NavTree extends Jam.Element {
         this.params = this.getData('params');
         this.$element.prepend(this.createItems(this.params?.items));
         this.setCurrentActive();
+        this.scrollToActive();
         this.$element.on('click', '.tree > .nav-link', this.onTreeLink.bind(this));
     }
 
@@ -43,6 +44,17 @@ Jam.NavTree = class NavTree extends Jam.Element {
         return !chr || chr === '/' || chr === '?';
     }
 
+    scrollToActive () {
+        const $active = this.getCurrentActive();
+        if ($active.length) {
+            const $container = this.$element.closest('aside');
+            const scroll = $active.offset().top - $container.height() / 2;
+            if (scroll > 0) {
+                $container.prop('scrollTop', scroll);
+            }
+        }
+    }
+
     onTreeLink (event) {
         event.preventDefault();
         const $item = this.getItem(event.currentTarget);
@@ -50,28 +62,5 @@ Jam.NavTree = class NavTree extends Jam.Element {
         if (!$item.hasClass('open')) {
             $item.find('.open').removeClass('open');
         }
-    }
-};
-
-Jam.LoadableNavTree = class LoadableNavTree extends Jam.NavTree {
-
-    getCurrentActive () {
-        return this.find('.active').last();
-    }
-
-    onTreeLink (event) {
-        super.onTreeLink(event);
-        this.loadItem(this.getItem(event.currentTarget));
-    }
-
-    loadItem ($item) {
-        if ($item.hasClass('loading') || $item.hasClass('loaded')) {
-            return false;
-        }
-        $item.addClass('loading');
-        const id = $item.data('id');
-        return $.get(this.getData('url'), {id})
-            .done(data => Jam.t($item.find('.nav-children').html(data)))
-            .always(() => $item.removeClass('loading').addClass('loaded'));
     }
 };
