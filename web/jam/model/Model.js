@@ -57,8 +57,8 @@ Jam.Model = class Model extends Jam.Element {
 
     createAlert () {
         return new Jam.Alert({
-            container: this.$content,
-            $scrollTo: this.$content
+            container: $alert => this.$form.before($alert),
+            scrollable: this.$content
         });
     }
 

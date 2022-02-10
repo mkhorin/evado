@@ -1,3 +1,32 @@
+## 5.2.0
+
+* component/misc/HierarchySolver
+    - add parent and descendants query
+* component/misc/ListFilter
+    - fix priority of logical operations
+* component/security/rbac/MetaNavInspector    
+    - search menu nodes with parent security 
+* console/asset
+    - remove asset configuration inheritance
+* view/template/_layout/frame/modelForm
+    - add ID title to copy button
+* web/jam/attr/Enum
+    - add option hint
+    - clear displayed value when switching enum sets    
+* web/jam/attr/Json
+     - normalize string JSON
+* web/jam/attr/Text
+    - automatically adjust text field height 
+* web/jam/element/Alert
+    - parse structural message and ignore if it is empty
+* web/jam/element/NavTree
+    - scroll to active menu item 
+* web/jam/misc/Dialog
+    - escape HTML tags by default
+* web/style/main
+    - fix global loader overlay
+    - make fixed top panel 
+
 ## 5.1.0
 
 * component/meta/MetaGrid
@@ -8,7 +37,7 @@
     - check negative offset
 * config/default-assets
     - separate action binder sources
-* filter by attributes of descendant classes    
+* filter by attributes of descendant classes 
 * model/AutoIncrement
     - move auto increment table to model
 * web/jam/attr/Attr
@@ -30,23 +59,23 @@
 * component/action/SortRelatedArrayAction
     - fix related object sorting
 * component/meta/rbac/rule
-    - add rules to check reference chains    
+    - add rules to check reference chains 
 * component/security/rbac
     - add multiple rules to one permission
     - add view history of model changes as security action
     - fix order of imported rules
     - optimize security check of metadata transitions
-    - refactor metadata transition security    
+    - refactor metadata transition security 
 * test/run/component/helper/select
     - add tests for the select helper
-* upgrade Node.js version    
-* upgrade dependencies    
+* upgrade Node.js version 
+* upgrade dependencies
 * view/template/_part/attr/checkbox
     - fix hints for checkboxes
 * web/jam/frame
-    - fix closing stack frames with escape    
+    - fix closing stack frames with escape 
 * web/style/main
-    - fix white button       
+    - fix white button 
 
 ## 4.0.0
 
@@ -55,32 +84,32 @@
 * component/file/FileStorage
     - add file hashing
 * component/file/S3Storage
-    - add S3 storage    
+    - add S3 storage 
 * config/default
     - rename thumbnail sizes
 * model/RawFile
-    - add file hashing        
+    - add file hashing 
 * web/jam/misc/Uploader
-    - fix event handlers  
+    - fix event handlers
 
 ## 3.1.0
 
 * web/jam/helper/DateHelper
     - check invalid date format 
-* upgrade dependencies    
-    
+* upgrade dependencies
+
 ## 3.0.0
 
 * component/security/rbac/Rbac
     - fix undefined base meta model
-* console/Console        
+* console/Console
     - define node environment via console
 * migration to Bootstrap 5
 * web/jam/misc/I18n
     - add formatted messages with parameters
 * web/jam/misc/Resource
     - fix resource key
-    
+
 ## 2.2.0
 
 * console/asset/AssetBuilder
@@ -122,11 +151,11 @@
 * component/notifier/MessageTemplate
     - add data preparation
 * component/notifier/Notification
-    - add template and recipient filter configurations        
+    - add template and recipient filter configurations
 * component/notifier/NotificationMessage
     - add recipients on message creating
 * component/observer/Observer
-    - cascading handling by event name    
+    - cascading handling by event name
 * component/security/rbac/MetaTransitionInspector
     - refactor transition security
 * component/security/rbac/Rbac
@@ -136,7 +165,7 @@
 * console/NotificationConsole
     - throw error on non-existent user filter
 * console/UserFilterConsole
-    - throw error on non-existent security item    
+    - throw error on non-existent security item
 
 ## 1.7.1
 
@@ -153,7 +182,7 @@
     - fix default values on create
 * component/security/rbac/Item
     - catch errors on assignment rule execution
-* console/Console                   
+* console/Console
     - normalize imported configuration data
     - remove uploaded files on clear all
 * model/auth/ChangePasswordForm
@@ -162,42 +191,42 @@
     - move from Office module 
 * web/jam/data-grid/DataGrid
     - fix grid body translation 
-    
+
 ## 1.6.0
 
 * component/base/BaseController
-    - CSRF token validation   
+    - CSRF token validation
 * component/notifier/Notification
     - add notification translation
 * component/scheduler/Scheduler
     - fix task name
 * console/Console
-    - configure event handlers  
-    - configure listeners  
+    - configure event handlers
+    - configure listeners
 * model/Task
-    - add task description  
+    - add task description
 
 ## 1.5.0
 
 * component/meta/MetaSecurity
     - fix relation security by view
 * component/notifier/Notifier
-    - add service message data    
+    - add service message data
 * component/security/rbac/Rbac
     - fix security by object states
 * component/utility/UtilityManager
-    - refactor utility render   
+    - refactor utility render
 
 ## 1.4.0
 
 * component/meta/MetaCommonSearch
-    - add search by embedded model title    
+    - add search by embedded model title
 * component/meta/rbac/rule/AuthorRule
     - add rule customization
 * component/meta/rbac/rule/RefUserRule
     - check user by reference attribute
 * component/security/PasswordAuthService
-    - set ID to new user    
+    - set ID to new user
 * component/security/rbac/MetaInspector
     - fix object filter
 * console/AssetConsole
@@ -205,36 +234,36 @@
 * console/ModuleAsset
     - move and rename deployed vendor 
 * console/SecurityConsole
-    - export/import users and assignments       
+    - export/import users and assignments
 * web/jam/attr/Enum
-    - keep item order           
-    
+    - keep item order
+
 ## 1.3.0
 
 * component/meta/MetaGrid
-    - add count method    
+    - add count method
     - render thumbnail without related model
 * component/meta/MetaListFilter
-    - fix empty relation condition      
+    - fix empty relation condition
 * component/meta/MetaModel
     - upgrade base meta model
 * model/RawFile
     - add user limits to file upload 
 * web/jam/list/DataFormatter
-    - fix empty array as not set value   
-    
+    - fix empty array as not set value
+
 ## 1.2.0
 
 * component/misc/CommonSearch
-    - add search by object title     
+    - add search by object title
 * component/misc/DataGrid
-    - customize query limit    
+    - customize query limit
 * component/security/PasswordAuthService
-    - replace messages to keys     
+    - replace messages to keys
 * model/File
-    - check svg format          
+    - check svg format
 * model/auth/SignUpForm
-    - disable mandatory verification after sign up   
+    - disable mandatory verification after sign up
 * web/jam/list/DataFormatter
     - model data is available in each attribute value handler
 * web/jam/element/Modal
@@ -242,18 +271,18 @@
 
 ## 1.1.0
 
-* component/action/SortRelatedAction  
+* component/action/SortRelatedAction
     - add 'with' query param 
     - add nested condition parser 
     - fix overridden models filter
 * component/meta/MetaGrid 
     - add actual meta class name to item
     - add meta class format
-    - fix related thumbnail size         
+    - fix related thumbnail size
 * component/misc/ListFilter 
-    - extract item parser to separate method    
+    - extract item parser to separate method
 * component/security/rbac/Rbac 
-    - inherit metadata permissions ​​from base meta class    
+    - inherit metadata permissions ​​from base meta class
 * fix css styles
 * upgrade dependencies
 
@@ -308,7 +337,7 @@
 * component/meta/MetaTreeGrid
     - fix render model
 * component/utility/Utility
-    - refactor utilities          
+    - refactor utilities
 * component/widget/CommonMenu
     - configure common menu title
 * controller/FileController
@@ -340,16 +369,16 @@
 * component/misc/Formatter
     - add translatable format
 * console/SecurityConsole 
-    - fix user creation        
+    - fix user creation
 * view/template/default
-    - translate error pages    
+    - translate error pages
 * web/jam/list/DataFormatter
     - separate null and undefined view
 * web/jam/element/LoadableContent
     - add resource solver and translation
 * web/jam/element/Modal
     - fix tab templates
-                        
+
 ## 0.1.12
 
 * component/meta/MetaGrid

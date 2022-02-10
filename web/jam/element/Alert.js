@@ -6,6 +6,7 @@ Jam.Alert = class Alert {
     constructor (params) {
         this.params = {
             css: '',
+            scrollable: null, // scrollable container
             scrollSpeed: 'fast',
             ...params
         };
@@ -56,8 +57,8 @@ Jam.Alert = class Alert {
     }
 
     scrollTo () {
-        if (this.params.$scrollTo) {
-            this.params.$scrollTo.animate({scrollTop: 0}, this.params.scrollSpeed);
+        if (this.params.scrollable) {
+            Jam.ScrollHelper.scrollTo(this.$element, this.params.scrollable, this.params.scrollSpeed)
         }
     }
 

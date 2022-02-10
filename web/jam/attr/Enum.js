@@ -62,10 +62,11 @@ Jam.EnumModelAttr = class EnumModelAttr extends Jam.ModelAttr {
     build () {
         let category = this.getData('t-sets');
         let result = '<option value></option>';
-        for (let {value, text} of this.items) {
+        for (let {value, text, hint} of this.items) {
             value = Jam.escape(value);
             text = Jam.escape(Jam.t(text, category));
-            result += `<option value="${value}">${text}</option>`;
+            hint = Jam.escape(Jam.t(hint, category)) || '';
+            result += `<option value="${value}" title="${hint}">${text}</option>`;
         }
         return result;
     }

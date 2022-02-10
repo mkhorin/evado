@@ -3,15 +3,6 @@
  */
 Jam.Helper = class Helper {
 
-    static addCommaValue (value, items) {
-        if (typeof items !== 'string' || !items.length) {
-            return value;
-        }
-        items = items.split(',');
-        items.push(value);
-        return items.join(',');
-    }
-
     static bindLabelsToInputs ($container) {
         let index = 0;
         let base = this.random(1, Number.MAX_SAFE_INTEGER);
@@ -56,42 +47,14 @@ Jam.Helper = class Helper {
         $images.first().prop('src', $images.first().data('src'));
     }
 
-    static findAndResolveTemplate (id, $container, data) {
-        return this.resolveTemplate(this.getTemplate(id, $container), data);
-    }
-
     static fixMultipleBootstrapModals () {
         const $body = $(document.body).on('hidden.bs.modal', '.modal', () => {
             $body.toggleClass('modal-open', $body.children('.modal-backdrop').length > 0);
         });
     }
 
-    static formatSelectItems (items) {
-        if (!Array.isArray(items)) {
-            items = items ? Object.keys(items).map(value => ({value, text: items[value]})) : [];
-        }
-        for (let item of items) {
-            item.id = item.value; // for select2
-        }
-        return items;
-    }
-
     static random (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    static getCookie (name) {
-        const data = name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1');
-        const matches = document.cookie.match(new RegExp(`(?:^|; )${data}=([^;]*)`));
-        return matches ? decodeURIComponent(matches[1]) : undefined;
-    }
-
-    static getTemplate (id, $container) {
-        return $container.find('template').filter(`[data-id="${id}"]`).html();
-    }
-
-    static hasDocumentScroll () {
-        return $(document).height() > $(window).height();
     }
 
     static parseJson (data) {
@@ -101,6 +64,14 @@ Jam.Helper = class Helper {
         try {
             return JSON.parse(data);
         } catch {}
+    }
+
+    static findAndResolveTemplate (id, $container, data) {
+        return this.resolveTemplate(this.getTemplate(id, $container), data);
+    }
+
+    static getTemplate (id, $container) {
+        return $container.find('template').filter(`[data-id="${id}"]`).html();
     }
 
     static resolveTemplate (text, data = {}) {
@@ -127,9 +98,28 @@ Jam.Helper = class Helper {
         return result;
     }
 
+    static formatSelectItems (items) {
+        if (!Array.isArray(items)) {
+            items = items ? Object.keys(items).map(value => ({value, text: items[value]})) : [];
+        }
+        for (let item of items) {
+            item.id = item.value; // for select2
+        }
+        return items;
+    }
+
     static resetFormElement ($element) {
         $element.wrap('<form>').closest('form').get(0).reset();
         $element.unwrap();
+    }
+
+    static addCommaValue (value, items) {
+        if (typeof items !== 'string' || !items.length) {
+            return value;
+        }
+        items = items.split(',');
+        items.push(value);
+        return items.join(',');
     }
 
     static removeCommaValue (value, items) {
@@ -144,15 +134,10 @@ Jam.Helper = class Helper {
         return items.length ? items.join(',') : '';
     }
 
-    static scrollTo (target, duration = 300, done) {
-        if (target instanceof jQuery) {
-            if (!target.length) {
-                return false;
-            }
-            target = target.offset().top;
-        }
-        const scrollTop = `${target}px`;
-        $(document.documentElement).animate({scrollTop}, {duration}, done);
+    static getCookie (name) {
+        const data = name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1');
+        const matches = document.cookie.match(new RegExp(`(?:^|; )${data}=([^;]*)`));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
     }
 
     static setCookie(name, value, options = {}) {

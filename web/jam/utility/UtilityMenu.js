@@ -67,15 +67,3 @@ Jam.UtilityMenu = class UtilityMenu {
         this.$dropdown.append($item.addClass('dropdown-item'));
     }
 };
-
-Jam.UtilityBar = class UtilityBar extends Jam.UtilityMenu {
-
-    init () {
-        for (const item of this.items) {
-            const utility = this.renderItem('button', item);
-            if (utility) {
-                this.$container.append(utility.$item);
-            }
-        }
-    }
-};

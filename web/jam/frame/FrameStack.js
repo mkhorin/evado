@@ -155,6 +155,6 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
         const {frame} = Jam.UrlHelper.getParams(url);
         if (frame) {
             this.createFrame().load(frame);
-        }   
-    }    
+        }
+    }
 };

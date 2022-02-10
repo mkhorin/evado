@@ -151,8 +151,7 @@ Jam.List = class List extends Jam.Element {
 
     createAlert () {
         return new Jam.Alert({
-            container: $alert => this.$grid.prepend($alert),
-            $scrollTo: this.$grid
+            container: $alert => this.$grid.prepend($alert)
         });
     }
 
@@ -203,7 +202,7 @@ Jam.List = class List extends Jam.Element {
     onClickItem (event) {
         if ($(event.target).closest('a').length) {
             return true;
-        }  
+        }
         if (!this.multiple || !event.ctrlKey) {
             this.deselectExceptOneItem(event.currentTarget);
         }

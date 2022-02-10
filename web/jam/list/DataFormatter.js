@@ -155,7 +155,8 @@ Jam.ListDataFormatter = class ListDataFormatter {
 
     asTitle (value, params) {
         return this.join((value, params, data, index) => {
-            value = data[params.titleName]?.[index] || value;
+            const title = data[params.titleName];
+            value = (index === undefined ? title : title?.[index]) || value;
             return this.escape(this.translate(value, params), params);
         }, ...arguments);
     }

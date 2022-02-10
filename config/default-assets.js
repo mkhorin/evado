@@ -10,6 +10,7 @@ module.exports = {
         sources: [
             'jam/Jam.js',
             'jam/element/Element.js',
+            'jam/element/NavTree.js',
             'jam/actionBinder/ActionBinderAction.js',
             'jam/attr/Attr.js',
             'jam/attr/File.js',
@@ -19,6 +20,8 @@ module.exports = {
             'jam/list/TreeList.js',
             'jam/listFilter/ListFilterType.js',
             'jam/listFilter/ListFilterTypeString.js',
+            'jam/userAction/UserAction.js',
+            'jam/utility/UtilityMenu.js',
             'jam'
         ],
         target: 'vendor/jam.min.js',

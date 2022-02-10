@@ -87,33 +87,3 @@ Jam.UserAction = class UserAction extends Jam.Element {
         this.toggleActive(state);
     }
 };
-
-Jam.FrameUserAction = class FrameUserAction extends Jam.UserAction {
-
-    execute () {
-        Jam.MainAlert.clear();
-        return this.constructor.confirm(this.$element).then(this.onConfirm.bind(this));
-    }
-
-    onConfirm () {
-        const frame = Jam.frameStack.createFrame();
-        frame.load(this.getParam('url'), this.getParam('params'));
-        frame.one('afterClose', this.onDone.bind(this));
-    }
-
-    onDone (event, data) {
-        if (data?.result) {
-            super.onDone(data.result);
-        }
-    }
-};
-
-Jam.PostUserAction = class PostUserAction extends Jam.UserAction {
-
-    execute () {
-        Jam.MainAlert.clear();
-        return Jam.UserAction.post(this.$element)
-            .done(this.onDone.bind(this))
-            .fail(data => data && this.onFail(data.responseText));
-    }
-};

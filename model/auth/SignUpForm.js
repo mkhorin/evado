@@ -26,7 +26,7 @@ module.exports = class SignUpForm extends Base {
     async register () {
         if (!await this.validate()) {
             return false;
-        }        
+        }
         try {
             this.set('verified', !this.module.getParam('enableSignUpVerification'));
             const service = this.spawn('security/PasswordAuthService');

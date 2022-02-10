@@ -23,13 +23,22 @@ Jam.NavTree = class NavTree extends Jam.Element {
         return this.resolveTemplate(template, data);
     }
 
+    isContainerItem () {
+        return !this.getItemUrl(...arguments);
+    }
+
+    getItemUrl () {
+        return this.getItem(...arguments).find('>.nav-link').attr('href');
+    }
+
     getItem (element) {
         return $(element).closest('.nav-item')
     }
 
     setCurrentActive () {
         const $item = this.getItem(this.getCurrentActive());
-        $item.add($item.parents('.nav-item')).addClass('active open');
+        $item.addClass('active');
+        $item.parents('.nav-item').addClass('open has-active');
     }
 
     getCurrentActive () {
@@ -56,11 +65,13 @@ Jam.NavTree = class NavTree extends Jam.Element {
     }
 
     onTreeLink (event) {
-        event.preventDefault();
         const $item = this.getItem(event.currentTarget);
-        $item.toggleClass('open');
-        if (!$item.hasClass('open')) {
-            $item.find('.open').removeClass('open');
+        if (!this.getItemUrl($item) || $item.hasClass('active')) {
+            event.preventDefault();
+            $item.toggleClass('open');
+            if (!$item.hasClass('open')) {
+                $item.find('.open').removeClass('open');
+            }
         }
     }
 };

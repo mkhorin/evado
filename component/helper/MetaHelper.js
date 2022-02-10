@@ -6,7 +6,7 @@
 module.exports = class MetaHelper {
 
     static isSystemName (name) {
-        return name.charAt(0) === '_';
+        return name?.charAt?.(0) === '_';
     }
 
     static createLabel ({data}) {

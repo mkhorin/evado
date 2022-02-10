@@ -54,7 +54,7 @@ module.exports = class MetaUtility extends Base {
         const result = {view: this.getBaseMeta().getView(meta)};
         if (!result.view) {
             throw new BadRequest('View not found');
-        }        
+        }
         result.class = result.view.class;
         if (model) {
             result.model = await this.findModel(result.view, model).one();

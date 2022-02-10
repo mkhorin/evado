@@ -43,7 +43,7 @@ module.exports = class ChangePasswordForm extends Base {
             return true;
         } catch (err) {
             this.addError('newPassword', err);
-        }       
+        }
     }
 };
 module.exports.init();

@@ -92,8 +92,8 @@ module.exports = class OverriddenValueBehavior extends Base {
         for (const name of Object.keys(states)) {
             if (!states[name]) {
                 this.owner.set(name, await this.getOriginalValue(name, original));
-            }    
-        }        
+            }
+        }
     }
 
     getOriginalValue (attrName, original) {

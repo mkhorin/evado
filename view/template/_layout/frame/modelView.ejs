@@ -34,6 +34,9 @@ if (typeof params !== 'undefined') {
         </div>
     </div>
     <div class="frame-box-body scroll-body">
+
+        <%- include(_view.get('_part/misc/frameDescription')) %>
+
         <div class="model-view model form"
              data-jam="<%- p.jam %>"
              data-params="<%= JSON.stringify(p) %>">

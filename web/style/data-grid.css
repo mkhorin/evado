@@ -25,30 +25,30 @@
     position: relative;
     border-top: none;
 }
-.data-grid-table > thead > tr > th,
-.data-grid-table > tbody > tr > th,
-.data-grid-table > tbody > tr > td {
+.data-grid-head > tr > th,
+.data-grid-body > tr > th,
+.data-grid-body > tr > td {
     border-color: var(--border-color);
     border-width: 1px;
 }
-.data-grid-table > thead > tr > th {
+.data-grid-head > tr > th {
     padding: .4rem .5rem;
     font-weight: normal;
     color: #667;
 }
-.data-grid-table > thead {
+.data-grid-head {
     border-bottom-width: 2px;
 }
-.data-grid-table > thead > tr > .group {
+.data-grid-head > tr > .group {
     vertical-align: middle;
     text-align: center;
     color: #aaa;
 }
-.data-grid-table > thead > tr > .column {
+.data-grid-head > tr > .column {
     position: relative;
     vertical-align: middle;
 }
-.data-grid-table > thead > tr > .column.sortable {
+.data-grid-head > tr > .column.sortable {
     padding-right: 1.5rem;
 }
 .has-advanced-search thead > tr > .searchable .column-label {
@@ -87,11 +87,11 @@
 .data-grid-table .desc .order-toggle:before {
     content: '\f063';
 }
-.data-grid-table > thead .asc,
-.data-grid-table > thead .desc {
+.data-grid-head .asc,
+.data-grid-head .desc {
     background: #f8f8f8;
 }
-.data-grid-table > tbody > tr.group > th {
+.data-grid-body > tr.group > th {
     position: relative;
     padding: .6rem .5rem;
     color: #789;
@@ -100,10 +100,10 @@
     border-top-width: 2px;
     font-weight: 500;
 }
-.data-grid-table > tbody > tr > td {
+.data-grid-body > tr > td {
     padding: 0;
 }
-.data-grid-table > tbody > tr > td > .value {
+.data-grid-body > tr > td > .value {
     overflow: auto;
     padding: .5rem;
     max-height: 24rem;
@@ -116,13 +116,13 @@
     margin: 0;
     display: inline-block;
 }
-.data-grid-table tbody tr:nth-of-type(odd) {
+.data-grid-body > tr:nth-of-type(odd) {
     background-color: rgba(0,0,0,.05);
 }
-.data-grid-table tbody tr:nth-of-type(even) .ordered {
+.data-grid-body > tr:nth-of-type(even) .ordered {
     background: rgba(0,0,0,.01);
 }
-.data-grid-table tbody tr:nth-of-type(odd) .ordered {
+.data-grid-body > tr:nth-of-type(odd) .ordered {
     background: rgba(0,0,0,.02);
 }
 .data-grid .data-grid-body .data-item.checked {
@@ -131,41 +131,41 @@
 .data-grid .data-grid-content .data-grid-body .data-item.selected {
     background-color: #fffae8;
 }
-.data-grid .data-grid-table tbody tr.selected .ordered {
+.data-grid .data-grid-body > tr.selected > .ordered {
     background-color: var(--selected-row-color);
 }
-.data-grid .data-grid-table tbody tr.linked:nth-child(odd) td,
+.data-grid .data-grid-body > tr.linked:nth-child(odd) > td,
 .data-grid-cards .data-item.linked:nth-child(odd) {
     background-color: #d4fad4 !important;
 }
-.data-grid .data-grid-table tbody tr.linked:nth-child(even) td,
+.data-grid .data-grid-body > tr.linked:nth-child(even) > td,
 .data-grid-cards .data-item.linked:nth-child(even) {
     background-color: #e3fce3 !important;
 }
-.data-grid .data-grid-table tbody tr.unlinked:nth-child(odd) td,
+.data-grid .data-grid-body > tr.unlinked:nth-child(odd) > td,
 .data-grid-cards .data-item.unlinked:nth-child(odd) {
     background-color: #ffe0e0 !important;
 }
-.data-grid .data-grid-table tbody tr.unlinked:nth-child(even) td,
+.data-grid .data-grid-body > tr.unlinked:nth-child(even) > td,
 .data-grid-cards .data-item.unlinked:nth-child(even) {
     background-color: #ffe8e8 !important;
 }
-.data-grid .data-grid-table tbody tr.deleted:nth-child(odd) td,
+.data-grid .data-grid-body > tr.deleted:nth-child(odd) > td,
 .data-grid-cards .data-item.deleted:nth-child(odd) {
     background-color: #ffd8d8 !important;
 }
-.data-grid .data-grid-table tbody tr.deleted:nth-child(even) td,
+.data-grid .data-grid-body > tr.deleted:nth-child(even) > td,
 .data-grid-cards .data-item.deleted:nth-child(even) {
     background-color: #ffe0e0 !important;
 }
-.data-grid .data-grid-table tbody tr.deleted td,
-.data-grid .data-grid-table tbody tr.unlinked td,
+.data-grid .data-grid-body > tr.deleted > td,
+.data-grid .data-grid-body > tr.unlinked > td,
 .data-grid-cards .data-item.deleted,
 .data-grid-cards .data-item.unlinked {
     position: relative;
     color: #a00;
 }
-.data-grid .data-grid-table tbody tr.deleted td:after,
+.data-grid .data-grid-body > tr.deleted > td:after,
 .data-grid-cards .data-item.deleted:after {
     content: '';
     display: block;
@@ -176,17 +176,17 @@
     height: 1px;
     background: #c88;
 }
-.data-grid .data-grid-table tbody tr.linked.selected td,
+.data-grid .data-grid-body > tr.linked.selected > td,
 .data-grid-cards .data-item.linked.selected {
     background-color: #d8ffc0 !important;
 }
-.data-grid .data-grid-table tbody tr.unlinked.selected td,
-.data-grid .data-grid-table tbody tr.deleted.selected td,
+.data-grid .data-grid-body > tr.unlinked.selected > td,
+.data-grid .data-grid-body > tr.deleted.selected > td,
 .data-grid-cards .data-item.unlinked.selected,
 .data-grid-cards .data-item.deleted.selected {
     background-color: #ffc8c8 !important;
 }
-.required.blank .data-grid-table > thead > tr > th {
+.required.blank .data-grid-head > tr > th {
     background: var(--required-color);
 }
 .data-grid .btn-demand-load,
@@ -343,7 +343,7 @@
     --toggle-start: .5rem;
 }
 
-.tree-data-grid .data-grid-table tbody td:first-child {
+.tree-data-grid .data-grid-body > tr > td:first-child {
     position: relative;
 }
 .tree-data-grid .node-toggle {
@@ -582,12 +582,12 @@
 }
 @media print {
 
-    .data-grid-table > thead {
+    .data-grid-head {
         border-color: #888 !important;
     }
     .data-grid-table,
-    .data-grid-table > thead > tr > th,
-    .data-grid-table > tbody > tr > td {
+    .data-grid-head > tr > th,
+    .data-grid-body > tr > td {
         border-top-width: 1px !important;
         border-bottom-width: 1px !important;
         border-left-width: 0 !important;
@@ -600,7 +600,7 @@
     .data-grid-pager {
         display: none !important;
     }
-    .data-grid-table > thead > tr > .column.sortable {
+    .data-grid-head > tr > .column.sortable {
         padding-right: .5rem;
     }
 }

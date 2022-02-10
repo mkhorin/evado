@@ -54,7 +54,7 @@ module.exports = class BaseMenu extends Base {
         return this.renderTemplate('_part/nav/sideMenuItems', {
             activeItem: null,
             openedItems: [],
-            forbiddenAccess: await this.resolveAccess({section, items}, {checkParents: true}),
+            forbiddenAccess: await this.resolveAccess({section, items}, {withParents: true}),
             items
         });
     }

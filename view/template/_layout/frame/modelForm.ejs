@@ -55,10 +55,15 @@ if (typeof params !== 'undefined') {
         </div>
     </div>
     <div class="frame-box-body scroll-body">
+
+        <%- include(_view.get('_part/misc/frameDescription')) %>
+
         <form class="model form" autocomplete="off" enctype="multipart/form-data"
               data-jam="<%- p.jam %>"
               data-params="<%= JSON.stringify(p) %>">
+
             <%- body %>
+
         </form>
     </div>
     <div class="overlay">

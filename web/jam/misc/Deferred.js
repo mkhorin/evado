@@ -27,19 +27,3 @@ Jam.Deferred = class Deferred {
         this.process();
     }
 };
-
-Jam.DeferredTask = class DeferredTask {
-
-    constructor (handler, params) {
-        this.handler = handler;
-        this.params = params;
-        this.processing = false;
-    }
-
-    process (cb) {
-        if (!this.processing) {
-            this.processing = true;
-            this.handler(cb, this.params);
-        }
-    }
-};

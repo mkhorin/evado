@@ -13,16 +13,18 @@ module.exports = class MetaActionView extends Base {
         };
     }
 
-    getViewModelClass (name) {
+    getViewModelClass () {
         const view = this.controller.meta.view;
         if (!view) {
-            return super.getViewModelClass(name);
+            return super.getViewModelClass(...arguments);
         }
-        let model = this.getModelFromOriginalOrSameView(view.viewModel);
-        if (!model && view !== view.class) {
-            model = this.getModelFromOriginalOrSameView(view.class.viewModel);
+        if (view === view.class) {
+            return this.getModelFromOriginalOrSameView(`_class/${view.name}`)
+                || super.getViewModelClass(...arguments);
         }
-        return model || super.getViewModelClass(name);
+        return this.getModelFromOriginalOrSameView(`_view/${view.class.name}/${view.name}`)
+            || this.getModelFromOriginalOrSameView(`_class/${view.class.name}`)
+            || super.getViewModelClass(...arguments);
     }
 
     get (name) {

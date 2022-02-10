@@ -33,12 +33,12 @@ module.exports = class MetaNavInspector extends Base {
         if (forbiddenSection) {
             return {[this.section.id]: true};
         }
-        return this.params.checkParents
-            ? this.getForbiddenAccessByParents(data)
+        return this.params.withParents
+            ? this.getForbiddenAccessWithParents(data)
             : this.getForbiddenAccess(data);
     }
 
-    async getForbiddenAccessByParents (data) {
+    async getForbiddenAccessWithParents (data) {
         const result = {};
         for (const item of this.items) {
             if (item.parent) {

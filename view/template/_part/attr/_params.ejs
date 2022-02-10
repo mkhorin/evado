@@ -37,12 +37,13 @@ if (p.format) {
             break;
         default:
             p.displayValue = Array.isArray(p.format)
-                    ? _format(p.displayValue, ...p.format)
-                    : _format(p.displayValue, p.format);
+                ? _format(p.displayValue, ...p.format)
+                : _format(p.displayValue, p.format);
     }
 }
 if (p.displayValue === undefined || p.displayValue === null) {
     p.displayValue = _format(null);
+    p.escape = false;
 }
 if (p.value === null || p.value === undefined) {
     p.value = '';
