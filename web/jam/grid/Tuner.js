@@ -21,10 +21,9 @@ Jam.DataGridTuner = class DataGridTuner {
     createMenu () {
         this.grouping = this.columns.filter(({grouping}) => grouping).length > 0;
         this.$menu = this.renderMenu();
-        const $body = this.$container.closest('.scroll-body');
-        this.$menu.appendTo($body.length ? $body : document.body);
         this.$menu.on('change', 'input.show', this.onShowItem.bind(this));
         this.$menu.on('change', 'input.group', this.onGroupItem.bind(this));
+        this.grid.$container.append(this.$menu);
     }
 
     renderMenu () {
