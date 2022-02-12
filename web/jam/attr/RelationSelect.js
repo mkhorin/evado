@@ -155,8 +155,9 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     onCommand (event) {
-        this.beforeCommand(event);
-        this.getCommandMethod(event.currentTarget.dataset.command).call(this, event);
+        if (this.beforeCommand(event)) {
+            this.getCommandMethod(event.currentTarget.dataset.command).call(this, event);
+        }
     }
 
     getCommandMethod (name) {
@@ -172,7 +173,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     beforeCommand () {
         this.alert.hide();
-        this.model.beforeCommand();
+        return this.model.beforeCommand();
     }
 
     getRequestParams (data) {

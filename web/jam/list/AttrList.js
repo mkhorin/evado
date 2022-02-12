@@ -84,8 +84,7 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     beforeCommand () {
-        super.beforeCommand();
-        this.model.beforeCommand();
+        return super.beforeCommand() && this.model.beforeCommand();
     }
 
     onAfterLoad () {

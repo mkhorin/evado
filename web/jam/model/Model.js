@@ -170,12 +170,14 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     onCommand (event) {
-        this.beforeCommand(event);
-        this.getCommandMethod(event.currentTarget.dataset.command)?.call(this, event);
+        if (this.beforeCommand(event)) {
+            this.getCommandMethod(event.currentTarget.dataset.command)?.call(this, event);
+        }
     }
 
     beforeCommand () {
         this.alert.hide();
+        return this.frame.checkLastActive();
     }
 
     getCommandMethod (name) {

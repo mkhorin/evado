@@ -106,11 +106,14 @@ Jam.List = class List extends Jam.Element {
     }
 
     onCommand (event) {
-        this.beforeCommand(event);
-        const method = this.getCommandMethod(event.currentTarget.dataset.command);
-        if (method) {
-            method.call(this, event);
+        if (this.beforeCommand(event)) {
+            this.getCommandMethod(event.currentTarget.dataset.command)?.call(this, event);
         }
+    }
+
+    beforeCommand () {
+        this.alert.hide();
+        return true;
     }
 
     getCommandMethod (name) {
@@ -125,6 +128,10 @@ Jam.List = class List extends Jam.Element {
             case 'executeUrl': return this.onExecuteUrl;
             case 'selectAll': return this.onSelectAll;
         }
+    }
+
+    findCommand (name) {
+        return this.$commands.find(`[data-command="${name}"]`);
     }
 
     setDataGridParams () {
@@ -365,14 +372,6 @@ Jam.List = class List extends Jam.Element {
 
     reload () {
         this.grid.load(...arguments);
-    }
-
-    findCommand (name) {
-        return this.$commands.find(`[data-command="${name}"]`);
-    }
-
-    beforeCommand () {
-        this.alert.hide();
     }
 
     onReload () {
