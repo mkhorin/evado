@@ -111,6 +111,11 @@ Jam.DataGridRenderer = class DataGridRenderer {
         this.columns = this.grid.getVisibleColumns();
     }
 
+    toggleParity (state) {
+        this._parity = state === undefined ? !this._parity : state;
+        return this._parity;
+    }
+
     drawHead () {
         this.$head.html(this.renderHead());
     }
@@ -122,6 +127,7 @@ Jam.DataGridRenderer = class DataGridRenderer {
     drawBody (data) {
         const content = this.renderBody(data);
         this.$body.html(content);
+        this.$body.toggleClass('grouped', !!this._groupName);
         this.$content.toggleClass('empty', !content);
         Jam.DateHelper.resolveClientDate(this.$body);
         Jam.t(this.$body);
@@ -132,6 +138,7 @@ Jam.DataGridRenderer = class DataGridRenderer {
     renderBody (data) {
         this._groupName = this.grid.getGroupName();
         this._groupDirection = this.grid.getGroupDirection() === 1 ? 'asc' : 'desc';
+        this.toggleParity(false);
         delete this._lastGroupValue;
         return data.map(item => this.renderBodyItem(item)).join('');
     }
@@ -157,6 +164,7 @@ Jam.DataGridRenderer = class DataGridRenderer {
         if (value === this._lastGroupValue) {
             return '';
         }
+        this.toggleParity(true);
         this._lastGroupValue = value;
         return this.renderBodyGroupHtml(value, column);
     }
@@ -170,7 +178,8 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 
     renderBodyItemHtml (id, content) {
-        return `<tr class="data-item" data-id="${id}">${content}</tr>`;
+        const parity = this.toggleParity() ? 'odd' : 'even';
+        return `<tr class="data-item ${parity}" data-id="${id}">${content}</tr>`;
     }
 
     renderBodyCell (data, column, index) {

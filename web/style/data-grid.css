@@ -1,8 +1,7 @@
-
 .data-grid {
     --border-color: #ddd;
     --content-color: #111;
-    --selected-row-color: #fff4e0;
+    --selected-row-color: #fffae8;
     position: relative;
     margin-top: .1rem;
 }
@@ -56,7 +55,7 @@
     cursor: pointer;
 }
 
-.data-grid-table .order-toggle {
+.data-grid-content .order-toggle {
     display: none;
     position: absolute;
     right: .3rem;
@@ -65,39 +64,39 @@
     text-align: center;
     color: #ccc;
 }
-.data-grid-table .order-toggle:hover {
+.data-grid-content .order-toggle:hover {
     color: #000 !important;
     cursor: pointer;
 }
-.data-grid-table .sortable .order-toggle,
-.data-grid-table .group:first-child .order-toggle {
+.data-grid-content .sortable .order-toggle,
+.data-grid-content .group:first-child .order-toggle,
+.data-grid-card-group:first-child .order-toggle {
     display: block;
     padding-right: .25rem;
 }
-.data-grid-table .order-toggle:before {
+.data-grid-content .order-toggle:before {
     content: '\f338';
 }
-.data-grid-table .asc .order-toggle,
-.data-grid-table .desc .order-toggle {
+.data-grid-content .asc .order-toggle,
+.data-grid-content .desc .order-toggle {
     color: #666;
 }
-.data-grid-table .asc .order-toggle:before {
+.data-grid-content .asc .order-toggle:before {
     content: '\f062';
 }
-.data-grid-table .desc .order-toggle:before {
+.data-grid-content .desc .order-toggle:before {
     content: '\f063';
 }
 .data-grid-head .asc,
 .data-grid-head .desc {
     background: #f8f8f8;
 }
-.data-grid-body > tr.group > th {
+.data-grid-body > tr.group > th,
+.data-grid-card-group {
     position: relative;
     padding: .6rem .5rem;
     color: #789;
-    background: #f0f8ff;
-    border-top-color: #bcd;
-    border-top-width: 2px;
+    background: #f0f4f8;
     font-weight: 500;
 }
 .data-grid-body > tr > td {
@@ -116,46 +115,47 @@
     margin: 0;
     display: inline-block;
 }
-.data-grid-body > tr:nth-of-type(odd) {
-    background-color: rgba(0,0,0,.05);
+.data-grid-body:not(.grouped) > tr:nth-of-type(odd),
+.data-grid-body.grouped > tr.odd,
+.data-grid-body:not(.grouped) .data-grid-card:nth-of-type(odd),
+.data-grid-body.grouped .data-grid-card.odd {
+    background-color: rgba(0,0,0,.04);
 }
-.data-grid-body > tr:nth-of-type(even) .ordered {
+.data-grid-body > tr > .ordered {
     background: rgba(0,0,0,.01);
 }
-.data-grid-body > tr:nth-of-type(odd) .ordered {
+.data-grid-body:not(.grouped) > tr:nth-of-type(odd) > .ordered,
+.data-grid-body.grouped > tr.odd > .ordered {
     background: rgba(0,0,0,.02);
 }
-.data-grid .data-grid-body .data-item.checked {
-    background-color: #e8f4ff;
-}
 .data-grid .data-grid-content .data-grid-body .data-item.selected {
-    background-color: #fffae8;
+    background-color: var(--selected-row-color);
 }
 .data-grid .data-grid-body > tr.selected > .ordered {
     background-color: var(--selected-row-color);
 }
-.data-grid .data-grid-body > tr.linked:nth-child(odd) > td,
-.data-grid-cards .data-item.linked:nth-child(odd) {
-    background-color: #d4fad4 !important;
-}
-.data-grid .data-grid-body > tr.linked:nth-child(even) > td,
-.data-grid-cards .data-item.linked:nth-child(even) {
+.data-grid .data-grid-body > tr.linked > td,
+.data-grid-cards .data-item.linked {
     background-color: #e3fce3 !important;
 }
-.data-grid .data-grid-body > tr.unlinked:nth-child(odd) > td,
-.data-grid-cards .data-item.unlinked:nth-child(odd) {
-    background-color: #ffe0e0 !important;
+.data-grid .data-grid-body > tr.linked:nth-of-type(odd) > td,
+.data-grid-cards .data-item.linked:nth-of-type(odd) {
+    background-color: #d4fad4 !important;
 }
-.data-grid .data-grid-body > tr.unlinked:nth-child(even) > td,
-.data-grid-cards .data-item.unlinked:nth-child(even) {
+.data-grid .data-grid-body > tr.unlinked > td,
+.data-grid-cards .data-item.unlinked {
+    background-color: #fff0f0 !important;
+}
+.data-grid .data-grid-body > tr.unlinked:nth-of-type(odd) > td,
+.data-grid-cards .data-item.unlinked:nth-of-type(odd) {
     background-color: #ffe8e8 !important;
 }
-.data-grid .data-grid-body > tr.deleted:nth-child(odd) > td,
-.data-grid-cards .data-item.deleted:nth-child(odd) {
-    background-color: #ffd8d8 !important;
+.data-grid .data-grid-body > tr.deleted > td,
+.data-grid-cards .data-item.deleted {
+    background-color: #ffe8e8 !important;
 }
-.data-grid .data-grid-body > tr.deleted:nth-child(even) > td,
-.data-grid-cards .data-item.deleted:nth-child(even) {
+.data-grid .data-grid-body > tr.deleted:nth-of-type(odd) > td,
+.data-grid-cards .data-item.deleted:nth-of-type(odd) {
     background-color: #ffe0e0 !important;
 }
 .data-grid .data-grid-body > tr.deleted > td,
@@ -184,7 +184,7 @@
 .data-grid .data-grid-body > tr.deleted.selected > td,
 .data-grid-cards .data-item.unlinked.selected,
 .data-grid-cards .data-item.deleted.selected {
-    background-color: #ffc8c8 !important;
+    background-color: #ffd0d0 !important;
 }
 .required.blank .data-grid-head > tr > th {
     background: var(--required-color);
@@ -426,9 +426,6 @@
     margin-bottom: .1rem;
     color: #568;
 }
-.data-grid-card:nth-of-type(odd) {
-    background-color: rgba(0,0,0,.03);
-}
 
 @media (min-width: 992px) {
     .data-grid-card .card-label {
@@ -444,7 +441,7 @@
     position: relative;
     margin: 0 0 1rem;
     padding: 1rem .5rem;
-    background: #f4f9f9;
+    background: #f4f6f8;
 }
 .list-filter .filter-tools {
     display: inline-block;
