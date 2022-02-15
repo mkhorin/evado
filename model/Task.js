@@ -50,7 +50,7 @@ module.exports = class Task extends Base {
     toString () {
         return `${this.constructor.name}: ${this.getName()}`;
     }
-    
+
     resolve () {
         try {
             const data = {...this.getAttrMap()};

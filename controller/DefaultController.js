@@ -10,7 +10,7 @@ module.exports = class DefaultController extends Base {
     static getConstants () {
         return {
             ACTIONS: {
-                'error': require('../component/action/ErrorAction'),                
+                'error': require('../component/action/ErrorAction'),
                 'widget': require('../component/action/WidgetAction')
             }
         };

@@ -12,7 +12,7 @@ module.exports = class User extends Base {
             TABLE: 'sys_user',
             ATTRS: [
                 '_id',
-                'name', 
+                'name',
                 'email',
                 'verified',
                 'blocked',

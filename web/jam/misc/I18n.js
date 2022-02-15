@@ -24,7 +24,7 @@ Jam.I18n = class I18n {
     translateBoolean (value, category) {
         return this.translateMessage(value ? 'Yes' : 'No', category);
     }
-    
+
     translateMessage (message, category) {
         const result = this.getMessage(category, message);
         return result === undefined ? message : result;

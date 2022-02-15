@@ -101,7 +101,7 @@ module.exports = class MetaAttrInspector extends Base {
                     return map[`${id}.${state.name}.${target.view.id}`]
                         || map[`${id}.${state.name}..${classId}`]
                         || map[`${id}..${target.view.id}`]
-                        || map[`${id}...${classId}`]                        
+                        || map[`${id}...${classId}`]
                         || map[`.${state.name}.${target.view.id}`]
                         || map[`.${state.name}..${classId}`]
                         || map[`..${target.view.id}`]

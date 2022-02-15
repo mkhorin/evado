@@ -3,7 +3,7 @@
  */
 'use strict';
 
-if ($.fn.select2) {    
+if ($.fn.select2) {
     $.extend($.fn.select2.defaults.defaults, {
         width: '100%',
         allowClear: true,

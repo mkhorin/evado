@@ -206,7 +206,7 @@ Jam.DataGrid = class DataGrid {
     setPage (page) {
         this.pagination.setPage(page);
     }
-    
+
     load (params = {}) {
         if (params.resetPage) {
             this.setPage(0);

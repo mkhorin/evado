@@ -31,7 +31,7 @@ describe('MetaHelper', ()=> {
         expect(MetaHelper.addClosingChar(null)).to.eql(null);
         expect(MetaHelper.addClosingChar('')).to.eql('');
     });
-    
+
     it('sortByOrderNumber', ()=> {
         const items = [
             {orderNumber: 2},

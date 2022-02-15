@@ -131,8 +131,8 @@ Jam.StackFrame = class StackFrame {
     }
 
     getLoadUrl () {
-        return this.loadParams 
-            ? Jam.UrlHelper.addParams(this.url, this.loadParams) 
+        return this.loadParams
+            ? Jam.UrlHelper.addParams(this.url, this.loadParams)
             : this.url;
     }
 

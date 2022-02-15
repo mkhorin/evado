@@ -70,7 +70,7 @@ module.exports = {
             enableAutoLogin: true
         },
         'metaHub': {
-            Class: require('../component/meta/MetaHub'),            
+            Class: require('../component/meta/MetaHub'),
             rbacTablePrefix: 'sys_rbac_'
         },
         'notifier': {

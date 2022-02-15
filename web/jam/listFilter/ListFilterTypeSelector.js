@@ -64,7 +64,7 @@ Jam.ListFilterTypeSelector = class ListFilterTypeSelector extends Jam.ListFilter
         $select.children().first().remove();
     }
 
-    focus () {       
+    focus () {
         if (this.getSelect2()) {
             this.getValueElement().select2('open');
         }

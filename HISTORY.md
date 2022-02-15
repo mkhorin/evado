@@ -4,28 +4,28 @@
     - add parent and descendants query
 * component/misc/ListFilter
     - fix priority of logical operations
-* component/security/rbac/MetaNavInspector    
-    - search menu nodes with parent security 
+* component/security/rbac/MetaNavInspector
+    - search menu nodes with parent security
 * console/asset
     - remove asset configuration inheritance
 * view/template/_layout/frame/modelForm
     - add ID title to copy button
 * web/jam/attr/Enum
     - add option hint
-    - clear displayed value when switching enum sets    
+    - clear displayed value when switching enum sets
 * web/jam/attr/Json
      - normalize string JSON
 * web/jam/attr/Text
-    - automatically adjust text field height 
+    - automatically adjust text field height
 * web/jam/element/Alert
     - parse structural message and ignore if it is empty
 * web/jam/element/NavTree
-    - scroll to active menu item 
+    - scroll to active menu item
 * web/jam/misc/Dialog
     - escape HTML tags by default
 * web/style/main
     - fix global loader overlay
-    - make fixed top panel 
+    - make fixed top panel
 
 ## 5.1.0
 
@@ -37,7 +37,7 @@
     - check negative offset
 * config/default-assets
     - separate action binder sources
-* filter by attributes of descendant classes 
+* filter by attributes of descendant classes
 * model/AutoIncrement
     - move auto increment table to model
 * web/jam/attr/Attr
@@ -59,23 +59,23 @@
 * component/action/SortRelatedArrayAction
     - fix related object sorting
 * component/meta/rbac/rule
-    - add rules to check reference chains 
+    - add rules to check reference chains
 * component/security/rbac
     - add multiple rules to one permission
     - add view history of model changes as security action
     - fix order of imported rules
     - optimize security check of metadata transitions
-    - refactor metadata transition security 
+    - refactor metadata transition security
 * test/run/component/helper/select
     - add tests for the select helper
-* upgrade Node.js version 
+* upgrade Node.js version
 * upgrade dependencies
 * view/template/_part/attr/checkbox
     - fix hints for checkboxes
 * web/jam/frame
-    - fix closing stack frames with escape 
+    - fix closing stack frames with escape
 * web/style/main
-    - fix white button 
+    - fix white button
 
 ## 4.0.0
 
@@ -84,18 +84,18 @@
 * component/file/FileStorage
     - add file hashing
 * component/file/S3Storage
-    - add S3 storage 
+    - add S3 storage
 * config/default
     - rename thumbnail sizes
 * model/RawFile
-    - add file hashing 
+    - add file hashing
 * web/jam/misc/Uploader
     - fix event handlers
 
 ## 3.1.0
 
 * web/jam/helper/DateHelper
-    - check invalid date format 
+    - check invalid date format
 * upgrade dependencies
 
 ## 3.0.0
@@ -175,7 +175,7 @@
     - add user data update
 * web/jam/element/Modal
     - fix modal frame close
-    
+
 ## 1.7.0
 
 * component/base/CrudController
@@ -186,11 +186,11 @@
     - normalize imported configuration data
     - remove uploaded files on clear all
 * model/auth/ChangePasswordForm
-    - log previous password hash 
+    - log previous password hash
 * model/DataHistory
-    - move from Office module 
+    - move from Office module
 * web/jam/data-grid/DataGrid
-    - fix grid body translation 
+    - fix grid body translation
 
 ## 1.6.0
 
@@ -232,7 +232,7 @@
 * console/AssetConsole
     - manage assets of each module separately
 * console/ModuleAsset
-    - move and rename deployed vendor 
+    - move and rename deployed vendor
 * console/SecurityConsole
     - export/import users and assignments
 * web/jam/attr/Enum
@@ -248,7 +248,7 @@
 * component/meta/MetaModel
     - upgrade base meta model
 * model/RawFile
-    - add user limits to file upload 
+    - add user limits to file upload
 * web/jam/list/DataFormatter
     - fix empty array as not set value
 
@@ -267,21 +267,21 @@
 * web/jam/list/DataFormatter
     - model data is available in each attribute value handler
 * web/jam/element/Modal
-    - refactor modal element names 
+    - refactor modal element names
 
 ## 1.1.0
 
 * component/action/SortRelatedAction
-    - add 'with' query param 
-    - add nested condition parser 
+    - add 'with' query param
+    - add nested condition parser
     - fix overridden models filter
-* component/meta/MetaGrid 
+* component/meta/MetaGrid
     - add actual meta class name to item
     - add meta class format
     - fix related thumbnail size
-* component/misc/ListFilter 
+* component/misc/ListFilter
     - extract item parser to separate method
-* component/security/rbac/Rbac 
+* component/security/rbac/Rbac
     - inherit metadata permissions ​​from base meta class
 * fix css styles
 * upgrade dependencies
@@ -368,7 +368,7 @@
     - move common helper from modules
 * component/misc/Formatter
     - add translatable format
-* console/SecurityConsole 
+* console/SecurityConsole
     - fix user creation
 * view/template/default
     - translate error pages

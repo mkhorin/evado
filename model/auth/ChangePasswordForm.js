@@ -18,7 +18,7 @@ module.exports = class ChangePasswordForm extends Base {
                     message: 'Password must not be equal to the current'
                 }],
                 [['currentPassword', 'newPassword'], 'validator/PasswordValidator'],
-                [['captchaCode'], require('areto/security/captcha/CaptchaValidator')]                
+                [['captchaCode'], require('areto/security/captcha/CaptchaValidator')]
             ],
             ATTR_LABELS: {
                 captchaCode: 'Verification code'

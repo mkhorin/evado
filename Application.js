@@ -59,7 +59,7 @@ module.exports = class EvadoApplication extends Base {
     getMetaHub () {
         return this.components.get('metaHub');
     }
-    
+
     loadMeta () {
         const hub = this.getMetaHub();
         hub.models.add(this.getConfig('metaModels'));

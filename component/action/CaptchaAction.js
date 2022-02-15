@@ -8,7 +8,7 @@ const Base = require('areto/security/captcha/CaptchaAction');
 module.exports = class CaptchaAction extends Base {
 
     constructor (config) {
-        super({            
+        super({
             ...config.module.getParam('captcha'),
             ...config
         });

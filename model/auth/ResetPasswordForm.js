@@ -14,7 +14,7 @@ module.exports = class ResetPasswordForm extends Base {
                 ['newPasswordRepeat', 'compare', {compareAttr: 'newPassword'}],
                 ['newPassword', 'validator/PasswordValidator'],
                 ['key', 'required', {message: 'Reset key required'}],
-                ['captchaCode', require('areto/security/captcha/CaptchaValidator')]                
+                ['captchaCode', require('areto/security/captcha/CaptchaValidator')]
             ],
             ATTR_LABELS: {
                 captchaCode: 'Verification code'

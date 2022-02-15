@@ -48,7 +48,7 @@ Jam.ListFilterTypeDescendant = class ListFilterTypeDescendant extends Jam.ListFi
         }
     }
 
-    focus () {       
+    focus () {
         if (this.getSelect2()) {
             this.getValueElement().select2('open');
         }

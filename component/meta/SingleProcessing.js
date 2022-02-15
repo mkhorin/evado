@@ -8,7 +8,7 @@ const Base = require('areto/base/Base');
 module.exports = class SingleProcessing extends Base {
 
     _busy = false;
-    
+
     constructor (config) {
         super({
             busyMessage: 'Processing in progress',

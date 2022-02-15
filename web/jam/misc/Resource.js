@@ -12,7 +12,7 @@ Jam.Resource = class Resource {
         this.createElements('script', 'src', result, elements);
         return this.loadElements(elements, result);
     }
-    
+
     loadElements (elements, result) {
         return new Promise((resolve, reject) => {
             Jam.AsyncHelper.each(elements, (element, cb) => {

@@ -8,7 +8,7 @@ const Base = require('../component/base/CrudController');
 module.exports = class ListFilterController extends Base {
 
     static getConstants () {
-        return {            
+        return {
             METHODS: {
                 'inlineList': 'get',
                 'inlineCreate': 'post',

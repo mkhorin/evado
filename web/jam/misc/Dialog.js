@@ -153,7 +153,7 @@ Jam.Dialog = class Dialog {
             }
         }
     }
-    
+
     createElement () {
         return `<div class="dialog"><div class="dialog-box"><div class="dialog-head"></div><div class="dialog-body"></div><div class="dialog-foot"><button class="btn-submit btn" type="button"></button><button class="btn-cancel btn" type="button"></button></div></div></div>`;
     }

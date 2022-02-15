@@ -45,7 +45,7 @@ module.exports = class CrudController extends Base {
         return this.render(params.template, {
             model: params.model,
             params: this.getQueryParams(),
-            ...params.templateData   
+            ...params.templateData
         });
     }
 

@@ -9,7 +9,7 @@ module.exports = {
         description: 'Delete uploaded but unrelated files',
         job: {
             Class: 'component/job/DeleteExpiredFiles'
-        },        
+        },
         period: 'PT2H',
         active: true
     },
@@ -17,7 +17,7 @@ module.exports = {
         description: 'Send notifications on new messages',
         job: {
             Class: 'component/job/SendNotifications'
-        },        
+        },
         startup: true,
         active: true
     }

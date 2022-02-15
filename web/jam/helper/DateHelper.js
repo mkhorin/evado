@@ -16,7 +16,7 @@ Jam.DateHelper = class DateHelper {
     }
 
     /**
-     * If UTC then delete Z suffix 
+     * If UTC then delete Z suffix
      */
     static formatByUtc (isoDate, utc) {
         return utc && typeof isoDate === 'string' ? isoDate.slice(0, -1) : isoDate;

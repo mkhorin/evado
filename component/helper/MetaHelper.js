@@ -49,7 +49,7 @@ module.exports = class MetaHelper {
     }
 
     // BUCKETS
-    
+
     static createBuckets (models, key) {
         const buckets = {
             models: {},

@@ -29,6 +29,7 @@ for (const column of data.columns) {
 if (!hasKeyColumn) {
     data.columns.unshift({
         name: relModel.PK,
+        label: 'ID',
         hidden: true,
         searchable: true,
         sortable: true

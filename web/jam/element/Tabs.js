@@ -104,7 +104,7 @@ Jam.Tabs = class Tabs extends Jam.Element {
         this.getPanes().parent()[method](`<div class="tab-pane" data-id="${id}">${content}</div>`);
         this.events.trigger('create', {id});
     }
-    
+
     deleteTab (id) {
         this.getNav(id).remove();
         this.getPane(id).remove();

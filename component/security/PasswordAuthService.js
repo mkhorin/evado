@@ -24,7 +24,7 @@ module.exports = class PasswordAuthService extends Base {
     async getUserByEmail (email) {
         return this.spawnUser().findByEmail(email).one();
     }
-    
+
     async login (email, password, user) {
         const identity = await this.getUserByEmail(email);
         if (!identity) {
