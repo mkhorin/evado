@@ -98,7 +98,7 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
         $frame = $(this.template);
         this.$pool.append($frame);
         $frame.on('click', '.frame-stack-tabs .close', () => frame.close());
-        $frame.click(this.onFrame.bind(this, frame));
+        $frame.on('mousedown', this.onFrame.bind(this, frame));
         return $frame;
     }
 

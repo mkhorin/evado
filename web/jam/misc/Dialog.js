@@ -21,7 +21,7 @@ Jam.Dialog = class Dialog {
         this.$cancel = this.$dialog.find('.btn-cancel');
         this.$submit.click(this.onAction.bind(this, true));
         this.$cancel.click(this.onAction.bind(this, false));
-        this.$dialog.click(this.onContainer.bind(this));
+        this.$dialog.mousedown(this.onContainer.bind(this));
         this.$dialog.keyup(this.onKeyUp.bind(this));
         $(document.body).append(this.$dialog);
     }
