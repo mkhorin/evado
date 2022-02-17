@@ -60,7 +60,7 @@ if (data.filter && !data.filter.url) {
     data.filter.url = _url('filter');
 }
 if (data.jam === undefined) {
-    data.jam = 'MainTreeList';
+    data.jam = 'TreeList';
 }
 %>
 <div class="tree-data-grid data-grid" data-jam="<%- data.jam %>" data-params="<%= JSON.stringify(data) %>">

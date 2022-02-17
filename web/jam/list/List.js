@@ -287,6 +287,10 @@ Jam.List = class List extends Jam.Element {
         return this.grid.findItems(selector);
     }
 
+    getCloneUrl () {
+        return this.params.clone;
+    }
+
     getCreateUrl () {
         return this.params.create;
     }
@@ -341,7 +345,7 @@ Jam.List = class List extends Jam.Element {
         if (data.reopen && id) {
             this.reopen(id);
         }
-        this.reload();
+        this.reload(id);
         this.grid.events.one('afterDrawPage', this.onAfterDrawPage.bind(this, id));
     }
 
@@ -349,8 +353,8 @@ Jam.List = class List extends Jam.Element {
         this.toggleItemSelect(this.findItemById(id), true);
     }
 
-    reopen (id) {
-        this.openFrame(this.getUpdateUrl(), {id});
+    reopen (id, params) {
+        this.openFrame(this.getUpdateUrl(), {id, ...params});
     }
 
     post (url, data) {
@@ -392,7 +396,7 @@ Jam.List = class List extends Jam.Element {
     onClone () {
         const $item = this.getSelectedItem();
         if ($item) {
-            this.openFrame(this.params.clone, this.getCloneParams($item));
+            this.openFrame(this.getCloneUrl(), this.getCloneParams($item));
         }
     }
 

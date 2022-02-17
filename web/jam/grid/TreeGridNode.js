@@ -24,15 +24,28 @@ Jam.TreeGridNode = class TreeGridNode {
         return parseInt(this.$item.data('depth'));
     }
 
+    getParentNode () {
+        return this.getParent().data('node');
+    }
+
+    getParent () {
+        const selector = this.getDepthSelector(this.getDepth() - 1);
+        return this.$item.prevUntil(selector).add(this.$item).prev(selector);
+    }
+
     getChildren () {
-        return this.getNestedItems().filter(`[data-depth="${this.getDepth() + 1}"]`);
+        return this.getNestedItems().filter(this.getDepthSelector(this.getDepth() + 1));
     }
 
     getNestedItems () {
         const depth = this.getDepth();
-        return this.$item.nextUntil(`[data-depth="${depth}"]`).filter((index, element) => {
+        return this.$item.nextUntil(this.getDepthSelector(depth)).filter((index, element) => {
             return element.dataset.depth > depth;
         });
+    }
+
+    getDepthSelector (depth) {
+        return `[data-depth="${depth}"]`;
     }
 
     toggle (state) {
@@ -61,6 +74,11 @@ Jam.TreeGridNode = class TreeGridNode {
 
     load () {
         this.loaded = true;
-        this.grid.load({node: this});
+        return this.grid.load({node: this});
+    }
+
+    reloadParent () {
+        const parent = this.getParentNode();
+        return parent ?  parent.load() : this.grid.load();
     }
 };
