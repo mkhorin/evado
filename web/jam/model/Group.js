@@ -39,7 +39,7 @@ Jam.ModelGroup = class ModelGroup {
     }
 
     /**
-     * A group can be hidden by binder or by empty content
+     * A group can be hidden by action binder or with empty content
      */
     toggleEmpty () {
         this.$group.toggleClass('empty-group', this.isEmpty());
@@ -55,7 +55,8 @@ Jam.ModelGroup = class ModelGroup {
         const model = this.grouping.model;
         const id = model.id;
         const group = this.id;
-        return $.get(model.frame.url, {id, group}).done(this.onLoad.bind(this));
+        const url = Jam.UrlHelper.addParams(model.frame.url, {id, group});
+        return $.get(url).done(this.onLoad.bind(this));
     }
 
     onLoad (data) {

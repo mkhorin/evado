@@ -88,11 +88,13 @@ Jam.ListDataFormatter = class ListDataFormatter {
         } else if (params.hasOwnProperty('separator')) {
             separator = params.separator;
         }
-        return value.map((value, index) => handler.call(this, value, params, data, index)).join(separator);
+        return value
+            .map((value, index) => handler.call(this, value, params, data, index))
+            .join(separator);
     }
 
-    asDefault (value, params) {
-        return this.join(value => this.escape(this.translate(value, params), params), ...arguments);
+    asDefault () {
+        return this.join((value, params) => this.escape(this.translate(value, params), params), ...arguments);
     }
 
     asBoolean () {
@@ -154,15 +156,17 @@ Jam.ListDataFormatter = class ListDataFormatter {
     }
 
     asTitle (value, params) {
-        return this.join((value, params, data, index) => {
-            const title = data[params.titleName];
-            value = (index === undefined ? title : title?.[index]) || value;
-            return this.escape(this.translate(value, params), params);
-        }, ...arguments);
+        return this.join(this.parseTitle, ...arguments);
     }
 
-    asThumbnail (value, params) {
+    asThumbnail () {
         return this.join(this.parseThumbnail, ...arguments);
+    }
+
+    parseTitle (value, params, data, index) {
+        const title = data[params.titleName];
+        value = (index === undefined ? title : title?.[index]) || value;
+        return this.escape(this.translate(value, params), params);
     }
 
     parseThumbnail (value, {format}) {

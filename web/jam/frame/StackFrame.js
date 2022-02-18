@@ -56,7 +56,7 @@ Jam.StackFrame = class StackFrame {
         this.url = url;
         this.initParams = initParams;
         this.loadParams = this.prepareLoadParams(params);
-        this.xhr = $.get(url, this.loadParams)
+        this.xhr = $.get(Jam.UrlHelper.addParams(url, this.loadParams))
             .always(this.onAlways.bind(this))
             .done(this.onDone.bind(this))
             .fail(this.onFail.bind(this));

@@ -13,13 +13,14 @@
 
 ### Ready to use
 
+- [Demo App](https://github.com/mkhorin/evado-app-demo) - demonstration of the main features
 - [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate) - a full-featured web app template
 - [E-Champ](https://github.com/mkhorin/e-champ) - a platform for online games
 - [Neural Net](https://github.com/mkhorin/neural-net) - neural networks for digit recognition
 
 ### Ready to try
 
-Web applications built on Evado Framework:
+Web applications built on the Evado Declarative Framework:
 
 - [Auction](https://github.com/mkhorin/evado-app-auction)
 - [Blog](https://github.com/mkhorin/evado-app-blog)

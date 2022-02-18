@@ -295,6 +295,10 @@ Jam.List = class List extends Jam.Element {
         return this.params.create;
     }
 
+    getViewUrl () {
+        return this.params.view;
+    }
+
     getDeleteUrl () {
         return this.params.delete;
     }
@@ -345,7 +349,11 @@ Jam.List = class List extends Jam.Element {
         if (data.reopen && id) {
             this.reopen(id);
         }
-        this.reload(id);
+        this.selectItemAfterLoad(id);
+    }
+
+    selectItemAfterLoad (id) {
+        this.reload();
         this.grid.events.one('afterDrawPage', this.onAfterDrawPage.bind(this, id));
     }
 
@@ -385,7 +393,7 @@ Jam.List = class List extends Jam.Element {
     onView () {
         const $item = this.getSelectedItem();
         if ($item) {
-            this.childFrame.load(this.params.view, this.getObjectIdParam($item));
+            this.childFrame.load(this.getViewUrl(), this.getObjectIdParam($item));
         }
     }
 

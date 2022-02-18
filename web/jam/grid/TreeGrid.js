@@ -39,7 +39,9 @@ Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
     }
 
     drawPage () {
-        this.itemNode ? this.drawNode(this.itemNode) : super.drawPage();
+        this.itemNode
+            ? this.drawNode(this.itemNode)
+            : super.drawPage();
     }
 
     drawNode (node) {

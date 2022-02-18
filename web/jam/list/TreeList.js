@@ -20,13 +20,20 @@ Jam.TreeList = class TreeList extends Jam.List {
         });
     }
 
-    reload (id) {
-        const $items = this.findItemById(id);
-        if (!$items.length) {
-            return super.reload();
+    selectItemAfterLoad (id) {
+        const $item = this.findItemById(id);
+        if ($item.length !== 1) {
+            return super.selectItemAfterLoad(id);
         }
-        for (const item of $items) {
-            this.grid.getNodeByItem($(item)).reloadParent();
+        const parent = this.grid.getNodeByItem($item).getParentNode();
+        if (!parent) {
+            return super.selectItemAfterLoad(id);
         }
+        parent.load();
+        this.grid.events.one('afterDrawNode', this.onAfterDrawNode.bind(this, id, parent));
+    }
+
+    onAfterDrawNode (id, parent) {
+        this.toggleItemSelect(parent.getChildren().filter(this.findItemById(id)), true);
     }
 };
