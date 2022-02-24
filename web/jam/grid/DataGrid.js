@@ -31,7 +31,8 @@ Jam.DataGrid = class DataGrid {
         pageSize: 10,
         pageSizes: [10, 20, 30],
         keepPageSize: true,
-        maxPageToggles: 9,
+        maxPageToggles: 7,
+        showDirectionPageToggle: false,
         order: null,
         maxCellHeight: 0,
         locale: {

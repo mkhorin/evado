@@ -114,36 +114,39 @@ Jam.Pagination = class Pagination {
         return this.resolveTemplate('group', {buttons});
     }
 
+    renderDirectionButton (name, page) {
+        return this.params.showDirectionPageToggle
+            ? this.renderButton(page, this.labels[name], `direction ${name}`)
+            : '';
+    }
+
     renderButtons () {
         let result = this.renderPageButton(0);
-        let numPages = this.getNumPages();
-        if (numPages > 2) {
-            let [start, end] = this.getToggleInterval(numPages);
+        let total = this.getNumPages();
+        let last = total - 1;
+        if (total > 2) {
+            let [start, end] = this.getToggleInterval(total);
             if (start > 2) {
                 result += this.renderGap();
             } else {
-                end += start === 0 ? 1 : 0;
                 start = 1;
             }
-            if (end > numPages - 4) {
-                start -= (end === numPages - 1) ? 1 : 0;
-                end = numPages - 2;
+            if (end === last) {
+                end -= 1;
+            } else if (end === last - 2) {
+                end += 1; // instead of gap
             }
             for (let page = start; page <= end; ++page) {
                 result += this.renderPageButton(page);
             }
-            if (end < numPages - 3) {
+            if (end < last - 1) {
                 result += this.renderGap();
             }
         }
-        if (numPages > 1) {
-            result += this.renderPageButton(numPages - 1);
+        if (total > 1) {
+            result += this.renderPageButton(last);
         }
         return result;
-    }
-
-    renderDirectionButton (name, page) {
-        return this.renderButton(page, this.labels[name], 'direction '+ name);
     }
 
     renderPageButton (page) {
@@ -197,12 +200,16 @@ Jam.Pagination = class Pagination {
     }
 
     updateJumper () {
-        const numPages = this.getNumPages();
-        if (!this.$jumper.length || numPages <= this.params.maxPageToggles) {
+        if (!this.$jumper.length || !this.hasHiddenPages()) {
             return this.$jumper.addClass('hidden');
         }
+        const numPages = this.getNumPages();
         this.$jumper.html(this.renderJumper(numPages));
         this.$jumper.val(this.page).removeClass('hidden');
+    }
+
+    hasHiddenPages () {
+        return this.$pagination.find('.gap').length > 0;
     }
 
     renderJumper (numPages) {
