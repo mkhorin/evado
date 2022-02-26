@@ -119,6 +119,7 @@ Jam.I18n.defaults = {
     'Modification date': 'Дата изменения',
 
     'Name': 'Название',
+    'Nested condition': 'Вложенное условие',
     'No': 'Нет',
     'No saved filters yet': 'Нет сохраненных фильтров',
     'Nothing found': 'Ничего не найдено',

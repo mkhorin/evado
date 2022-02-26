@@ -49,6 +49,7 @@ Jam.ListFilter = class ListFilter {
         this.$conditionSample = this.$container.children('.filter-condition');
         this.$typeSamples = this.$container.children('.filter-types');
         this.$content = this.$container.children('.filter-content');
+        this.addNestedTypeColumn();
         this.group = new Jam.ListFilterGroup(this, this.params.columns);
         this.$content.append(this.group.$container);
         this.$commands = this.$container.children('.filter-commands');
@@ -58,6 +59,19 @@ Jam.ListFilter = class ListFilter {
         this.onAddCondition();
         this.storage = new Jam.ListFilterStorage(this);
         this.events.trigger('afterBuild');
+    }
+
+    addNestedTypeColumn () {
+        this.params.columns.push(this.getNestedTypeColumn());
+    }
+
+    getNestedTypeColumn () {
+        return {
+            type: 'nested',
+            label: 'Nested condition',
+            name: '$nested',
+            columns: [...this.params.columns]
+        };
     }
 
     getAttrNames () {
