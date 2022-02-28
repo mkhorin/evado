@@ -51,9 +51,13 @@ Jam.ListFilterCondition = class ListFilterCondition {
     }
 
     createType (params) {
-        const name = `ListFilterType${Jam.StringHelper.capitalize(params.type || 'string')}`;
-        const constructor = Jam[name] || Jam.ListFilterTypeString;
-        return new constructor(params, this);
+        const defaultType = 'string';
+        const name = `ListFilterType${Jam.StringHelper.capitalize(params.type || defaultType)}`;
+        if (Jam[name]) {
+            return new Jam[name](params, this);
+        }
+        params.type = defaultType;
+        return new Jam.ListFilterTypeString(params, this);
     }
 
     getOperation () {
@@ -100,7 +104,7 @@ Jam.ListFilterCondition = class ListFilterCondition {
         const op = this.getOperation();
         const value = this.getValue();
         if (op && value !== undefined) {
-            const or = this.or;
+            const or = this.or ? true : undefined;
             const attr = this.getAttr();
             return this.type.serialize({or, attr, op, value});
         }
