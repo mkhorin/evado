@@ -14,10 +14,9 @@ Jam.i18n.translateDocument();
 Jam.createElements();
 Jam.Helper.executeSerialImageLoading();
 Jam.Helper.fixMultipleBootstrapModals();
+Jam.Helper.fixSelect2Focus();
 Jam.Helper.handlePreloadLinks();
 Jam.FrameStack.attachFrameLinks();
+Jam.frameStack?.openFromUrl(location.search);
 
-if (Jam.frameStack) {
-    Jam.frameStack.openFromUrl(location.search);
-}
 document.body.classList.add('main-transition');

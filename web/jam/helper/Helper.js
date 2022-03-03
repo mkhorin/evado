@@ -13,10 +13,6 @@ Jam.Helper = class Helper {
         }
     }
 
-    static confirm (message) {
-        return !message || confirm(Jam.t(message));
-    }
-
     static copyToClipboard (value, format = 'text/plain') {
         $(document).one('copy', event => {
             event.preventDefault();
@@ -53,6 +49,12 @@ Jam.Helper = class Helper {
         });
     }
 
+    static fixSelect2Focus () {
+        $(document).on('select2:open', () => {
+            setTimeout(() => document.querySelector('.select2-search__field')?.focus(), 0);
+        });
+    }
+
     static random (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -86,7 +88,7 @@ Jam.Helper = class Helper {
                 value: data.emptyValue || ''
             });
         }
-        items.push(...this.formatSelectItems(data.items));
+        items.push(...this.normalizeSelectItems(data.items));
         let result = '';
         for (let {text, value} of items) {
             const selected = value === data.defaultValue ? ' selected' : '';
@@ -98,7 +100,7 @@ Jam.Helper = class Helper {
         return result;
     }
 
-    static formatSelectItems (items) {
+    static normalizeSelectItems (items) {
         if (!Array.isArray(items)) {
             items = items ? Object.keys(items).map(value => ({value, text: items[value]})) : [];
         }
@@ -132,30 +134,6 @@ Jam.Helper = class Helper {
             items.splice(index, 1);
         }
         return items.length ? items.join(',') : '';
-    }
-
-    static getCookie (name) {
-        const data = name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1');
-        const matches = document.cookie.match(new RegExp(`(?:^|; )${data}=([^;]*)`));
-        return matches ? decodeURIComponent(matches[1]) : undefined;
-    }
-
-    static setCookie(name, value, options = {}) {
-        options = {
-            path: '/',
-            ...options
-        };
-        if (options.expires instanceof Date) {
-            options.expires = options.expires.toUTCString();
-        }
-        let cookie = encodeURIComponent(name) +'='+ encodeURIComponent(value);
-        for (const key of Object.keys(options)) {
-            cookie += '; ' + key;
-            if (options[key] !== true) {
-                cookie += '=' + options[key];
-            }
-        }
-        document.cookie = cookie;
     }
 
     static sortChildrenByInteger ($container, key = 'index') {

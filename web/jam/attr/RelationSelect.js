@@ -195,7 +195,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             pagination: {
                 more: params.page * this.params.pageSize < data.total
             },
-            results: Jam.Helper.formatSelectItems(data.items)
+            results: Jam.Helper.normalizeSelectItems(data.items)
         };
     }
 
