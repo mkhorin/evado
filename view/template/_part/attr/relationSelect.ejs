@@ -84,8 +84,9 @@ if (d.modalSort) {
 const related = model.rel(attr);
 %>
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
-    <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
-           data-t="<%- p.translate %>"><%- p.label %></label>
+    <label class="col-form-label <%- p.labelCss %>">
+        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
+    </label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="hidden" class="form-value">
         <div class="relation-select">

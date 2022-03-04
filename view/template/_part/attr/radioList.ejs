@@ -24,13 +24,13 @@ if (items === 'labels') {
             <% } if (Array.isArray(items)) {
                for (const item of items) { %>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" value="<%- item.value %>" type="radio">
+                <input class="form-check-input" value="<%= item.value %>" type="radio">
                 <label class="form-check-label" title="<%= item.hint %>" data-t="<%- p.translate %>"><%- item.text %></label>
             </div>
             <% }} else {
                for (const key of Object.keys(items)) { %>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" value="<%- key %>" type="radio">
+                <input class="form-check-input" value="<%= key %>" type="radio">
                 <label class="form-check-label" data-t="<%- p.translate %>"><%- items[key] %></label>
             </div>
             <% }} %>

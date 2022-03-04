@@ -34,6 +34,7 @@
     --form-row-space: 1.35rem;
     --form-set-space: 2.7rem;
     --text-monospace: Consolas,"Liberation Mono","Courier New",monospace;
+    --text-placeholder: #a8a8a8;
 
     font-size: 14px;
     height: auto;
@@ -53,6 +54,7 @@ body {
     --sidebar-toggle-time: .7s;
     --super-navbar-color: #668;
     --semi-bold: 500;
+    --popover-background: #fffff2;
 
     --hover-row-color: #fff8e8;
     --title-label-color: #667;
@@ -62,6 +64,11 @@ body {
     height: auto;
     min-height: 100%;
     background-color: var(--body-background);
+}
+
+input::placeholder {
+    color: var(--text-placeholder) !important;
+    opacity: 1.0;
 }
 
 a {
@@ -703,10 +710,11 @@ body.loading {
 
 /* FORM */
 
-.col-form-label {
+.col-form-label-text {
     color: var(--title-label-color);
 }
-.col-form-label[title]:not([title=""]):after {
+.col-form-label-text[title]:not([title=""]):after,
+.col-form-label-text[data-bs-original-title]:after {
     content: "";
     display: inline-block;
     margin-left: .3rem;
@@ -761,7 +769,7 @@ select.form-select {
 .form-group:last-child {
     margin-bottom: 0;
 }
-.form-group.required .col-form-label:before {
+.form-group.required .col-form-label-text:before {
     content: "*";
     margin-right: .25rem;
     color: var(--light-danger);
@@ -1362,17 +1370,32 @@ form.was-validated select:valid ~ .select2-container .select2-selection {
     display: block;
 }
 
+/* POPOVER */
+
+.popover-header {
+    background: var(--popover-background);
+    font-weight: normal;
+    padding: .75rem 1rem;
+    white-space: pre-line;
+}
+.bs-popover-start > .popover-arrow::after {
+    border-left-color: var(--popover-background);
+}
+.bs-popover-end > .popover-arrow::after {
+    border-right-color: var(--popover-background);
+}
+.bs-popover-top > .popover-arrow::after {
+    border-top-color: var(--popover-background);
+}
+.bs-popover-bottom > .popover-arrow::after {
+    border-bottom-color: var(--popover-background);
+}
+
 /* MODAL */
 
 .modal {
     background: rgba(0,0,0,.2);
     z-index: 3001;
-}
-.modal-dialog .modal-body .form-group {
-
-}
-.modal-dialog .modal-body .form-group:last-child {
-
 }
 .modal-backdrop.show {
     opacity: .1;

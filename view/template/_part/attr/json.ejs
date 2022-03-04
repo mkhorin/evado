@@ -7,13 +7,14 @@ const p = {handler: 'Json'};
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
-           data-t="<%- p.translate %>"><%- p.label %></label>
+    <label class="col-form-label <%- p.labelCss %>">
+        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
+    </label>
     <div class="<%- p.valueCss %>">
         <div class="input-group">
             <input name="<%- p.name %>" type="text" value="<%= p.value %>" <%- p.required %>
                    class="form-control form-value">
-            <button class="btn-outline-secondary btn" type="button" title="Editor" data-command="edit">
+            <button class="btn-outline-secondary btn" type="button" title="Editor" tabindex="-1" data-command="edit">
                 <i class="fas fa-code"></i>
             </button>
         </div>

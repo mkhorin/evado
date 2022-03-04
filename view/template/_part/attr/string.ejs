@@ -8,8 +8,9 @@ const p = {};
      data-handler="<%= p.handler %>"
      data-behaviors="<%= p.behaviors %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="col-form-label <%- p.labelCss %>"
-           title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></label>
+    <label class="col-form-label <%- p.labelCss %>">
+        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
+    </label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
                value="<%= p.value %>" <%- p.required %> class="form-control form-value">

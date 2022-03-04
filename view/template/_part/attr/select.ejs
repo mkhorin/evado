@@ -39,8 +39,9 @@ content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-sele
      data-select2="<%= p.select2 %>"
      data-depends="<%= p.depends %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label data-t="<%- p.translate %>" title="<%= p.extHint %>"
-           class="col-form-label <%- p.labelCss %>"><%- p.label %></label>
+    <label class="col-form-label <%- p.labelCss %>">
+        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
+    </label>
     <div class="<%- p.valueCss %>">
         <% if (p.update) { %>
         <div class="input-group">

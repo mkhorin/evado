@@ -13,8 +13,9 @@ const p = {
      data-action-binder="<%= p.actionBinder %>"
      data-utc="<%- p.utc %>"
      data-params="<%= p.options %>">
-    <label class="col-form-label <%- p.labelCss %>" title="<%= p.extHint %>"
-           data-t="<%- p.translate %>"><%- p.label %></label>
+    <label class="col-form-label <%- p.labelCss %>">
+        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
+    </label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="hidden" value="<%- p.value %>" class="form-value">
         <div class="input-group">

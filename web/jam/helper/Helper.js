@@ -158,4 +158,25 @@ Jam.Helper = class Helper {
             });
         });
     }
+
+    static initLabelPopovers ($container, params) {
+        const title = '[title]:not([title=""])';
+        params = {
+            container: $container.get(0),
+            showOnCreate: true,
+            targetSelector: `.col-form-label-text${title},.form-check-label${title}`,
+            trigger: 'hover',
+            ...params
+        };
+        $container.on('mouseenter', params.targetSelector, ({target}) => this.createPopover(target, params));
+    }
+
+    static createPopover (target, params) {
+        if (!target.dataset.bsOriginalTitle) {
+            const popover = new bootstrap.Popover(target, params);
+            if (params?.showOnCreate) {
+                popover.show();
+            }
+        }
+    }
 };

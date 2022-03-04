@@ -85,6 +85,7 @@ Jam.StackFrame = class StackFrame {
             const $container = this.$content.children().first();
             this.createTitle($container);
             this.createTabTitle($container);
+            Jam.Helper.initLabelPopovers($container.children('.frame-box-body'));
             this.resize();
             this.stack.afterLoad(this);
             this.updateCsrfToken();

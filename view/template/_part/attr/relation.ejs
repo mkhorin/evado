@@ -106,8 +106,9 @@ if (d.filter && !d.filter.url) {
 d.id = attr + _controller.getCurrentRoute();
 %>
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
-    <label class="<%- p.labelCss %> col-form-label" title="<%= p.extHint%>"
-           data-t="<%- p.translate %>"><%- p.label %></label>
+    <label class="col-form-label <%- p.labelCss %>">
+        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
+    </label>
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="hidden" class="form-value">
         <div class="data-grid" data-params="<%= JSON.stringify(d) %>">
