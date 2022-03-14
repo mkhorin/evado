@@ -12,9 +12,12 @@ module.exports = class BaseMenu extends Base {
         const section = nav.getSection('main', this.module.getRouteName());
         const activeItem = this.controller.meta?.node;
         const openedItems = activeItem?.getParents() || [];
-        const items = [...openedItems, ...section.children];
-        if (activeItem?.children) {
-            items.push(...activeItem.children);
+        const items = [...section.children];
+        if (activeItem) {
+            items.push(...activeItem.getParentsChildren());
+            if (activeItem.children) {
+                items.push(...activeItem.children);
+            }
         }
         const forbiddenAccess = await this.resolveAccess({section, items});
         return this.renderTemplate('_part/nav/sideMenu', {
@@ -30,7 +33,7 @@ module.exports = class BaseMenu extends Base {
     }
 
     getItemUrl (item) {
-        return item.data.url || `${this.getItemModule(item)}/model/?n=${item.id}`;
+        return item.data.url || `${this.getItemModule(item)}/model/?n=${item.id}${item.serializeUrlParams()}`;
     }
 
     getItemModule (item) {
@@ -51,10 +54,11 @@ module.exports = class BaseMenu extends Base {
     }
 
     async renderItems (items, section) {
+        const forbiddenAccess = await this.resolveAccess({section, items}, {withParents: true});
         return this.renderTemplate('_part/nav/sideMenuItems', {
             activeItem: null,
             openedItems: [],
-            forbiddenAccess: await this.resolveAccess({section, items}, {withParents: true}),
+            forbiddenAccess,
             items
         });
     }
