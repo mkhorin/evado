@@ -4,15 +4,16 @@ const p = {
     handler: 'File',
     nameAttr: typeof nameAttr === 'undefined' ? '' : nameAttr
 };
+const params = {p};
 %>
-<%- include(_view.get('_part/attr/_params'), {p}) %>
+<%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.required %>"
      data-handler="<%= p.handler %>"
      data-name-attr="<%= p.nameAttr %>">
-    <label class="col-form-label <%- p.labelCss %>">
-        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
-    </label>
+
+    <%- include(_view.get('_part/attr/_label'), params) %>
+
     <div class="<%- p.valueCss %>">
         <input type="hidden" name="<%- p.name %>" value="<%= p.value %>" class="form-value">
         <div class="uploader show-dropzone"

@@ -6,16 +6,17 @@ const p = {
     after: typeof after === 'undefined' ? null : after,
     afterCss: typeof afterCss === 'undefined' ? null : afterCss
 };
+const params = {p};
 %>
-<%- include(_view.get('_part/attr/_params'), {p}) %>
+<%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-behaviors="<%= p.behaviors %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="col-form-label <%- p.labelCss %>">
-        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
-    </label>
+
+    <%- include(_view.get('_part/attr/_label'), params) %>
+
     <div class="<%- p.valueCss %>">
         <div class="input-group">
             <% if (p.before) { %>

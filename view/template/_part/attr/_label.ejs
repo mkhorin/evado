@@ -1,4 +1,5 @@
 <!-- _part/attr/_label -->
 <label class="col-form-label <%- p.labelCss %>">
-    <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
+    <span class="col-form-label-text" data-t="<%- p.translate %>"><%- p.label %></span><% if (p.extHint) {
+        %><i class="hint-icon" title="<%= p.extHint %>"></i><% } %>
 </label>

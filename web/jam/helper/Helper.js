@@ -49,12 +49,6 @@ Jam.Helper = class Helper {
         });
     }
 
-    static fixSelect2Focus () {
-        $(document).on('select2:open', () => {
-            setTimeout(() => document.querySelector('.select2-search__field')?.focus(), 0);
-        });
-    }
-
     static random (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -78,36 +72,6 @@ Jam.Helper = class Helper {
 
     static resolveTemplate (text, data = {}) {
         return text.replace(/{{(\w+)}}/gm, (match, key) => data.hasOwnProperty(key) ? data[key] : '');
-    }
-
-    static renderSelectOptions (data) {
-        const items = [];
-        if (data.hasEmpty) {
-            items.push({
-                text: data.emptyText || '',
-                value: data.emptyValue || ''
-            });
-        }
-        items.push(...this.normalizeSelectItems(data.items));
-        let result = '';
-        for (let {text, value} of items) {
-            const selected = value === data.defaultValue ? ' selected' : '';
-            if (data.translate !== false) {
-                text = Jam.t(text, data.translate);
-            }
-            result += `<option value="${value}" ${selected}>${text}</option>`;
-        }
-        return result;
-    }
-
-    static normalizeSelectItems (items) {
-        if (!Array.isArray(items)) {
-            items = items ? Object.keys(items).map(value => ({value, text: items[value]})) : [];
-        }
-        for (let item of items) {
-            item.id = item.value; // for select2
-        }
-        return items;
     }
 
     static resetFormElement ($element) {
@@ -157,26 +121,5 @@ Jam.Helper = class Helper {
                 event.target.click();
             });
         });
-    }
-
-    static initLabelPopovers ($container, params) {
-        const title = '[title]:not([title=""])';
-        params = {
-            container: $container.get(0),
-            showOnCreate: true,
-            targetSelector: `.col-form-label-text${title},.form-check-label${title}`,
-            trigger: 'hover',
-            ...params
-        };
-        $container.on('mouseenter', params.targetSelector, ({target}) => this.createPopover(target, params));
-    }
-
-    static createPopover (target, params) {
-        if (!target.dataset.bsOriginalTitle) {
-            const popover = new bootstrap.Popover(target, params);
-            if (params?.showOnCreate) {
-                popover.show();
-            }
-        }
     }
 };

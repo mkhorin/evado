@@ -4,16 +4,17 @@ const p = {
     allValue: typeof allValue === 'undefined' ? null : allValue,
     handler: 'CheckboxList'
 };
+const params = {p};
 %>
-<%- include(_view.get('_part/attr/_params'), {p}) %>
+<%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr <%- p.css %> <%- p.required %> form-group row"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>"
      data-all="<%- p.allValue %>">
-    <label class="col-form-label <%- p.labelCss %>">
-        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
-    </label>
+
+    <%- include(_view.get('_part/attr/_label'), params) %>
+
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
         <div class="form-check-list-inline form-check-list">
@@ -21,7 +22,8 @@ const p = {
                for (const item of items) { %>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" value="<%= item.value %>" type="checkbox">
-                <label class="form-check-label" title="<%= item.hint %>" data-t="<%- p.translate %>"><%- item.text %></label>
+                <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label><% if (item.hint) {
+                    %><i class="hint-icon" title="<%= item.hint %>"></i><% } %>
             </div>
             <% }} else {
                for (const key of Object.keys(items)) { %>

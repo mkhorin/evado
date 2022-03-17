@@ -11,8 +11,9 @@ const p = {
     depends: typeof depends === 'undefined' ? '' : JSON.stringify(depends),
     itemTranslate: typeof itemTranslate === 'undefined' ? '' : itemTranslate
 };
+const params = {p};
 %>
-<%- include(_view.get('_part/attr/_params'), {p}) %>
+<%- include(_view.get('_part/attr/_params'), params) %>
 <%
 let content = p.hasEmpty ? `<option value="">${p.emptyText}</option>` : '';
 if (typeof items !== 'undefined' && items) {
@@ -39,9 +40,9 @@ content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-sele
      data-select2="<%= p.select2 %>"
      data-depends="<%= p.depends %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="col-form-label <%- p.labelCss %>">
-        <span class="col-form-label-text" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></span>
-    </label>
+
+    <%- include(_view.get('_part/attr/_label'), params) %>
+
     <div class="<%- p.valueCss %>">
         <% if (p.update) { %>
         <div class="input-group">

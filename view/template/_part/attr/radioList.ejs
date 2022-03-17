@@ -6,13 +6,16 @@ const p = {
 if (items === 'labels') {
     items = _view.ModelHelper.getLabelSelectItems(attr, model);
 }
+const params = {p};
 %>
-<%- include(_view.get('_part/attr/_params'), {p}) %>
+<%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr <%- p.css %> <%- p.required %> form-group row"
      data-handler="<%= p.handler %>"
      data-action-binder="<%= p.actionBinder %>">
-    <label class="<%- p.labelCss %> col-form-label" data-t="<%- p.translate %>"><%- p.label %></label>
+
+    <%- include(_view.get('_part/attr/_label'), params) %>
+
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
         <div class="form-check-list-inline">
@@ -25,7 +28,8 @@ if (items === 'labels') {
                for (const item of items) { %>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" value="<%= item.value %>" type="radio">
-                <label class="form-check-label" title="<%= item.hint %>" data-t="<%- p.translate %>"><%- item.text %></label>
+                <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label><% if (item.hint) {
+                    %><i class="hint-icon" title="<%= item.hint %>"></i><% } %>
             </div>
             <% }} else {
                for (const key of Object.keys(items)) { %>

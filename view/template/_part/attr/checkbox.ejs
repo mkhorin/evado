@@ -12,7 +12,8 @@ const p = {handler: 'Checkbox'};
         <input class="form-value" name="<%- p.name %>" type="hidden" value="<%- p.value %>">
         <div class="form-check">
             <input class="form-check-input"<%- p.value ? ' checked' : '' %> type="checkbox">
-            <label class="form-check-label" title="<%= p.extHint %>" data-t="<%- p.translate %>"><%- p.label %></label>
+            <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label><% if (p.extHint) {
+                %><i class="hint-icon" title="<%= p.extHint %>" data-t="<%- p.translate %>"></i><% } %>
         </div>
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>

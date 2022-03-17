@@ -46,7 +46,7 @@ body {
     --btn-space: .3rem;
     --header-height: 50px;
     --header-indent: var(--header-height);
-    --max-modal-width: 1480px;
+    --max-modal-width: 1525px;
     --nav-group-space: 1.1rem;
     --nav-item-acsent-color: #88a;
     --navbar-color: #88a;
@@ -54,7 +54,7 @@ body {
     --sidebar-toggle-time: .7s;
     --super-navbar-color: #668;
     --semi-bold: 500;
-    --popover-background: #fffff2;
+    --popover-background: #fffff0;
 
     --hover-row-color: #fff8e8;
     --title-label-color: #667;
@@ -409,8 +409,11 @@ body.loading {
     text-decoration: none;
 }
 .nav-tree .nav-header {
-    opacity: .6;
+    opacity: .5;
     text-transform: uppercase;
+}
+.nav-tree .nav-item + .nav-header {
+    margin-top: .7rem;
 }
 .nav-tree .nav-children {
     display: none;
@@ -633,7 +636,7 @@ body.loading {
     color: #d0d7db;
 }
 .main-sidebar > .nav-tree {
-    padding: .5rem 0;
+    padding: .5rem 0 1rem;
 }
 
 /* MAIN TRANSITION */
@@ -713,19 +716,6 @@ body.loading {
 .col-form-label-text {
     color: var(--title-label-color);
 }
-.col-form-label-text[title]:not([title=""]):after,
-.col-form-label-text[data-bs-original-title]:after {
-    content: "";
-    display: inline-block;
-    margin-left: .3rem;
-    margin-right: -1px;
-    width: 12px;
-    height: 12px;
-    background-image: url(./question.svg);
-    background-repeat: no-repeat;
-    background-size: contain;
-    opacity: 0.6;
-}
 .form .empty-group {
     display: none;
 }
@@ -755,6 +745,9 @@ body.loading {
     color: var(--body-color);
     -moz-osx-font-smoothing: auto;
     -webkit-font-smoothing: antialiased;
+}
+.form-check-label {
+    display: inline;
 }
 .form-control:disabled,
 .form-control[readonly] {
@@ -968,6 +961,24 @@ select.form-select {
 .model-group-loader {
     text-align: center;
     color: #ccc;
+}
+
+.hint-icon {
+    display: inline-block;
+    margin-left: .3rem;
+    width: 12px;
+    height: 12px;
+    background-image: url(./question.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    opacity: 0.5;
+}
+.hint-icon:hover {
+    opacity: 0.9;
+}
+.hint-icon[data-title=""] {
+    display: none;
 }
 
 /* FORM OVERRIDE */
@@ -1343,7 +1354,7 @@ form.was-validated select:valid ~ .select2-container .select2-selection {
     color: #444;
 }
 .select2-dropdown {
-    background: #fffff4;
+    background: #fffff2;
 }
 .select2-container--open {
     z-index: 2001;
@@ -1372,6 +1383,9 @@ form.was-validated select:valid ~ .select2-container .select2-selection {
 
 /* POPOVER */
 
+.popover {
+    z-index: 2003;
+}
 .popover-header {
     background: var(--popover-background);
     font-weight: normal;
