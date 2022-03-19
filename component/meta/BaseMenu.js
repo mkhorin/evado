@@ -20,11 +20,13 @@ module.exports = class BaseMenu extends Base {
             }
         }
         const forbiddenAccess = await this.resolveAccess({section, items});
+        const dynamicItems = await section.getDynamicNodes(items);
         return this.renderTemplate('_part/nav/sideMenu', {
             section,
             activeItem,
             openedItems,
-            forbiddenAccess
+            forbiddenAccess,
+            dynamicItems
         });
     }
 
@@ -55,11 +57,13 @@ module.exports = class BaseMenu extends Base {
 
     async renderItems (items, section) {
         const forbiddenAccess = await this.resolveAccess({section, items}, {withParents: true});
-        return this.renderTemplate('_part/nav/sideMenuItems', {
+        const dynamicItems = await section.getDynamicNodes(items);
+        return this.renderTemplate('_part/nav/sideMenuItems', this.view.getRenderParams({
             activeItem: null,
             openedItems: [],
             forbiddenAccess,
+            dynamicItems,
             items
-        });
+        }));
     }
 };

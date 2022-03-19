@@ -1,6 +1,6 @@
 {
   "name": "evado",
-  "version": "5.2.1",
+  "version": "5.3.0",
   "description": "Declarative Node.js Framework for rapid web app development",
   "author": {
     "name": "Maxim Khorin",
@@ -16,7 +16,7 @@
     "url": "https://github.com/mkhorin/evado.git"
   },
   "dependencies": {
-    "areto": "~3.1.4",
+    "areto": "~3.2.0",
     "areto-ejs": "~1.0.0",
     "multer": "~1.4.4",
     "nodemailer": "~6.7.2"

@@ -9,8 +9,9 @@ const p = {
 <div class="tabs" data-action-binder="<%= p.actionBinder %>">
     <div class="nav-tabs nav" role="tablist">
         <% for (const item of items) { %>
-        <a class="nav-item nav-link <%- item.active ? 'active' : '' %>" title="<%= item.hint %>" href="#" role="tab"
-           data-id="<%- item.id %>" data-t="<%- p.translate %>"><%- item.label || item.id %></a>
+        <a class="nav-item nav-link <%- item.active ? 'active' : '' %>" href="#" role="tab"
+           data-id="<%- item.id %>"><span data-t="<%- p.translate %>"><%- item.label || item.id %></span><% if (item.hint) {
+            %><i class="hint-icon" title="<%= item.hint %>" data-t="<%- p.translate %>"></i><% } %></a>
         <% } %>
     </div>
     <div class="tab-content">

@@ -52,7 +52,7 @@ module.exports = class DatabaseStore extends Base {
     }
 
     findAssignmentRule () {
-        return this.find(this.TABLE_ASSIGNMENT_RULE);
+        return this.find(this.TABLE_ASSIGNMENT_RULE).and({active: true});
     }
 
     findAssignmentRuleByName (name) {

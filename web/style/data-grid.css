@@ -9,9 +9,10 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    row-gap: 0.5rem;
 }
 .data-grid-content {
-    margin-bottom: .7rem;
+    margin-bottom: .5rem;
     color: var(--content-color);
     -moz-osx-font-smoothing: auto;
     -webkit-font-smoothing: antialiased;
@@ -300,6 +301,7 @@
 
 .data-grid-pager {
     display: none;
+    margin-top: .2rem;
 }
 .data-grid-pagination {
     margin-right: 1rem;
@@ -361,6 +363,9 @@
 }
 .tree-data-grid .data-item.opened .node-toggle {
     color: #888;
+}
+.tree-data-grid .data-item .node-toggle:hover {
+    color: #d00;
 }
 .tree-data-grid .data-item.opened .node-toggle i {
     transform: rotate(-90deg);

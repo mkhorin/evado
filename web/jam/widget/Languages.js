@@ -11,7 +11,7 @@ Jam.Languages = class Languages extends Jam.Loadable {
     onLanguage (event) {
         event.preventDefault();
         const code = event.currentTarget.dataset.code;
-        Jam.Helper.setCookie(this.findData('cookie'), code, {
+        Jam.CookieHelper.set(this.findData('cookie'), code, {
             'max-age': this.findData('max-age')
         });
         location.reload();

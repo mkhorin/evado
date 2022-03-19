@@ -117,7 +117,7 @@ Jam.ListFilter = class ListFilter {
     }
 
     serialize () {
-        return this.group ? this.group.serialize() : undefined;
+        return this.group?.serialize();
     }
 
     parse (items) {

@@ -21,7 +21,7 @@ Jam.ListFilterTypeSelector = class ListFilterTypeSelector extends Jam.ListFilter
 
     createSimple () {
         Jam.ObjectHelper.assignUndefined(this.params, {hasEmpty: true});
-        const items = Jam.Helper.renderSelectOptions(this.params);
+        const items = Jam.SelectHelper.renderOptions(this.params);
         this.getValueElement().html(items).select2();
     }
 
@@ -85,7 +85,7 @@ Jam.ListFilterTypeSelector = class ListFilterTypeSelector extends Jam.ListFilter
         const more = params.page * this.params.pageSize < data.total;
         return {
             pagination: {more},
-            results: Jam.Helper.normalizeSelectItems(items)
+            results: Jam.SelectHelper.normalizeItems(items)
         };
     }
 

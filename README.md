@@ -2,6 +2,7 @@
 
 ### A high-level framework for rapidly developing web apps by declaring entities and relationships through a web interface.
 
+- Pure JavaScript provides lightness and performance
 - Node.js and MongoDB accelerate development and simplify support.
 - User-friendly design optimizes data handling and reduces errors.
 - Modular structure makes it easy to customize components and create new ones.
@@ -9,7 +10,7 @@
 - Responsive web API interacts with external systems.
 - Unified web interface accelerates user skills.
 
-[![Evado Declarative Framework](doc/evado-framework-steps.jpg)](http://nervebit.com)
+[![Evado Declarative Framework](doc/evado-framework-steps.jpg)](https://mkhorin.github.io/evado-site/)
 
 ### Ready to use
 

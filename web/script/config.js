@@ -41,7 +41,7 @@ if ($.fn.datetimepicker) {
         useCurrent: false,
         toolbarPlacement: 'bottom',
         widgetPositioning: {
-            vertical: 'bottom'
+            vertical: 'bottom' // prevent clipping at the top in scrollable containers
         },
         // widgetParent: 'body',
         // debug: true

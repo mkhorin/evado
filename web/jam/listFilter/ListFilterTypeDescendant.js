@@ -11,7 +11,7 @@ Jam.ListFilterTypeDescendant = class ListFilterTypeDescendant extends Jam.ListFi
 
     createItems () {
         this.params.hasEmpty = true;
-        const items = Jam.Helper.renderSelectOptions(this.params);
+        const items = Jam.SelectHelper.renderOptions(this.params);
         this.getValueElement().html(items).select2({
             placeholder: Jam.t('Select a descendant class...')
         });
@@ -68,7 +68,9 @@ Jam.ListFilterTypeDescendant = class ListFilterTypeDescendant extends Jam.ListFi
 
     serialize (data) {
         return super.serialize(Object.assign(data, {
-            class: this.getDescendantName()
+            attr: undefined,
+            class: this.getDescendantName(),
+            op: undefined
         }));
     }
 

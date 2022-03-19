@@ -1,3 +1,27 @@
+## 5.3.0
+
+* component/meta/BaseMenu
+    - fix navigation access control for children of parents
+* decorate label popup tooltip
+* web/jam/helper/CookieHelper
+    - move cookie management to a separate helper
+* web/jam/helper/SelectHelper
+    - fix select2 focus    
+* web/jam/grid/CardRenderer
+    - fix grid card view
+* web/jam/grid/TreeGridNode
+    - fix tree list view    
+* web/jam/grid/Tuner
+    - fix grid tuner position
+* web/jam/list/Pagination
+    - fix pagination toggles
+* web/jam/listFilter/ListFilterCondition
+    - fix default filter type    
+* web/jam/listFilter/ListFilterTypeNested
+    - add nested condition to filter        
+* web/jam/misc/Dialog
+    - close popup on press mouse down
+
 ## 5.2.0
 
 * component/misc/HierarchySolver
