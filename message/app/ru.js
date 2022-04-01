@@ -9,7 +9,7 @@ module.exports = {
 
     'Access blocked': 'Доступ заблокирован',
     'Access blocked for': 'Доступ заблокирован для',
-    'Access denied': 'Доступ запрешен',
+    'Access denied': 'Доступ запрещён',
 
     'Bad request': 'Неверный запрос',
 

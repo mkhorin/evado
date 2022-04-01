@@ -91,7 +91,7 @@ module.exports = class BaseController extends Base {
                 result[model.constructor.name] = this.translateMessageMap(model.getFirstErrorMap());
             }
         }
-        this.send(result, 400);
+        this.send(result, Response.BAD_REQUEST);
     }
 
     hasAnyModelError (...models) {
@@ -136,6 +136,7 @@ module.exports.init();
 
 const BadRequest = require('areto/error/http/BadRequest');
 const NotFound = require('areto/error/http/NotFound');
+const Response = require('areto/web/Response');
 const DataGrid = require('../misc/DataGrid');
 const TreeGrid = require('../misc/TreeGrid');
 const Select2 = require('../misc/Select2');

@@ -39,7 +39,8 @@ Jam.SortList = class SortList extends Jam.List {
     }
 
     getChangedOrder () {
-        const column = this.getSourceOrderColumn(), data = {};
+        const column = this.getSourceOrderColumn();
+        const data = {};
         this.findItems().each((index, item) => {
             const value = this.grid.getData(item.dataset.id, column);
             if (value !== this.sourceOrderNumbers[index]) {

@@ -24,12 +24,14 @@ Jam.UploaderFile = class UploaderFile {
     }
 
     getDeleteUrl () {
-        const url = this.uploader.options.delete;
-        return typeof url === 'function' ? url(this) : url;
+        return this.resolveUrl(this.uploader.options.delete);
     }
 
     getUploadUrl () {
-        const url = this.uploader.options.upload;
+        return this.resolveUrl(this.uploader.options.upload);
+    }
+
+    resolveUrl (url) {
         return typeof url === 'function' ? url(this) : url;
     }
 

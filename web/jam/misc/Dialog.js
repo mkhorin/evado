@@ -55,7 +55,7 @@ Jam.Dialog = class Dialog {
             css: 'warning',
             title: 'Warning',
             submitText: false,
-            cancelText: 'Close',
+            cancelText: 'OK',
             returnCancel: true,
             ...data
         });
@@ -66,7 +66,7 @@ Jam.Dialog = class Dialog {
             css: 'danger',
             title: 'Error',
             submitText: false,
-            cancelText: 'Close',
+            cancelText: 'OK',
             returnCancel: true,
             strictCancel: true,
             ...data

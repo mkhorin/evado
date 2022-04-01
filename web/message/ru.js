@@ -26,7 +26,7 @@ Jam.I18n.defaults = {
     'GiB': 'Гб',
     'TiB': 'Тб',
 
-    'Access denied': 'Доступ запрещен',
+    'Access denied': 'Доступ запрещён',
     'Account': 'Аккаунт',
     'Action completed': 'Действие завершено',
     'Action failed': 'Действие не удалось',

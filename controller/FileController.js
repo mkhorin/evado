@@ -28,10 +28,10 @@ module.exports = class FileController extends Base {
     async actionUpload () {
         const model = this.spawn('model/RawFile');
         if (!await model.validateUserLimit(this.user)) {
-            return this.sendText(this.translate(model.getFirstError()), 409);
+            return this.sendText(this.translate(model.getFirstError()), Response.CONFLICT);
         }
         if (!await model.upload(this.req, this.res)) {
-            return this.sendText(this.translate(model.getFirstError()), 400);
+            return this.sendText(this.translate(model.getFirstError()), Response.BAD_REQUEST);
         }
         this.sendJson({
             id: model.getId(),
@@ -43,13 +43,13 @@ module.exports = class FileController extends Base {
     async actionDelete () {
         const model = await this.spawn('model/RawFile').findById(this.getPostParam('id')).one();
         if (!model) {
-            return this.sendStatus(404);
+            return this.sendStatus(Response.NOT_FOUND);
         }
         if (model.getOwner()) {
-            return this.sendStatus(400);
+            return this.sendStatus(Response.BAD_REQUEST);
         }
         await model.delete();
-        this.sendStatus(200);
+        this.sendStatus(Response.OK);
     }
 
     async actionDownload () {
@@ -58,7 +58,7 @@ module.exports = class FileController extends Base {
         const stat = await FileHelper.getStat(file);
         if (!stat) {
             model.log('error', 'File not found');
-            return this.sendStatus(404);
+            return this.sendStatus(Response.NOT_FOUND);
         }
         this.setHttpHeader(model.getFileHeaders());
         this.sendFile(file);
@@ -68,7 +68,7 @@ module.exports = class FileController extends Base {
         const model = await this.getModel();
         const file = await model.ensureThumbnail(this.getQueryParam('s'));
         if (!file) {
-            return this.sendStatus(404);
+            return this.sendStatus(Response.NOT_FOUND);
         }
         this.setHttpHeader(model.getThumbnailHeaders());
         this.sendFile(file);
@@ -77,3 +77,4 @@ module.exports = class FileController extends Base {
 module.exports.init(module);
 
 const FileHelper = require('areto/helper/FileHelper');
+const Response = require('areto/web/Response');

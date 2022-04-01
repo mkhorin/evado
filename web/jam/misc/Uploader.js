@@ -51,7 +51,8 @@ Jam.Uploader = class Uploader {
             failedMessage: 'Upload failed',
             abortedMessage: 'Upload aborted',
             uploadMethod: 'POST',
-            prepareUploadData: data => data
+            prepareUploadData: data => data,
+            nextProcessDelay: 300
         };
     }
 
@@ -195,7 +196,7 @@ Jam.Uploader = class Uploader {
             } else if (data.hasOwnProperty('validated') && !data.hasOwnProperty('uploading')) {
                 data.validated.upload();
             }
-        }, 300);
+        }, this.options.nextProcessDelay);
     }
 
     getFirstFilesByStatus () {
