@@ -17,7 +17,10 @@ module.exports = class Item extends Base {
 
     setAssignmentRules (data) {
         const rules = [];
-        if (Array.isArray(this.assignmentRules)) {
+        if (this.assignmentRules) {
+            if (!Array.isArray(this.assignmentRules)) {
+                this.assignmentRules = [this.assignmentRules];
+            }
             for (const key of this.assignmentRules) {
                 if (Object.prototype.hasOwnProperty.call(data, key)) {
                     rules.push(data[key]);
@@ -32,7 +35,7 @@ module.exports = class Item extends Base {
         if (Array.isArray(this.assignmentRules)) {
             for (const config of this.assignmentRules) {
                 try {
-                    if (await (new config.Class(config)).execute(this, userId)) {
+                    if (await this.createAssignmentRule(config).execute(this, userId)) {
                         return true; // can assign item to user
                     }
                 } catch (err) {
@@ -47,13 +50,17 @@ module.exports = class Item extends Base {
         if (Array.isArray(this.assignmentRules)) {
             for (const config of this.assignmentRules) {
                 try {
-                    users.push(...await (new config.Class(config)).getUsers(this));
+                    users.push(...await this.createAssignmentRule(config).getUsers(this));
                 } catch (err) {
                     this.rbac.log('error', `Item: ${this.name}: ${config.name}`, err);
                 }
             }
         }
         return users;
+    }
+
+    createAssignmentRule (config) {
+        return new config.Class(config);
     }
 
     // CREATE
@@ -65,12 +72,18 @@ module.exports = class Item extends Base {
     }
 
     async resolveAssignmentRuleRelation () {
-        const names = this.data.assignmentRules;
-        if (!Array.isArray(names) || !names.length) {
+        let rules = this.data.assignmentRules;
+        if (!rules) {
             return [];
         }
-        const result = await this.store.findAssignmentRuleByName(names).column(this.store.key);
-        if (result.length !== names.length) {
+        if (!Array.isArray(rules)) {
+            rules = [rules];
+        }
+        if (!rules.length) {
+            return rules;
+        }
+        const result = await this.store.findAssignmentRuleByName(rules).column(this.store.key);
+        if (result.length !== rules.length) {
             throw new Error(`Assignment rule not found for item: ${this.name}`);
         }
         return result;
