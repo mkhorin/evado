@@ -28,6 +28,9 @@ module.exports = class DataGrid extends Base {
             ListFilter,
             ...config
         });
+        if (this.params?.request) {
+            this.request = {...this.request, ...this.params.request};
+        }
         this.params = this.params || {};
     }
 
@@ -81,7 +84,7 @@ module.exports = class DataGrid extends Base {
     }
 
     getMaxLimit () {
-        return this.MAX_LIMIT;
+        return this.params.maxLimit || this.MAX_LIMIT;
     }
 
     setOrder () {
@@ -147,8 +150,10 @@ module.exports = class DataGrid extends Base {
 
     renderModel (model) {
         const data = {[this.ROW_KEY]: model.getId()};
-        for (const column of this.columns) {
-            data[column.name] = this.renderModelAttr(column, model);
+        if (Array.isArray(this.columns)) {
+            for (const column of this.columns) {
+                data[column.name] = this.renderModelAttr(column, model);
+            }
         }
         return data;
     }
