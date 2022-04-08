@@ -407,10 +407,14 @@ body.loading {
     position: relative;
     padding: .5rem 1rem;
     text-decoration: none;
+    overflow-wrap: break-word;
 }
 .nav-tree .nav-header {
     opacity: .5;
     text-transform: uppercase;
+}
+.nav-tree .nav-item {
+    overflow-wrap: break-word;
 }
 .nav-tree .nav-item + .nav-header {
     margin-top: .7rem;
@@ -909,7 +913,7 @@ select.form-select {
     display: block;
 }
 .form-divider {
-    margin: 2rem 0;
+    margin: 1rem 0 2rem 0;
     background: none;
     border-bottom: 1px dashed #666;
 }
