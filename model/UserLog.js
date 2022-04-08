@@ -18,8 +18,8 @@ module.exports = class UserLog extends Base {
                 'data'
             ],
             INDEXES: [[{user: 1}, {unique: false}]],
-            OVERFLOW: 30,
-            TRUNCATION: 20
+            TRUNCATION_THRESHOLD: 30,
+            TRUNCATION_OFFSET: 20
         };
     }
 
@@ -37,8 +37,8 @@ module.exports = class UserLog extends Base {
     async truncate (user, event) {
         return ModelHelper.truncateOverflow({
             query: this.find({user, event}),
-            overflow: this.module.getParam('userLogOverflow', this.OVERFLOW),
-            truncation: this.module.getParam('userLogTruncation', this.TRUNCATION),
+            threshold: this.module.getParam('userLogTruncationOverflow', this.TRUNCATION_THRESHOLD),
+            offset: this.module.getParam('userLogTruncationOffset', this.TRUNCATION_OFFSET),
             inBulk: true
         });
     }

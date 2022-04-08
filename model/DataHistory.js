@@ -20,8 +20,8 @@ module.exports = class DataHistory extends Base {
                 data: 'Source data'
             },
             TABLE_PREFIX: 'dh_',
-            OVERFLOW: 20,
-            TRUNCATION: 10
+            TRUNCATION_THRESHOLD: 20,
+            TRUNCATION_OFFSET: 10
         };
     }
 
@@ -47,8 +47,8 @@ module.exports = class DataHistory extends Base {
     truncate () {
         return ModelHelper.truncateOverflow({
             query: this.findByOwner(),
-            overflow: this.module.getParam('dataHistoryOverflow', this.OVERFLOW),
-            truncation: this.module.getParam('dataHistoryTruncation', this.TRUNCATION),
+            threshold: this.module.getParam('dataHistoryTruncationThreshold', this.TRUNCATION_THRESHOLD),
+            offset: this.module.getParam('dataHistoryTruncationOffset', this.TRUNCATION_OFFSET),
             inBulk: true
         });
     }

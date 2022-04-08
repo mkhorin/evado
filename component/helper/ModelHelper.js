@@ -58,10 +58,17 @@ module.exports = class ModelHelper {
         }
     }
 
-    static async truncateOverflow ({query, overflow, truncation, inBulk}) {
-        if (await query.count() > overflow) {
+    /**
+     * Truncate old records to the offset if threshold is exceeded
+     * @param query
+     * @param threshold - minimum number of records before truncation
+     * @param offset - number of records after truncation
+     * @param {boolean} inBulk - delete records at once, otherwise by loading the models first
+     */
+    static async truncateOverflow ({query, threshold, offset, inBulk}) {
+        if (await query.count() > threshold) {
             const model = query.model;
-            query.order({[model.PK]: -1}).offset(truncation);
+            query.order({[model.PK]: -1}).offset(offset);
             if (inBulk) {
                 const ids = await query.ids();
                 return query.order(null).where({[model.PK]: ids}).delete();

@@ -25,8 +25,8 @@ module.exports = class NotificationMessage extends Base {
             DELETE_ON_UNLINK: [
                 'popupNotifications'
             ],
-            OVERFLOW: 10,
-            TRUNCATION: 5
+            TRUNCATION_THRESHOLD: 10,
+            TRUNCATION_OFFSET: 5
         };
     }
 
@@ -102,10 +102,11 @@ module.exports = class NotificationMessage extends Base {
         if (!notification) {
             return this.log('error', 'Notification not found');
         }
-        const query = this.find({notification: notification.getId()});
-        const overflow = notification.getOption('messageOverflow', this.OVERFLOW);
-        const truncation = notification.getOption('messageTruncation', this.TRUNCATION);
-        await ModelHelper.truncateOverflow({query, overflow, truncation});
+        await ModelHelper.truncateOverflow({
+            query: this.find({notification: notification.getId()}),
+            threshold: notification.getOption('messageTruncationThreshold', this.TRUNCATION_THRESHOLD),
+            offset: notification.getOption('messageTruncationOffset', this.TRUNCATION_OFFSET)
+        });
         return true;
     }
 
