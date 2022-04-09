@@ -151,7 +151,11 @@ module.exports = class RawFile extends Base {
     }
 
     async afterDelete () {
-        await this.deleteFile();
+        try {
+            await this.deleteFile();
+        } catch (err) {
+            this.log('error', err);
+        }
         return super.afterDelete();
     }
 
