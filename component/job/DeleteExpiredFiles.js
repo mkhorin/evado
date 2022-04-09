@@ -7,9 +7,18 @@ const Base = require('areto/scheduler/Job');
 
 module.exports = class DeleteExpiredFiles extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {number} config.lifetime - Seconds or ISO_8601#Duration
+     * @param {Array} config.models - File models
+     */
     constructor (config) {
         super({
-            lifetime: 'PT1H',
+            lifetime: 'PT2H',
+            models: [
+                'model/RawFile',
+                'model/S3File'
+            ],
             ...config
         });
     }
@@ -19,8 +28,14 @@ module.exports = class DeleteExpiredFiles extends Base {
     }
 
     async deleteFiles () {
-        const raw = this.spawn('model/RawFile');
-        const files = await raw.findExpired(this.getEarliestValidCreationDate()).all();
+        for (const model of this.models) {
+            await this.deleteModelFiles(model);
+        }
+    }
+
+    async deleteModelFiles (config) {
+        const model = this.spawn(config);
+        const files = await model.findExpired(this.getEarliestValidCreationDate()).all();
         for (const file of files) {
             await file.delete();
         }
