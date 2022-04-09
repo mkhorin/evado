@@ -19,8 +19,8 @@ module.exports = class BaseMenu extends Base {
                 items.push(...activeItem.children);
             }
         }
-        const forbiddenAccess = await this.resolveAccess({section, items});
-        const dynamicItems = await section.getDynamicNodes(items);
+        const forbiddenAccess = await this.resolveAccess({items, section});
+        const dynamicItems = await this.getDynamicItems(items, section);
         return this.renderTemplate('_part/nav/sideMenu', {
             section,
             activeItem,
@@ -48,6 +48,12 @@ module.exports = class BaseMenu extends Base {
         return this.module.getRouteName();
     }
 
+    getDynamicItems (items, section) {
+        return section.getDynamicNodes(items, {
+            controller: this.controller
+        });
+    }
+
     resolveAccess (data, params) {
         return this.module.getRbac().resolveNavAccess(this.controller.user.assignments, data, {
             controller: this.controller,
@@ -56,8 +62,8 @@ module.exports = class BaseMenu extends Base {
     }
 
     async renderItems (items, section) {
-        const forbiddenAccess = await this.resolveAccess({section, items}, {withParents: true});
-        const dynamicItems = await section.getDynamicNodes(items);
+        const forbiddenAccess = await this.resolveAccess({items, section}, {withParents: true});
+        const dynamicItems = await this.getDynamicItems(items, section);
         return this.renderTemplate('_part/nav/sideMenuItems', this.view.getRenderParams({
             activeItem: null,
             openedItems: [],

@@ -19,7 +19,7 @@ module.exports = class ErrorAction extends Base {
         const controller = this.controller;
         const err = controller.err;
         if (!err) {
-            return this.render(404);
+            return this.render(Response.NOT_FOUND);
         }
         controller.log('error', err);
         const status = err.status;
@@ -28,16 +28,16 @@ module.exports = class ErrorAction extends Base {
         if (this.ajax) {
             return this.sendText(message);
         }
-        if (status === 403 && this.isAuthRedirect()) {
+        if (status === Response.FORBIDDEN && this.isAuthRedirect()) {
             return true;
         }
         switch (status) {
-            case 400:
-            case 403:
-            case 404:
+            case Response.BAD_REQUEST:
+            case Response.FORBIDDEN:
+            case Response.NOT_FOUND:
                 return this.render(status);
         }
-        return this.render(500);
+        return this.render(Response.INTERNAL_SERVER_ERROR);
     }
 
     isAuthRedirect () {
@@ -52,3 +52,5 @@ module.exports = class ErrorAction extends Base {
         }
     }
 };
+
+const Response = require('areto/web/Response');

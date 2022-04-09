@@ -37,13 +37,12 @@ module.exports = class S3File extends Base {
         return this.getStorage().getSignedUploadUrl(this.getFilename());
     }
 
-    async upload (data) {
+    setData (data) {
         if (typeof data.name === 'string') {
             data.extension = FileHelper.getExtension(data.name);
         }
         this.setSafeAttrs(data);
         this.set('file', data);
-        return this.save();
     }
 
     addValidatorByRule (rule) {

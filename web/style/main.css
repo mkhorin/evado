@@ -864,6 +864,12 @@ select.form-select {
 .form-group + .form-set {
     margin-top: var(--form-set-space);
 }
+.form-group ~ .form-set {
+    margin-top: var(--form-set-space);
+}
+.form-set:not(.hidden) + .form-set {
+    margin-top: 0;
+}
 .form-columns + .form-set {
     margin-top: var(--form-row-space);
 }
@@ -894,11 +900,11 @@ select.form-select {
     color: var(--dark-danger);
 }
 .form-set > legend {
-    margin-bottom: 2rem;
     padding-bottom: .2rem;
     border-color: #c8c8c8;
 }
 .form-set.active > legend {
+    margin-bottom: 2rem;
     border-color: #e0e0e0;
 }
 .form-set.active > legend .form-set-toggle {
@@ -1742,6 +1748,8 @@ body.frame-stack-collapsed .frame-stack {
 }
 .uploader-message {
     color: #888;
+    max-height: 6.4rem;
+    overflow: auto;
 }
 .uploader-message:empty {
     display: none;

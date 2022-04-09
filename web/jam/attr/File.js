@@ -102,7 +102,7 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
     onErrorFile (event, item) {
         const message = Jam.Helper.parseJson(item.error);
         item.$item.removeClass('pending processing').addClass('failed');
-        item.$item.find(this.fileMessageSelector).text(message?.file || item.error);
+        item.$item.find(this.fileMessageSelector).text(message?.file || Jam.t(item.error));
     }
 
     onConfirmFileDeletion (event, item) {

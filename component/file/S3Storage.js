@@ -7,6 +7,13 @@ const Base = require('areto/base/Component');
 
 module.exports = class S3Storage extends Base {
 
+    /**
+     * @param {Object} config
+     * @param {number} config.downloadExpiryTime - Seconds
+     * @param {number} config.uploadExpiryTime - Seconds
+     * @param {number} config.maxTotalUserFileSize - Size in bytes
+     * @param {number} config.maxTotalUserFiles
+     */
     constructor (config) {
         super({
             endPoint: '127.0.0.1',
@@ -15,15 +22,20 @@ module.exports = class S3Storage extends Base {
             accessKey: '',
             secretKey: '',
             bucket: '',
-            urlExpiryTime: 2 * 60 * 60,
-            maxTotalUserFileSize: null, // 1000 * 1024 * 1024 // bytes
-            maxTotalUserFiles: null, // 1000
+            downloadExpiryTime: 3600,
+            uploadExpiryTime: 3600,
+            maxTotalUserFileSize: null,
+            maxTotalUserFiles: null,
             ...config
         });
     }
 
     async init () {
         this.client = this.createClient();
+    }
+
+    isConnectionError (data) {
+        return data?.code === 'ECONNREFUSED';
     }
 
     isThumbnails () {
@@ -44,13 +56,13 @@ module.exports = class S3Storage extends Base {
     }
 
     getSignedDownloadUrl (filename, name) {
-        return this.client.presignedGetObject(this.bucket, filename, this.urlExpiryTime, {
+        return this.client.presignedGetObject(this.bucket, filename, this.downloadExpiryTime, {
             'response-content-disposition': `attachment; filename=${encodeURIComponent(name || filename)}`
         });
     }
 
     getSignedUploadUrl (filename) {
-        return this.client.presignedPutObject(this.bucket, filename, this.urlExpiryTime);
+        return this.client.presignedPutObject(this.bucket, filename, this.uploadExpiryTime);
     }
 
     createClient () {

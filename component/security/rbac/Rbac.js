@@ -235,15 +235,19 @@ module.exports = class Rbac extends Base {
     resolveMetaItemRules () {
         for (const item of Object.values(this.metaItems)) {
             if (Array.isArray(item.rules)) {
-                const rules = [];
-                for (const id of item.rules) {
-                    const rule = this.ruleMap[id];
-                    rule ? rules.push(this.constructor.getItemRuleData(item, rule))
-                         : this.log('error', `Rule not found: ${id}`);
-                }
-                item.rules = rules.length ? rules : null;
+                this.resolveMetaItemRulesByItem(item);
             }
         }
+    }
+
+    resolveMetaItemRulesByItem (item) {
+        const rules = [];
+        for (const id of item.rules) {
+            const rule = this.ruleMap[id];
+            rule ? rules.push(this.constructor.getItemRuleData(item, rule))
+                 : this.log('error', `Rule not found: ${id}`);
+        }
+        item.rules = rules.length ? rules : null;
     }
 
     setMetaMap () {
