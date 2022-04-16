@@ -10,7 +10,7 @@ module.exports = class Thumbnail extends Base {
     constructor (config) {
         super({
             basePath: 'upload/thumbnail',
-            defaultSizeKey: 'small',
+            defaultSizeKey: 'sm',
             type: 'image/png',
             extension: 'png',
             ThumbnailSize: require('./ThumbnailSize'),

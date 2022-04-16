@@ -107,6 +107,7 @@
     overflow: auto;
     padding: .5rem;
     max-height: 24rem;
+    min-height: 2.4rem;
 }
 .data-grid-body .img-thumbnail {
     max-width: 64px;

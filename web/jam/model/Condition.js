@@ -30,6 +30,7 @@ Jam.ModelCondition = class ModelCondition {
         this.data = data;
         this.model = model;
         this.attrMap = {};
+        this.initial = false;
     }
 
     isValid () {
@@ -190,14 +191,23 @@ Jam.ModelCondition = class ModelCondition {
         return false;
     }
 
+    /**
+     * Check that this is the initial value setting
+     */
     validateInitial () {
         return this.initial;
     }
 
+    /**
+     * Check that the operand is starting trigger of changes
+     */
     validateStartTrigger (operator, operands) {
         return this.validateTrigger(operator, operands, 'startTriggerAttr');
     }
 
+    /**
+     * Check that the operand is trigger of changes
+     */
     validateTrigger (operator, operands, key = 'triggerAttr') {
         if (operands.length !== 1) {
             return this.logDataError(operator, operands);

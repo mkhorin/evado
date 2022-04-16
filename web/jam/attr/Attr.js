@@ -87,10 +87,14 @@ Jam.ModelAttr = class ModelAttr {
         this.activated = true;
     }
 
-    enable (state) {
-        this.$value.attr('readonly', !state);
-        this.$value.toggleClass('disabled', !state);
-        this.$attr.toggleClass('disabled', !state);
+    enable (enabled) {
+        const disabled = !enabled;
+        if (disabled) {
+            this.setInitialValue();
+        }
+        this.$value.attr('readonly', disabled);
+        this.$value.toggleClass('disabled', disabled);
+        this.$attr.toggleClass('disabled', disabled);
     }
 
     require (state) {
@@ -100,8 +104,9 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     toggle (visible) {
-        this.$attr.toggleClass('hidden', !visible);
-        if (!visible && !this.isReadOnly()) {
+        const hidden = !visible;
+        this.$attr.toggleClass('hidden', hidden);
+        if (hidden && !this.isReadOnly()) {
             this.setInitialValue();
         }
         this.activate();
