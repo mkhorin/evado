@@ -31,6 +31,10 @@ module.exports = class EvadoApplication extends Base {
         return this.components.get('rbac');
     }
 
+    getSession () {
+        return this.components.get('session');
+    }
+
     getScheduler () {
         return this.components.get('scheduler');
     }

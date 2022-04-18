@@ -13,6 +13,15 @@ module.exports = {
         period: 'PT2H',
         active: true
     },
+    'deleteExpiredSessions': {
+        description: 'Delete expired login sessions',
+        job: {
+            Class: 'component/job/DeleteExpiredSessions'
+        },
+        period: 'PT1H',
+        active: true,
+        startup: true
+    },
     'sendNotifications': {
         description: 'Send notifications on new messages',
         job: {

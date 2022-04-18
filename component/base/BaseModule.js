@@ -51,6 +51,10 @@ module.exports = class BaseModule extends Base {
         return this.components.get('rbac');
     }
 
+    getSession () {
+        return this.components.get('session');
+    }
+
     getScheduler () {
         return this.components.get('scheduler');
     }
