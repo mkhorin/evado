@@ -133,7 +133,7 @@ module.exports = class CrudController extends Base {
 
     async actionDeleteList () {
         const ids = this.getPostParam('ids');
-        if (!ids) {
+        if (typeof ids !== 'string') {
             throw new BadRequest;
         }
         this.checkCsrfToken();

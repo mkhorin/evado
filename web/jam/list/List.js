@@ -138,8 +138,7 @@ Jam.List = class List extends Jam.Element {
         this.params.columns.forEach(this.prepareColumnData, this);
         if (this.params.list) {
             this.params.ajax = {
-                url: this.params.list,
-                listAll: this.params.listAll
+                url: this.params.list
             };
         }
         this.params.overridenMethods = {

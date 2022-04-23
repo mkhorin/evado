@@ -68,6 +68,7 @@ Jam.DataGridAjaxProvider = class DataGridAjaxProvider {
             search: this.grid.search.getValue(),
             order: this.getOrder(),
             dependency: this.params.dependency,
+            ...this.params.requestData,
             ...data
         };
     }

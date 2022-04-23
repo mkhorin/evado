@@ -37,7 +37,6 @@ Jam.CardGridRenderer = class CardGridRenderer extends Jam.DataGridRenderer {
 
     renderBodyGroupHtml (value, {name, label, translate}) {
         const direction = this._groupDirection;
-        const cols = this.columns.length;
         const sort = '<span class="order-toggle fa" title="Sort"></span>';
         label = Jam.escape(Jam.t(label || name, translate));
         return `<div class="data-grid-card-group ${direction}" title="${label}">${value}${sort}</div>`;

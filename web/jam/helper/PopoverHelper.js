@@ -39,7 +39,7 @@ Jam.PopoverHelper = class PopoverHelper {
         $(document.body).on(this.HIDE_EVENT, this.onHideEvent.bind(this, event.target));
     }
 
-    static onHide (event) {
+    static onHide () {
         $(document.body).off(this.HIDE_EVENT);
     }
 

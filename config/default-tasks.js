@@ -19,8 +19,7 @@ module.exports = {
             Class: 'component/job/DeleteExpiredSessions'
         },
         period: 'PT1H',
-        active: true,
-        startup: true
+        active: true
     },
     'sendNotifications': {
         description: 'Send notifications on new messages',

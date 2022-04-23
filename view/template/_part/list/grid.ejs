@@ -29,7 +29,7 @@ if (data.clone === true) {
 } else if (Array.isArray(data.clone)) {
     data.clone = _url(data.clone);
 }
-if (data.order === undefined) {
+if (data.order === undefined && model.PK) {
     data.order = {[model.PK]: -1};
 }
 let hasKeyColumn = false;

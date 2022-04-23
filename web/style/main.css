@@ -31,6 +31,8 @@
     --scrollbar-thumb-color: #b0b0b0;
     --scrollbar-thumb-hover: #e0b0b0;
 
+    --form-bg-disabled: #f4f6f8;
+    --form-border-disabled: #ced4da;
     --form-row-space: 1.35rem;
     --form-set-space: 2.7rem;
     --text-monospace: Consolas,"Liberation Mono","Courier New",monospace;
@@ -498,13 +500,13 @@ body.loading {
     background: rgba(0,0,0,.15);
 }
 .nav-btn-dark {
-    background: rgba(0,0,0,.15);
+    background: rgba(0,0,0,.2);
 }
 .nav-btn-dark:active,
 .nav-btn-dark:focus,
 .nav-btn-dark:hover,
 .show > .nav-btn-dark {
-    background: rgba(0,0,0,.3);
+    background: rgba(0,0,0,.4);
 }
 
 .nav-block {
@@ -755,7 +757,9 @@ body.loading {
 }
 .form-control:disabled,
 .form-control[readonly] {
-    background-color: #f4f6f8;
+    background-color: var(--form-bg-disabled);
+    border-color: var(--form-border-disabled);
+    box-shadow: none;
 }
 select.form-select {
     padding-left: .5rem;
@@ -1296,9 +1300,9 @@ select.form-select {
 }
 .select2-container.select2-container--disabled .select2-selection,
 .select2-container.select2-container--disabled.select2-container--focus .select2-selection {
-    background-color: #e9ecef;
+    background-color: var(--form-bg-disabled);
     cursor: not-allowed;
-    border-color: #ced4da;
+    border-color: var(--form-border-disabled);
     box-shadow: none;
 }
 .select2-container.select2-container--disabled .select2-search__field,
