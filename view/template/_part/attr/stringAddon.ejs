@@ -13,7 +13,8 @@ const params = {p};
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
      data-handler="<%= p.handler %>"
      data-behaviors="<%= p.behaviors %>"
-     data-action-binder="<%= p.actionBinder %>">
+     data-action-binder="<%= p.actionBinder %>"
+     data-mask="<%= p.mask %>">
 
     <%- include(_view.get('_part/attr/_label'), params) %>
 

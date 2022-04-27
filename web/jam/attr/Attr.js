@@ -56,7 +56,17 @@ Jam.ModelAttr = class ModelAttr {
     init () {
         this.activate();
         this.toggleBlank();
+        this.createMask();
+        this.formatDisplayValue();
         Jam.Behavior.createAll(this.getData('behaviors'), this);
+    }
+
+    createMask () {
+        this.mask = new Jam.ValueMask(this.getData('mask'), this.$value);
+    }
+
+    formatDisplayValue () {
+        Jam.FormatHelper.formatDisplayValue(this.getValue(), this.$attr);
     }
 
     inProgress () {

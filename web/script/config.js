@@ -47,3 +47,8 @@ if ($.fn.datetimepicker) {
         // debug: true
     };
 }
+
+window.Inputmask?.extendDefaults({
+    autoUnmask: true,
+    clearIncomplete: true
+});

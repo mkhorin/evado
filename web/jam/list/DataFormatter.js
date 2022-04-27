@@ -11,6 +11,7 @@ Jam.ListDataFormatter = class ListDataFormatter {
         json: 'asJson',
         label:'asDefault',
         link:'asLink',
+        mask:'asMask',
         relation: 'asRelation',
         select: 'asSelect',
         thumbnail: 'asThumbnail',
@@ -147,6 +148,10 @@ Jam.ListDataFormatter = class ListDataFormatter {
         return this.join(this.parseLink, ...arguments);
     }
 
+    asMask (value, params) {
+        return this.join(this.parseMask, ...arguments);
+    }
+
     asNotSet () {
         return this.join(Jam.FormatHelper.asNotSet, ...arguments);
     }
@@ -161,6 +166,10 @@ Jam.ListDataFormatter = class ListDataFormatter {
 
     asThumbnail () {
         return this.join(this.parseThumbnail, ...arguments);
+    }
+
+    parseMask (value, params) {
+        return Jam.FormatHelper.asMask(value, params.format.params);
     }
 
     parseTitle (value, params, data, index) {

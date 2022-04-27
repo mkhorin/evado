@@ -30,6 +30,10 @@ Jam.FormatHelper = class FormatHelper {
         return `${size} ${Jam.t(unit)}`;
     }
 
+    static asCurrency (data, ...params) {
+        return new Intl.NumberFormat(...params).format(Math.round((data + Number.EPSILON) * 100) / 100);
+    }
+
     static asDate (data, format = 'L') {
         const date = moment(data);
         return !data ? '' : date.isValid() ? date.format(format) : data;
@@ -40,15 +44,19 @@ Jam.FormatHelper = class FormatHelper {
     }
 
     static asInvalidData () {
-        return `<span class="not-set">[${Jam.t('invalid data')}]</span>`;
+        return `<span class="not-set">${Jam.t('[invalid data]')}</span>`;
+    }
+
+    static asMask (data) {
+        return data !== '' ? Jam.ValueMask.format(...arguments) : data;
     }
 
     static asNoAccess () {
-        return `<span class="no-access">[${Jam.t('no access')}]</span>`;
+        return `<span class="no-access">${Jam.t('[no access]')}</span>`;
     }
 
     static asNotSet () {
-        return `<span class="not-set">[${Jam.t('not set')}]</span>`;
+        return `<span class="not-set">${Jam.t('[not set]')}</span>`;
     }
 
     static asNotSetOnEmpty (data) {
@@ -80,7 +88,18 @@ Jam.FormatHelper = class FormatHelper {
             : name;
     }
 
-    static asCurrency (data, ...params) {
-        return new Intl.NumberFormat(...params).format(Math.round((data + Number.EPSILON) * 100) / 100);
+    static formatDisplayValue (value, $container, selector = 'display-format') {
+        for (const element of $container.find(`[data-${selector}]`)) {
+            const result = this.getDisplayValue(value, $(element).data(selector));
+            if (result) {
+                element.innerHTML = result;
+            }
+        }
+    }
+
+    static getDisplayValue (value, format) {
+        if (format?.name === 'mask') {
+            return this.asMask(value, format.params);
+        }
     }
 };

@@ -16,6 +16,7 @@ p.translate = typeof translate === 'undefined' ? null : translate;
 p.handler = typeof handler === 'undefined' ? p.handler || null : handler;
 p.behaviors = typeof behaviors === 'undefined' ? null : JSON.stringify(behaviors);
 p.escape = typeof escape !== 'boolean' ? true : escape;
+p.mask = typeof mask === 'undefined' ? null : typeof mask === 'string' ? mask : JSON.stringify(mask);
 
 p.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
 if (p.sourceValue === undefined && typeof defaultValue !== 'undefined') {

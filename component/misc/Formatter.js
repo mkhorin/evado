@@ -9,9 +9,22 @@ module.exports = class Formatter extends Base {
 
     constructor (config) {
         super({
-            noAccessFormat: '<span class="no-access">[no access]</span>',
+            noAccessFormat: '<span class="no-access" data-t="">[no access]</span>',
+            nullFormat: '<span class="not-set" data-t="">[not set]</span>',
             ...config
         });
+    }
+
+    format (value, type, params) {
+        return type && typeof type === 'object'
+            ? super.format(value, type.name, type.params || type)
+            : super.format(value, type, params);
+    }
+
+    asDisplayFormat (value, params) {
+        return value !== null && value !== undefined
+            ? `<span data-display-format="${EscapeHelper.escapeHtml(JSON.stringify(params))}">${value}</span>`
+            : this.nullFormat;
     }
 
     asDownload (value, params) {
@@ -20,7 +33,7 @@ module.exports = class Formatter extends Base {
 
     asInherited (value, params) {
         const translate = typeof params.translate === 'string' ? `data-t="${params.translate}"` : '';
-        value = this.format(value, null, params);
+        value = this.asRaw(value, params);
         return `<span class="inherited-value" ${translate} title="Inherited value" data-t-title="">${value}</span>`;
     }
 
@@ -28,8 +41,12 @@ module.exports = class Formatter extends Base {
         return `<a href="${value}" class="frame-link">${params?.text || value}</a>`;
     }
 
+    asMask (value, params) {
+        return this.asDisplayFormat(value, {name: 'mask', params});
+    }
+
     asNoAccess (value, params) {
-        return this.translate(this.noAccessFormat, I18n.APP_SOURCE, params?.language);
+        return this.noAccessFormat;
     }
 
     asThumbnail (value, {text} = {}) {
@@ -53,5 +70,6 @@ module.exports = class Formatter extends Base {
 };
 module.exports.init();
 
+const EscapeHelper = require('areto/helper/EscapeHelper');
 const I18n = require('areto/i18n/I18n');
 const moment = require('moment');
