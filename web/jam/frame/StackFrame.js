@@ -81,11 +81,11 @@ Jam.StackFrame = class StackFrame {
     }
 
     onDone (data) {
-        Jam.insertContent(data, this.$content).then(() => {
+        return Jam.insertContent(data, this.$content).then(() => {
             const $container = this.$content.children().first();
             this.createTitle($container);
             this.createTabTitle($container);
-            Jam.PopoverHelper.initHints($container.children('.frame-box-body'));
+            Jam.PopoverHelper.initHints($container);
             this.resize();
             this.stack.afterLoad(this);
             this.updateCsrfToken();

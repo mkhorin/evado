@@ -851,6 +851,9 @@ select.form-select {
 .form-group .alert {
     margin-bottom: .5rem;
 }
+.form-attr .form-control-plaintext {
+    min-height: 2.35rem;
+}
 
 .form legend {
     font-size: 1.1rem;

@@ -5,8 +5,6 @@
 
 module.exports = {
 
-    '<span class="no-access">[no access]</span>': '<span class="no-access">[нет доступа]</span>',
-
     'Access blocked': 'Доступ заблокирован',
     'Access blocked for': 'Доступ заблокирован для',
     'Access denied': 'Доступ запрещён',

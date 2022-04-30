@@ -4,7 +4,7 @@
 Jam.CardGridRenderer = class CardGridRenderer extends Jam.DataGridRenderer {
 
     renderContainer () {
-        return `<div class="data-grid-cards"><div class="data-grid-body"></div><div class="data-grid-placeholder">[${Jam.t('no data')}]</div></div>`;
+        return `<div class="data-grid-cards"><div class="data-grid-body"></div><div class="data-grid-placeholder">${Jam.t('[no data]')}</div></div>`;
     }
 
     renderBodyItemHtml (id, content) {
