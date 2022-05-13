@@ -15,8 +15,14 @@ module.exports = class Auth extends Base {
         });
     }
 
-    async afterLogin (event) {
-        await event.user.log('login');
-        await super.afterLogin(event);
+    async afterLogin (data) {
+        await data.user.log('login');
+        await this.module.emit('auth.login', data);
+        await super.afterLogin(data);
+    }
+
+    async afterLogout (data) {
+        await this.module.emit('auth.logout', data);
+        await super.afterLogout(data);
     }
 };
