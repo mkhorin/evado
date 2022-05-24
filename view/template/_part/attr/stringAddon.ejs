@@ -24,7 +24,8 @@ const params = {p};
             <span class="input-group-text <%- p.beforeCss %>"><%- p.before %></span>
             <% } %>
             <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
-                   value="<%= p.value %>" <%- p.required %> class="form-control form-value" autocomplete="on">
+                   autocomplete="<%- p.autocomplete %>"
+                   value="<%= p.value %>" <%- p.required %> class="form-control form-value">
             <% if (p.after) { %>
             <span class="input-group-text <%- p.afterCss %>"><%- p.after %></span>
             <% } %>

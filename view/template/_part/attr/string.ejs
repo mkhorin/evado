@@ -15,6 +15,7 @@ const params = {p};
 
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
+               autocomplete="<%- p.autocomplete %>"
                value="<%= p.value %>" <%- p.required %> class="form-control form-value">
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
