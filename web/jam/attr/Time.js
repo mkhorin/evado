@@ -13,7 +13,7 @@ Jam.TimeModelAttr = class TimeModelAttr extends Jam.DateModelAttr {
     }
 
     getFormat () {
-        return this.params.momentFormat || 'LT';
+        return this.params.dateFormat || 'LT';
     }
 
     onChangeDate (event) {

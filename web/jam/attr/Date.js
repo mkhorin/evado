@@ -43,7 +43,7 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
     }
 
     getFormat (options) {
-        const format = this.params.momentFormat;
+        const format = this.params.dateFormat;
         return format || Jam.DateHelper.getMomentFormat(options.format || this.params.format || 'date');
     }
 

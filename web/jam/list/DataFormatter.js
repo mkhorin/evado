@@ -107,14 +107,14 @@ Jam.ListDataFormatter = class ListDataFormatter {
     }
 
     asDate () {
-        return this.join((value, {momentFormat, utc}) => {
-            return Jam.FormatHelper.asDate(Jam.DateHelper.formatByUtc(value, utc), momentFormat);
+        return this.join((value, {dateFormat, utc}) => {
+            return Jam.FormatHelper.asDate(Jam.DateHelper.formatByUtc(value, utc), dateFormat);
         }, ...arguments);
     }
 
     asDatetime () {
-        return this.join((value, {momentFormat, utc}) => {
-            return Jam.FormatHelper.asDatetime(Jam.DateHelper.formatByUtc(value, utc), momentFormat);
+        return this.join((value, {dateFormat, utc}) => {
+            return Jam.FormatHelper.asDatetime(Jam.DateHelper.formatByUtc(value, utc), dateFormat);
         }, ...arguments);
     }
 
@@ -131,12 +131,12 @@ Jam.ListDataFormatter = class ListDataFormatter {
     }
 
     asTime () {
-        return this.join((value, {momentFormat}) => Jam.FormatHelper.asTime(data, momentFormat), ...arguments);
+        return this.join((value, {dateFormat}) => Jam.FormatHelper.asTime(data, dateFormat), ...arguments);
     }
 
     asTimestamp () {
-        return this.join((data, {momentFormat, utc}) => {
-            return Jam.FormatHelper.asTimestamp(Jam.DateHelper.formatByUtc(data, utc), momentFormat);
+        return this.join((data, {dateFormat, utc}) => {
+            return Jam.FormatHelper.asTimestamp(Jam.DateHelper.formatByUtc(data, utc), dateFormat);
         }, ...arguments);
     }
 

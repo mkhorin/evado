@@ -44,8 +44,8 @@ module.exports = class EventHandler extends Base {
         }
     }
 
-    execute (data) {
-        return this.spawn(this._config).execute(data);
+    execute () {
+        return this.spawn(this._config).execute(...arguments);
     }
 };
 module.exports.init(module);

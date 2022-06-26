@@ -21,6 +21,10 @@ module.exports = class Utility extends Base {
         return this._permissionName;
     }
 
+    /**
+     * Check utility availability
+     * @returns {boolean}
+     */
     isActive () {
         return this.enabled && (!this.actions || !this.modelAction || this.actions.includes(this.modelAction));
     }

@@ -1,3 +1,26 @@
+## 5.4.0
+
+* component/job/DeleteExpiredFiles
+    - delete expired S3 file records
+* component/job/DeleteExpiredSessions
+    - add a task to delete expired sessions   
+* component/misc/DataGrid
+    - override request data using params
+* component/helper/ModelHelper
+    - rename overflow truncation params
+* component/security/Auth
+    - add login and logout events        
+* component/security/rbac/Item
+    - accept assignment rule as a string
+* model/RawFile
+    - catch file deletion errors from storage  
+* web/jam/listFilter/ListFilterTypeNumber
+    - fix numeric type for list filter
+* web/jam/misc/ValueMask
+    - add input masks
+* web/style/main.css
+    - wrap overflowed menu labels            
+
 ## 5.3.0
 
 * component/meta/BaseMenu

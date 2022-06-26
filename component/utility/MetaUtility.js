@@ -7,6 +7,10 @@ const Base = require('./Utility');
 
 module.exports = class MetaUtility extends Base {
 
+    /**
+     * Check utility availability
+     * @returns {Promise<boolean>}
+     */
     isActive () {
         return super.isActive() && this.isTargetMeta();
     }
