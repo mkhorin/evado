@@ -13,14 +13,19 @@ Jam.ScrollHelper = class ScrollHelper {
     }
 
     static scrollTo (target, container, duration = 'fast', done) {
-        const $container = container ? $(container) : $(document.documentElement);
-        const top = Number.isFinite(target) ? target : this.getScrollTopOffset(target, $container);
+        const top = Number.isFinite(target) ? target : this.getScrollTopOffset(target, container);
+        const $container = $(container || document.documentElement);
         $container.animate({scrollTop: `${top}px`}, {duration}, done);
     }
 
     static getScrollTopOffset (target, container) {
-        const diff = $(target).offset()?.top - $(container).offset()?.top;
-        const top = $(container)[0]?.scrollTop + diff;
+        const targetTop = $(target).offset()?.top;
+        if (!container) {
+            return Math.floor(targetTop || 0);
+        }
+        const $container = $(container);
+        const diff = targetTop - $container.offset()?.top;
+        const top = $container[0]?.scrollTop + diff;
         return Math.floor(top || 0);
     }
 
