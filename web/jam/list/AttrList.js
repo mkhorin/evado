@@ -36,13 +36,14 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     prepareItem (item, data, index) {
-        if (this.changes.getLinks().includes(data[this.params.key])) {
+        const id = data[this.params.key];
+        if (this.changes.getLinks().includes(id)) {
             $(item).addClass('linked').attr('title', 'Add');
         }
-        if (this.changes.getUnlinks().includes(data[this.params.key])) {
+        if (this.changes.getUnlinks().includes(id)) {
             $(item).addClass('unlinked').attr('title', 'Remove');
         }
-        if (this.changes.getDeletes().includes(data[this.params.key])) {
+        if (this.changes.getDeletes().includes(id)) {
             $(item).addClass('deleted').attr('title', 'Delete');
         }
         super.prepareItem(item, data, index);
@@ -83,6 +84,10 @@ Jam.AttrList = class AttrList extends Jam.List {
         return result;
     }
 
+    getLinkUrl () {
+        return this.getParamUrl(this.params.link, this.params.linkParams);
+    }
+
     beforeCommand () {
         return super.beforeCommand() && this.model.beforeCommand();
     }
@@ -94,7 +99,7 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     onCreate () {
         if (!this.revertChanges()) {
-            this.openFrame(this.params.create, this.getDependencyData(), this.onAfterCloseFrame);
+            this.openFrame(this.getCreateUrl(), this.getDependencyData(), this.onAfterCloseFrame);
         }
     }
 
@@ -111,7 +116,7 @@ Jam.AttrList = class AttrList extends Jam.List {
         }
         this.linkObjects(id);
         if (data.reopen) {
-            this.openFrame(this.params.update, {id});
+            this.openFrame(this.getUpdateUrl(), {id});
         }
     }
 
@@ -127,7 +132,7 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     onLink () {
         if (!this.revertChanges()) {
-            this.openFrame(this.params.link, this.getDependencyData(), this.onAfterCloseLinkModal, {
+            this.openFrame(this.getLinkUrl(), this.getDependencyData(), this.onAfterCloseLinkModal, {
                 multiple: this.multiple
             });
         }

@@ -136,10 +136,9 @@ Jam.List = class List extends Jam.Element {
 
     setDataGridParams () {
         this.params.columns.forEach(this.prepareColumnData, this);
-        if (this.params.list) {
-            this.params.ajax = {
-                url: this.params.list
-            };
+        const url = this.getListUrl();
+        if (url) {
+            this.params.ajax = {url, ...this.params.ajax};
         }
         this.params.overridenMethods = {
             isSearchableColumn: this.isSearchableColumn.bind(this)
@@ -286,24 +285,32 @@ Jam.List = class List extends Jam.Element {
         return this.grid.findItems(selector);
     }
 
+    getListUrl () {
+        return this.getParamUrl(this.params.list, this.params.listParams);
+    }
+
     getCloneUrl () {
-        return this.params.clone;
+        return this.getParamUrl(this.params.clone, this.params.cloneParams);
     }
 
     getCreateUrl () {
-        return this.params.create;
+        return this.getParamUrl(this.params.create, this.params.createParams);
     }
 
     getViewUrl () {
-        return this.params.view;
+        return this.getParamUrl(this.params.view, this.params.viewParams);
     }
 
     getDeleteUrl () {
-        return this.params.delete;
+        return this.getParamUrl(this.params.delete, this.params.deleteParams);
     }
 
     getUpdateUrl () {
-        return this.params.update;
+        return this.getParamUrl(this.params.update, this.params.updateParams);
+    }
+
+    getParamUrl (url, params) {
+        return url && (params ? Jam.UrlHelper.addParams(url, params) : url);
     }
 
     deleteObjects ($items) {
