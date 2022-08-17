@@ -83,7 +83,7 @@ Jam.ListDataFormatter = class ListDataFormatter {
         if (!value.length) {
             return this.asNotSet(null, params);
         }
-        let separator = '<br>';
+        let separator = '<div class="separator"></div>';
         if (params.format?.hasOwnProperty('separator')) {
             separator = params.format.separator;
         } else if (params.hasOwnProperty('separator')) {
