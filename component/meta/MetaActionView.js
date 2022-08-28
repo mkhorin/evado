@@ -36,7 +36,7 @@ module.exports = class MetaActionView extends Base {
         if (!template && view !== view.class) {
             template = this.getMetadataViewTemplate(view.class, name);
         }
-        return super.get(template || name);
+        return template || super.get(name);
     }
 
     getMetadataViewTemplate (view, name) {

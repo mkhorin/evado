@@ -170,6 +170,13 @@ ul:last-child {
 .relation-select {
     position: relative;
 }
+.value-item {
+    display: block;
+}
+.separator,
+.value-item + .value-item {
+    margin-top: .35rem;
+}
 .scroll-body {
     overflow-y: auto;
     overflow-x: hidden;
@@ -885,6 +892,9 @@ select.form-select {
     padding-left: .2rem;
     cursor: pointer;
 }
+.form-set-toggle:hover {
+    color: #222 !important;
+}
 .form-set-toggle .icon {
     margin-right: .3rem;
 }
@@ -1106,6 +1116,9 @@ select.form-select {
 }
 .commands > * {
     margin-bottom: 1rem;
+}
+.commands > .btn {
+    min-width: 2.6rem;
 }
 .commands > .btn + .btn {
     margin-left: var(--btn-space);
