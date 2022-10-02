@@ -19,7 +19,7 @@ Jam.SelectHelper = class SelectHelper {
         }
         items.push(...this.normalizeItems(data.items));
         let result = '';
-        for (let items of items) {
+        for (let item of items) {
             result += this.renderOption(item, data);
         }
         return result;
