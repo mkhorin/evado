@@ -45,7 +45,7 @@ Jam.PopoverHelper = class PopoverHelper {
 
     static onHideEvent (source, {target}) {
         const popover = this.getInstance(source);
-        if (popover && !popover.getTipElement()?.contains(target)) {
+        if (popover && !popover.tip?.contains?.(target)) {
             popover.hide();
         }
     }
