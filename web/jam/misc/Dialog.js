@@ -13,12 +13,13 @@ Jam.Dialog = class Dialog {
             beforeSubmit: null,
             cancelCss: 'btn-outline-secondary',
             translatable: true,
+            translationCategory: null,
             escaping: true,
             ...params
         };
         this.$dialog = $(this.createElement());
-        this.$submit = this.$dialog.find('.btn-submit');
-        this.$cancel = this.$dialog.find('.btn-cancel');
+        this.$submit = this.find('.btn-submit');
+        this.$cancel = this.find('.btn-cancel');
         this.$submit.click(this.onAction.bind(this, true));
         this.$cancel.click(this.onAction.bind(this, false));
         this.$dialog.mousedown(this.onContainer.bind(this));
@@ -99,12 +100,16 @@ Jam.Dialog = class Dialog {
 
     build (data) {
         this.$dialog.removeClass().addClass(`dialog-${data.css} dialog`);
-        this.$dialog.find('.dialog-head').html(this.prepareText(data.title));
-        this.$dialog.find('.dialog-body').html(this.prepareText(data.message));
-        this.$submit.html(this.prepareText(data.submitText)).toggle(!!data.submitText);
-        this.$cancel.html(this.prepareText(data.cancelText)).toggle(!!data.cancelText);
+        this.find('.dialog-head').html(this.prepareText(data.title, data));
+        this.find('.dialog-body').html(this.prepareText(data.message, data));
+        this.$submit.html(this.prepareText(data.submitText, data)).toggle(!!data.submitText);
+        this.$cancel.html(this.prepareText(data.cancelText, data)).toggle(!!data.cancelText);
         this.setButtonCss(data.submitCss, this.$submit, 'btn-submit btn');
         this.setButtonCss(data.cancelCss, this.$cancel, 'btn-cancel btn');
+    }
+
+    find () {
+        return this.$dialog.find(...arguments);
     }
 
     setButtonCss (css, $element, baseCss) {
@@ -118,8 +123,8 @@ Jam.Dialog = class Dialog {
         }
     }
 
-    onAction (status) {
-        if (status && this._beforeSubmit && !this._beforeSubmit(status)) {
+    async onAction (status) {
+        if (status && this._beforeSubmit && !(await this._beforeSubmit(status))) {
             return false;
         }
         this.execute(status);
@@ -127,13 +132,13 @@ Jam.Dialog = class Dialog {
 
     onContainer (event) {
         if (event.target === event.currentTarget && !this._strictCancel) {
-            this.onAction(false);
+            return this.onAction(false);
         }
     }
 
     onKeyUp (event) {
         if (event.key === 'Escape' && !this._strictCancel) {
-            this.onAction(false);
+            return this.onAction(false);
         }
     }
 
@@ -158,15 +163,15 @@ Jam.Dialog = class Dialog {
         return `<div class="dialog"><div class="dialog-box"><div class="dialog-head"></div><div class="dialog-body"></div><div class="dialog-foot"><button class="btn-submit btn" type="button"></button><button class="btn-cancel btn" type="button"></button></div></div></div>`;
     }
 
-    prepareText () {
-        return this.escape(this.translate(...arguments));
+    prepareText (text, params) {
+        return this.escape(this.translate(text, params), params);
     }
 
-    escape (message) {
-        return this.params.escaping ? Jam.StringHelper.escapeTags(message) : message;
+    escape (message, params) {
+        return params?.escaping ? Jam.StringHelper.escapeTags(message) : message;
     }
 
-    translate (message) {
-        return this.params.translatable ? Jam.t(...arguments) : message;
+    translate (message, params) {
+        return params?.translatable ? Jam.t(message, params.translationCategory) : message;
     }
 };
