@@ -258,9 +258,8 @@ module.exports = class ListFilter extends Base {
     }
 
     getEmptyValueCondition (attr, op) {
-        return op === '!=' || op === 'notEqual'
-            ? ['notEqual', attr, null]
-            : {[attr]: null};
+        op = op === '!=' || op === 'notEqual' ? 'notIn' : 'in';
+        return [op, attr, [null, '']];
     }
 
     formatByValueType (value, valueType) {
