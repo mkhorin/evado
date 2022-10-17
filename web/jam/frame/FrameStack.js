@@ -141,8 +141,8 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
         this.setActive(this.getLast());
     }
 
-    onKeyUp (event) {
-        if (event.key === 'Escape') {
+    onKeyUp ({key, target: {tagName}}) {
+        if (key === 'Escape' && tagName !== 'INPUT' && tagName !== 'TEXTAREA') {
             this.closeLast();
         }
     }
