@@ -236,10 +236,17 @@ module.exports = class ListFilter extends Base {
         if (value === '') {
             return ['or', {[attr]: ''}, {[attr]: null}]
         }
+        if (op === 'equal') {
+            return {[attr]: value};
+        }
+        if (op === 'notEqual') {
+            return ['!=', attr, value];
+        }
         value = EscapeHelper.escapeRegex(value);
         switch (op) {
             case 'contains': break;
-            case 'equal': value = `^${value}$`; break;
+            case 'equalCaseInsensitive': value = `^${value}$`; break;
+            case 'notEqualCaseInsensitive': value = `^((?!${value}).)*$`; break;
             case 'begins': value = `^${value}`; break;
             case 'ends': value = `${value}$`; break;
             case 'lt': return ['<', attr, value];
