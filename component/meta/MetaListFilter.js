@@ -71,21 +71,42 @@ module.exports = class MetaListFilter extends Base {
         value = this.formatByValueType(value, 'id') || null;
         const relation = this.getRelation(attr);
         if (relation.isRef()) {
-            let condition = this.formatSelectorCondition(attr, op, value);
-            if (!relation.multiple || value !== null) {
-                return condition;
-            }
-            return op === 'equal'
-                ? ['or', condition, {[attr]: []}]
-                : ['and', condition, ['notEqual', attr, []]];
+            return this.getRefCondition(relation, attr, op, value);
         }
-        if (!value) {
-            return ['false'];
+        return value
+            ? this.getBackRefCondition(relation, attr, op, value)
+            : this.getEmptyBackRefCondition(relation, attr, op);
+    }
+
+    getRefCondition (relation, attr, op, value) {
+        let condition = this.formatSelectorCondition(attr, op, value);
+        if (!relation.multiple || value !== null) {
+            return condition;
         }
-        const query = relation.refClass.find({[relation.refClass.getKey()]: value});
+        return op === 'equal'
+            ? ['or', condition, {[attr]: []}]
+            : ['and', condition, ['notEqual', attr, []]];
+    }
+
+    async getBackRefCondition (relation, attr, op, value) {
+        const key = relation.refClass.getKey();
+        const query = relation.refClass.find({[key]: value});
         value = await this.getRelationValue(relation, query);
-        attr = relation.linkAttrName;
-        return this.formatSelectorCondition(attr, op, value);
+        return this.formatSelectorCondition(relation.linkAttrName, op, value);
+    }
+
+    async getEmptyBackRefCondition ({refClass, refAttrName, linkAttrName}, attr, op) {
+        const linked = await refClass.find().distinct(refAttrName);
+        if (!linked.length) {
+            return null;
+        }
+        if (op === 'equal') {
+            return ['notIn', linkAttrName, linked];
+        }
+        if (op === 'notEqual') {
+            return {[linkAttrName]: linked};
+        }
+        this.throwInvalidOperation(op);
     }
 
     async parseNested ({attr, value}) {
