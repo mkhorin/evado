@@ -105,6 +105,9 @@ Jam.ListFilterTypeSelector = class ListFilterTypeSelector extends Jam.ListFilter
     }
 
     changeValue (value, data) {
+        if (this.getSelect2()) {
+            this.getValueElement().select2('close');
+        }
         if (this.nested.active()) {
             this.nested.parse(value);
         } else if (this.isAjax()) {
@@ -112,14 +115,12 @@ Jam.ListFilterTypeSelector = class ListFilterTypeSelector extends Jam.ListFilter
         } else {
             this.setValue(value).change();
         }
-        if (this.getSelect2()) {
-            this.getValueElement().select2('close');
-        }
     }
 
-    changeAjaxValue (value, data) {
-        const $select = this.getValueElement().select2('destroy');
-        $select.empty().append(new Option(data.text, value, true, true));
+    changeAjaxValue (value, {text}) {
+        const $select = this.getValueElement();
+        const option = new Option(text, value, true, true);
+        $select.select2('destroy').empty().append(option);
         this.createAjax();
     }
 
