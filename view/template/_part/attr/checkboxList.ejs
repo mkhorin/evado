@@ -1,10 +1,13 @@
-<!-- _part/attr/checkList -->
+<!-- _part/attr/checkboxList -->
 <%
 const p = {
     allValue: typeof allValue === 'undefined' ? null : allValue,
+    inline: typeof inline === 'undefined' ? true : inline,
     handler: 'CheckboxList'
 };
 const params = {p};
+const cssList = p.inline ? 'form-check-list-inline' : '';
+const cssItem = p.inline ? 'form-check-inline' : '';
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 
@@ -17,17 +20,24 @@ const params = {p};
 
     <div class="<%- p.valueCss %>">
         <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
-        <div class="form-check-list-inline form-check-list">
+        <div class="<%- cssList %> form-check-list">
             <% if (Array.isArray(items)) {
                for (const item of items) { %>
-            <div class="form-check form-check-inline">
+            <div class="<%- cssItem %> form-check">
                 <input class="form-check-input" value="<%= item.value %>" type="checkbox">
-                <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label><% if (item.hint) {
-                    %><i class="hint-icon" title="<%= item.hint %>"></i><% } %>
+                <% if (item.hint) { %>
+                <div class="form-check-label-wrapper">
+                    <label class="form-check-label"
+                           data-t="<%- p.translate %>"><%- item.text %></label><i
+                           class="hint-icon" data-t="<%- p.translate %>" title="<%= item.hint %>"></i>
+                </div>
+                <% } else { %>
+                <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label>
+                <% } %>
             </div>
             <% }} else {
                for (const key of Object.keys(items)) { %>
-            <div class="form-check form-check-inline">
+            <div class="<%- cssItem %> form-check">
                 <input class="form-check-input" value="<%= key %>" type="checkbox">
                 <label class="form-check-label" data-t="<%- p.translate %>"><%- items[key] %></label>
             </div>
