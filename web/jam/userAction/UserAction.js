@@ -16,8 +16,8 @@ Jam.UserAction = class UserAction extends Jam.Element {
     }
 
     static onConfirm ($element, params) {
-        Jam.toggleLoader(true);
-        return Jam.post($element.data('url'), params).always(() => Jam.toggleLoader(false));
+        Jam.showLoader();
+        return Jam.post($element.data('url'), params).always(() => Jam.hideLoader());
     }
 
     init () {

@@ -17,7 +17,9 @@ module.exports = class MetaHelper {
     }
 
     static addClosingChar (text, char) {
-        return typeof text === 'string' && text.length && text.slice(-1) !== char ? (text + char) : text;
+        return typeof text === 'string' && text.length && text.slice(-1) !== char
+            ? text + char
+            : text;
     }
 
     static sortByOrderNumber (items) {
@@ -101,7 +103,9 @@ module.exports = class MetaHelper {
         const result = {};
         for (const row of rows) {
             const value = row[rowKey];
-            const rowValue = Object.prototype.hasOwnProperty.call(row, valueKey) ? row[valueKey] : row;
+            const rowValue = Object.prototype.hasOwnProperty.call(row, valueKey)
+                ? row[valueKey]
+                : row;
             if (Array.isArray(value)) {
                 for (const val of value) {
                     if (Object.prototype.hasOwnProperty.call(docs, val)) {
@@ -142,7 +146,9 @@ module.exports = class MetaHelper {
         for (const attr of attrs) {
             const value = model.get(attr);
             if (value !== null && value !== undefined) {
-                Array.isArray(value) ? values.push(...value) : values.push(value);
+                Array.isArray(value)
+                    ? values.push(...value)
+                    : values.push(value);
             }
         }
         return values;

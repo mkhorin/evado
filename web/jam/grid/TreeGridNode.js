@@ -34,12 +34,15 @@ Jam.TreeGridNode = class TreeGridNode {
     }
 
     getChildren () {
-        return this.getNestedItems().filter(this.getDepthSelector(this.getDepth() + 1));
+        const selector = this.getDepthSelector(this.getDepth() + 1);
+        return this.getNestedItems().filter(selector);
     }
 
     getNestedItems () {
         const depth = this.getDepth();
-        return this.$item.nextUntil(this.getDepthSelector(depth)).filter((index, element) => {
+        const selector = this.getDepthSelector(depth);
+        const $items = this.$item.nextUntil(selector);
+        return $items.filter((index, element) => {
             return element.dataset.depth > depth;
         });
     }
@@ -79,6 +82,6 @@ Jam.TreeGridNode = class TreeGridNode {
 
     reloadParent () {
         const parent = this.getParentNode();
-        return parent ?  parent.load() : this.grid.load();
+        return parent ? parent.load() : this.grid.load();
     }
 };

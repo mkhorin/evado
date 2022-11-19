@@ -21,7 +21,9 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
         this.toggleError(false);
         let value = this.$value.val();
         try {
-            value = value ? JSON.stringify(JSON.parse(value), null, 2) : value;
+            if (value) {
+                value = JSON.stringify(JSON.parse(value), null, 2);
+            }
             this.$text.val(value);
         } catch (err) {
             this.$text.val(this.$value.val());
@@ -38,7 +40,8 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
         const value = this.$text.val();
         try {
             if (value) {
-                this.$value.val(JSON.stringify(JSON.parse(value), null, 1)).change();
+                const data = JSON.stringify(JSON.parse(value), null, 1);
+                this.$value.val(data).change();
             }
             this.modal.hide();
         } catch (err) {

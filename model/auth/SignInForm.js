@@ -15,8 +15,8 @@ module.exports = class SignInForm extends Base {
                 ['email', 'email'],
                 ['rememberMe', 'checkbox'],
                 ['password', 'validator/PasswordValidator'],
-                ['captchaCode', 'required', {on: [CAPTCHA_SCENARIO]}],
-                ['captchaCode', require('areto/security/captcha/CaptchaValidator'), {on: [CAPTCHA_SCENARIO]}]
+                ['captchaCode', 'required', {on: CAPTCHA_SCENARIO}],
+                ['captchaCode', require('areto/security/captcha/CaptchaValidator'), {on: CAPTCHA_SCENARIO}]
             ],
             ATTR_LABELS: {
                 rememberMe: 'Remember me',
@@ -73,7 +73,9 @@ module.exports = class SignInForm extends Base {
     }
 
     setCaptchaScenario () {
-        this.scenario = this.rateLimitModel?.isExceeded() ? this.CAPTCHA_SCENARIO : null;
+        this.scenario = this.rateLimitModel?.isExceeded()
+            ? this.CAPTCHA_SCENARIO
+            : null;
     }
 
     async updateRateLimit () {

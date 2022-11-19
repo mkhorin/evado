@@ -30,7 +30,10 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
             options.defaultDate = this.getDefaultDate(this.$value.val());
             options.format = this.getFormat(options);
             options.widgetParent = this.$picker.parent();
-            this.$picker.datetimepicker({...$.fn.datetimepicker.defaultOptions, ...options});
+            this.$picker.datetimepicker({
+                ...$.fn.datetimepicker.defaultOptions,
+                ...options
+            });
             this.picker = this.$picker.data('DateTimePicker');
             this.$picker.on('dp.change', this.onChangeDate.bind(this));
         } catch (err) {
@@ -39,12 +42,17 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
     }
 
     getDefaultDate (value) {
-        return !value ? null : this.utc ? new Date(value.slice(0, -1)) : new Date(value);
+        return value
+            ? new Date(this.utc ? value.slice(0, -1) : value)
+            : null;
     }
 
     getFormat (options) {
-        const format = this.params.dateFormat;
-        return format || Jam.DateHelper.getMomentFormat(options.format || this.params.format || 'date');
+        if (this.params.dateFormat) {
+            return this.params.dateFormat;
+        }
+        const format = options.format || this.params.format || 'date';
+        return Jam.DateHelper.getMomentFormat(format);
     }
 
     onChangeDate (event) {

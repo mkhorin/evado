@@ -35,7 +35,8 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 
     renderContainer () {
-        return `<div class="table-responsive"><table class="data-grid-table table table-bordered"><thead class="data-grid-head"></thead><tbody class="data-grid-body"></tbody></table></div>`;
+        return '<div class="table-responsive"><table class="data-grid-table table table-bordered">'
+            + '<thead class="data-grid-head"></thead><tbody class="data-grid-body"></tbody></table></div>';
     }
 
     prepareColumns () {
@@ -187,10 +188,10 @@ Jam.DataGridRenderer = class DataGridRenderer {
         return this.renderBodyCellHtml(value, column, index);
     }
 
-    renderBodyCellHtml (value, column) {
+    renderBodyCellHtml (value, {name}) {
         const style = this.getBodyValueStyle(...arguments);
         const css = this.getBodyCellClass(...arguments);
-        return `<td class="${css}" data-name="${column.name}"><div class="value" ${style}>${value}</div></td>`;
+        return `<td class="${css}" data-name="${name}"><div class="value" ${style}>${value}</div></td>`;
     }
 
     renderValue (data, column) {
@@ -209,9 +210,9 @@ Jam.DataGridRenderer = class DataGridRenderer {
         return Array.isArray(_forbidden) && _forbidden.includes(name);
     }
 
-    getBodyCellClass (value, column) {
-        const css = this.grid.getOrderDirection(column.name) ? ' ordered' : '';
-        return column.css ? `${css} ${column.css}` : css;
+    getBodyCellClass (value, {css, name}) {
+        const cellCss = this.grid.getOrderDirection(name) ? ' ordered' : '';
+        return css ? `${cellCss} ${css}` : cellCss;
     }
 
     getBodyValueStyle (value, column) {
@@ -219,9 +220,9 @@ Jam.DataGridRenderer = class DataGridRenderer {
         return height ? `style="max-height: ${height}px"` : '';
     }
 
-    getMaxCellHeight (column) {
-        return Number.isSafeInteger(column.maxCellHeight)
-            ? column.maxCellHeight
+    getMaxCellHeight ({maxCellHeight}) {
+        return Number.isSafeInteger(maxCellHeight)
+            ? maxCellHeight
             : this.params.maxCellHeight;
     }
 
@@ -236,13 +237,14 @@ Jam.DataGridRenderer = class DataGridRenderer {
     renderHeadColumn ({name, label, hint, translate}, columns, rows) {
         let css = 'column';
         if (this.grid.isSortableColumn(name)) {
-            css += ' sortable '+ this.getDirectionName(this.grid.getOrderDirection(name));
+            let direction = this.grid.getOrderDirection(name);
+            css += ` sortable ${this.getDirectionName(direction)}`;
         }
         label = Jam.escape(Jam.t(label || name, translate));
         hint = hint ? Jam.escape(Jam.t(hint, translate)) : label;
-        return '<th class="'+ css +'" rowspan="'+ rows +'" data-name="'+ name +'">'
-            + '<span class="column-label search-toggle" title="'+ hint +'">'+ label +'</span>'
-            + '<span class="order-toggle fa" title="'+ this.locale.orderToggle +'"></span></th>';
+        return `<th class="${css}" rowspan="${rows}" data-name="${name}">`
+            + `<span class="column-label search-toggle" title="${hint}">${label}</span>`
+            + `<span class="order-toggle fa" title="${this.locale.orderToggle}"></span></th>`;
     }
 
     renderHeadGroup ({name, label, translate}, columns, rows) {
@@ -256,7 +258,7 @@ Jam.DataGridRenderer = class DataGridRenderer {
         for (let x = 0; x < columns.length; ++x) {
             let column = columns[x];
             let group = this.grid.columnGroupMap[column.group];
-            while (group && typeof group === 'object') {
+            while (typeof group === 'object' && group) {
                 if (!matrix[group._level]) {
                     matrix[group._level] = [];
                 }
@@ -272,7 +274,7 @@ Jam.DataGridRenderer = class DataGridRenderer {
         for (const column of columns) {
             let level = 1;
             let group = this.grid.columnGroupMap[column.group];
-            while (group && typeof group === 'object') {
+            while (typeof group === 'object' && group) {
                 if (!group._level || group._level < level) {
                     group._level = level;
                 }

@@ -132,7 +132,8 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
     }
 
     onResize () {
-        this.$pool.children().each((index, element) => $(element).data('frame').resize());
+        const children = this.$pool.children();
+        children.each((index, element) => $(element).data('frame').resize());
         this.tabs.resize();
     }
 
@@ -141,8 +142,8 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
         this.setActive(this.getLast());
     }
 
-    onKeyUp ({key, target: {tagName}}) {
-        if (key === 'Escape' && tagName !== 'INPUT' && tagName !== 'TEXTAREA') {
+    onKeyUp ({key, target: {tagName: tag}}) {
+        if (key === 'Escape' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
             this.closeLast();
         }
     }

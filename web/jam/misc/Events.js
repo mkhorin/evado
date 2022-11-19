@@ -5,7 +5,7 @@ Jam.Events = class Events {
 
     constructor (prefix, params) {
         this.prefix = prefix;
-        this.$target = $('<div></div>');
+        this.$target = $('<div/>');
         this.params = params || {};
     }
 

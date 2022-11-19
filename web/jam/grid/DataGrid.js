@@ -25,13 +25,13 @@ Jam.DataGrid = class DataGrid {
             {'a': 'a3', 'b': 'b3', 'c': 'c11'},
             {'a': 'a4', 'b': 'b4', 'c': 'c12'}, */
         ],
-        hideOnePageToggle: true,
         hideColumnGroups: false,
         page: 0,
         pageSize: 10,
         pageSizes: [10, 20, 30],
         keepPageSize: true,
         maxPageToggles: 7,
+        hideOnePageToggle: true,
         showDirectionPageToggle: false,
         order: null,
         maxCellHeight: 0,
@@ -257,7 +257,7 @@ Jam.DataGrid = class DataGrid {
 
     getInfo () {
         let info = this.locale.info;
-        if (this.items.length) {
+        if (this.pagination.page > 0 || this.items.length) {
             const interval = this.pagination.getDataInterval(this.itemTotalSize);
             info = info.replace('#{START}', interval[0] + 1);
             info = info.replace('#{END}', interval[1]);

@@ -32,7 +32,9 @@ module.exports = class RefValueRule extends Base {
 
     async checkRefValue () {
         let ref = await this.getTarget().related.resolve(this.refAttr);
-        let matched = ref ? this.compareValue(ref.get(this.valueAttr)) : false;
+        let matched = ref
+            ? this.compareValue(ref.get(this.valueAttr))
+            : false;
         if (this.not) {
             matched = !matched;
         }

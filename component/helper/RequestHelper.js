@@ -6,7 +6,10 @@
 module.exports = class RequestHelper {
 
     static getArrayParam (value) {
-        return typeof value !== 'string' ? null : value ? value.split(',') : [];
+        if (typeof value !== 'string') {
+            return null;
+        }
+        return value ? value.split(',') : [];
     }
 
     static getNotEmptyArrayParam (value) {

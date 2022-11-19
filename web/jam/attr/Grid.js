@@ -7,7 +7,7 @@ Jam.GridModelAttr = class GridModelAttr extends Jam.ModelAttr {
         super(...arguments);
         this.$grid = this.find('.data-grid');
         this.gridParams = this.$grid.data('params');
-        this.changes = new Jam.AttrListChanges(this);
+        this.changes = new Jam.RelationChanges(this);
     }
 
     activate () {
@@ -19,12 +19,12 @@ Jam.GridModelAttr = class GridModelAttr extends Jam.ModelAttr {
     }
 
     createList (afterInit) {
-        this.list = (new Jam.AttrList(this.$grid, {
+        this.list = new Jam.AttrList(this.$grid, {
             attr: this,
             changes: this.changes,
             model: this.model,
             afterInit
-        }));
+        });
         this.list.init();
     }
 

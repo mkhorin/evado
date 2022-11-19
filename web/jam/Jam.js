@@ -13,6 +13,14 @@ class Jam {
         return this.i18n.translate(...arguments);
     }
 
+    static showLoader () {
+        this.toggleLoader(true);
+    }
+
+    static hideLoader () {
+        this.toggleLoader(false);
+    }
+
     static toggleLoader (state) {
         $(document.body).toggleClass('loading', state);
     }

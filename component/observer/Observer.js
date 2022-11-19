@@ -51,8 +51,10 @@ module.exports = class Observer extends Base {
 
     async handleInternal (originalEvent, data) {
         data = data ? {...data} : data;
-        for (const event of this._parsedMap[originalEvent]) {
-            for (const handler of this._eventMap[event]) {
+        const events = this._parsedMap[originalEvent];
+        for (const event of events) {
+            const handlers = this._eventMap[event];
+            for (const handler of handlers) {
                 try {
                     await handler.execute(data, event, originalEvent);
                 } catch (err) {

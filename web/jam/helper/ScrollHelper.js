@@ -32,7 +32,9 @@ Jam.ScrollHelper = class ScrollHelper {
     static getClosestScrollableParent (target) {
         const $parent = $(target).parent();
         if ($parent.length) {
-            return this.isScrollableElement($parent) ? $parent : this.getClosestScrollableParent($parent);
+            return this.isScrollableElement($parent)
+                ? $parent
+                : this.getClosestScrollableParent($parent);
         }
     }
 };

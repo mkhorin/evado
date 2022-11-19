@@ -47,6 +47,7 @@ Jam.I18n.defaults = {
     'Can not restore ambiguous values': 'Не могу восстановить неоднозначные значения',
     'Cancel': 'Отменить',
     'Change password': 'Изменить пароль',
+    'Checkbox list': 'Список флажков',
     'Clone': 'Клонировать',
     'Close': 'Закрыть',
     'Close the last stack tab first': 'Закройте последнюю вкладку стека',
@@ -119,7 +120,6 @@ Jam.I18n.defaults = {
     'Modification date': 'Дата изменения',
 
     'Name': 'Название',
-    'Nested condition': 'Вложенное условие',
     'No': 'Нет',
     'No saved filters yet': 'Нет сохраненных фильтров',
     'Nothing found': 'Ничего не найдено',
@@ -206,6 +206,14 @@ Jam.I18n.defaults = {
     'Yes': 'Да',
     'You have no new notifications': 'Нет новых уведомлений',
 
+    '[Nested condition]': '[Вложенное условие]',
+
+    '[invalid data]': '[неверные данные]',
+
+    '[no access]': '[нет доступа]',
+    '[no data]': '[нет данных]',
+    '[not set]': '[не задано]',
+
     'begins': 'начинается',
 
     'ends': 'заканчивается',
@@ -213,12 +221,9 @@ Jam.I18n.defaults = {
     'contains': 'содержит',
 
     'equal': 'равно',
+    'equal (case-insensitive)': 'равно (без учёта регистра)',
 
     'nested': 'вложенный',
     'not equal': 'не равно',
-
-    '[invalid data]': '[неверные данные]',
-    '[no access]': '[нет доступа]',
-    '[no data]': '[нет данных]',
-    '[not set]': '[не задано]'
+    'not equal (case-insensitive)': 'не равно (без учёта регистра)',
 };

@@ -48,14 +48,17 @@ module.exports = class CommonSearch extends Base {
         if (!column.relation) {
             return this.conditions.push(condition);
         }
-        const name = column.relation === true ? column.name : column.relation;
+        const name = column.relation === true
+            ? column.name
+            : column.relation;
         const relation = this.query.model.getRelation(name);
         if (!relation) {
             return this.throwBadRequest(`Relation not found: ${name}`);
         }
         // relation without via
         const query = relation.model.find(condition);
-        this.conditions.push({[relation.linkKey]: await query.column(relation.refKey)});
+        const refValue = await query.column(relation.refKey);
+        this.conditions.push({[relation.linkKey]: refValue});
     }
 
     getDefaultTypeCondition (attr, value) {
@@ -66,7 +69,9 @@ module.exports = class CommonSearch extends Base {
     getDateTypeCondition (attr, value) {
         value = DateHelper.parse(value, this.controller.language);
         value = DateHelper.getDayInterval(value);
-        return value ? ['and', ['>=', attr, value[0]], ['<', attr, value[1]]] : null;
+        return value
+            ? ['and', ['>=', attr, value[0]], ['<', attr, value[1]]]
+            : null;
     }
 
     getIdTypeCondition (attr, value) {

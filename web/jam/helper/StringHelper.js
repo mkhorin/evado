@@ -47,11 +47,11 @@ Jam.StringHelper = class StringHelper {
     }
 
     static capitalize (text) {
-        return text.charAt(0).toUpperCase() + text.slice(1);
+        return text[0].toUpperCase() + text.slice(1);
     }
 
     static toLowerCaseFirstLetter (text) {
-        return text.charAt(0).toLowerCase() + text.slice(1);
+        return text[0].toLowerCase() + text.slice(1);
     }
 
     static replaceParam (text, param, value) {

@@ -24,7 +24,9 @@ module.exports = class ErrorAction extends Base {
         controller.log('error', err);
         const status = err.status;
         controller.setHttpStatus(status);
-        const message = err.isServerError() ? this.serverErrorMessage : err.message;
+        const message = err.isServerError()
+            ? this.serverErrorMessage
+            : err.message;
         if (this.ajax) {
             return this.sendText(message);
         }

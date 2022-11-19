@@ -69,8 +69,14 @@ module.exports = class NotificationMessage extends Base {
         }
         for (const method of notification.get('methods')) {
             switch (method) {
-                case 'popup': await this.sendAsPopup(recipients); break;
-                case 'email': await this.sendAsEmail(recipients); break;
+                case 'popup': {
+                    await this.sendAsPopup(recipients);
+                    break;
+                }
+                case 'email': {
+                    await this.sendAsEmail(recipients);
+                    break;
+                }
             }
         }
         await this.directUpdate({sentAt: new Date});
@@ -83,7 +89,9 @@ module.exports = class NotificationMessage extends Base {
             return recipients;
         }
         const notification = await this.resolveRelation('notification');
-        return notification ? await notification.getRecipientUsers() : [];
+        return notification
+            ? await notification.getRecipientUsers()
+            : [];
     }
 
     sendAsPopup (users) {
@@ -91,7 +99,8 @@ module.exports = class NotificationMessage extends Base {
     }
 
     async sendAsEmail (users) {
-        const recipient = await this.spawn('model/User').findById(users).column('email');
+        const query = this.spawn('model/User').findById(users);
+        const recipient = await query.column('email');
         const subject = this.get('subject');
         const text = this.get('text');
         return this.module.getMailer().send({recipient, subject, text});
@@ -102,11 +111,12 @@ module.exports = class NotificationMessage extends Base {
         if (!notification) {
             return this.log('error', 'Notification not found');
         }
-        await ModelHelper.truncateOverflow({
-            query: this.find({notification: notification.getId()}),
-            threshold: notification.getOption('messageTruncationThreshold', this.TRUNCATION_THRESHOLD),
-            offset: notification.getOption('messageTruncationOffset', this.TRUNCATION_OFFSET)
+        const query = this.find({
+            notification: notification.getId()
         });
+        const threshold = notification.getOption('messageTruncationThreshold', this.TRUNCATION_THRESHOLD);
+        const offset = notification.getOption('messageTruncationOffset', this.TRUNCATION_OFFSET);
+        await ModelHelper.truncateOverflow({query, threshold, offset});
         return true;
     }
 

@@ -112,23 +112,26 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     beforeClose (event) {
-        const confirmation = this.params.closeConfirmation;
+        let confirmation = this.params.closeConfirmation;
+        let deferred = null;
         if (this.isChanged() && confirmation !== false) {
-            event.deferred = Jam.dialog.confirm(confirmation || 'Close without saving?');
+            deferred = Jam.dialog.confirm(confirmation || 'Close without saving?');
         }
-        const message = this.inProgress();
+        const message = this.isRunning();
         if (message) {
-            event.deferred = $.when(event.deferred).then(() => Jam.dialog.confirm(message));
+            deferred = $.when(deferred).then(() => Jam.dialog.confirm(message));
         }
+        $.when(deferred).then(() => this.events.trigger('close'));
         event.data = {
             result: this.id,
             saved: this.saved,
             reopen: this.reopen
         };
+        event.deferred = deferred;
     }
 
-    inProgress () {
-        return this.attrs.map(attr => attr.inProgress()).filter(message => message)[0];
+    isRunning () {
+        return this.attrs.map(attr => attr.isRunning()).find(message => message);
     }
 
     setReadOnly () {
@@ -232,10 +235,12 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     onShowHistory () {
-        this.childFrame.load(this.findCommand('history').data('url'));
+        const url = this.findCommand('history').data('url');
+        this.childFrame.load(url);
     }
 
     reload () {
+        this.events.trigger('close');
         this.frame.off('beforeClose', this.beforeCloseMethod);
         this.frame.reload();
     }

@@ -16,7 +16,9 @@ module.exports = class BaseController extends Base {
     }
 
     getLanguage () {
-        return this.language || this.user?.getLanguage() || this.i18n?.language;
+        return this.language
+            || this.user?.getLanguage()
+            || this.i18n?.language;
     }
 
     getReferrer () {
@@ -27,7 +29,8 @@ module.exports = class BaseController extends Base {
     }
 
     redirectToReferrer (url = 'index') {
-        this.redirect(this.getPostParam('referrer') || url);
+        const {referrer} = this.getPostParams();
+        this.redirect(referrer || url);
     }
 
     getSpawnConfig (params) {
@@ -42,7 +45,7 @@ module.exports = class BaseController extends Base {
     checkCsrfToken () {
         if (this.user.auth.csrf && this.isPostRequest()) {
             const token = this.getCsrfToken();
-            if (token && this.getPostParam('csrf') !== token) {
+            if (token && this.getPostParams().csrf !== token) {
                 throw new BadRequest('Invalid CSRF token');
             }
         }
@@ -52,7 +55,8 @@ module.exports = class BaseController extends Base {
 
     async getModel (params = {}) {
         let model = this.spawn(params.Class || this.getModelClass());
-        let id = model.getDb().normalizeId(params.id || this.getQueryParam('id') || this.getPostParam('id'));
+        let id = params.id || this.getQueryParam('id') || this.getPostParam('id');
+        id = model.getDb().normalizeId(id);
         if (!id) {
             throw new BadRequest('Invalid ID');
         }
@@ -88,7 +92,8 @@ module.exports = class BaseController extends Base {
         const result = {};
         for (const model of models) {
             if (model) {
-                result[model.constructor.name] = this.translateMessageMap(model.getFirstErrorMap());
+                const errors = model.getFirstErrorMap();
+                result[model.constructor.name] = this.translateMessageMap(errors);
             }
         }
         this.send(result, Response.BAD_REQUEST);
@@ -96,7 +101,7 @@ module.exports = class BaseController extends Base {
 
     hasAnyModelError (...models) {
         for (const model of models) {
-            if (model && model.hasError()) {
+            if (model?.hasError()) {
                 return true;
             }
         }
@@ -127,7 +132,11 @@ module.exports = class BaseController extends Base {
             searchAttrs: ['name', 'label'],
             ...params
         };
-        const select2 = new Select2({controller: this, query, params});
+        const select2 = new Select2({
+            controller: this,
+            query,
+            params
+        });
         const result = await select2.getList();
         this.sendJson(result);
     }

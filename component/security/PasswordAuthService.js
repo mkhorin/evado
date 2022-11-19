@@ -11,7 +11,7 @@ module.exports = class PasswordAuthService extends Base {
         if (user.get('expiredPassword')) {
             return true;
         }
-        const lifetime = this.module.getParam('maxUserPasswordLifetime');
+        const lifetime = this.module.params.maxUserPasswordLifetime;
         if (!lifetime) {
             return false;
         }
@@ -91,13 +91,13 @@ module.exports = class PasswordAuthService extends Base {
         if (!passwords.length) { // insert new
             return this.executeUpdate(newPassword, model, user, expired);
         }
-        const old = this.module.getParam('oldUserPasswords', 0);
+        const old = this.module.params.oldUserPasswords || 0;
         if (model.constructor.isUsed(newPassword, passwords.slice(0, old + 1))) {
             throw 'auth.passwordAlreadyUsed';
         }
         const current = passwords[0];
         const currentHash = current.get('hash');
-        const min = this.module.getParam('minUserPasswordLifetime');
+        const min = this.module.params.minUserPasswordLifetime;
         if (!old || !min || !current.isExpired(min)) {
             await this.executeUpdate(newPassword, current, user, expired); // update current
             return currentHash;
@@ -120,7 +120,7 @@ module.exports = class PasswordAuthService extends Base {
         const model = this.spawnVerification();
         let verification = await model.findByUser(user.getId()).one();
         if (verification) {
-            const timeout = this.module.getParam('repeatVerificationTimeout');
+            const timeout = this.module.params.repeatVerificationTimeout;
             const rest = DateHelper.parseDuration(timeout) - verification.getElapsedTime();
             if (rest > 0) {
                 throw ['auth.requestAlreadySent', {time: [rest, 'duration', {suffix: true}]}];
@@ -153,7 +153,7 @@ module.exports = class PasswordAuthService extends Base {
         if (model.isDone()) {
             throw 'auth.verificationAlreadyDone';
         }
-        if (model.isExpired(this.module.getParam('verificationLifetime'))) {
+        if (model.isExpired(this.module.params.verificationLifetime)) {
             throw 'auth.verificationExpired';
         }
         return model;

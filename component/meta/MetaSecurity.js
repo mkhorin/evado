@@ -184,14 +184,16 @@ module.exports = class MetaSecurity extends Base {
         this.relationAccessMap = {};
         for (const attr of view.relationAttrs) {
             data.target = attr.listView;
-            data.targetType = data.target.isClass() ? Rbac.TARGET_CLASS : Rbac.TARGET_VIEW;
+            data.targetType = data.target.isClass()
+                ? Rbac.TARGET_CLASS
+                : Rbac.TARGET_VIEW;
             data.actions = this.controller.extraMeta.getAttrData(attr).actions;
             this.relationAccessMap[attr.name] = await this.rbac.resolveAccess(assignments, data, params);
         }
     }
 
     async resolveForbiddenReadAttrs (models, view) {
-        if (this.attrAccess && this.attrAccess.hasAnyObjectTargetData(view.class.name)) {
+        if (this.attrAccess?.hasAnyObjectTargetData(view.class.name)) {
             for (const model of models) {
                 if (model.forbiddenReadAttrs === undefined) {
                     const data = await this.attrAccess.resolveObjectTarget(model);

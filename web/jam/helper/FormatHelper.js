@@ -31,7 +31,8 @@ Jam.FormatHelper = class FormatHelper {
     }
 
     static asCurrency (data, ...params) {
-        return new Intl.NumberFormat(...params).format(Math.round((data + Number.EPSILON) * 100) / 100);
+        const value = Math.round((data + Number.EPSILON) * 100) / 100;
+        return new Intl.NumberFormat(...params).format(value);
     }
 
     static asDate (data, format = 'L') {
@@ -68,9 +69,9 @@ Jam.FormatHelper = class FormatHelper {
     }
 
     static asTime (data, format = 'LT') {
-        data = parseInt(data);
-        return !isNaN(data)
-            ? moment().startOf('day').add(moment.duration({s: data})).format(format)
+        const s = parseInt(data);
+        return !isNaN(s)
+            ? moment().startOf('day').add(moment.duration({s})).format(format)
             : null;
     }
 
@@ -82,15 +83,16 @@ Jam.FormatHelper = class FormatHelper {
         if (!data || !data.thumbnail && !data.name) {
             return data;
         }
+        const css = data.css || '';
         const name = Jam.StringHelper.escapeTags(data.name);
-        return data.thumbnail
-            ? `<img src="${data.thumbnail}" class="img-thumbnail img-fluid ${data.css || ''}" title="${name}" alt="">`
-            : name;
+        return `<img src="${data.thumbnail}" class="img-thumbnail img-fluid ${css}" title="${name}" alt="">`;
     }
 
     static formatDisplayValue (value, $container, selector = 'display-format') {
-        for (const element of $container.find(`[data-${selector}]`)) {
-            const result = this.getDisplayValue(value, $(element).data(selector));
+        const $elements = $container.find(`[data-${selector}]`);
+        for (const element of $elements) {
+            const format = $(element).data(selector);
+            const result = this.getDisplayValue(value, format);
             if (result) {
                 element.innerHTML = result;
             }

@@ -76,7 +76,8 @@ module.exports = class Notification extends Base {
 
     async resolveMessageTemplate (data, messageSource) {
         try {
-            const template = this.spawn(ClassHelper.resolveSpawn(this.getMessageTemplateConfig(), this.module));
+            const config = ClassHelper.resolveSpawn(this.getMessageTemplateConfig(), this.module);
+            const template = this.spawn(config);
             template.data = await template.prepareData(data);
             this.resolveMessageTemplateAttr('subject', template, messageSource);
             this.resolveMessageTemplateAttr('text', template, messageSource);

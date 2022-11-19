@@ -17,13 +17,13 @@ module.exports = class AuthController extends Base {
                     Class: require('areto/filter/AccessControl'),
                     rules: [{
                         actions: ['changePassword'],
-                        match: action => action.controller.canChangePassword() ? undefined : false
+                        match: ({controller}) => controller.canChangePassword() ? undefined : false
                     },{
                         actions: ['signUp'],
-                        match: action => action.controller.canSignUp() ? undefined /* to continue rules */ : false
+                        match: ({controller}) => controller.canSignUp() ? undefined /*to continue rules*/ : false
                     },{
                         actions: ['requestReset', 'resetPassword'],
-                        match: action => action.controller.canResetPassword() ? undefined : false
+                        match: ({controller}) => controller.canResetPassword() ? undefined : false
                     },{
                         actions: ['signIn', 'signUp', 'requestReset', 'resetPassword'],
                         permissions: ['?'],
@@ -51,7 +51,8 @@ module.exports = class AuthController extends Base {
             return this.render('signIn', {model});
         }
         if (this.user.getIdentity().isVerified()) {
-            return this.goBack(this.getQueryParam('returnUrl'));
+            const {returnUrl} = this.getQueryParams();
+            return this.goBack(returnUrl);
         }
         this.setFlash('error', 'auth.userNotVerified');
         return this.redirect('request-verification');
@@ -59,7 +60,8 @@ module.exports = class AuthController extends Base {
 
     async actionSignOut () {
         await this.user.logout();
-        this.redirect(this.module.getParam('afterSignOutUrl') || this.module.getHomeUrl());
+        const {afterSignOutUrl} = this.module.params;
+        this.redirect(afterSignOutUrl || this.module.getHomeUrl());
     }
 
     async actionSignUp () {
@@ -74,8 +76,11 @@ module.exports = class AuthController extends Base {
         }
         let verified = user.isVerified();
         let type = verified ? 'success' : 'info';
-        let message = verified ? 'auth.registrationCompleted' : 'auth.verificationSent';
-        message = this.translate(message, {email: model.get('email')});
+        let email = model.get('email');
+        let message = verified
+            ? 'auth.registrationCompleted'
+            : 'auth.verificationSent';
+        message = this.translate(message, {email});
         return this.render('alert', {type, message});
     }
 
@@ -102,9 +107,8 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).request()) {
             return this.render('requestReset', {model});
         }
-        this.setFlash('success', 'auth.resetPasswordKeySent', {
-            email: model.get('email')
-        });
+        const email = model.get('email');
+        this.setFlash('success', 'auth.resetPasswordKeySent', {email});
         this.reload();
     }
 
@@ -114,7 +118,8 @@ module.exports = class AuthController extends Base {
             return this.render('resetPassword', {model});
         }
         await model.load(this.getPostParams());
-        model.set('key', this.getQueryParam('key'));
+        const {key} = this.getQueryParams();
+        model.set('key', key);
         model.captchaAction = this.createAction('captcha');
         if (!await model.resetPassword()) {
             return this.render('resetPassword', {model});
@@ -132,15 +137,15 @@ module.exports = class AuthController extends Base {
         if (!await model.load(this.getPostParams()).request()) {
             return this.render('requestVerification', {model});
         }
-        this.setFlash('success', 'auth.verificationSent', {
-            email: model.get('email')
-        });
+        const email = model.get('email');
+        this.setFlash('success', 'auth.verificationSent', {email});
         this.reload();
     }
 
     async actionVerify () {
         const model = this.spawn('model/auth/VerifyForm');
-        model.set('key', this.getQueryParam('key'));
+        const {key} = this.getQueryParams();
+        model.set('key', key);
         if (!await model.verify()) {
             this.setFlash('error', model.getFirstError());
             return this.redirect('request-verification');
@@ -152,15 +157,15 @@ module.exports = class AuthController extends Base {
     }
 
     canChangePassword () {
-        return this.module.getParam('enablePasswordChange');
+        return this.module.params.enablePasswordChange;
     }
 
     canSignUp () {
-        return this.module.getParam('enableSignUp');
+        return this.module.params.enableSignUp;
     }
 
     canResetPassword () {
-        return this.module.getParam('enablePasswordReset');
+        return this.module.params.enablePasswordReset;
     }
 
     blockByRateLimit (model) {

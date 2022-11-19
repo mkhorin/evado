@@ -28,7 +28,9 @@ Jam.ActionBinder = class ActionBinder {
 
     createElement ($item) {
         const data = $item.data('actionBinder');
-        return data ? new Jam.ActionBinderElement($item, data, this) : null;
+        return data
+            ? new Jam.ActionBinderElement($item, data, this)
+            : null;
     }
 
     appendElements ($container) {

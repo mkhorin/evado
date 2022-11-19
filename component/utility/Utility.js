@@ -8,25 +8,34 @@ const Base = require('areto/base/Base');
 module.exports = class Utility extends Base {
 
     static getRouteName () {
-        if (!this._routeName) {
-            this._routeName = StringHelper.camelToKebab(StringHelper.trimEnd(this.name, 'Utility'));
+        if (!this._routeName) {            
+            this._routeName = StringHelper.camelToKebab(this.getName());
         }
         return this._routeName;
     }
 
     static getPermissionName () {
         if (!this._permissionName) {
-            this._permissionName = 'utility' + StringHelper.trimEnd(this.name, 'Utility');
+            this._permissionName = 'utility' + this.getName();
         }
         return this._permissionName;
     }
+    
+    static getName () {
+        return StringHelper.trimEnd(this.name, 'Utility');
+    } 
 
     /**
      * Check utility availability
      * @returns {boolean}
      */
     isActive () {
-        return this.enabled && (!this.actions || !this.modelAction || this.actions.includes(this.modelAction));
+        if (!this.enabled) {
+            return false;
+        }
+        return !this.actions
+            || !this.modelAction
+            || this.actions.includes(this.modelAction);
     }
 
     isIndexAction () {

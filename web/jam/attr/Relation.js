@@ -7,24 +7,28 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
         super(...arguments);
         this.$grid = this.find('.data-grid');
         this.gridParams = this.$grid.data('params');
-        this.initChanges();
+        this.createChanges();
     }
 
-    initChanges () {
-        this.changes = new Jam.AttrListChanges(this);
+    createChanges () {
+        this.changes = new Jam.RelationChanges(this);
         this.changes.setDefaultValue(this.getValue());
         this.setValueByChanges();
     }
 
     hasValue () {
-        const max = this.list ? this.list.grid.itemMaxSize : 0;
-        const removes = this.changes.getUnlinks().length + this.changes.getDeletes().length;
-        return this.changes.hasLinks() || max > removes;
+        if (this.changes.hasLinks()) {
+            return true;
+        }
+        const max = this.list?.grid.itemMaxSize || 0;
+        const removes = this.changes.countRemoves();
+        return max > removes;
     }
 
     getLinkedValue () {
-        const links = this.changes.getLinks();
-        return this.gridParams.multiple ? links : links[0];
+        return this.gridParams.multiple
+            ? this.changes.links
+            : this.changes.links[0];
     }
 
     setValueByChanges () {
@@ -59,12 +63,12 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
     }
 
     getDependencyValue () {
-        let data = this.list
+        let items = this.list
             ? this.list.getObjectIds(this.list.findItems())
-            : this.changes.getLinks();
-        data = Jam.ArrayHelper.exclude(this.changes.getUnlinks(), data);
-        data = Jam.ArrayHelper.exclude(this.changes.getDeletes(), data);
-        return data.length ? data : null;
+            : this.changes.links;
+        items = this.changes.excludeUnlinks(items);
+        items = this.changes.excludeDeletes(items);
+        return items.length ? items : null;
     }
 
     onDependencyChange () {

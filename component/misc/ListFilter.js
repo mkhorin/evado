@@ -66,13 +66,13 @@ module.exports = class ListFilter extends Base {
 
     parse (data) {
         if (data.items) {
-            return this.parseNestedItems(data);
+            return this.parseNestedCondition(data);
         }
         if (data.owner) {
             return this.parseOwner(data);
         }
         if (data.op === 'nested') {
-            return this.parseNested(data);
+            return this.parseNestedOperation(data);
         }
         if (data.relation) {
             return this.parseRelation(data);
@@ -80,10 +80,10 @@ module.exports = class ListFilter extends Base {
         return this.parseByType(data);
     }
 
-    async parseNestedItems ({items}) {
+    async parseNestedCondition ({items}) {
         return Array.isArray(items)
             ? this.resolveItems(items)
-            : this.throwBadRequest('Invalid nested items');
+            : this.throwBadRequest('Invalid nested condition');
     }
 
     async parseOwner ({attr, value, owner, relation}) {
@@ -101,7 +101,7 @@ module.exports = class ListFilter extends Base {
         return {[this.query.model.PK]: result};
     }
 
-    async parseNested ({attr, relation, value: items}) {
+    async parseNestedOperation ({attr, relation, value: items}) {
         let rel = this.getRelation(attr, this.query.model);
         let query = rel.model.createQuery();
         await this.spawnSelf({items, query}).resolve();
@@ -143,32 +143,39 @@ module.exports = class ListFilter extends Base {
 
     getRelation (name, model) {
         return model.getRelation(name)
-            || this.throwBadRequest(`${model.constructor.name}: Relation not found: ${name}`);
+            || this.throwBadRequest(`Relation not found: ${name}`);
     }
 
     parseByType (data) {
         switch (data.type) {
-            case 'boolean':
+            case 'boolean': {
                 return this.parseBoolean(data);
-            case 'date':
+            }
+            case 'date': {
                 return this.parseDate(data);
-            case 'datetime':
+            }
+            case 'datetime': {
                 return this.parseDatetime(data);
-            case 'id':
+            }
+            case 'id': {
                 return this.parseId(data);
+            }
             case 'integer':
             case 'float':
-            case 'number':
+            case 'number': {
                 return this.parseNumber(data);
-            case 'string':
+            }
+            case 'string': {
                 return this.parseString(data);
-            case 'selector':
+            }
+            case 'selector': {
                 return this.parseSelector(data);
+            }
         }
     }
 
-    parseBoolean (data) {
-        return [data.value === 'true' ? '=' : '!=', data.attr, true];
+    parseBoolean ({value, attr}) {
+        return [value === 'true' ? '=' : '!=', attr, true];
     }
 
     parseDate ({attr, op, value}) {
@@ -261,7 +268,9 @@ module.exports = class ListFilter extends Base {
             return this.getEmptyValueCondition(attr, op);
         }
         value = this.formatByValueType(value, valueType);
-        return value ? this.formatSelectorCondition(attr, op, value) : null;
+        return value
+            ? this.formatSelectorCondition(attr, op, value)
+            : null;
     }
 
     getEmptyValueCondition (attr, op) {

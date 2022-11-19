@@ -1,8 +1,11 @@
 <!-- _part/attr/checkbox -->
 <%
-const p = {handler: 'Checkbox'};
+const p = {
+    handler: 'Checkbox'
+};
+const params = {p};
 %>
-<%- include(_view.get('_part/attr/_params'), {p}) %>
+<%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.css %>"
      data-handler="<%= p.handler %>"
@@ -12,8 +15,14 @@ const p = {handler: 'Checkbox'};
         <input class="form-value" name="<%- p.name %>" type="hidden" value="<%- p.value %>">
         <div class="form-check">
             <input class="form-check-input"<%- p.value ? ' checked' : '' %> type="checkbox">
-            <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label><% if (p.extHint) {
-                %><i class="hint-icon" title="<%= p.extHint %>" data-t="<%- p.translate %>"></i><% } %>
+            <% if (p.extHint) { %>
+            <div class="form-check-label-wrapper">
+                <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label><i
+                       class="hint-icon" title="<%= p.extHint %>" data-t="<%- p.translate %>"></i>
+            </div>
+            <% } else { %>
+            <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label>
+            <% } %>
         </div>
         <div class="error-block"></div>
         <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>

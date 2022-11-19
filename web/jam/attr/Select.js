@@ -113,7 +113,7 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
             params.placeholder = Jam.t(params.placeholder, params.translate);
         }
         this.select2Params = params;
-        this.$value.select2(params).change(this.onChangeSelect.bind(this));
+        this.$value.select2(params).change(this.onChangeSelection.bind(this));
         this.getSelect2().on('query', this.onQuery.bind(this));
     }
 
@@ -133,7 +133,7 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         }
     }
 
-    onChangeSelect () {
+    onChangeSelection () {
         this.toggleBlank();
     }
 
@@ -169,7 +169,8 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
 
     processResults (data, params) {
         const items = typeof data.items === 'object' ? data.items : data;
-        const more = ((params.page || 1) * this.select2Params.pageSize) < data.total;
+        const page = params.page || 1;
+        const more = (page * this.select2Params.pageSize) < data.total;
         return {
             pagination: {more},
             results: Jam.SelectHelper.normalizeItems(items)

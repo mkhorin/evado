@@ -35,7 +35,8 @@ module.exports = class DeleteExpiredFiles extends Base {
 
     async deleteModelFiles (config) {
         const model = this.spawn(config);
-        const files = await model.findExpired(this.getEarliestValidCreationDate()).all();
+        const date = this.getEarliestValidCreationDate();
+        const files = await model.findExpired(date).all();
         for (const file of files) {
             await file.delete();
         }

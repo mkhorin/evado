@@ -109,10 +109,11 @@ module.exports = class MetaGrid extends Base {
     }
 
     async setModels () {
-        let links = this.request.changes && this.request.changes.links;
+        let links = this.request.changes?.links;
         if (Array.isArray(links) && links.length) {
-            this._models = await this.query.and(['notId', this.query.view.getKey(), links]).all();
-            links = await this.query.where(['id', this.query.view.getKey(), links]).offset(0).all();
+            const key =  this.query.view.getKey();
+            this._models = await this.query.and(['notId', key, links]).all();
+            links = await this.query.where(['id', key, links]).offset(0).all();
             this._models = links.concat(this._models);
         } else {
             this._models = await this.query.all();
@@ -172,8 +173,7 @@ module.exports = class MetaGrid extends Base {
     }
 
     isForbiddenAttr (name, model) {
-        return this._forbiddenAttrs && this._forbiddenAttrs.includes(name)
-            || model.forbiddenReadAttrs && model.forbiddenReadAttrs.includes(name);
+        return this._forbiddenAttrs?.includes(name) || model.forbiddenReadAttrs?.includes(name);
     }
 
     setForbiddenAttr (name, result) {
@@ -220,8 +220,8 @@ module.exports = class MetaGrid extends Base {
         return value;
     }
 
-    renderFileAttr (attr, model) {
-        return this.controller.extraMeta.getModelFileData(model, attr.options.thumbnail);
+    renderFileAttr ({options}, model) {
+        return this.controller.extraMeta.getModelFileData(model, options.thumbnail);
     }
 
     renderRelatedAttr (related, value, attr) {
@@ -239,8 +239,9 @@ module.exports = class MetaGrid extends Base {
         return result;
     }
 
-    getRenderRelatedHandler (attr) {
-        return this[this.RELATED_HANDLERS[this._columnMap[attr.name].format.name]] || this.renderRelatedDefault;
+    getRenderRelatedHandler ({name}) {
+        return this[this.RELATED_HANDLERS[this._columnMap[name].format.name]]
+            || this.renderRelatedDefault;
     }
 
     renderRelatedDefault (model, title) {
@@ -253,8 +254,8 @@ module.exports = class MetaGrid extends Base {
         return {id: model.getId(), text};
     }
 
-    renderRelatedThumbnail (model, title, attr) {
-        const data = this.controller.extraMeta.getModelFileData(model, attr.options.thumbnail);
+    renderRelatedThumbnail (model, title, {options}) {
+        const data = this.controller.extraMeta.getModelFileData(model, options.thumbnail);
         if (data) {
             data.name = title;
             return data;
@@ -276,8 +277,8 @@ module.exports = class MetaGrid extends Base {
         return result;
     }
 
-    getRenderRelationHandler (attr) {
-        return this[this.RELATION_HANDLERS[this._columnMap[attr.name].format.name]];
+    getRenderRelationHandler ({name}) {
+        return this[this.RELATION_HANDLERS[this._columnMap[name].format.name]];
     }
 
     renderRelationThumbnail (id, attr) {

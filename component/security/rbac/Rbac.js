@@ -278,7 +278,9 @@ module.exports = class Rbac extends Base {
         const items = this.metaItems.filter(this.filterMetaReadAllowedItem, this);
         for (const item of items) {
             for (const role of item.roles) {
-                const key = item.view ? `${item.view}.${item.class}` : item.class;
+                const key = item.view
+                    ? `${item.view}.${item.class}`
+                    : item.class;
                 result[role] = result[role] || {};
                 result[role][key] = true;
             }
@@ -345,7 +347,8 @@ module.exports = class Rbac extends Base {
     }
 
     filterMetaTransitionItem ({actions, targetType}) {
-        return (targetType === this.ALL || targetType === this.TARGET_TRANSITION) && actions.includes(this.UPDATE);
+        return (targetType === this.ALL || targetType === this.TARGET_TRANSITION)
+            && actions.includes(this.UPDATE);
     }
 
     setMetaNavMap () {

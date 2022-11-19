@@ -12,8 +12,8 @@ module.exports = class ModuleAsset extends Base {
         this.params = this.getParams(this.module);
     }
 
-    getParams (module = this.module) {
-        return Object.assign(this.getDefaultParams(), module.config.getOwn('assets'));
+    getParams ({config} = this.module) {
+        return Object.assign(this.getDefaultParams(), config.getOwn('assets'));
     }
 
     getDefaultParams () {

@@ -34,6 +34,8 @@ module.exports = class UserRule extends Base {
     }
 
     getObjectFilter () {
-        return this.objectFilter ? {[this.userAttr]: this.getUserId()} : null;
+        return this.objectFilter
+            ? {[this.userAttr]: this.getUserId()}
+            : null;
     }
 };

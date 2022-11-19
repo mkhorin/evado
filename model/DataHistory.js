@@ -47,8 +47,8 @@ module.exports = class DataHistory extends Base {
     truncate () {
         return ModelHelper.truncateOverflow({
             query: this.findByOwner(),
-            threshold: this.module.getParam('dataHistoryTruncationThreshold', this.TRUNCATION_THRESHOLD),
-            offset: this.module.getParam('dataHistoryTruncationOffset', this.TRUNCATION_OFFSET),
+            threshold: this.module.params.dataHistoryTruncationThreshold || this.TRUNCATION_THRESHOLD,
+            offset: this.module.params.dataHistoryTruncationOffset || this.TRUNCATION_OFFSET,
             inBulk: true
         });
     }

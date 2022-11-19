@@ -28,7 +28,9 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     get (attrName) {
-        return this.owner.get(this.getStates()[attrName] ? attrName : `${this.originalAttr}.${attrName}`);
+        return this.getStates()[attrName]
+            ? this.owner.get(attrName)
+            : this.owner.get(`${this.originalAttr}.${attrName}`);
     }
 
     getOriginal () {
@@ -45,7 +47,9 @@ module.exports = class OverriddenValueBehavior extends Base {
 
     getState (attrName) {
         const states = this.owner.get(this.stateAttr);
-        return states ? states[attrName] === true : false;
+        return states
+            ? states[attrName] === true
+            : false;
     }
 
     /**
@@ -91,7 +95,8 @@ module.exports = class OverriddenValueBehavior extends Base {
         const states = this.getStates();
         for (const name of Object.keys(states)) {
             if (!states[name]) {
-                this.owner.set(name, await this.getOriginalValue(name, original));
+                const value = await this.getOriginalValue(name, original);
+                this.owner.set(name, value);
             }
         }
     }

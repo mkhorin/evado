@@ -85,19 +85,23 @@ module.exports = class MetaInspector extends Base {
         }
         let classKey, viewKey;
         switch (this.targetType) {
-            case Rbac.TARGET_NODE:
+            case Rbac.TARGET_NODE: {
                 classKey = this.targetClass?.id;
                 viewKey = this.targetView?.id;
                 break;
-            case Rbac.TARGET_VIEW:
+            }
+            case Rbac.TARGET_VIEW: {
                 classKey = this.target.class.id;
                 viewKey = this.target.id;
                 break;
-            case Rbac.TARGET_CLASS:
+            }
+            case Rbac.TARGET_CLASS: {
                 classKey = this.target.id;
                 break;
-            default:
+            }
+            default: {
                 return;
+            }
         }
         for (const role of this.assignments) {
             const data = this.rbac.metaReadAllowedMap[role];
@@ -348,7 +352,13 @@ module.exports = class MetaInspector extends Base {
                 result.push(conditions.length === 2 ? conditions[1] : conditions);
             }
         }
-        return result.length === 1 ? null : result.length === 2 ? result[1] : result;
+        if (result.length === 1) {
+            return null;
+        }
+        if (result.length === 2) {
+            return result[1];
+        }
+        return result;
     }
 
     async getRuleObjectFilters (rules, operation) {
@@ -364,24 +374,30 @@ module.exports = class MetaInspector extends Base {
 
     async getItemRuleObjectFilters (rules) {
         const result = ['and'];
+        const cache = this._metaObjectRuleCache;
         for (const config of rules) {
-            const condition = Object.prototype.hasOwnProperty.call(this._metaObjectRuleCache, config.name)
-                ? this._metaObjectRuleCache[config.name]
+            const condition = Object.prototype.hasOwnProperty.call(cache, config.name)
+                ? cache[config.name]
                 : await this.getRuleObjectFilter(config);
             if (condition) {
                 result.push(condition);
             }
-            this._metaObjectRuleCache[config.name] = condition;
+            cache[config.name] = condition;
         }
-        return result.length === 2 ? result[1] : result.length === 1 ? null : result;
+        if (result.length === 1) {
+            return null;
+        }
+        if (result.length === 2) {
+            return result[1];
+        }
+        return result;
     }
 
     getRuleObjectFilter (config) {
-        const rule = new config.Class({
-            ...config,
-            params: config.params ? {...config.params, ...this.params} : this.params,
-            inspector: this
-        });
+        const params = config.params
+            ? {...config.params, ...this.params}
+            : this.params;
+        const rule = new config.Class({...config, params, inspector: this});
         return rule.getObjectFilter();
     }
 };

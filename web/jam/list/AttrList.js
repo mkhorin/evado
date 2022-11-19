@@ -37,13 +37,13 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     prepareItem (item, data, index) {
         const id = data[this.params.key];
-        if (this.changes.getLinks().includes(id)) {
+        if (this.changes.hasLink(id)) {
             $(item).addClass('linked').attr('title', 'Add');
         }
-        if (this.changes.getUnlinks().includes(id)) {
+        if (this.changes.hasUnlink(id)) {
             $(item).addClass('unlinked').attr('title', 'Remove');
         }
-        if (this.changes.getDeletes().includes(id)) {
+        if (this.changes.hasDelete(id)) {
             $(item).addClass('deleted').attr('title', 'Delete');
         }
         super.prepareItem(item, data, index);
@@ -52,7 +52,7 @@ Jam.AttrList = class AttrList extends Jam.List {
     beforeXhr (event, data) {
         super.beforeXhr(event, data);
         if (!this.changes.isEmpty()) {
-            data.request.data.changes = this.changes.data;
+            data.request.data.changes = this.changes.getData();
         }
     }
 
@@ -99,7 +99,9 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     onCreate () {
         if (!this.revertChanges()) {
-            this.openFrame(this.getCreateUrl(), this.getDependencyData(), this.onAfterCloseFrame);
+            const url = this.getCreateUrl();
+            const data = this.getDependencyData();
+            this.openFrame(url, data, this.onAfterCloseFrame);
         }
     }
 
@@ -132,7 +134,9 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     onLink () {
         if (!this.revertChanges()) {
-            this.openFrame(this.getLinkUrl(), this.getDependencyData(), this.onAfterCloseLinkModal, {
+            const url = this.getLinkUrl();
+            const data = this.getDependencyData();
+            this.openFrame(url, data, this.onAfterCloseLinkModal, {
                 multiple: this.multiple
             });
         }
@@ -153,13 +157,16 @@ Jam.AttrList = class AttrList extends Jam.List {
 
     linkObjects (ids) {
         ids = typeof ids === 'string' ? ids.split(',') : [];
-        this.multiple ? this.linkMultiple(ids) : this.linkSingle(ids);
+        this.multiple
+            ? this.linkMultiple(ids)
+            : this.linkSingle(ids);
         this.setValue();
         this.reload();
     }
 
     linkSingle (ids) {
-        this.changes.linkSingle(ids, this.getObjectIds(this.findItems()), this.params);
+        const currents = this.getObjectIds(this.findItems());
+        this.changes.linkSingle(ids, currents, this.params);
     }
 
     linkMultiple (ids) {
@@ -167,13 +174,15 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     unlinkObjects ($items) {
-        this.changes.unlinkObjects(this.getObjectIds($items));
+        const ids = this.getObjectIds($items);
+        this.changes.unlinkObjects(ids);
         this.setValue();
         this.redraw();
     }
 
     deleteObjects ($items) {
-        this.changes.deleteObjects(this.getObjectIds($items));
+        const ids = this.getObjectIds($items);
+        this.changes.deleteObjects(ids);
         this.setValue();
         this.redraw();
     }

@@ -97,18 +97,18 @@ module.exports = class Mailer extends Base {
 
     async executeVerificationSubmit (name, link, verification, user) {
         try {
-            let time = this.module.getParam('verificationLifetime');
+            let recipient = user.getEmail();
+            let subject = this.translate(`${name}.subject`);
+            let time = this.module.params.verificationLifetime;
             time = this.formatter.format(time, 'duration');
             link = this.urlManager.createAbsolute(link);
             link = `${link}?key=${verification.get('key')}`;
-            await this.send({
-                recipient: user.getEmail(),
-                subject: this.translate(`${name}.subject`),
-                text: this.translate(`${name}.text`, {name: user.getTitle(), link, time})
-            });
-        } catch (err) {
+
+            let text = this.translate(`${name}.text`, {name: user.getTitle(), link, time});
+            await this.send({recipient, subject, text});
+        } catch (error) {
             await verification.delete();
-            throw err;
+            throw error;
         }
     }
 };

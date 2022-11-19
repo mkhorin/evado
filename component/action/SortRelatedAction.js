@@ -23,7 +23,8 @@ module.exports = class SortRelatedAction extends Base {
             this.setRelationWith(rel);
             return this.renderOrder();
         }
-        await this.updateOrder(this.getPostParam('order'));
+        const {order} = this.getPostParams();
+        await this.updateOrder(order);
         await this.send('Done');
     }
 
@@ -93,12 +94,13 @@ module.exports = class SortRelatedAction extends Base {
     }
 
     filterOverriddenModels ({models, orderAttr}) {
-        if (!this.sortOrderBehavior.overriddenBehavior) {
+        const overridden = this.sortOrderBehavior.overriddenBehavior;
+        if (!overridden) {
             return models;
         }
         const result = [];
         for (const model of models) {
-            const behavior = model.getBehavior(this.sortOrderBehavior.overriddenBehavior);
+            const behavior = model.getBehavior(overridden);
             const states = behavior.getStates();
             if (!behavior.hasOriginal() || !behavior.attrs.includes(orderAttr) || states[orderAttr] === true) {
                 result.push(model);

@@ -70,7 +70,9 @@ module.exports = class MetaAttrInspector extends Base {
             let items = this.getTargetAttrItems(this.rbac.targetMetaAttrMap);
             if (items) {
                 items = this.filterMetaAttrData(this.rbac.metaAttrMap, items);
-                this.forbiddenAttrMap = items.length ? await this.resolveAttrs(items) : {};
+                this.forbiddenAttrMap = items.length
+                    ? await this.resolveAttrs(items)
+                    : {};
             }
         }
         return this;
@@ -79,15 +81,15 @@ module.exports = class MetaAttrInspector extends Base {
     getTargetAttrItems (map) {
         const target = this.target;
         switch (this.targetType) {
-            case Rbac.TARGET_CLASS:
+            case Rbac.TARGET_CLASS: {
                 return map[`...${target.id}`];
-
-            case Rbac.TARGET_VIEW:
+            }
+            case Rbac.TARGET_VIEW: {
                 return target === target.class
                     ? map[`...${target.id}`]
                     : map[`..${target.id}`] || map[`...${target.class.id}`];
-
-            case Rbac.TARGET_OBJECT:
+            }
+            case Rbac.TARGET_OBJECT: {
                 const id = target.getId().toString();
                 const classId = target.class.id;
                 const state = target.getState();
@@ -114,6 +116,7 @@ module.exports = class MetaAttrInspector extends Base {
                     || map[`${id}...${classId}`]
                     || map[`..${target.view.id}`]
                     || map[`...${classId}`];
+            }
         }
     }
 

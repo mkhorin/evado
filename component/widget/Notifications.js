@@ -22,8 +22,10 @@ module.exports = class Notifications extends Base {
         if (!this.widgetAction) {
             return this.render();
         }
-        const id = this.controller.getQueryParam('message');
-        return id ? this.readMessage(id) : this.getUnreadMessages();
+        const {message} = this.controller.getQueryParams();
+        return message
+            ? this.readMessage(message)
+            : this.getUnreadMessages();
     }
 
     async render () {
@@ -32,7 +34,7 @@ module.exports = class Notifications extends Base {
     }
 
     async readMessage (id) {
-        const model = await this.spawn('notifier/NotificationMessage').findById(id).one();
+        const model = await this.spawnMessage().findById(id).one();
         if (!model) {
             throw new BadRequest('Message not found');
         }
@@ -54,8 +56,10 @@ module.exports = class Notifications extends Base {
     }
 
     async getUnreadMessageItems (ids) {
-        const message = this.spawn('notifier/NotificationMessage');
-        const models = await message.findById(ids).order({[message.PK]: -1}).limit(this.unreadLimit).all();
+        const message = this.spawnMessage();
+        const order = {[message.PK]: -1};
+        const query = message.findById(ids).order(order).limit(this.unreadLimit);
+        const models = await query.all();
         return models.map(this.getUnreadMessageItem, this);
     }
 
@@ -64,6 +68,10 @@ module.exports = class Notifications extends Base {
             id: model.getId(),
             title: model.get('subject')
         };
+    }
+
+    spawnMessage () {
+        return this.spawn('notifier/NotificationMessage');
     }
 };
 

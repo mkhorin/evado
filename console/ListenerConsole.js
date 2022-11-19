@@ -20,9 +20,10 @@ module.exports = class ListenerConsole extends Base {
             active: true,
             ...data
         });
-        model.set('handlers', await this.getRelatedIds('observer/EventHandler', data.handlers));
-        model.set('notifications', await this.getRelatedIds('notifier/Notification', data.notifications));
-        model.set('tasks', await this.getRelatedIds('model/Task', data.tasks));
+        const handlers = await this.getRelatedIds('observer/EventHandler', data.handlers);
+        const notifications = await this.getRelatedIds('notifier/Notification', data.notifications);
+        const tasks = await this.getRelatedIds('model/Task', data.tasks);
+        model.assign({handlers, notifications, tasks});
         await this.saveModel(model, name);
     }
 
@@ -35,8 +36,11 @@ module.exports = class ListenerConsole extends Base {
             const model = this.spawn(modelName);
             for (const name of names) {
                 const id = await model.find({name}).id();
-                id ? result.push(id)
-                   : this.log('error', `${modelName} not found: ${name}`);
+                if (id) {
+                    result.push(id)
+                } else {
+                    this.log('error', `${modelName} not found: ${name}`);
+                }
             }
         }
         return result;

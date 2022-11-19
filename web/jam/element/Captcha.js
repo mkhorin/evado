@@ -10,6 +10,8 @@ Jam.Captcha = class Captcha extends Jam.Element {
     onRefresh (event) {
         event.preventDefault();
         const $img = this.find('.captcha-image');
-        $img.attr('src', $img.attr('src').replace(/\?_=([0-9]+)/, ()=> '?_='+ Date.now()));
+        const source = $img.attr('src');
+        const target = source.replace(/\?_=([0-9]+)/, ()=> '?_='+ Date.now());
+        $img.attr('src', target);
     }
 };

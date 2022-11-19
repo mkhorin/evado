@@ -33,7 +33,9 @@ Jam.StackTabs = class StackTabs {
     }
 
     findFrame (frame) {
-        return this.$pool.children().filter((index, element) => $(element).data('frame') === frame);
+        return this.$pool.children().filter((index, element) => {
+            return $(element).data('frame') === frame;
+        });
     }
 
     attach (frame) {
@@ -62,7 +64,7 @@ Jam.StackTabs = class StackTabs {
         }
         const $children = this.$pool.children();
         $children.filter('.active').removeClass('active');
-        $children.filter((index, element) => $(element).data('frame') === frame).addClass('active');
+        this.findFrame(frame).addClass('active');
         frame.$frame.prepend(this.$tabs);
         if (this.$tabs.css('position') === 'fixed') {
             this.resolveMaxWidth(frame, $children);

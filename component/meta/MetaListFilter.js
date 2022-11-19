@@ -9,7 +9,7 @@ module.exports = class MetaListFilter extends Base {
 
     parse (data) {
         if (data.items) {
-            return this.parseNestedItems(data);
+            return this.parseNestedCondition(data);
         }
         if (this.class.key.name === data.attr) {
             data.type = this.class.key.type;
@@ -109,7 +109,7 @@ module.exports = class MetaListFilter extends Base {
         this.throwInvalidOperation(op);
     }
 
-    async parseNested ({attr, value}) {
+    async parseNestedOperation ({attr, value}) {
         const relation = this.getRelation(attr);
         const query = relation.refClass.createQuery();
         const filter = new this.constructor({
@@ -129,7 +129,8 @@ module.exports = class MetaListFilter extends Base {
 
     getRelation (name) {
         const attr = this.class.getAttr(name);
-        return attr.relation || this.throwBadRequest(`Invalid relation: ${attr.id}`);
+        return attr.relation
+            || this.throwBadRequest(`Invalid relation: ${attr.id}`);
     }
 
     async getRelationValue (relation, query) {

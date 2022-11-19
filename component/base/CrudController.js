@@ -100,8 +100,9 @@ module.exports = class CrudController extends Base {
             scenario: 'clone',
             ...params
         };
+        const {sampleClass} = this.getQueryParams();
         sampleParams = {
-            className: this.getQueryParam('sampleClass'),
+            className: sampleClass,
             ...sampleParams
         };
         const sample = await this.getModelByClassName(sampleParams);
@@ -132,7 +133,7 @@ module.exports = class CrudController extends Base {
     }
 
     async actionDeleteList () {
-        const ids = this.getPostParam('ids');
+        const {ids} = this.getPostParams();
         if (typeof ids !== 'string') {
             throw new BadRequest;
         }
@@ -146,7 +147,9 @@ module.exports = class CrudController extends Base {
     // LIST
 
     actionList (query, params) {
-        query = query || this.createModel().createQuery();
+        if (!query) {
+            query = this.createModel().createQuery();
+        }
         return this.sendGridList(query, {
             viewModel: 'list',
             ...params
@@ -154,40 +157,45 @@ module.exports = class CrudController extends Base {
     }
 
     actionListSelect (params) {
-        return this.sendSelectList(this.createModel().createQuery(), params);
+        const query = this.createModel().createQuery();
+        return this.sendSelectList(query, params);
     }
 
     async actionListRelated (params) {
-        const relation = this.getQueryParam('rel');
+        const {pid, rel} = this.getQueryParams();
         params = {
-            pid: this.getQueryParam('pid'),
-            relation: relation,
-            viewModel: `list/${relation}`,
-            with: this.getListRelatedWith(relation),
+            pid,
+            relation: rel,
+            viewModel: `list/${rel}`,
+            with: this.getListRelatedWith(rel),
             ...params
         };
         const model = params.pid
             ? await this.getModel({id: params.pid})
             : this.createModel();
-        const query = model.getRelation(relation);
+        const query = model.getRelation(rel);
         if (!query) {
             throw new BadRequest('Relation not found');
         }
-        params.pid ? query.with(params.with) : query.where(['false']);
+        params.pid
+            ? query.with(params.with)
+            : query.where(['false']);
         return this.sendGridList(query, params);
     }
 
     actionListRelatedSelect (params) {
+        const {pid, rel} = this.getQueryParams();
         params = {
-            pid: this.getQueryParam('pid'),
-            relation: this.getQueryParam('rel'),
+            relation: rel,
+            pid,
             ...params
         };
         const query = this.createModel().getRelation(params.relation);
         if (!query) {
             throw new BadRequest('Relation not found');
         }
-        return this.sendSelectList(query.with(params.with), params);
+        query.with(params.with);
+        return this.sendSelectList(query, params);
     }
 
     // METHOD

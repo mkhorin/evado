@@ -8,12 +8,15 @@ const Base = require('areto/filter/ActionFilter');
 module.exports = class ExpiredPasswordFilter extends Base {
 
     async beforeAction (action) {
-        if (action.isAjax() || action.isPostRequest()) {
+        if (!this.module.params.enablePasswordChange) {
             return;
         }
         const controller = action.controller;
-        const url = this.module.getParam('changePasswordUrl');
-        if (controller.user.isGuest() || !this.module.getParam('enablePasswordChange') || !url) {
+        if (controller.isAjax() || controller.isPostRequest() || controller.user.isGuest()) {
+            return;
+        }
+        const url = this.module.params.changePasswordUrl;
+        if (!url) {
             return;
         }
         const service = this.spawn('security/PasswordAuthService');

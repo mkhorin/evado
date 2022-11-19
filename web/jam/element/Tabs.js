@@ -100,7 +100,10 @@ Jam.Tabs = class Tabs extends Jam.Element {
         const hint = data.hint || text;
         const close = data.close ? 'closing' : '';
         const content = data.content;
-        this.getNavItems().parent()[method](`<li class="nav-tab ${close}" data-id="${id}"><a href="#" title="${hint}">${text}</a><div class="tab-close">&times;</div></li>`);
+        const node = `<li class="nav-tab ${close}" data-id="${id}">`
+            + `<a href="javascript:void 0" title="${hint}">${text}</a>`
+            + `<div class="tab-close">&times;</div></li>`;
+        this.getNavItems().parent()[method](node);
         this.getPanes().parent()[method](`<div class="tab-pane" data-id="${id}">${content}</div>`);
         this.events.trigger('create', {id});
     }

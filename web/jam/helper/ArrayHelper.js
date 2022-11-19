@@ -64,14 +64,19 @@ Jam.ArrayHelper = class ArrayHelper {
         return data;
     }
 
-    static intersect (items, targets) {
+    static intersectAll (...lists) {
+        let result = lists[0];
+        for (let i = 1; i < lists.length; ++i) {
+            result = this.intersect(result, lists[i]);
+        }
+        return result;
+    }
+
+    static intersect (targets, sources) {
         const result = [];
-        for (const item of items) {
-            for (const target of targets) {
-                if (item === target) {
-                    result.push(item);
-                    break;
-                }
+        for (const target of targets) {
+            if (sources.includes(target)) {
+                result.push(target);
             }
         }
         return result;
@@ -83,7 +88,9 @@ Jam.ArrayHelper = class ArrayHelper {
     static mapValueByKey (key, items, value) {
         const values = [];
         for (const item of items) {
-            values.push({[item[key]]: value !== undefined ? item[value] : item});
+            values.push({
+                [item[key]]: value !== undefined ? item[value] : item
+            });
         }
         return values;
     }
@@ -97,25 +104,36 @@ Jam.ArrayHelper = class ArrayHelper {
         return true;
     }
 
-    static removeObjectsByKeyValues (key, values, items) {
+    static removeObjectsByKeyValue (key, value, items) {
+        const removedObjects = [];
         for (let i = items.length - 1; i >= 0; --i) {
-            if (values.includes(items[i][key])) {
-                items.splice(i, 1);
+            if (items[i][key] === value) {
+                removedObjects.push(...items.splice(i, 1));
             }
         }
+        return removedObjects;
+    }
+
+    static removeObjectsByKeyValues (key, values, items) {
+        const removedObjects = [];
+        for (let i = items.length - 1; i >= 0; --i) {
+            if (values.includes(items[i][key])) {
+                removedObjects.push(...items.splice(i, 1));
+            }
+        }
+        return removedObjects;
     }
 
     static replaceObjectByTarget (target, key, items) {
         for (let i = 0; i < items.length; ++i) {
             if (items[i][key] === target[key]) {
-                items.splice(i, 1, target);
-                return;
+                return items.splice(i, 1, target)[0];
             }
         }
     }
 
     static random (items) {
-        return items.length ? items[Math.floor(Math.random() * items.length)] : null;
+        return items[Math.floor(Math.random() * items.length)];
     }
 
     static shuffle (items) {
@@ -157,5 +175,9 @@ Jam.ArrayHelper = class ArrayHelper {
             }
         }
         return -1;
+    }
+
+    static sortByLength (lists, direction = 1) {
+        return lists.sort(({length: a}, {length: b}) => (a - b) * direction);
     }
 };

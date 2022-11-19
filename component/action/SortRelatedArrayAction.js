@@ -22,7 +22,8 @@ module.exports = class SortRelatedArrayAction extends Base {
             this.setRelationWith(rel);
             return this.renderOrder();
         }
-        await this.updateOrder(this.getPostParam('order'), rel);
+        const {order} = this.getPostParams();
+        await this.updateOrder(order, rel);
         await this.send('Done');
     }
 

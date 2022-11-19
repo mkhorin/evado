@@ -13,7 +13,8 @@ module.exports = class MetaNavInspector extends Base {
 
     static intersectData (d1, d2) {
         const result = {};
-        for (const key of ArrayHelper.intersect(Object.keys(d1), Object.keys(d2))) {
+        const keys = ArrayHelper.intersect(Object.keys(d1), Object.keys(d2));
+        for (const key of keys) {
             result[key] = d1[key].concat(d2[key]);
         }
         return result;
@@ -54,7 +55,7 @@ module.exports = class MetaNavInspector extends Base {
     async checkParents (parents, data, forbiddenAccess) {
         for (let i = parents.length - 1; i >= 0; --i) { // start from the root
             let id = parents[i].id;
-            if (!forbiddenAccess.hasOwnProperty(id)) {
+            if (!Object.prototype.hasOwnProperty.call(forbiddenAccess, id)) {
                 forbiddenAccess[id] = data[id]
                     ? await this.checkItems(data[id])
                     : false;

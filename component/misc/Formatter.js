@@ -22,9 +22,11 @@ module.exports = class Formatter extends Base {
     }
 
     asDisplayFormat (value, params) {
-        return value !== null && value !== undefined
-            ? `<span data-display-format="${EscapeHelper.escapeHtml(JSON.stringify(params))}">${value}</span>`
-            : this.nullFormat;
+        if (value === null && value === undefined) {
+            return this.nullFormat;
+        }
+        const format = EscapeHelper.escapeHtml(JSON.stringify(params));
+        return `<span data-display-format="${format}">${value}</span>`;
     }
 
     asDownload (value, params) {
@@ -59,9 +61,11 @@ module.exports = class Formatter extends Base {
     }
 
     asTimeFromInteger (value, params) {
-        return Number.isSafeInteger(value)
-            ? this.asTime(moment().startOf('day').add(moment.duration({s: value})), params)
-            : value;
+        if (!Number.isSafeInteger(value)) {
+            return value;
+        }
+        value = moment().startOf('day').add(moment.duration({s: value}));
+        return this.asTime(value, params);
     }
 
     asTranslatable (value, params) {

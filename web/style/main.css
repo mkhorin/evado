@@ -134,7 +134,7 @@ ul:last-child {
     cursor: not-allowed;
     pointer-events: none;
 }
-.btn-white:not(:hover):not(:active) {
+.btn-white:not(:hover):not(:active):not(:focus) {
     background: #fff;
 }
 .bootstrap-datetimepicker-widget a {
@@ -175,7 +175,14 @@ ul:last-child {
 }
 .separator,
 .value-item + .value-item {
-    margin-top: .35rem;
+    margin-top: .5rem;
+}
+.value-item-inline {
+    display: inline-block;
+    margin-right: 1rem;
+}
+.value-item-inline:last-child {
+    margin-right: 0;
 }
 .scroll-body {
     overflow-y: auto;
@@ -297,7 +304,7 @@ ul:last-child {
 .global-loader {
     display: none;
     position: fixed;
-    z-index: 3049;
+    z-index: 4049;
 }
 .loading > .overlay,
 .loading > .main-wrapper > .overlay {
@@ -316,6 +323,7 @@ body.loading {
     left: 0;
     width: 100%;
     height: 100%;
+    overflow: auto;
     background: rgba(0, 0, 0, .3);
     z-index: 3002;
 }
@@ -338,7 +346,7 @@ body.loading {
 .dialog-body {
     max-height: 30rem;
     overflow: auto;
-    padding: 0 1rem 1.5rem;
+    padding: .5rem 1rem 1.5rem;
 }
 .dialog-foot {
     text-align: center;
@@ -525,6 +533,9 @@ body.loading {
 }
 .nav-group:not(.btn-group) .btn + .btn {
     margin-left: var(--btn-space);
+}
+.nav-group .btn-group .btn:not(:first-child) {
+    margin-left: -1px;
 }
 .btn + .nav-group,
 .nav-group + .btn,
@@ -753,14 +764,8 @@ body.loading {
     margin-bottom: 1rem;
 }
 .form-control,
-.form-control-plaintext,
-.form-check-label {
+.form-control-plaintext {
     color: var(--body-color);
-    -moz-osx-font-smoothing: auto;
-    -webkit-font-smoothing: antialiased;
-}
-.form-check-label {
-    display: inline;
 }
 .form-control:disabled,
 .form-control[readonly] {
@@ -828,8 +833,14 @@ select.form-select {
 .form .tabs .nav {
     margin-bottom: 2rem;
 }
+.form .tabs .nav .nav-link.active {
+    color: var(--body-color);
+}
 .form-check {
-    margin-top: .25rem;
+    margin-top: .125rem;
+}
+.form-check + .form-check {
+    margin-top: .6rem;
 }
 .form-check-list {
     padding-top: .45rem;
@@ -837,10 +848,26 @@ select.form-select {
 .form-check-list-inline {
     padding-top: .22rem;
 }
+.form-check-list-inline .form-check {
+    margin-top: .25rem;
+}
+.form-check-label {
+    color: var(--body-color);
+}
+.form-check-label-wrapper {
+    display: inline-block;
+}
+.form-check-label-wrapper .form-check-label {
+    display: inline;
+}
+.form-check-label-wrapper .action-icon {
+    margin-left: .5rem;
+}
 .form-check-input:disabled~.form-check-label,
 .form-check-input[disabled]~.form-check-label {
     cursor: not-allowed;
 }
+
 .form-group .loading .commands {
     display: none;
 }
@@ -939,6 +966,7 @@ select.form-select {
     margin: 1rem 0 2rem 0;
     background: none;
     border-bottom: 1px dashed #666;
+    border-top: none;
 }
 .form .relation-select .select2-selection--multiple .select2-selection__clear,
 .form .relation-select .select2-selection--multiple .select2-selection__choice__remove {
@@ -1387,7 +1415,7 @@ form.was-validated select:valid ~ .select2-container .select2-selection {
     background: #fffff2;
 }
 .select2-container--open {
-    z-index: 2001;
+    z-index: 4001;
 }
 .select2-results .load-more {
     padding: .5rem 1rem .5rem 1rem;

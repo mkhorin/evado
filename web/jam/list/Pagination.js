@@ -31,7 +31,12 @@ Jam.Pagination = class Pagination {
     }
 
     isHidden () {
-        return !this.pageSize || (this.params.hideOnePagePagination && this.pageSize >= this.getTotalSize());
+        if (!this.pageSize) {
+            return true;
+        }
+        return this.params.hideOnePageToggle
+            && this.page === 0
+            && this.pageSize >= this.getTotalSize();
     }
 
     isNewPage (page) {
@@ -52,11 +57,14 @@ Jam.Pagination = class Pagination {
 
     getDataInterval (totalSize) {
         let start = 0, end = totalSize;
-        if (this.pageSize && this.pageSize < totalSize) {
+        if (this.pageSize && this.pageSize <= totalSize) {
             start = this.page * this.pageSize;
             end = start + this.pageSize;
         }
-        return [start, end > totalSize ? totalSize : end];
+        if (end > totalSize) {
+            end = totalSize;
+        }
+        return [start, end];
     }
 
     setPage (page) {
@@ -68,7 +76,9 @@ Jam.Pagination = class Pagination {
     }
 
     onPage (event) {
-        if (this.setPage($(event.currentTarget).blur().data('page'))) {
+        const $page = $(event.currentTarget).blur();
+        const index = $page.data('page');
+        if (this.setPage(index)) {
             this.list.load();
         }
     }
@@ -92,7 +102,8 @@ Jam.Pagination = class Pagination {
 
     update () {
         if (this.$pager.length) {
-            this.$pagination.html(this.isHidden() ? '' : this.render());
+            const content = this.isHidden() ? '' : this.render();
+            this.$pagination.html(content);
             const $toggle = this.$pagination.find('[data-page]');
             this.list.toggleClass('has-page-toggle', $toggle.length > 0);
             this.updateJumper();
@@ -102,7 +113,7 @@ Jam.Pagination = class Pagination {
     render () {
         let buttons = '';
         let total = this.getNumPages();
-        if (total > 1 || !this.params.hideOnePageToggle) {
+        if (total > 1 || this.page > 0) {
             if (this.page > 0) {
                 buttons += this.renderDirectionButton('previous', this.page - 1);
             }
@@ -225,8 +236,8 @@ Jam.Pagination = class Pagination {
             if (this.params.keepPageSize) {
                 this.pageSize = this.list.getStorageData('pageSize', this.pageSize);
             }
-            const sizes = this.params.pageSizes.map(this.renderPageSize, this).join('');
-            this.$pageSizeSelect.html(sizes).val(this.pageSize);
+            const sizes = this.params.pageSizes.map(this.renderPageSize, this);
+            this.$pageSizeSelect.html(sizes.join('')).val(this.pageSize);
             this.$pageSize.removeClass('hidden');
         }
     }

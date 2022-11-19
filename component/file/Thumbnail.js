@@ -36,7 +36,9 @@ module.exports = class Thumbnail extends Base {
     }
 
     getSize (key) {
-        return Object.prototype.hasOwnProperty.call(this.sizes, key) ? this.sizes[key] : null;
+        return Object.prototype.hasOwnProperty.call(this.sizes, key)
+            ? this.sizes[key]
+            : null;
     }
 
     getSizePath (key, filename) {

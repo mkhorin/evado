@@ -19,7 +19,7 @@ Jam.DataGridTuner = class DataGridTuner {
     }
 
     createMenu () {
-        this.grouping = this.columns.filter(({grouping}) => grouping).length > 0;
+        this.grouping = !!this.columns.find(({grouping}) => grouping);
         this.$menu = this.renderMenu();
         this.$menu.on('change', 'input.show', this.onShowItem.bind(this));
         this.$menu.on('change', 'input.group', this.onGroupItem.bind(this));

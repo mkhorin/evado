@@ -25,6 +25,11 @@ Jam.Alert = class Alert {
         this.hide();
     }
 
+    hasElement (element) {
+        return this.$element.is(element)
+            || this.$element.find(element).length > 0;
+    }
+
     success (message) {
         this.show('success', message);
     }

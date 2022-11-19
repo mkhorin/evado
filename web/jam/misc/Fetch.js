@@ -45,7 +45,9 @@ Jam.Fetch = class Fetch {
     getOptions (data, options) {
         return {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(data),
             signal: this.controller.signal,
             ...options

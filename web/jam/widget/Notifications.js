@@ -63,9 +63,9 @@ Jam.Notifications = class Notifications extends Jam.Element {
     }
 
     requestNotification (message) {
-        Jam.toggleLoader(true);
+        Jam.showLoader();
         return $.get(this._url, {message}).always(() => {
-            Jam.toggleLoader(false);
+            Jam.hideLoader();
         }).done(data => {
             this.onRefreshDone(data);
             this.showNotification(data);

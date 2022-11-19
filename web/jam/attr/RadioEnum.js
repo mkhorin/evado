@@ -7,7 +7,7 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
         super.init();
         this.sets = Jam.EnumSet.createSets(this.getData('sets'), this);
         this.$list = this.find('.form-check-list');
-        this.$list.on('change', '[type="radio"]', this.changeValue.bind(this));
+        this.$list.on('change', '[type="radio"]', this.onChangeSelection.bind(this));
         this.model.events.on('change', this.onUpdate.bind(this));
         setTimeout(this.onUpdate.bind(this), 0);
     }
@@ -31,7 +31,7 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
         this.getRadioItem(value).prop('checked', true);
     }
 
-    changeValue (event) {
+    onChangeSelection (event) {
         const radio = event.currentTarget;
         if (radio.checked) {
             this.getRadioItems().not(radio).prop('checked', false);
@@ -41,9 +41,9 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
 
     onUpdate () {
         if (this.updateItems()) {
-            const value = this.getValue();
             this.$list.html(this.build());
             Jam.Helper.bindLabelsToInputs(this.$list);
+            const value = this.getValue();
             this.getRadioItem(value).length
                 ? this.setValue(value)
                 : this.$value.val('').change();
@@ -52,7 +52,9 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
 
     updateItems () {
         const items = Jam.EnumSet.filterItems(this.sets);
-        this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
+        if (!Jam.ArrayHelper.equals(items, this.items)) {
+            this.items = items;
+        }
         return this.items === items;
     }
 

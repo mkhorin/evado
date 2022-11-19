@@ -49,14 +49,16 @@ module.exports = class HierarchySolver extends Base {
     }
 
     async getDescendantIds (parentIds) {
-        const children = await this.model.find({[this.parentAttr]: parentIds}).column(this.model.PK);
+        const query =  this.model.find({[this.parentAttr]: parentIds});
+        const children = await query.column(this.model.PK);
         if (children.length === 0) {
             return children;
         }
         if (ArrayHelper.includes(this.model.getId(), children)) {
             throw new Error(this.constructor.getCircularError(this.model));
         }
-        return children.concat(await this.getDescendantIds(children));
+        const descendants = await this.getDescendantIds(children);
+        return children.concat(descendants);
     }
 
     /**

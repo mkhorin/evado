@@ -6,10 +6,11 @@ Jam.Helper = class Helper {
     static bindLabelsToInputs ($container) {
         let index = 0;
         let base = this.random(1, Number.MAX_SAFE_INTEGER);
-        let $inputs = $container.find('.form-check-input').add($container.find('.btn-check'));
+        let $check = $container.find('.btn-check');
+        let $inputs = $container.find('.form-check-input').add($check);
         for (const input of $inputs) {
             input.id = input.id || base + index++;
-            input.nextElementSibling.setAttribute('for', input.id);
+            $(input).next().find('label').addBack().filter('label').attr('for', input.id);
         }
     }
 
@@ -44,8 +45,10 @@ Jam.Helper = class Helper {
     }
 
     static fixMultipleBootstrapModals () {
-        const $body = $(document.body).on('hidden.bs.modal', '.modal', () => {
-            $body.toggleClass('modal-open', $body.children('.modal-backdrop').length > 0);
+        const $body = $(document.body);
+        $body.on('hidden.bs.modal', '.modal', () => {
+            const $backdrops = $body.children('.modal-backdrop');
+            $body.toggleClass('modal-open', $backdrops.length > 0);
         });
     }
 
@@ -63,15 +66,18 @@ Jam.Helper = class Helper {
     }
 
     static findAndResolveTemplate (id, $container, data) {
-        return this.resolveTemplate(this.getTemplate(id, $container), data);
+        const content = this.getTemplate(id, $container);
+        return this.resolveTemplate(content, data);
     }
 
     static getTemplate (id, $container) {
         return $container.find('template').filter(`[data-id="${id}"]`).html();
     }
 
-    static resolveTemplate (text, data = {}) {
-        return text.replace(/{{(\w+)}}/gm, (match, key) => data.hasOwnProperty(key) ? data[key] : '');
+    static resolveTemplate (content, data = {}) {
+        return content.replace(/{{(\w+)}}/gm, (match, key) => {
+            return Object.prototype.hasOwnProperty.call(data, key) ? data[key] : '';
+        });
     }
 
     static resetFormElement ($element) {
@@ -85,7 +91,7 @@ Jam.Helper = class Helper {
         }
         items = items.split(',');
         items.push(value);
-        return items.join(',');
+        return items.join();
     }
 
     static removeCommaValue (value, items) {
@@ -101,11 +107,15 @@ Jam.Helper = class Helper {
     }
 
     static sortChildrenByInteger ($container, key = 'index') {
-        $container.children().sort((a, b) => {
-            return a.dataset.hasOwnProperty(key) && b.dataset.hasOwnProperty(key)
-                ? parseInt(a.dataset[key]) - parseInt(b.dataset[key])
-                : 0;
-        }).appendTo($container);
+        const compare = (a, b) => {
+            if (Object.prototype.hasOwnProperty.call(a.dataset, key)) {
+                if (Object.prototype.hasOwnProperty.call(b.dataset, key)) {
+                    return parseInt(a.dataset[key]) - parseInt(b.dataset[key]);
+                }
+            }
+            return 0;
+        };
+        $container.children().sort(compare).appendTo($container);
     }
 
     static validateWithBrowser (form) {
@@ -115,10 +125,11 @@ Jam.Helper = class Helper {
     static handlePreloadLinks ($container = $(document.body)) {
         $container.on('click', 'a[data-preload="true"]', event => {
             event.preventDefault();
-            event.target.removeAttribute('data-preload');
-            $.get(event.target.href).done(url => {
-                event.target.href = url;
-                event.target.click();
+            const {target} = event;
+            target.removeAttribute('data-preload');
+            $.get(target.href).done(url => {
+                target.href = url;
+                target.click();
             });
         });
     }

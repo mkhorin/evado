@@ -47,7 +47,8 @@ Jam.ModelGroup = class ModelGroup {
 
     isEmpty () {
         const $children = this.$content.children();
-        return $children.filter('.hidden, .empty-group').length === $children.length;
+        const $hidden = $children.filter('.hidden, .empty-group');
+        return $hidden.length === $children.length;
     }
 
     load () {

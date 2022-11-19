@@ -9,7 +9,8 @@ module.exports = class CommonMenu extends Base {
 
     execute () {
         const items = this.items || this.getDefaultItems();
-        const active = this.getActiveItem(items, this.controller.getQueryParam('url'));
+        const {url} = this.controller.getQueryParams();
+        const active = this.getActiveItem(items, url);
         return this.renderTemplate('_widget/commonMenu', {items, active});
     }
 

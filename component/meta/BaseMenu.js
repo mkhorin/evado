@@ -64,12 +64,13 @@ module.exports = class BaseMenu extends Base {
     async renderItems (items, section) {
         const forbiddenAccess = await this.resolveAccess({items, section}, {withParents: true});
         const dynamicItems = await this.getDynamicItems(items, section);
-        return this.renderTemplate('_part/nav/sideMenuItems', this.view.getRenderParams({
+        const params = this.view.getRenderParams({
             activeItem: null,
             openedItems: [],
             forbiddenAccess,
             dynamicItems,
             items
-        }));
+        });
+        return this.renderTemplate('_part/nav/sideMenuItems', params);
     }
 };

@@ -43,9 +43,10 @@ Jam.ListFilterGroup = class ListFilterGroup {
     }
 
     serialize () {
-        let result = this.conditions.map(condition => condition.serialize());
-        result = result.filter(value => value);
-        return result.length ? result : undefined;
+        const items = this.conditions.map(item => item.serialize()).filter(v => v);
+        if (items.length) {
+            return items;
+        }
     }
 
     afterDeleteCondition (condition) {

@@ -141,24 +141,33 @@ module.exports = class DatabaseStore extends Base {
         const state = data.state || empty;
         const object = data.object || empty;
         switch (data.type) {
-            case this.rbac.ALL:
+            case this.rbac.ALL: {
                 return empty;
-            case this.rbac.TARGET_CLASS:
+            }
+            case this.rbac.TARGET_CLASS: {
                 return cls;
-            case this.rbac.TARGET_VIEW:
+            }
+            case this.rbac.TARGET_VIEW: {
                 return view;
-            case this.rbac.TARGET_STATE:
+            }
+            case this.rbac.TARGET_STATE: {
                 return view ? `${state}.${view}` : empty;
-            case this.rbac.TARGET_OBJECT:
+            }
+            case this.rbac.TARGET_OBJECT: {
                 return view ? `${object}.${state}.${view}` : empty;
-            case this.rbac.TARGET_TRANSITION:
+            }
+            case this.rbac.TARGET_TRANSITION: {
                 return cls ? `${data.transition || empty}.${object}.${cls}` : empty;
-            case this.rbac.TARGET_ATTR:
+            }
+            case this.rbac.TARGET_ATTR: {
                 return `${data.attr}.${object}.${state}.${view}`;
-            case this.rbac.TARGET_SECTION:
+            }
+            case this.rbac.TARGET_SECTION: {
                 return data.section || empty;
-            case this.rbac.TARGET_NODE:
+            }
+            case this.rbac.TARGET_NODE: {
                 return data.section ? `${data.node || empty}.${data.section}` : empty;
+            }
         }
     }
 
@@ -173,7 +182,8 @@ module.exports = class DatabaseStore extends Base {
     }
 
     async createAssignmentRule (name, data) {
-        return await this.findAssignmentRuleByName(name).one()
+        const rule = await this.findAssignmentRuleByName(name).one();
+        return rule
             ? this.log('warn', `Assignment rule already exists: ${name}`)
             : this.findAssignmentRule().insert({name, ...data});
     }

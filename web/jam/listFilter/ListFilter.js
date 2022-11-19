@@ -14,7 +14,8 @@ Jam.ListFilter = class ListFilter {
     }
 
     init () {
-        this.params = Object.assign(this.params, this.$container.data('params'));
+        const params = this.$container.data('params');
+        this.params = Object.assign(this.params, params);
         this.events = new Jam.Events('ListFilter');
     }
 
@@ -68,7 +69,7 @@ Jam.ListFilter = class ListFilter {
     getNestedTypeColumn () {
         return {
             type: 'nested',
-            label: 'Nested condition',
+            label: '[Nested condition]',
             name: '$nested',
             columns: [...this.params.columns]
         };

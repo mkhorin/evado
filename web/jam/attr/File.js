@@ -41,7 +41,7 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         return this.model.getAttr(this.getData('nameAttr'));
     }
 
-    inProgress () {
+    isRunning () {
         return this.uploader.isProcessing() ? 'Abort upload?' : false;
     }
 
@@ -71,16 +71,16 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         }
     }
 
-    onValidateFile (event, item) {
-        if (item.image) {
-            item.$item.addClass('with-thumbnail');
-            item.$item.find('.uploader-thumbnail').css('background-image', `url(${item.image.src})`);
+    onValidateFile (event, {$item, image}) {
+        if (image) {
+            $item.addClass('with-thumbnail');
+            $item.find('.uploader-thumbnail').css('background-image', `url(${image.src})`);
         }
     }
 
-    onStartFile (event, item) {
-        item.$item.removeClass('pending').addClass('processing');
-        item.$item.find(this.fileMessageSelector).text('Uploading...');
+    onStartFile (event, {$item}) {
+        $item.removeClass('pending').addClass('processing');
+        $item.find(this.fileMessageSelector).text('Uploading...');
     }
 
     onProgressFile (event, item) {
@@ -99,10 +99,11 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         this.$value.val(value).change();
     }
 
-    onErrorFile (event, item) {
-        const message = Jam.Helper.parseJson(item.error);
-        item.$item.removeClass('pending processing').addClass('failed');
-        item.$item.find(this.fileMessageSelector).text(message?.file || Jam.t(item.error));
+    onErrorFile (event, {$item, error}) {
+        $item.removeClass('pending processing').addClass('failed');
+        const data = Jam.Helper.parseJson(error);
+        const message = data?.file || Jam.t(error);
+        $item.find(this.fileMessageSelector).text(message);
     }
 
     onConfirmFileDeletion (event, item) {
@@ -121,19 +122,19 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         }
     }
 
-    onSaveFile (event, item) {
-        item.$item.removeClass('pending').addClass('saved');
-        let name = item.file.name;
+    onSaveFile (event, {$item, file}) {
+        $item.removeClass('pending').addClass('saved');
+        let name = file.name;
         let download = this.uploader.options.download;
         if (download) {
-            name = `<a href="${download}${item.file.id}" target="_blank">${item.file.name}</a>`;
+            name = `<a href="${download}${file.id}" target="_blank">${file.name}</a>`;
         }
-        item.$item.find('.uploader-filename').html(`${name} (${item.file.size})`);
-        item.$item.find(this.fileMessageSelector).html(item.file.message);
+        $item.find('.uploader-filename').html(`${name} (${file.size})`);
+        $item.find(this.fileMessageSelector).html(file.message);
         const thumbnail = this.uploader.options.thumbnail;
-        if (item.file.isImage && thumbnail) {
-            item.$item.addClass('with-thumbnail');
-            item.$item.find('.uploader-thumbnail').css('background-image', `url(${thumbnail}${item.file.id})`);
+        if (file.isImage && thumbnail) {
+            $item.addClass('with-thumbnail');
+            $item.find('.uploader-thumbnail').css('background-image', `url(${thumbnail}${file.id})`);
         }
     }
 };

@@ -35,7 +35,8 @@ module.exports = class Item extends Base {
         if (Array.isArray(this.assignmentRules)) {
             for (const config of this.assignmentRules) {
                 try {
-                    if (await this.createAssignmentRule(config).execute(this, userId)) {
+                    const rule = this.createAssignmentRule(config);
+                    if (await rule.execute(this, userId)) {
                         return true; // can assign item to user
                     }
                 } catch (err) {
@@ -50,7 +51,8 @@ module.exports = class Item extends Base {
         if (Array.isArray(this.assignmentRules)) {
             for (const config of this.assignmentRules) {
                 try {
-                    users.push(...await this.createAssignmentRule(config).getUsers(this));
+                    const rule = this.createAssignmentRule(config);
+                    users.push(...await rule.getUsers(this));
                 } catch (err) {
                     this.rbac.log('error', `Item: ${this.name}: ${config.name}`, err);
                 }
@@ -82,7 +84,8 @@ module.exports = class Item extends Base {
         if (!rules.length) {
             return rules;
         }
-        const result = await this.store.findAssignmentRuleByName(rules).column(this.store.key);
+        const query = this.store.findAssignmentRuleByName(rules);
+        const result = await query.column(this.store.key);
         if (result.length !== rules.length) {
             throw new Error(`Assignment rule not found for item: ${this.name}`);
         }
@@ -173,7 +176,8 @@ module.exports = class Item extends Base {
     }
 
     isItemTarget (target, item) {
-        return item.targetType === target.type && item.key === this.store.getItemKey(target);
+        return item.targetType === target.type
+            && item.key === this.store.getItemKey(target);
     }
 
     // VALIDATION
@@ -218,7 +222,8 @@ module.exports = class Item extends Base {
         if (!names.length) {
             return names;
         }
-        const roleMap = await this.store.findRoleItem().and({name: names}).index('name').all();
+        const query = this.store.findRoleItem().and({name: names});
+        const roleMap = await query.index('name').all();
         const result = [];
         for (const name of names) {
             if (!roleMap.hasOwnProperty(name)) {
@@ -318,8 +323,12 @@ module.exports = class Item extends Base {
     }
 
     validateMetadataAttr (data) {
-        if (data.view ? this.validateMetadataView(data) : this.validateMetadataClass(data)) {
-            if (!(this._target.view || this._target.class).getAttr(data.attr)) {
+        const valid = data.view
+            ? this.validateMetadataView(data)
+            : this.validateMetadataClass(data);
+        if (valid) {
+            const target = this._target.view || this._target.class;
+            if (!target.getAttr(data.attr)) {
                 this._targetError = `Invalid attribute: ${data.attr}`;
             }
         }

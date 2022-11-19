@@ -95,7 +95,9 @@ Jam.ListDataFormatter = class ListDataFormatter {
     }
 
     asDefault () {
-        return this.join((value, params) => this.escape(this.translate(value, params), params), ...arguments);
+        return this.join((value, params) => {
+            return this.escape(this.translate(value, params), params);
+        }, ...arguments);
     }
 
     asBoolean () {
@@ -108,18 +110,22 @@ Jam.ListDataFormatter = class ListDataFormatter {
 
     asDate () {
         return this.join((value, {dateFormat, utc}) => {
-            return Jam.FormatHelper.asDate(Jam.DateHelper.formatByUtc(value, utc), dateFormat);
+            const date = Jam.DateHelper.formatByUtc(value, utc);
+            return Jam.FormatHelper.asDate(date, dateFormat);
         }, ...arguments);
     }
 
     asDatetime () {
         return this.join((value, {dateFormat, utc}) => {
-            return Jam.FormatHelper.asDatetime(Jam.DateHelper.formatByUtc(value, utc), dateFormat);
+            const date = Jam.DateHelper.formatByUtc(value, utc);
+            return Jam.FormatHelper.asDatetime(date, dateFormat);
         }, ...arguments);
     }
 
     asJson (data, params) {
-        return this.escape(JSON.stringify(data, null, 1), params);
+        return data !== '' && data !== null && data !== undefined
+            ? this.escape(JSON.stringify(data, null, 1), params)
+            : '';
     }
 
     asEmbeddedModel (data, params) {
@@ -131,12 +137,15 @@ Jam.ListDataFormatter = class ListDataFormatter {
     }
 
     asTime () {
-        return this.join((value, {dateFormat}) => Jam.FormatHelper.asTime(data, dateFormat), ...arguments);
+        return this.join((value, {dateFormat}) => {
+            return Jam.FormatHelper.asTime(value, dateFormat);
+        }, ...arguments);
     }
 
     asTimestamp () {
-        return this.join((data, {dateFormat, utc}) => {
-            return Jam.FormatHelper.asTimestamp(Jam.DateHelper.formatByUtc(data, utc), dateFormat);
+        return this.join((value, {dateFormat, utc}) => {
+            const date = Jam.DateHelper.formatByUtc(value, utc);
+            return Jam.FormatHelper.asTimestamp(date, dateFormat);
         }, ...arguments);
     }
 
@@ -184,7 +193,9 @@ Jam.ListDataFormatter = class ListDataFormatter {
         }
         const thumbnail = Jam.FormatHelper.asThumbnail(value);
         const url = value.url || format.url;
-        return url ? this.renderLink(url, thumbnail, value, format) : thumbnail;
+        return url
+            ? this.renderLink(url, thumbnail, value, format)
+            : thumbnail;
     }
 
     parseLink (value, params) {
@@ -196,15 +207,21 @@ Jam.ListDataFormatter = class ListDataFormatter {
         if (!url || text === null || text === undefined) {
             return this.render(this.asDefault, text, params);
         }
-        text = this.escape(this.translate(text, params), params);
+        text = this.translate(text, params);
+        text = this.escape(text, params);
         return this.renderLink(url, text, value, params.format);
     }
 
     renderLink (url, content, data, format) {
-        const params = data.id || data.params
+        let params = data.id || data.params
             ? {id: data.id, ...data.params}
             : {id: content};
-        url += (url.includes('?') ? '&' : '?') + $.param({...format.params, ...params});
+        params = $.param({
+            ...format.params,
+            ...params
+        });
+        let separator = url.includes('?') ? '&' : '?';
+        url += separator + params;
         return `<a href="${url}" class="frame-link">${content}</a>`;
     }
 };

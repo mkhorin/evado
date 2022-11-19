@@ -8,6 +8,10 @@ Jam.Utility = class Utility {
         this.manager = manager;
         this.params = params;
         this.frame = Jam.frameStack.getFrame(manager.$container);
+        this.init();
+    }
+
+    init () {
         this.$item.click(this.onItem.bind(this));
     }
 

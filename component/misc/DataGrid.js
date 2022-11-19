@@ -29,7 +29,10 @@ module.exports = class DataGrid extends Base {
             ...config
         });
         if (this.params?.request) {
-            this.request = {...this.request, ...this.params.request};
+            this.request = {
+                ...this.request,
+                ...this.params.request
+            };
         }
         this.params = this.params || {};
     }
@@ -78,7 +81,7 @@ module.exports = class DataGrid extends Base {
             throw new BadRequest('Invalid limit');
         }
         if (limit > this.getMaxLimit()) {
-            throw new BadRequest('Length exceeds limit');
+            throw new BadRequest('Length exceeds max limit');
         }
         this.query.limit(limit);
     }
@@ -141,7 +144,8 @@ module.exports = class DataGrid extends Base {
 
     prepareViewModels () {
         const params = this.params;
-        return this.controller.createViewModel(params.viewModel, {params})?.prepareModels(this._models);
+        const view = this.controller.createViewModel(params.viewModel, {params});
+        return view?.prepareModels(this._models);
     }
 
     render () {
@@ -163,12 +167,15 @@ module.exports = class DataGrid extends Base {
             return model.getViewAttr(name);
         }
         switch (format.name || format) {
-            case 'label':
+            case 'label': {
                 return model.getAttrValueLabel(name);
-            case 'raw':
+            }
+            case 'raw': {
                 return model.get(name);
-            case 'relation':
+            }
+            case 'relation': {
                 return this.renderModelRelation(name, model);
+            }
         }
         return model.getViewAttr(name);
     }

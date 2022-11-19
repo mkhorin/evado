@@ -87,7 +87,9 @@ Jam.ModelGrouping = class ModelGrouping {
     }
 
     setMaxDepth (depth) {
-        this.maxDepth = this.maxDepth < depth ? depth : this.maxDepth;
+        if (this.maxDepth < depth) {
+            this.maxDepth = depth;
+        }
     }
 
     /**
@@ -108,8 +110,8 @@ Jam.ModelGrouping = class ModelGrouping {
         this.model.$form.on('click', '.tabs > .nav .nav-link', this.onTab.bind(this));
     }
 
-    onSet (event) {
-        $(event.currentTarget).closest('.form-set').data('group')?.toggleActive();
+    onSet ({currentTarget}) {
+        $(currentTarget).closest('.form-set').data('group')?.toggleActive();
         this.saveStates();
     }
 

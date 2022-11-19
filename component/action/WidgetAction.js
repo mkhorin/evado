@@ -9,12 +9,15 @@ module.exports = class WidgetAction extends Base {
 
     async execute () {
         const view = this.controller.createView();
-        const widget = view.createWidget(this.getQueryParam('id'));
+        const {id} = this.getQueryParams();
+        const widget = view.createWidget(id);
         if (!widget) {
             throw new BadRequest('Widget not found');
         }
         widget.widgetAction = this;
-        this.send(await widget.resolveContent(view.getRenderParams()));
+        const params = view.getRenderParams();
+        const content = await widget.resolveContent(params);
+        this.send(content);
     }
 };
 

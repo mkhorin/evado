@@ -19,7 +19,9 @@ Jam.TimeModelAttr = class TimeModelAttr extends Jam.DateModelAttr {
     onChangeDate (event) {
         const date = event.date;
         const format = 'HH:mm:ss';
-        const value = date ? moment.duration(moment(date).format(format), format).asSeconds() : '';
+        const value = date
+            ? moment.duration(moment(date).format(format), format).asSeconds()
+            : '';
         this.$value.val(value);
         this.triggerChange();
     }
@@ -30,6 +32,10 @@ Jam.TimeModelAttr = class TimeModelAttr extends Jam.DateModelAttr {
 
     getDateByTime (seconds) {
         seconds = parseInt(seconds);
-        return isNaN(seconds) ? null : moment().startOf('day').add(moment.duration({s: seconds})).toDate();
+        if (isNaN(seconds)) {
+            return null;
+        }
+        const duration = moment.duration({s: seconds});
+        return moment().startOf('day').add(duration).toDate();
     }
 };

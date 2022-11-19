@@ -4,7 +4,8 @@
 Jam.CardGridRenderer = class CardGridRenderer extends Jam.DataGridRenderer {
 
     renderContainer () {
-        return `<div class="data-grid-cards"><div class="data-grid-body"></div><div class="data-grid-placeholder">${Jam.t('[no data]')}</div></div>`;
+        return `<div class="data-grid-cards"><div class="data-grid-body"></div>`
+          + `<div class="data-grid-placeholder">${Jam.t('[no data]')}</div></div>`;
     }
 
     renderBodyItemHtml (id, content) {
@@ -13,14 +14,20 @@ Jam.CardGridRenderer = class CardGridRenderer extends Jam.DataGridRenderer {
     }
 
     renderBodyCell (data, column) {
-        return column.hideEmpty && !data[column.name] ? '' : super.renderBodyCell(...arguments);
+        if (column.hideEmpty && !data[column.name]) {
+            return '';
+        }
+        return super.renderBodyCell(...arguments);
     }
 
     renderBodyCellHtml (value, {name, label, hint, translate}) {
         const css = this.getBodyCellClass(...arguments);
         label = Jam.escape(Jam.t(label || name, translate));
         hint = hint ? `title="${Jam.escape(Jam.t(hint, translate))}"` : '';
-        return `<div class="card-row row ${css}" data-name="${name}"><label class="card-label col-xl-2 col-lg-3" ${hint}>${label}</label><div class="col-xl-10 col-lg-9"><div class="value">${value}</div></div></div>`;
+        return `<div class="card-row row ${css}" data-name="${name}">`
+            + `<label class="card-label col-xl-2 col-lg-3" ${hint}>${label}</label>`
+            + `<div class="col-xl-10 col-lg-9"><div class="value">${value}</div>`
+            + `</div></div>`;
     }
 
     renderHead () {

@@ -32,7 +32,9 @@ module.exports = class UserPassword extends Base {
 
     isExpired (duration) {
         const date = this.get('createdAt');
-        return date instanceof Date ? DateHelper.isExpired(date, duration) : true;
+        return date instanceof Date
+            ? DateHelper.isExpired(date, duration)
+            : true;
     }
 
     findByUser (id) {

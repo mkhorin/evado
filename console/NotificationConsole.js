@@ -30,9 +30,12 @@ module.exports = class NotificationConsole extends Base {
         const result = [];
         const model = this.spawn('model/UserFilter');
         for (const name of StringHelper.split(names)) {
-            const item = await model.find({name}).id();
-            item ? result.push(item)
-                 : this.log('error', `User filter not found: ${name}`);
+            const id = await model.find({name}).id();
+            if (id) {
+                result.push(id);
+            } else {
+                this.log('error', `User filter not found: ${name}`);
+            }
         }
         return result;
     }

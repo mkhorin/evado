@@ -6,7 +6,11 @@ Jam.RadioListModelAttr = class RadioListModelAttr extends Jam.ModelAttr {
     constructor () {
         super(...arguments);
         this.$radioItems = this.find('[type="radio"]');
-        this.$radioItems.change(this.onChangeValue.bind(this));
+        this.$radioItems.change(this.onChangeSelection.bind(this));
+        this.setValueToItems();
+    }
+
+    setValueToItems () {
         this.setValue(this.$value.val());
     }
 
@@ -17,14 +21,22 @@ Jam.RadioListModelAttr = class RadioListModelAttr extends Jam.ModelAttr {
 
     setValue (value) {
         this.$value.val(value);
-        this.$radioItems.prop('checked', false);
-        this.$radioItems.filter(`[value="${value}"]`).prop('checked', true);
+        this.setRadioItem(value);
     }
 
-    onChangeValue (event) {
-        if (event.target.checked) {
-            this.$radioItems.not(event.target).prop('checked', false);
-            this.$value.val($(event.target).val());
+    setRadioItem (value) {
+        if (value === undefined || value === null) {
+            value = '';
+        }
+        for (const radioItem of this.$radioItems) {
+            radioItem.checked = radioItem.value === value;
+        }
+    }
+
+    onChangeSelection ({target}) {
+        if (target.checked) {
+            this.$radioItems.not(target).prop('checked', false);
+            this.$value.val(target.value);
             this.triggerChange();
         }
     }

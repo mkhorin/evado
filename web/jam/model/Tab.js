@@ -11,7 +11,8 @@ Jam.ModelTab = class ModelTab extends Jam.ModelGroup {
     }
 
     isEmptyTabs () {
-        return this.$navs.filter('.hidden, .empty-group').length === this.$navs.length;
+        const $empty = this.$navs.filter('.hidden, .empty-group');
+        return $empty.length === this.$navs.length;
     }
 
     getNav () {

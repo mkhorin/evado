@@ -9,7 +9,7 @@ module.exports = class CaptchaAction extends Base {
 
     constructor (config) {
         super({
-            ...config.module.getParam('captcha'),
+            ...config.module.params.captcha,
             ...config
         });
     }

@@ -37,7 +37,10 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     static getAttrs ($container) {
-        return $container.find('.form-attr').map((index, element) => $(element).data('modelAttr')).get();
+        return $container
+            .find('.form-attr')
+            .map((index, element) => $(element).data('modelAttr'))
+            .get();
     }
 
     constructor ($attr, model) {
@@ -69,7 +72,7 @@ Jam.ModelAttr = class ModelAttr {
         Jam.FormatHelper.formatDisplayValue(this.getValue(), this.$attr);
     }
 
-    inProgress () {
+    isRunning () {
         return false;
     }
 
@@ -168,8 +171,12 @@ Jam.ModelAttr = class ModelAttr {
         this.setValue(this.initialValue);
     }
 
+    addChangeListener () {
+        this.$value.on('change', ...arguments);
+    }
+
     triggerChange () {
-        this.$value.change();
+        this.$value.trigger('change', ...arguments);
     }
 
     toggleBlank () {
@@ -181,7 +188,10 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     findByData (key, value) {
-        return this.find(value === undefined ? `[data-${key}="${value}"]` : `[data-${key}]`);
+        const selector = value === undefined
+            ? `[data-${key}="${value}"]`
+            : `[data-${key}]`;
+        return this.find(selector);
     }
 
     serialize () {
@@ -193,7 +203,8 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     bindDependencyChangeByName (name) {
-        this.model.getAttr(name)?.$value.change(this.onDependencyChange.bind(this));
+        const attr = this.model.getAttr(name);
+        attr?.addChangeListener(this.onDependencyChange.bind(this));
     }
 
     onDependencyChange () {

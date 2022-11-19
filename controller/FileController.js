@@ -28,10 +28,12 @@ module.exports = class FileController extends Base {
     async actionUpload () {
         const model = this.spawn('model/RawFile');
         if (!await model.validateUserLimit(this.user)) {
-            return this.sendText(this.translate(model.getFirstError()), Response.CONFLICT);
+            const message = this.translate(model.getFirstError());
+            return this.sendText(message, Response.CONFLICT);
         }
         if (!await model.upload(this.req, this.res)) {
-            return this.sendText(this.translate(model.getFirstError()), Response.BAD_REQUEST);
+            const message = this.translate(model.getFirstError());
+            return this.sendText(message, Response.BAD_REQUEST);
         }
         this.sendJson({
             id: model.getId(),
@@ -41,7 +43,8 @@ module.exports = class FileController extends Base {
     }
 
     async actionDelete () {
-        const model = await this.spawn('model/RawFile').findById(this.getPostParam('id')).one();
+        const {id} = this.getPostParams();
+        const model = await this.spawn('model/RawFile').findById(id).one();
         if (!model) {
             return this.sendStatus(Response.NOT_FOUND);
         }
@@ -66,7 +69,8 @@ module.exports = class FileController extends Base {
 
     async actionThumbnail () {
         const model = await this.getModel();
-        const file = await model.ensureThumbnail(this.getQueryParam('s'));
+        const {s: size} = this.getQueryParams();
+        const file = await model.ensureThumbnail(size);
         if (!file) {
             return this.sendStatus(Response.NOT_FOUND);
         }

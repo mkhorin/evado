@@ -53,7 +53,8 @@ module.exports = class ModelHelper {
                 column.items = this.getLabelSelectItems(column.name, model);
             }
             if (column.columns) {
-                this.resolveFilterColumns(column.columns, model.getRelation(column.name).model);
+                const relModel = model.getRelation(column.name).model;
+                this.resolveFilterColumns(column.columns, relModel);
             }
         }
     }

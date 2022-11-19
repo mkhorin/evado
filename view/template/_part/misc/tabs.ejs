@@ -8,7 +8,7 @@ const p = {
 <div class="<%- p.tabsCss %> tabs" data-jam="<%- p.jam %>">
     <div class="nav-tabs nav" role="tablist">
     <% for (const item of items) { %>
-    <a href="#" class="nav-link nav-item <%- item.active ? 'active' : '' %>"
+    <a href="javascript:void 0" class="nav-link nav-item <%- item.active ? 'active' : '' %>"
        data-id="<%- item.id %>" data-t=""><%- item.label || item.id %></a>
     <% } %>
     </div>

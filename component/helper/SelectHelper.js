@@ -73,17 +73,16 @@ module.exports = class SelectHelper {
         const items = [];
         if (Array.isArray(docs)) {
             for (const doc of docs) {
-                items.push({
-                    value: doc[params.valueKey],
-                    text: params.getItemText.call(this, doc, params)
-                });
+                const value = doc[params.valueKey];
+                const text = params.getItemText.call(this, doc, params);
+                items.push({value, text});
             }
         }
         return items;
     }
 
-    static getLabelText (doc) {
-        return doc.label ? `${doc.label} (${doc.name})` : doc.name;
+    static getLabelText ({label, name}) {
+        return label ? `${label} (${name})` : name;
     }
 
     static getItemText (doc, params) {

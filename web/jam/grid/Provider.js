@@ -13,7 +13,7 @@ Jam.DataGridProvider = class DataGridProvider {
         for (const column of this.params.columns) {
             column.formatFilterValue = typeof column.format === 'function'
                 ? column.format
-                : this.formatFilterValue.bind(this)
+                : this.formatFilterValue.bind(this);
         }
     }
 
@@ -77,8 +77,8 @@ Jam.DataGridProvider = class DataGridProvider {
     }
 
     compareDocs (a, b) {
-        for (const item of this._sortItems) {
-            const result = this.compareValues(a[item[0]], b[item[0]], item[1]);
+        for (const [key, direction] of this._sortItems) {
+            const result = this.compareValues(a[key], b[key], direction);
             if (result !== 0) {
                 return result;
             }

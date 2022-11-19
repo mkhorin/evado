@@ -11,8 +11,12 @@ module.exports = class DataConsole extends Base {
         super(config);
         this.params = Object.assign(this.getDefaultParams(), this.params);
         this.directory = this.app.getPath('data', this.params.dir);
-        this.includes = this.params.includes ? this.wrapArray(this.params.includes) : null;
-        this.excludes = this.params.excludes ? this.wrapArray(this.params.excludes) : null;
+        this.includes = this.params.includes
+            ? this.wrapArray(this.params.includes)
+            : null;
+        this.excludes = this.params.excludes
+            ? this.wrapArray(this.params.excludes)
+            : null;
     }
 
     getDefaultParams () {
@@ -74,11 +78,15 @@ module.exports = class DataConsole extends Base {
     }
 
     excludeTable (table) {
-        this.excludes = this.excludes ? this.excludes.concat(table) : [table];
+        this.excludes = this.excludes
+            ? this.excludes.concat(table)
+            : [table];
     }
 
     includeTable (table) {
-        this.includes = this.includes ? this.includes.concat(table) : [table];
+        this.includes = this.includes
+            ? this.includes.concat(table)
+            : [table];
     }
 
     wrapArray (data) {

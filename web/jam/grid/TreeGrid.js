@@ -10,10 +10,12 @@ Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
     };
 
     constructor (container, params) {
-        super(container, $.extend(true, {
-            'Renderer': Jam.TreeGridRenderer,
-            'AjaxProvider': Jam.TreeGridAjaxProvider
-        }, Jam.TreeGrid.defaults, params));
+        const defaultParams = {
+            Renderer: Jam.TreeGridRenderer,
+            AjaxProvider: Jam.TreeGridAjaxProvider
+        };
+        params = $.extend(true, defaultParams, Jam.TreeGrid.defaults, params);
+        super(container, params);
     }
 
     init () {
@@ -29,8 +31,8 @@ Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
         return Jam.TreeGridNode.get({grid: this, $item});
     }
 
-    onToggleNode (event) {
-        this.getNodeByItem($(event.currentTarget).closest('.data-item')).toggle();
+    onToggleNode ({currentTarget}) {
+        this.getNodeByItem($(currentTarget).closest('.data-item')).toggle();
     }
 
     load (params = {}) {

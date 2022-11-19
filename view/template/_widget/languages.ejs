@@ -3,6 +3,6 @@
      data-max-age="<%- _widget.cookieMaxAge %>">
 <% for (const item of items) { %>
     <a class="dropdown-item <%- item === active ? 'active' : '' %>"
-        href="#" data-code="<%- item.code %>"><%- item.label %></a>
+        href="javascript:void 0" data-code="<%- item.code %>"><%- item.label %></a>
 <% } %>
 </div>

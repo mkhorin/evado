@@ -5,8 +5,8 @@ Jam.CheckboxListModelAttr = class CheckboxListModelAttr extends Jam.ModelAttr {
 
     constructor () {
         super(...arguments);
-        this.$checks = this.find('[type="checkbox"]');
-        this.$checks.change(this.onChangeCheckbox.bind(this));
+        this.$checkboxes = this.find('[type="checkbox"]');
+        this.$checkboxes.change(this.onChangeSelection.bind(this));
         this.allValue = this.getData('all');
         this.allValue = this.allValue === true ? 'all' : this.allValue;
         this.setValue(this.$value.val());
@@ -14,38 +14,48 @@ Jam.CheckboxListModelAttr = class CheckboxListModelAttr extends Jam.ModelAttr {
 
     enable (state) {
         this.$value.attr('readonly', !state);
-        this.$checks.attr('disabled', !state);
-        this.$checks.closest('.checkbox').toggleClass('disabled', !state);
+        this.$checkboxes.attr('disabled', !state);
+        this.$checkboxes.closest('.checkbox').toggleClass('disabled', !state);
     }
 
     setValue (value) {
         this.$value.val(value);
-        this.$checks.prop('checked', false);
-        value = Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : [];
-        for (const val of value) {
-            this.$checks.filter(`[value="${val}"]`).prop('checked', true);
+        this.setCheckboxes(value);
+    }
+
+    setCheckboxes (data) {
+        const values = this.prepareValues(data);
+        for (const checkbox of this.$checkboxes) {
+            checkbox.checked = values.includes(checkbox.value);
         }
     }
 
-    extractValues () {
-        const values = [];
-        for (const item of this.$checks.filter(':checked')) {
-            values.push($(item).val());
+    prepareValues (data) {
+        if (typeof data === 'string') {
+            return data.split(',');
         }
-        return values;
+        return Array.isArray(data) ? data : [];
     }
 
-    onChangeCheckbox (event) {
+    onChangeSelection (event) {
         this.resolveAllValue($(event.currentTarget));
-        this.$value.val(this.extractValues());
+        this.$value.val(this.getCheckedValues());
         this.triggerChange();
     }
 
+    getCheckedValues () {
+        const $checked = this.$checkboxes.filter(':checked');
+        return $.map($checked, checkbox => checkbox.value);
+    }
+
     resolveAllValue ($target) {
-        if (this.allValue && $target.is(':checked')) {
-            $target.val() === this.allValue
-                ? this.$checks.not(`[value="${this.allValue}"]`).prop('checked', false)
-                : this.$checks.filter(`[value="${this.allValue}"]`).prop('checked', false);
+        const value = this.allValue;
+        if (value && $target.is(':checked')) {
+            const selector = `[value="${value}"]`;
+            const $checkboxes = $target.val() === value
+                ? this.$checkboxes.not(selector)
+                : this.$checkboxes.filter(selector);
+            $checkboxes.prop('checked', false);
         }
     }
 };

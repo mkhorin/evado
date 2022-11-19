@@ -30,9 +30,9 @@ Jam.DataGridAjaxProvider = class DataGridAjaxProvider {
 
     resolveData (data) {
         return {
-            items: data ? data.items : [],
-            totalSize: data ? data.totalSize : 0,
-            maxSize: data ? data.maxSize : 0
+            items: data?.items || [],
+            totalSize: data?.totalSize || 0,
+            maxSize: data?.maxSize || 0
         };
     }
 

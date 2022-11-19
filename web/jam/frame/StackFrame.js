@@ -108,7 +108,8 @@ Jam.StackFrame = class StackFrame {
             this.title = Jam.escape(this.title);
         }
         const url = data.url || this.getLoadUrl();
-        this.$title.html(`<a href="${Jam.UrlHelper.getPageFrameUrl(url)}" target="_blank">${this.title}</a>`);
+        const frameUrl = Jam.UrlHelper.getPageFrameUrl(url);
+        this.$title.html(`<a href="${frameUrl}" target="_blank">${this.title}</a>`);
         Jam.t(this.$title);
     }
 
@@ -121,7 +122,8 @@ Jam.StackFrame = class StackFrame {
     }
 
     onFail (data) {
-        this.$content.html(`<div class="stack-frame-error"><pre>${data.responseText}</pre></div>`);
+        const error = data.responseText;
+        this.$content.html(`<div class="stack-frame-error"><pre>${error}</pre></div>`);
         this.title = Jam.t(data.statusText || 'Error');
         this.tabTitle = data.status;
         const url = Jam.UrlHelper.getPageFrameUrl(this.getLoadUrl());

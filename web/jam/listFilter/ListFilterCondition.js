@@ -52,7 +52,8 @@ Jam.ListFilterCondition = class ListFilterCondition {
 
     createType (params) {
         const defaultType = 'string';
-        const name = `ListFilterType${Jam.StringHelper.capitalize(params.type || defaultType)}`;
+        const type = params.type || defaultType;
+        const name = `ListFilterType${Jam.StringHelper.capitalize(type)}`;
         if (Jam[name]) {
             return new Jam[name](params, this);
         }

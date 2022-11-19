@@ -55,7 +55,9 @@ Jam.EnumModelAttr = class EnumModelAttr extends Jam.ModelAttr {
 
     updateItems () {
         const items = Jam.EnumSet.filterItems(this.sets);
-        this.items = Jam.ArrayHelper.equals(items, this.items) ? this.items : items;
+        if (!Jam.ArrayHelper.equals(items, this.items)) {
+            this.items = items;
+        }
         return this.items === items;
     }
 

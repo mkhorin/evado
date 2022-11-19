@@ -9,7 +9,7 @@ module.exports = class DataImportConsole extends Base {
 
     getDefaultParams () {
         return Object.assign(super.getDefaultParams(), {
-            space: 2
+            space: 0
         });
     }
 
@@ -49,7 +49,8 @@ module.exports = class DataImportConsole extends Base {
         }
         MongoHelper.normalizeExportData(data);
         data = JSON.stringify(data, null, Number(this.params.space));
-        await fs.promises.writeFile(path.join(this.directory, `${table}.json`), data);
+        let file = path.join(this.directory, `${table}.json`);
+        await fs.promises.writeFile(file, data);
         this.log('info', `Exported: ${table}`);
     }
 

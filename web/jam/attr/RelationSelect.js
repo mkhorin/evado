@@ -7,21 +7,22 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         super(...arguments);
         this.$select = this.find('select');
         this.selectParams = this.$select.data('params');
-        this.initChanges();
+        this.createChanges();
     }
 
-    initChanges () {
-        this.changes = {links: [], unlinks: [], deletes: []};
-        this.initValues = [];
+    createChanges () {
+        this.changes = new Jam.RelationChanges(this);
         const defaultValue = this.getValue();
-        if (defaultValue) {
-            this.changes.links = defaultValue.split(',');
-        } else {
-            for (const option of this.$select.children()) {
-                this.initValues.push(option.getAttribute('value'));
-            }
-        }
+        this.changes.setDefaultValue(defaultValue);
+        const initialValue = this.getInitialValue();
+        this.changes.setInitialValue(initialValue);
         this.setValueByChanges();
+    }
+
+    getInitialValue () {
+        if (!this.changes.hasLinks()) {
+            return $.map(this.$select.children(), item => item.getAttribute('value'));
+        }
     }
 
     activate () {
@@ -40,7 +41,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.$container.mouseleave(this.hideCommands.bind(this));
         this.$container.on('click', this.select2ChoiceClass, this.onClickSelect2Choice.bind(this));
         this.$container.on('dblclick', this.select2ChoiceClass, this.onDoubleClickSelect2Choice.bind(this));
-        this.$select.change(this.onChangeSelect.bind(this));
+        this.$select.change(this.onChangeSelection.bind(this));
         this.$container.on('click', '[data-command]', this.onCommand.bind(this));
         this.createSelect2();
         // this.getDefaultTitles();
@@ -66,18 +67,18 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     hasValue () {
-        const data = this.$select.val();
-        return Array.isArray(data) ? data.length > 0 : !!data;
-    }
-
-    getLinkedValue () {
-        const links = this.changes.links;
-        return this.selectParams.multiple ? links : links[0];
+        return !!this.getDependencyValue();
     }
 
     getDependencyValue () {
         const data = this.$select.val();
         return !Array.isArray(data) || data.length ? data : null;
+    }
+
+    getLinkedValue () {
+        return this.selectParams.multiple
+            ? this.changes.links
+            : this.changes.links[0];
     }
 
     getValueText () {
@@ -94,7 +95,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     clear () {
-        this.changes.links = [];
+        this.changes.clearLinks();
         this.setValueByChanges();
         this.$select.val('').trigger('change.select2');
         this.toggleBlank();
@@ -106,9 +107,9 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     setValueByChanges () {
-        const value = this.hasChanges() ? JSON.stringify(this.changes) : '';
-        if (this.$value.val() !== value) {
-            this.$value.val(value);
+        const value = this.changes.serialize();
+        if (this.getValue() !== value) {
+            this.setValue(value);
             return true;
         }
     }
@@ -156,7 +157,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     onCommand (event) {
         if (this.beforeCommand(event)) {
-            this.getCommandMethod(event.currentTarget.dataset.command).call(this, event);
+            const command = event.currentTarget.dataset.command;
+            this.getCommandMethod(command).call(this, event);
         }
     }
 
@@ -191,10 +193,9 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     processResults (data, params) {
         params.page = params.page || 1;
+        const more = params.page * this.params.pageSize < data.total;
         return {
-            pagination: {
-                more: params.page * this.params.pageSize < data.total
-            },
+            pagination: {more},
             results: Jam.SelectHelper.normalizeItems(data.items)
         };
     }
@@ -243,14 +244,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.findCommand('update').click();
     }
 
-    hasChanges () {
-        return this.changes.links.length
-            || this.changes.unlinks.length
-            || this.changes.deletes.length;
-    }
-
-    onChangeSelect () {
-        this.changes.links = [];
+    onChangeSelection () {
+        this.changes.clearLinks();
         const value = this.$select.val();
         if (Array.isArray(value)) {
             value.forEach(this.linkValue, this);
@@ -258,7 +253,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             if (value) {
                 this.linkValue(value);
             }
-            this.unlinkCurrentValue(value);
+            this.changes.unlinkCurrentValue(value);
         }
         if (this.setValueByChanges()) {
             this.triggerChange();
@@ -267,18 +262,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     linkValue (value) {
-        if (!this.initValues.includes(value)) {
-            this.changes.links.push(value);
-        }
-        Jam.ArrayHelper.remove(value, this.changes.unlinks);
-        Jam.ArrayHelper.remove(value, this.changes.deletes);
-    }
-
-    unlinkCurrentValue (value) {
-        const values = this.initValues;
-        if (values.length && !values.includes(value) && !this.changes.deletes.includes(values[0])) {
-            this.changes.unlinks = [values[0]];
-        }
+        this.changes.linkValue(value);
     }
 
     showCommands () {
@@ -335,8 +319,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     unlink (values) {
         for (const value of values) {
-            if (this.initValues.includes(value)) {
-                this.changes.unlinks.push(value);
+            if (this.changes.hasInitialValue(value)) {
+                this.changes.addUnlink(value);
             }
             this.removeSelect2Value(value);
         }
@@ -344,8 +328,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     delete (values) {
         for (const value of values) {
-            if (this.initValues.includes(value)) {
-                this.changes.deletes.push(value);
+            if (this.changes.hasInitialValue(value)) {
+                this.changes.addDelete(value);
             }
             this.removeSelect2Value(value);
         }
@@ -364,7 +348,9 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     openFrame (url, params, afterClose) {
         afterClose = afterClose || this.defaultAfterCloseModal;
         this._afterClose = afterClose.bind(this);
-        this.childFrame.load(url, params).done(this.addAfterCloseListener.bind(this));
+        this.childFrame
+            .load(url, params)
+            .done(this.addAfterCloseListener.bind(this));
     }
 
     addAfterCloseListener () {
@@ -391,7 +377,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     selectValue (id) {
-        return $.get(this.params.viewTitle, {id}).done(this.parseSelectedValue.bind(this, id));
+        const done = this.parseSelectedValue.bind(this, id);
+        return $.get(this.params.viewTitle, {id}).done(done);
     }
 
     parseSelectedValue (id, data) {
@@ -401,12 +388,15 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             this.$select.select2('destroy');
             this.createSelect2();
         } else {
-            this.$select.append(new Option(data, id, true, true)).change();
+            const option = new Option(data, id, true, true);
+            this.$select.append(option).change();
         }
     }
 
     sortByIdList (ids) {
         const data = Jam.ArrayHelper.flip(ids);
-        this.$select.children().sort((a, b) => data[a.value] - data[b.value]).appendTo(this.$select);
+        const $options = this.$select.children();
+        const compare = (a, b) => data[a.value] - data[b.value];
+        $options.sort(compare).appendTo(this.$select);
     }
 };

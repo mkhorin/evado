@@ -130,7 +130,9 @@ Jam.ListFilterStorage = class ListFilterStorage {
     }
 
     addError ($input, message) {
-        $input.closest('.form-group').addClass('has-error').find('.error-block').html(Jam.t(message));
+        const $attr = $input.closest('.form-group');
+        $attr.addClass('has-error');
+        $attr.find('.error-block').html(Jam.t(message));
     }
 
     onApply () {
@@ -169,7 +171,8 @@ Jam.ListFilterStorage = class ListFilterStorage {
 
     createItems () {
         const index = this.getSelectedElement().index();
-        this.$list.html(this.items.map(this.createItem, this).join(''));
+        const items = this.items.map(this.createItem, this);
+        this.$list.html(items.join(''));
         const $items = this.$list.children();
         if (index !== -1) {
             $items.eq(index).click();

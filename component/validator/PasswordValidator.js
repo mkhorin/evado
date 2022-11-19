@@ -9,7 +9,7 @@ module.exports = class PasswordValidator extends Base {
 
     constructor (config) {
         super({
-            ...config.module.getParam('userPasswordValidator'),
+            ...config.module.params.userPasswordValidator,
             ...config
         });
     }

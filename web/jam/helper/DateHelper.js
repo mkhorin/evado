@@ -7,19 +7,26 @@ Jam.DateHelper = class DateHelper {
         if (!date) {
             return false;
         }
-        date = date instanceof Date ? date : new Date(date);
+        if (!(date instanceof Date)) {
+            date = new Date(date);
+        }
         return !isNaN(date.getTime());
     }
 
     static stringify (date, absolute) {
-        return (absolute ? moment(date).utcOffset(0, true) : moment.utc(date)).format();
+        date = absolute
+            ? moment(date).utcOffset(0, true)
+            : moment.utc(date);
+        return date.format();
     }
 
     /**
      * If UTC then delete Z suffix
      */
     static formatByUtc (isoDate, utc) {
-        return utc && typeof isoDate === 'string' ? isoDate.slice(0, -1) : isoDate;
+        return typeof isoDate === 'string' && utc
+            ? isoDate.slice(0, -1)
+            : isoDate;
     }
 
     static resolveClientDate ($container) {
@@ -27,8 +34,11 @@ Jam.DateHelper = class DateHelper {
             const $item = $(item);
             const format = $item.attr('data-format');
             if (format) {
-                const date = this.formatByUtc($item.attr('datetime'), $item.data('utc'));
-                $item.html(moment(date).format(this.getMomentFormat(format)));
+                const utc = $item.data('utc');
+                const value = $item.attr('datetime');
+                const date = this.formatByUtc(value, utc);
+                const momentFormat = this.getMomentFormat(format);
+                $item.html(moment(date).format(momentFormat));
             }
             $item.removeAttr('data-format');
         }

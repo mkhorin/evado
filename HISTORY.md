@@ -1,3 +1,33 @@
+## 5.5.0
+ 
+* component/meta/MetaListFilter
+    - add filter by empty back references 
+* component/misc/ListFilter
+    - add case-sensitive filter
+    - add string as empty filter value
+* web/jam/attr/CheckboxEnum
+    - add multiple choice of enumeration values    
+* web/jam/attr/RelationCheckboxList
+    - add checkbox list view to relation
+* web/jam/attr/RelationRadioList
+    - add radio list view to relation  
+* web/jam/frame/FrameStack
+    - ignore frame close by escape on input elements
+* web/jam/helper/PopoverHelper
+    - fix popover hiding
+* web/jam/helper/ScrollHelper
+    - fix scroll offset
+* web/jam/helper/SelectHelper
+    - fix selection rendering
+* web/jam/list/DataFormatter
+    - add customizable separator    
+* web/jam/list/List
+    - add custom command parameters
+* web/jam/listFilter/ListFilterTypeSelector
+    - fix scrolling freeze after filtering
+* web/jam/misc/Dialog
+    - fix dialog message escaping
+
 ## 5.4.0
 
 * component/job/DeleteExpiredFiles

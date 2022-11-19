@@ -34,6 +34,8 @@ Jam.TreeList = class TreeList extends Jam.List {
     }
 
     onAfterDrawNode (id, parent) {
-        this.toggleItemSelect(parent.getChildren().filter(this.findItemById(id)), true);
+        const item = this.findItemById(id);
+        const nodes = parent.getChildren().filter(item);
+        this.toggleItemSelect(nodes, true);
     }
 };

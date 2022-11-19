@@ -247,9 +247,10 @@ module.exports = class Console extends Base {
     async logResult () {
         await PromiseHelper.setTimeout(250); // wait for previous console output
         const logger = this.app.get('logger');
-        const counters = logger.getCounters(['error', 'warn']).map(item => `${item.type}: ${item.counter}`);
+        const counters = logger.getCounters(['error', 'warn']);
         if (counters.length) {
-            this.log('warn', `Logging result: ${counters.join(', ')}`);
+            const items = counters.map(({type, counter}) => `${type}: ${counter}`);
+            this.log('warn', `Logging result: ${items.join(', ')}`);
         }
     }
 

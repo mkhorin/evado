@@ -15,7 +15,7 @@ module.exports = class UserNameValidator extends Base {
             max: 32,
             pattern: USER_NAME_REGEX,
             shrinking: true,
-            ...config.module.getParam('userNameValidator'),
+            ...config.module.params.userNameValidator,
             ...config
         });
     }

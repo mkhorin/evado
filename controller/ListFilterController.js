@@ -18,7 +18,8 @@ module.exports = class ListFilterController extends Base {
     }
 
     async actionInlineList () {
-        const query = this.createModel().findByTarget(this.getQueryParam('target'));
+        const {target} = this.getQueryParams();
+        const query = this.createModel().findByTarget(target);
         const author = this.user.getId();
         const models = await query.and({author}).all();
         this.sendJson({

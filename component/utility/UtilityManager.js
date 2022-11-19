@@ -22,7 +22,9 @@ module.exports = class UtilityManager extends Base {
     }
 
     resolveUtilityMap (data) {
-        return typeof data === 'string' ? this.resolveFromConfig(data) : data;
+        return typeof data === 'string'
+            ? this.resolveFromConfig(data)
+            : data;
     }
 
     resolveFromConfig (key) {

@@ -18,7 +18,8 @@ Jam.NavTree = class NavTree extends Jam.Element {
     createItem (data) {
         data.children = this.createItems(data.children);
         data.label = Jam.t(data.label, data.t);
-        data.title = Jam.escape(data.title ? Jam.t(data.title, data.t) : data.label);
+        const title = data.title ? Jam.t(data.title, data.t) : data.label;
+        data.title = Jam.escape(title);
         const template = data.type || (data.children ? 'parent' : 'item');
         return this.resolveTemplate(template, data);
     }
@@ -28,7 +29,9 @@ Jam.NavTree = class NavTree extends Jam.Element {
     }
 
     getItemUrl () {
-        return this.getItem(...arguments).find('>.nav-link').attr('href');
+        return this.getItem(...arguments)
+            .find('>.nav-link')
+            .attr('href');
     }
 
     getItem (element) {
@@ -42,7 +45,9 @@ Jam.NavTree = class NavTree extends Jam.Element {
     }
 
     getCurrentActive () {
-        return this.find('.nav-link').filter(this.isCurrentItem, this).first();
+        return this.find('.nav-link')
+            .filter(this.isCurrentItem, this)
+            .first();
     }
 
     isCurrentItem (index, {href}) {

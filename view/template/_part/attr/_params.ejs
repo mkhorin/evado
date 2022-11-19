@@ -34,13 +34,15 @@ p.displayValue = typeof displayValue === 'undefined' ? p.value : displayValue;
 
 if (p.format) {
     switch (p.format) {
-        case 'label':
+        case 'label': {
             p.displayValue = model.constructor.getAttrValueLabel(attr, p.value) || p.displayValue;
             break;
-        default:
+        }
+        default: {
             p.displayValue = Array.isArray(p.format)
                 ? _format(p.displayValue, ...p.format)
                 : _format(p.displayValue, p.format);
+        }
     }
 }
 if (p.displayValue === undefined || p.displayValue === null) {

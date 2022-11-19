@@ -217,7 +217,7 @@ Jam.ModelCondition = class ModelCondition {
     }
 
     logDataError (operator, operands) {
-        return this.log('error', `${operator}: Operands invalid: ${JSON.stringify(operands)}`);
+        this.log('error', `${operator}: Operands invalid: ${JSON.stringify(operands)}`);
     }
 
     log (type, message) {
