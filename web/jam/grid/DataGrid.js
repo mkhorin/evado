@@ -69,6 +69,7 @@ Jam.DataGrid = class DataGrid {
         return {
             AjaxProvider: Jam.DataGridAjaxProvider,
             Pagination: Jam.Pagination,
+            PageJumper: Jam.PageJumper,
             Provider: Jam.DataGridProvider,
             Renderer: this.getRendererClass(params.view),
             Search: Jam.DataGridSearch,
@@ -105,7 +106,7 @@ Jam.DataGrid = class DataGrid {
             params: this.params,
             $pager: this.$container.find('.data-grid-pager'),
             $pagination: this.$container.find('.data-grid-pagination'),
-            $jumper: this.$container.find('.data-grid-page-jumper'),
+            $pageJumper: this.$container.find('.data-grid-page-jumper'),
             $pageSize: this.$container.find('.data-grid-page-size')
         });
     }

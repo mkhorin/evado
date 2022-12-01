@@ -5,6 +5,7 @@ Jam.Pagination = class Pagination {
 
     constructor (list, config) {
         this.list = list;
+        this.config = config;
         this.params = config.params;
         this.labels = Object.assign(this.getDefaultLabels(), config.labels);
         this.templates = {};
@@ -13,11 +14,10 @@ Jam.Pagination = class Pagination {
         this.$pager = config.$pager;
         this.$pagination = config.$pagination;
         this.$pagination.on('click', 'button', this.onPage.bind(this));
-        this.$jumper = config.$jumper;
-        this.$jumper.change(this.onChangePage.bind(this));
         this.$pageSize = config.$pageSize;
         this.$pageSizeSelect = this.$pageSize.find('select');
         this.$pageSizeSelect.change(this.onPageSize.bind(this));
+        this.createPageJumper();
         this.createPageSizes();
     }
 
@@ -83,9 +83,8 @@ Jam.Pagination = class Pagination {
         }
     }
 
-    onChangePage () {
-        this.$jumper.blur();
-        if (this.setPage(this.$jumper.val())) {
+    onChangePage (event, value) {
+        if (this.setPage(value)) {
             this.list.load();
         }
     }
@@ -106,7 +105,7 @@ Jam.Pagination = class Pagination {
             this.$pagination.html(content);
             const $toggle = this.$pagination.find('[data-page]');
             this.list.toggleClass('has-page-toggle', $toggle.length > 0);
-            this.updateJumper();
+            this.pageJumper.update(this.page, this.getNumPages(), this.hasHiddenPages());
         }
     }
 
@@ -210,25 +209,13 @@ Jam.Pagination = class Pagination {
         return [start, end];
     }
 
-    updateJumper () {
-        if (!this.$jumper.length || !this.hasHiddenPages()) {
-            return this.$jumper.addClass('hidden');
-        }
-        const numPages = this.getNumPages();
-        this.$jumper.html(this.renderJumper(numPages));
-        this.$jumper.val(this.page).removeClass('hidden');
-    }
-
     hasHiddenPages () {
         return this.$pagination.find('.gap').length > 0;
     }
 
-    renderJumper (numPages) {
-        let result = '';
-        for (let i = 0 ; i < numPages; ++i) {
-            result += `<option value="${i}">${i + 1}</option>`;
-        }
-        return result;
+    createPageJumper () {
+        this.pageJumper = new Jam.PageJumper(this.config);
+        this.pageJumper.events.on('change', this.onChangePage.bind(this));
     }
 
     createPageSizes () {
@@ -237,7 +224,8 @@ Jam.Pagination = class Pagination {
                 this.pageSize = this.list.getStorageData('pageSize', this.pageSize);
             }
             const sizes = this.params.pageSizes.map(this.renderPageSize, this);
-            this.$pageSizeSelect.html(sizes.join('')).val(this.pageSize);
+            this.$pageSizeSelect.html(sizes.join(''));
+            this.$pageSizeSelect.val(this.pageSize);
             this.$pageSize.removeClass('hidden');
         }
     }
