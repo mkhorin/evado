@@ -28,9 +28,9 @@ Jam.ActionBinder = class ActionBinder {
 
     createElement ($item) {
         const data = $item.data('actionBinder');
-        return data
-            ? new Jam.ActionBinderElement($item, data, this)
-            : null;
+        if (data) {
+            return new Jam.ActionBinderElement($item, data, this);
+        }
     }
 
     appendElements ($container) {
@@ -40,7 +40,9 @@ Jam.ActionBinder = class ActionBinder {
     }
 
     onChange () {
-        this.update();
+        if (!this.running) {
+            this.update();
+        }
     }
 
     updateInitially () {
@@ -50,12 +52,14 @@ Jam.ActionBinder = class ActionBinder {
     }
 
     update (elements = this.elements) {
+        this.running = true;
         const value = this.model.stringifyAttrs();
         for (const element of elements) {
             element.update();
         }
+        this.running = false;
         value === this.model.stringifyAttrs()
             ? this.events.trigger('update')
-            : this.model.events.trigger('change');
+            : this.model.triggerChange();
     }
 };
