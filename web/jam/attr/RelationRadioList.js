@@ -43,11 +43,16 @@ Jam.RelationRadioListModelAttr = class RelationRadioListModelAttr extends Jam.Ra
     }
 
     getValueText () {
-        return this.getDependencyValue();
+        return Jam.Helper.getLabelTextByValue(this.getDependencyValue(), this.$attr);
     }
 
     setValue (value) {
         this.$value.val(value);
+    }
+
+    setInitialValue () {
+        this.setValue(null);
+        this.setRadioItem();
     }
 
     onChangeSelection ({target}) {

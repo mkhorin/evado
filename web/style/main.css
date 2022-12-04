@@ -33,6 +33,7 @@
 
     --form-bg-disabled: #f4f6f8;
     --form-border-disabled: #ced4da;
+    --form-text-disabled: #989898;
     --form-row-space: 1.35rem;
     --form-set-space: 2.7rem;
     --text-monospace: Consolas,"Liberation Mono","Courier New",monospace;
@@ -745,7 +746,7 @@ body.loading {
 }
 .form .error-block {
     display: none;
-    margin-top: .2rem;
+    margin-top: .3rem;
     color: var(--dark-danger);
 }
 .form .has-error .error-block {
@@ -768,13 +769,15 @@ body.loading {
     color: var(--body-color);
 }
 .form-control:disabled,
-.form-control[readonly] {
+.form-control[readonly],
+.form-select:disabled,
+.form-select[readonly]{
     background-color: var(--form-bg-disabled);
     border-color: var(--form-border-disabled);
     box-shadow: none;
 }
-select.form-select {
-    padding-left: .5rem;
+.form-select {
+    padding-left: .75rem;
 }
 .form-group {
     margin-bottom: var(--form-row-space);
@@ -788,7 +791,7 @@ select.form-select {
     color: var(--light-danger);
 }
 .form-group .hint-block {
-    margin-top: .2rem;
+    margin-top: .3rem;
     opacity: .6;
 }
 .form-group .hint-block:empty {
@@ -863,8 +866,8 @@ select.form-select {
 .form-check-label-wrapper .action-icon {
     margin-left: .5rem;
 }
-.form-check-input:disabled~.form-check-label,
-.form-check-input[disabled]~.form-check-label {
+.form-group.disabled .form-check-label {
+    color: var(--form-text-disabled);
     cursor: not-allowed;
 }
 
@@ -963,7 +966,7 @@ select.form-select {
     display: block;
 }
 .form-divider {
-    margin: 1rem 0 2rem 0;
+    margin: 0.8rem 0 2rem 0;
     background: none;
     border-bottom: 1px dashed #666;
     border-top: none;
@@ -1171,6 +1174,9 @@ select.form-select {
 .show-commands .hidden-commands {
     display: flex;
 }
+.form-group.disabled .show-commands .hidden-commands {
+    display: none;
+}
 
 /* ALERT */
 
@@ -1258,7 +1264,7 @@ select.form-select {
 }
 .select2-container .select2-selection--single .select2-selection__rendered {
     line-height: calc(1.5em + .75rem);
-    padding-left: .7rem;
+    padding-left: .75rem;
 }
 .select2-search--dropdown .select2-search__field {
     border: 1px solid #ced4da;
@@ -1421,12 +1427,19 @@ form.was-validated select:valid ~ .select2-container .select2-selection {
     padding: .5rem 1rem .5rem 1rem;
     color: #999;
 }
-.required.blank .select2-container--default .select2-selection {
+.required.blank .select2-container .select2-selection {
     background: var(--required-color);
 }
 .input-group > .select2-container {
     flex: 1 1 auto;
     width: 1% !important;
+}
+.form-group.disabled .select2-container .select2-selection {
+    background: var(--form-bg-disabled);
+    pointer-events: none;
+}
+.form-group.disabled .select2-selection__clear {
+    display: none;
 }
 
 /* TABS */
@@ -1956,14 +1969,13 @@ body.frame-stack-collapsed .frame-stack {
         overflow-x: visible;
         overflow-y: visible;
     }
-    .select2-container--default .select2-selection--single,
-    .select2-selection .select2-selection--single,
-    .select2-container .select2-selection--single .select2-selection__rendered {
+    .select2-container .select2-selection,
+    .select2-container .select2-selection .select2-selection__rendered {
         border: none;
         padding: 0;
     }
-    .select2-container--default .select2-selection--single .select2-selection__clear,
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
+    .select2-container .select2-selection .select2-selection__clear,
+    .select2-container .select2-selection .select2-selection__arrow {
         display: none;
     }
     .form .tab-content > .tab-pane {

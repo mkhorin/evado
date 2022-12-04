@@ -213,7 +213,9 @@ Jam.ModelCondition = class ModelCondition {
             return this.logDataError(operator, operands);
         }
         const tracker = this.model.changeTracker;
-        return tracker && tracker[key] === this.getAttr(operands[0]);
+        if (tracker) {
+            return tracker[key] === this.getAttr(operands[0]);
+        }
     }
 
     logDataError (operator, operands) {

@@ -153,7 +153,9 @@ Jam.DataGridRenderer = class DataGridRenderer {
             content += this.renderBodyCell(data, this.columns[i], i);
         }
         const id = this.params.getItemId(data);
-        return this.renderBodyGroup(data) + this.renderBodyItemHtml(id, content, ...arguments);
+        const group = this.renderBodyGroup(data);
+        const item = this.renderBodyItemHtml(id, content, ...arguments);
+        return group + item;
     }
 
     renderBodyGroup (data) {
@@ -188,7 +190,7 @@ Jam.DataGridRenderer = class DataGridRenderer {
         return this.renderBodyCellHtml(value, column, index);
     }
 
-    renderBodyCellHtml (value, {name}) {
+    renderBodyCellHtml (value, {name}, index) {
         const style = this.getBodyValueStyle(...arguments);
         const css = this.getBodyCellClass(...arguments);
         return `<td class="${css}" data-name="${name}"><div class="value" ${style}>${value}</div></td>`;

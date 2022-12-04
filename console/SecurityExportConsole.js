@@ -7,6 +7,12 @@ const Base = require('./SecurityImportConsole');
 
 module.exports = class SecurityExportConsole extends Base {
 
+    getDefaultParams () {
+        return Object.assign(super.getDefaultParams(), {
+            space: 2
+        });
+    }
+
     async execute () {
         this.data = await this.getStore().loadData();
         this.assignmentRuleMap = IndexHelper.indexObjects(this.data.assignmentRules, this.getKey());
@@ -19,7 +25,8 @@ module.exports = class SecurityExportConsole extends Base {
             roles: this.getItems('role')
         };
         if (this.params.users) {
-            this.userMap = await this.spawnUser().createQuery().indexByKey().raw().all();
+            const query = this.spawnUser().createQuery();
+            this.userMap = await query.indexByKey().raw().all();
             data.users = await this.getUsers();
             data.assignments = this.getAssignments();
         }
@@ -34,7 +41,7 @@ module.exports = class SecurityExportConsole extends Base {
 
     async saveData (data, file) {
         await FileHelper.createDirectory(path.dirname(file));
-        data = JSON.stringify(data, null, parseInt(this.params.space) || 2);
+        data = JSON.stringify(data, null, parseInt(this.params.space));
         await fs.promises.writeFile(file, data);
     }
 
@@ -169,7 +176,8 @@ module.exports = class SecurityExportConsole extends Base {
     async getUsers () {
         const key = this.getKey();
         const password = this.spawn('security/UserPassword');
-        const passwordMap = await password.createQuery().orderByKey().raw().index('user').all();
+        const query = password.createQuery().orderByKey().raw();
+        const passwordMap = await query.index('user').all();
         const result = [];
         for (const item of Object.values(this.userMap)) {
             const password = passwordMap[item[key]];

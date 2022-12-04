@@ -7,17 +7,20 @@ if ($.fn.select2) {
     $.extend($.fn.select2.defaults.defaults, {
         width: '100%',
         allowClear: true,
-        placeholder: '---',
+        placeholder: '',
         minimumResultsForSearch: 8
     });
+    const selector = '.select2-hidden-accessible';
+    const key = 'deselecting';
     const $document = $(document.body);
     // prevent open dropdown to clear
-    $document.on('select2:unselecting', '.select2-hidden-accessible', event => {
-        $(event.target).data('unselecting', true);
+    $document.on('select2:unselecting', selector, event => {
+        $(event.target).data(key, true);
+        $document.find(selector).select2('close');
     });
-    $document.on('select2:opening', '.select2-hidden-accessible', event => {
-        if ($(event.target).data('unselecting')) {
-            $(event.target).removeData('unselecting');
+    $document.on('select2:opening', selector, event => {
+        if ($(event.target).data(key)) {
+            $(event.target).removeData(key);
             event.preventDefault();
         }
     });

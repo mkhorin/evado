@@ -16,7 +16,8 @@ Jam.Utility = class Utility {
     }
 
     getList () {
-        return Jam.Element.getInstance(this.manager.$container.closest('.data-grid'));
+        const $grid = this.manager.$container.closest('.data-grid');
+        return Jam.Element.getInstance($grid);
     }
 
     getModel () {

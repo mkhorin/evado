@@ -22,7 +22,7 @@ Jam.CheckboxEnumModelAttr = class CheckboxEnumModelAttr extends Jam.ModelAttr {
     }
 
     enable (state) {
-        this.$value.attr('disabled', !state);
+        super.enable(state);
         this.getCheckboxes().attr('disabled', !state);
     }
 
@@ -75,6 +75,7 @@ Jam.CheckboxEnumModelAttr = class CheckboxEnumModelAttr extends Jam.ModelAttr {
             this.$list.html(this.build());
             Jam.Helper.bindLabelsToInputs(this.$list);
             this.setValue(this.getValue());
+            this.enable(!this.isDisabled());
         }
     }
 

@@ -32,7 +32,9 @@ Jam.AttrList = class AttrList extends Jam.List {
     }
 
     createAlert () {
-        return new Jam.Alert({container: $alert => this.$grid.prepend($alert)});
+        return new Jam.Alert({
+            container: $alert => this.$grid.prepend($alert)
+        });
     }
 
     prepareItem (item, data, index) {

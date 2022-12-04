@@ -13,9 +13,8 @@ Jam.CheckboxListModelAttr = class CheckboxListModelAttr extends Jam.ModelAttr {
     }
 
     enable (state) {
-        this.$value.attr('readonly', !state);
+        super.enable(state);
         this.$checkboxes.attr('disabled', !state);
-        this.$checkboxes.closest('.checkbox').toggleClass('disabled', !state);
     }
 
     setValue (value) {

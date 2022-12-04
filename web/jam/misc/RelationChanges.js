@@ -27,6 +27,10 @@ Jam.RelationChanges = class RelationChanges {
         return this.initialValues.length > 0;
     }
 
+    hasInitialValue (id) {
+        return this.initialValues.includes(id);
+    }
+
     hasDeletes () {
         return this.deletes.length > 0;
     }
@@ -41,10 +45,6 @@ Jam.RelationChanges = class RelationChanges {
 
     hasDelete (id) {
         return this.deletes.includes(id);
-    }
-
-    hasInitialValue (id) {
-        return this.initialValues.includes(id);
     }
 
     getData () {

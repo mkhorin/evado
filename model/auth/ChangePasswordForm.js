@@ -32,14 +32,16 @@ module.exports = class ChangePasswordForm extends Base {
         }
         const current = this.get('currentPassword');
         const service = this.spawn('security/PasswordAuthService');
-        const password = await service.spawnPassword().findByUser(this.user.getId()).one();
+        const query = service.spawnPassword().findByUser(this.user.getId());
+        const password = await query.one();
         if (!password || !password.check(current)) {
             return this.addError('currentPassword', 'Invalid password');
         }
         try {
             const user = this.user.getIdentity();
-            const old = await service.changePassword(this.get('newPassword'), user);
-            await this.user.log('changePassword', old, user);
+            const newPassword = this.get('newPassword');
+            const hash = await service.changePassword(newPassword, user);
+            await this.user.log('changePassword', hash, user);
             return true;
         } catch (err) {
             this.addError('newPassword', err);

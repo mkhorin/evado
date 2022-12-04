@@ -14,7 +14,7 @@ Jam.GridModelAttr = class GridModelAttr extends Jam.ModelAttr {
         if (this.canActivate()) {
             this.activated = true;
             Jam.deferred.add(this.createList.bind(this));
-            this.bindDependencyChange();
+            this.addDependencyListeners();
         }
     }
 

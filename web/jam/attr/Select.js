@@ -8,7 +8,6 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         this.select2Params = this.getData('select2');
         this.$update = this.findByData('action', 'update');
         this.$update.click(this.onUpdate.bind(this));
-        this.cache = new Map;
     }
 
     getDefaultParams () {
@@ -27,13 +26,6 @@ Jam.SelectModelAttr = class SelectModelAttr extends Jam.ModelAttr {
         this.activated = true;
         this.createDependencies();
         this.toggleBlank();
-    }
-
-    enable (state) {
-        super.enable(state);
-        if (this.getSelect2()) {
-            this.$value.select2('enable', state ? undefined : false);
-        }
     }
 
     getSelect2 () {

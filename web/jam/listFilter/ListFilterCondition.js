@@ -30,7 +30,8 @@ Jam.ListFilterCondition = class ListFilterCondition {
         this.$attrSelect.change(this.onChangeAttr.bind(this));
         this.$container.find('.delete-condition').click(this.onDelete.bind(this));
         this.$container.find('.condition-logical').click(this.onToggleLogical.bind(this));
-        this.$attrSelect.html(this.constructor.createAttrItems(this.group.columns)).select2();
+        const items = this.constructor.createAttrItems(this.group.columns);
+        this.$attrSelect.html(items).select2();
     }
 
     getAttr () {

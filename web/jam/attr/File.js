@@ -58,7 +58,8 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
     }
 
     onAppendFile (event, item) {
-        item.$item.find('.uploader-filename').text(`${item.file.name} (${Jam.FormatHelper.asBytes(item.file.size)})`);
+        const bytes = Jam.FormatHelper.asBytes(item.file.size);
+        item.$item.find('.uploader-filename').text(`${item.file.name} (${bytes})`);
         this.setNameAttr(item.file.name);
         this.events.trigger('append', item);
     }
@@ -73,8 +74,7 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
 
     onValidateFile (event, {$item, image}) {
         if (image) {
-            $item.addClass('with-thumbnail');
-            $item.find('.uploader-thumbnail').css('background-image', `url(${image.src})`);
+            this.setThumbnail($item, image.src);
         }
     }
 
@@ -133,8 +133,12 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         $item.find(this.fileMessageSelector).html(file.message);
         const thumbnail = this.uploader.options.thumbnail;
         if (file.isImage && thumbnail) {
-            $item.addClass('with-thumbnail');
-            $item.find('.uploader-thumbnail').css('background-image', `url(${thumbnail}${file.id})`);
+            this.setThumbnail($item, `${thumbnail}${file.id}`);
         }
+    }
+
+    setThumbnail ($item, url) {
+        $item.find('.uploader-thumbnail').css('background-image', `url(${url})`);
+        $item.addClass('with-thumbnail');
     }
 };

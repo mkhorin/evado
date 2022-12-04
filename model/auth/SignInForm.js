@@ -61,7 +61,9 @@ module.exports = class SignInForm extends Base {
         }
         try {
             const service = this.spawn('security/PasswordAuthService');
-            const identity = await service.login(this.get('email'), this.get('password'), this.user);
+            const email = this.get('email');
+            const password = this.get('password');
+            const identity = await service.login(email, password, this.user);
             const duration = this.get('rememberMe') ? this.rememberPeriod : 0;
             await this.user.login({identity, duration});
         } catch (err) {

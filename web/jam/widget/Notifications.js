@@ -3,6 +3,8 @@
  */
 Jam.Notifications = class Notifications extends Jam.Element {
 
+    static SHOW_POPUP_DELAY = 500;
+
     init () {
         this.setCounter(this.getData('counter'));
         this.$element.on('show.bs.dropdown', this.onShowDropdown.bind(this));
@@ -49,7 +51,8 @@ Jam.Notifications = class Notifications extends Jam.Element {
 
     renderNotifications (items) {
         if (Array.isArray(items)) {
-            this.$notifications.html(items.map(this.renderNotification, this).join(''));
+            items = items.map(this.renderNotification, this);
+            this.$notifications.html(items.join(''));
         }
     }
 
@@ -85,11 +88,13 @@ Jam.Notifications = class Notifications extends Jam.Element {
     }
 
     resolvePopup (items) {
-        this.$popup = this.$popup || this.createPopup();
+        if (!this.$popup) {
+            this.$popup = this.createPopup();
+        }
         this.togglePopup(false);
         if (items?.length) {
             this.buildPopup(items[0]);
-            setTimeout(() => this.togglePopup(true), 500);
+            setTimeout(() => this.togglePopup(true), this.constructor.SHOW_POPUP_DELAY);
         }
     }
 

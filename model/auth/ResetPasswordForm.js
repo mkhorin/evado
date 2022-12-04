@@ -28,12 +28,14 @@ module.exports = class ResetPasswordForm extends Base {
         }
         try {
             const service = this.spawn('security/PasswordAuthService');
-            const verification = await service.getVerification(this.get('key'));
+            const key = this.get('key');
+            const verification = await service.getVerification(key);
             const user = await service.getUserByVerification(verification);
             try {
-                const old = await service.changePassword(this.get('newPassword'), user);
+                const newPassword = this.get('newPassword');
+                const hash = await service.changePassword(newPassword, user);
                 await verification.execute();
-                await this.user.log('resetPassword', old, user);
+                await this.user.log('resetPassword', hash, user);
                 return true;
             } catch (err) {
                 this.addError('newPassword', err);

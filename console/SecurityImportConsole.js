@@ -7,6 +7,12 @@ const Base = require('./SecurityConsole');
 
 module.exports = class SecurityImportConsole extends Base {
 
+    getDefaultParams () {
+        return Object.assign(super.getDefaultParams(), {
+            file: 'default'
+        });
+    }
+
     async execute () {
         const file = this.getDataFile();
         this.data = await FileHelper.readJsonFile(file);
@@ -21,8 +27,7 @@ module.exports = class SecurityImportConsole extends Base {
     }
 
     getDataFile () {
-        const file = this.params.file || 'default';
-        return this.app.getPath('data/security', `${file}.json`);
+        return this.app.getPath('data/security', `${this.params.file}.json`);
     }
 
     getUserItems () {

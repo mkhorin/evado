@@ -9,7 +9,7 @@ module.exports = class DataImportConsole extends Base {
 
     getDefaultParams () {
         return Object.assign(super.getDefaultParams(), {
-            space: 0
+            space: 1
         });
     }
 

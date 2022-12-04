@@ -60,7 +60,8 @@ module.exports = class BaseController extends Base {
         if (!id) {
             throw new BadRequest('Invalid ID');
         }
-        model = await model.findById(id).with(params.with).one();
+        const query = model.findById(id).with(params.with);
+        model = await query.one();
         if (!model) {
             throw new NotFound('Object not found');
         }
@@ -110,21 +111,23 @@ module.exports = class BaseController extends Base {
     // LIST
 
     sendGridList (query, params) {
-        return this.spawn({
+        const grid = this.spawn({
             Class: DataGrid,
             controller: this,
             query,
             params
-        }).sendList();
+        });
+        return grid.sendList();
     }
 
     sendTreeGridList (query, params) {
-        return this.spawn({
+        const grid = this.spawn({
             Class: TreeGrid,
             controller: this,
             query,
             params
-        }).sendList();
+        });
+        return grid.sendList();
     }
 
     async sendSelectList (query, params) {

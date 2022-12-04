@@ -198,11 +198,11 @@ Jam.ModelAttr = class ModelAttr {
         return this.getValue();
     }
 
-    bindDependencyChange () {
-        this.getDependencyNames().forEach(this.bindDependencyChangeByName, this);
+    addDependencyListeners () {
+        this.getDependencyNames().forEach(this.addDependencyListener, this);
     }
 
-    bindDependencyChangeByName (name) {
+    addDependencyListener (name) {
         const attr = this.model.getAttr(name);
         attr?.addChangeListener(this.onDependencyChange.bind(this));
     }

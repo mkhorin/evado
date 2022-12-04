@@ -5,7 +5,8 @@ Jam.TreeGridRenderer = class TreeGridRenderer extends Jam.DataGridRenderer {
 
     drawNode ($item, items) {
         const depth = parseInt($item.data('depth')) + 1;
-        $item.after(items.map(item => this.renderBodyItem(item, depth)).join(''));
+        const content = items.map(item => this.renderBodyItem(item, depth)).join('');
+        $item.after(content);
     }
 
     renderBodyItemHtml (id, content, data, depth = 0) {

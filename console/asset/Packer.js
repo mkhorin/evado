@@ -28,9 +28,11 @@ module.exports = class Packer extends Base {
     }
 
     async mergeSources (sources) {
-        let result = '';
+        if (typeof sources === 'string') {
+            sources = [sources];
+        }
         this.processedSources = new DataMap;
-        sources = typeof sources === 'string' ? [sources] : sources;
+        let result = '';
         for (const source of sources) {
             const content = await this.mergeSource(source);
             if (typeof content !== 'string') {

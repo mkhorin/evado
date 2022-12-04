@@ -53,7 +53,9 @@ class Jam {
             return this[name];
         }
         const item = this[name.substring(0, pos)];
-        return item ? this.getClass.call(item, name.substring(pos + 1)) : null;
+        return item
+            ? this.getClass.call(item, name.substring(pos + 1))
+            : null;
     }
 
     static createElements (container = document.body) {

@@ -19,8 +19,4 @@ Jam.ActionBinderAction = class ActionBinderAction {
         this.condition.initial = this.element.binder.initial;
         return this.condition.isValid();
     }
-
-    update () {
-        this.isValid() ? this.setValid() : this.setInvalid();
-    }
 };

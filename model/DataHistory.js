@@ -30,7 +30,9 @@ module.exports = class DataHistory extends Base {
     }
 
     findByOwner () {
-        return this.find({owner: this.owner.getId()});
+        return this.find({
+            owner: this.owner.getId()
+        });
     }
 
     async append (data) {
@@ -45,10 +47,11 @@ module.exports = class DataHistory extends Base {
     }
 
     truncate () {
+        const params = this.module.params;
         return ModelHelper.truncateOverflow({
             query: this.findByOwner(),
-            threshold: this.module.params.dataHistoryTruncationThreshold || this.TRUNCATION_THRESHOLD,
-            offset: this.module.params.dataHistoryTruncationOffset || this.TRUNCATION_OFFSET,
+            threshold: params.dataHistoryTruncationThreshold || this.TRUNCATION_THRESHOLD,
+            offset: params.dataHistoryTruncationOffset || this.TRUNCATION_OFFSET,
             inBulk: true
         });
     }

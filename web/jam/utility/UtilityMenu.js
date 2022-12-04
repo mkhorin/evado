@@ -26,7 +26,9 @@ Jam.UtilityMenu = class UtilityMenu {
         }
         const utility = this.renderItem('button', this.items[0]);
         if (utility) {
-            const $container = this.items.length > 1 ? this.$menu : this.$container;
+            const $container = this.items.length > 1
+                ? this.$menu
+                : this.$container;
             $container.prepend(utility.$item);
         }
         if (this.items.length > 1) {

@@ -30,8 +30,10 @@ Jam.UtilityManager = class UtilityManager extends Jam.Element {
             return null;
         }
         const Class = Jam.Utility[frontClass];
-        if (Jam.Utility.hasOwnProperty(frontClass) && typeof Class === 'function') {
-            return Class;
+        if (typeof Class === 'function') {
+            if (Jam.Utility.hasOwnProperty(frontClass)) {
+                return Class;
+            }
         }
         console.error('Invalid utility class:', frontClass);
     }

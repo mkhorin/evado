@@ -54,6 +54,11 @@ Jam.RelationCheckboxListModelAttr = class RelationCheckboxListModelAttr extends 
         this.$value.val(value);
     }
 
+    setInitialValue () {
+        this.setValue(null);
+        this.setCheckboxes();
+    }
+
     onChangeSelection ({target}) {
         const value = target.value;
         target.checked

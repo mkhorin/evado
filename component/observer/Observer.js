@@ -16,7 +16,9 @@ module.exports = class Observer extends Base {
         this._parsedMap = {};
         this._listeners = await this.spawn('observer/Listener').findActive().all();
         for (const listener of this._listeners) {
-            this.attachListener(listener.get('events'), listener.resolveHandlers());
+            const events = listener.get('events');
+            const handlers = listener.resolveHandlers();
+            this.attachListener(events, handlers);
         }
     }
 
@@ -50,7 +52,9 @@ module.exports = class Observer extends Base {
     }
 
     async handleInternal (originalEvent, data) {
-        data = data ? {...data} : data;
+        if (data) {
+            data = {...data};
+        }
         const events = this._parsedMap[originalEvent];
         for (const event of events) {
             const handlers = this._eventMap[event];

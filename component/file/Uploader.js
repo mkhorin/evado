@@ -35,12 +35,12 @@ module.exports = class Uploader extends Base {
     }
 
     createSingleMulter (dir) {
-        return multer({
-            storage: multer.diskStorage({
-                destination: this.generateDestination.bind(this, dir),
-                filename: this.generateFilename.bind(this)
-            })
-        }).single(this.fileAttr);
+        const storage = multer.diskStorage({
+            destination: this.generateDestination.bind(this, dir),
+            filename: this.generateFilename.bind(this)
+        });
+        const instance = multer({storage});
+        return instance.single(this.fileAttr);
     }
 
     /**

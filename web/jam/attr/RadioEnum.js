@@ -21,7 +21,7 @@ Jam.RadioEnumModelAttr = class RadioEnumModelAttr extends Jam.ModelAttr {
     }
 
     enable (state) {
-        this.$value.attr('disabled', !state);
+        super.enable(state);
         this.getRadioItems().attr('disabled', !state);
     }
 

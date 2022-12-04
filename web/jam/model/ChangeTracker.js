@@ -26,7 +26,7 @@ Jam.ModelChangeTracker = class ModelChangeTracker {
             this.startTriggerAttr = this.triggerAttr;
         }
         this._skipTrigger = true;
-        this.model.events.trigger('change');
+        this.model.triggerChange();
         setTimeout(() => this._skipTrigger = false, 0);
     }
 };

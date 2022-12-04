@@ -17,7 +17,8 @@ Jam.UserAction = class UserAction extends Jam.Element {
 
     static onConfirm ($element, params) {
         Jam.showLoader();
-        return Jam.post($element.data('url'), params).always(() => Jam.hideLoader());
+        const url = $element.data('url');
+        return Jam.post(url, params).always(() => Jam.hideLoader());
     }
 
     init () {
@@ -38,7 +39,9 @@ Jam.UserAction = class UserAction extends Jam.Element {
 
     getAlert () {
         const model = this.getModel();
-        return model ? model.alert : new Jam.MainAlert;
+        return model
+            ? model.alert
+            : new Jam.MainAlert;
     }
 
     getModel () {
@@ -62,12 +65,15 @@ Jam.UserAction = class UserAction extends Jam.Element {
 
     onDone (message) {
         const alert = () => this.getAlert().success(message || 'Action completed');
-        return this.getParam('reload') ? this.reload(alert) : alert();
+        return this.getParam('reload')
+            ? this.reload(alert)
+            : alert();
     }
 
     reload (next) {
         const frame = Jam.frameStack.getLast();
-        frame ? frame.reload().done(next) : location.reload(true);
+        frame ? frame.reload().done(next)
+              : location.reload(true);
     }
 
     onFail (message) {

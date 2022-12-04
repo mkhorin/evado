@@ -41,12 +41,16 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.$container.mouseleave(this.hideCommands.bind(this));
         this.$container.on('click', this.select2ChoiceClass, this.onClickSelect2Choice.bind(this));
         this.$container.on('dblclick', this.select2ChoiceClass, this.onDoubleClickSelect2Choice.bind(this));
-        this.$select.change(this.onChangeSelection.bind(this));
+        this.$select.on('change', this.onChangeSelection.bind(this));
         this.$container.on('click', '[data-command]', this.onCommand.bind(this));
         this.createSelect2();
         // this.getDefaultTitles();
         this.toggleBlank();
-        this.bindDependencyChange();
+        this.addDependencyListeners();
+    }
+
+    hasValue () {
+        return !!this.getDependencyValue();
     }
 
     getDefaultParams () {
@@ -54,8 +58,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
             pageSize: 10,
             inputDelay: 500,
             minInputLength: 0,
-            maxInputLength: 10,
-            placeholder: ''
+            maxInputLength: 10
         };
     }
 
@@ -64,10 +67,6 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         this.changes.links.forEach(id => {
             deferred = deferred.then(() => this.selectValue(id));
         });
-    }
-
-    hasValue () {
-        return !!this.getDependencyValue();
     }
 
     getDependencyValue () {
@@ -82,8 +81,10 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     getValueText () {
-        const data = this.$select.select2('data');
-        return data.map(item => item.text).join();
+        if (this.getSelect2()) {
+            const data = this.$select.select2('data');
+            return data.map(item => item.text).join();
+        }
     }
 
     getUpdateUrl () {
@@ -94,11 +95,21 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         return this.$select.data('select2');
     }
 
+    enable (state) {
+        super.enable(state);
+        if (!state) {
+            this.clear();
+        }
+    }
+
     clear () {
         this.changes.clearLinks();
-        this.setValueByChanges();
-        this.$select.val('').trigger('change.select2');
+        const changed = this.setValueByChanges();
+        this.$select.val(null).trigger('change.select2');
         this.toggleBlank();
+        if (changed) {
+            this.triggerChange();
+        }
     }
 
     setValue (value) {
@@ -275,6 +286,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     onDependencyChange () {
+        this.changes.unlinkCurrentValue();
         this.clear();
     }
 

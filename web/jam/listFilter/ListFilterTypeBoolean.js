@@ -10,7 +10,8 @@ Jam.ListFilterTypeBoolean = class ListFilterTypeBoolean extends Jam.ListFilterTy
     }
 
     onChangeValue () {
-        this.setValue(this.getValueElement().is(':checked') ? 'true' : 'false');
+        const checked = this.getValueElement().is(':checked');
+        this.setValue(checked ? 'true' : 'false');
     }
 
     changeValue (value) {

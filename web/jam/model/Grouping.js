@@ -74,7 +74,8 @@ Jam.ModelGrouping = class ModelGrouping {
         const activeLoadable = [];
         const inactive = [];
         for (const group of this.groups) {
-            (group.isActive() ? active : inactive).push(group.id);
+            const list = group.isActive() ? active : inactive;
+            list.push(group.id);
             if (group.loadable && group.isActive() ) {
                 activeLoadable.push(group.id);
             }

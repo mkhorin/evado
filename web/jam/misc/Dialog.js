@@ -100,10 +100,14 @@ Jam.Dialog = class Dialog {
 
     build (data) {
         this.$dialog.removeClass().addClass(`dialog-${data.css} dialog`);
-        this.find('.dialog-head').html(this.prepareText(data.title, data));
-        this.find('.dialog-body').html(this.prepareText(data.message, data));
-        this.$submit.html(this.prepareText(data.submitText, data)).toggle(!!data.submitText);
-        this.$cancel.html(this.prepareText(data.cancelText, data)).toggle(!!data.cancelText);
+        const title = this.prepareText(data.title, data);
+        this.find('.dialog-head').html(title);
+        const message = this.prepareText(data.message, data);
+        this.find('.dialog-body').html(message);
+        const submitText = this.prepareText(data.submitText, data);
+        this.$submit.html(submitText).toggle(!!data.submitText);
+        const cancelText = this.prepareText(data.cancelText, data);
+        this.$cancel.html(cancelText).toggle(!!data.cancelText);
         this.setButtonCss(data.submitCss, this.$submit, 'btn-submit btn');
         this.setButtonCss(data.cancelCss, this.$cancel, 'btn-cancel btn');
     }
@@ -124,8 +128,10 @@ Jam.Dialog = class Dialog {
     }
 
     async onAction (status) {
-        if (status && this._beforeSubmit && !(await this._beforeSubmit(status))) {
-            return false;
+        if (status && this._beforeSubmit) {
+            if (!await this._beforeSubmit(status)) {
+                return false;
+            }
         }
         this.execute(status);
     }
@@ -160,7 +166,10 @@ Jam.Dialog = class Dialog {
     }
 
     createElement () {
-        return `<div class="dialog"><div class="dialog-box"><div class="dialog-head"></div><div class="dialog-body"></div><div class="dialog-foot"><button class="btn-submit btn" type="button"></button><button class="btn-cancel btn" type="button"></button></div></div></div>`;
+        return '<div class="dialog"><div class="dialog-box"><div class="dialog-head"></div>'
+            + '<div class="dialog-body"></div><div class="dialog-foot">'
+            + '<button class="btn-submit btn" type="button"></button>'
+            + '<button class="btn-cancel btn" type="button"></button></div></div></div>';
     }
 
     prepareText (text, params) {
@@ -168,10 +177,14 @@ Jam.Dialog = class Dialog {
     }
 
     escape (message, params) {
-        return params?.escaping ? Jam.StringHelper.escapeTags(message) : message;
+        return params?.escaping
+            ? Jam.StringHelper.escapeTags(message)
+            : message;
     }
 
     translate (message, params) {
-        return params?.translatable ? Jam.t(message, params.translationCategory) : message;
+        return params?.translatable
+            ? Jam.t(message, params.translationCategory)
+            : message;
     }
 };

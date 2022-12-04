@@ -7,6 +7,15 @@ const Base = require('areto/base/Base');
 
 module.exports = class SecurityConsole extends Base {
 
+    constructor () {
+        super(...arguments);
+        this.params = Object.assign(this.getDefaultParams(), this.params);
+    }
+
+    getDefaultParams () {
+        return {};
+    }
+
     getRbac () {
         return this.app.getRbac();
     }

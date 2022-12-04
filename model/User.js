@@ -86,7 +86,9 @@ module.exports = class User extends Base {
 
     findByTitle (value) {
         value = EscapeHelper.escapeRegex(value);
-        return this.find({name: new RegExp(value, 'i')});
+        return this.find({
+            name: new RegExp(value, 'i')
+        });
     }
 
     async getAssignments () {
@@ -125,7 +127,8 @@ module.exports = class User extends Base {
     }
 
     readMessage (id) {
-        return this.relPopupNotifications().and(['id', 'message', id]).updateAll({read: true});
+        const query = this.relPopupNotifications().and(['id', 'message', id]);
+        return query.updateAll({read: true});
     }
 
     // RELATIONS

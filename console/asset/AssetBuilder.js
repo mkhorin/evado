@@ -33,12 +33,13 @@ module.exports = class AssetBuilder extends Base {
         }
     }
 
-    buildAsset (data, root, params) {
+    buildAsset (data, root, {webDir}) {
         data.Class = this.resolveHandlerClass(data.Class);
-        return this.spawn(data, {
-            sourceRoot: path.join(root, data.sourceDir || params.webDir),
-            targetRoot: path.join(root, data.targetDir || params.webDir)
-        }).execute();
+        const instance = this.spawn(data, {
+            sourceRoot: path.join(root, data.sourceDir || webDir),
+            targetRoot: path.join(root, data.targetDir || webDir)
+        });
+        return instance.execute();
     }
 
     resolveHandlerClass (name) {

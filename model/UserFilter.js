@@ -70,7 +70,8 @@ module.exports = class UserFilter extends Base {
             return [];
         }
         try {
-            const config = ClassHelper.resolveSpawn(CommonHelper.parseJson(data), this.module);
+            const json = CommonHelper.parseJson(data);
+            const config = ClassHelper.resolveSpawn(json, this.module);
             return this.spawn(config).getUsers();
         } catch (err) {
             this.log('error', 'Invalid configuration', err);

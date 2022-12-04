@@ -14,6 +14,8 @@ Jam.TreeGridAjaxProvider = class TreeGridAjaxProvider extends Jam.DataGridAjaxPr
             data.length = 0;
             data.node = this.node.getId();
             data.depth = this.node.getDepth();
+            delete data.filter;
+            delete data.search;
         }
         return data;
     }

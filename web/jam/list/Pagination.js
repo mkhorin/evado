@@ -3,22 +3,21 @@
  */
 Jam.Pagination = class Pagination {
 
+    static PAGE_SIZE_KEY = 'pageSize';
+
     constructor (list, config) {
         this.list = list;
         this.config = config;
         this.params = config.params;
         this.labels = Object.assign(this.getDefaultLabels(), config.labels);
         this.templates = {};
-        this.pageSize = parseInt(this.params.pageSize) || 0;
-        this.page = parseInt(this.params.page) || 0;
-        this.$pager = config.$pager;
+        this.page = Number(this.params.page) || 0;
+        this.pageSize = this.resolvePageSize();
         this.$pagination = config.$pagination;
-        this.$pagination.on('click', 'button', this.onPage.bind(this));
-        this.$pageSize = config.$pageSize;
-        this.$pageSizeSelect = this.$pageSize.find('select');
-        this.$pageSizeSelect.change(this.onPageSize.bind(this));
+        this.$pages = config.$pages;
+        this.$pages.on('click', 'button', this.onPage.bind(this));
         this.createPageJumper();
-        this.createPageSizes();
+        this.createPageSizeSelect();
     }
 
     getDefaultLabels () {
@@ -55,14 +54,14 @@ Jam.Pagination = class Pagination {
         return this.list.getTotalSize();
     }
 
-    getDataInterval (totalSize) {
-        let start = 0, end = totalSize;
-        if (this.pageSize && this.pageSize <= totalSize) {
+    getDataInterval (total) {
+        let start = 0, end = total;
+        if (this.pageSize && this.pageSize <= total) {
             start = this.page * this.pageSize;
             end = start + this.pageSize;
         }
-        if (end > totalSize) {
-            end = totalSize;
+        if (end > total) {
+            end = total;
         }
         return [start, end];
     }
@@ -89,21 +88,18 @@ Jam.Pagination = class Pagination {
         }
     }
 
-    onPageSize () {
-        this.$pageSizeSelect.blur();
+    onChangePageSize (event, value) {
         this.page = 0;
-        this.pageSize = parseInt(this.$pageSizeSelect.val());
-        if (this.params.keepPageSize) {
-            this.list.setStorageData('pageSize', this.pageSize);
-        }
+        this.pageSize = value;
+        this.savePageSize();
         this.list.load();
     }
 
     update () {
-        if (this.$pager.length) {
+        if (this.$pagination.length) {
             const content = this.isHidden() ? '' : this.render();
-            this.$pagination.html(content);
-            const $toggle = this.$pagination.find('[data-page]');
+            this.$pages.html(content);
+            const $toggle = this.$pages.find('[data-page]');
             this.list.toggleClass('has-page-toggle', $toggle.length > 0);
             this.pageJumper.update(this.page, this.getNumPages(), this.hasHiddenPages());
         }
@@ -178,7 +174,7 @@ Jam.Pagination = class Pagination {
 
     getTemplate (name) {
         if (!this.templates[name]) {
-            this.templates[name] = Jam.Helper.getTemplate(name, this.$pager);
+            this.templates[name] = Jam.Helper.getTemplate(name, this.$pagination);
         }
         return this.templates[name];
     }
@@ -210,27 +206,29 @@ Jam.Pagination = class Pagination {
     }
 
     hasHiddenPages () {
-        return this.$pagination.find('.gap').length > 0;
+        return this.$pages.find('.gap').length > 0;
     }
 
-    createPageJumper () {
-        this.pageJumper = new Jam.PageJumper(this.config);
-        this.pageJumper.events.on('change', this.onChangePage.bind(this));
+    resolvePageSize () {
+        const size = parseInt(this.params.pageSize) || 0;
+        return this.params.keepPageSize
+            ? this.list.getStorageData(this.constructor.PAGE_SIZE_KEY, size)
+            : size;
     }
 
-    createPageSizes () {
-        if (this.$pageSize.length && Array.isArray(this.params.pageSizes)) {
-            if (this.params.keepPageSize) {
-                this.pageSize = this.list.getStorageData('pageSize', this.pageSize);
-            }
-            const sizes = this.params.pageSizes.map(this.renderPageSize, this);
-            this.$pageSizeSelect.html(sizes.join(''));
-            this.$pageSizeSelect.val(this.pageSize);
-            this.$pageSize.removeClass('hidden');
+    savePageSize () {
+        if (this.params.keepPageSize) {
+            this.list.setStorageData(this.constructor.PAGE_SIZE_KEY, this.pageSize);
         }
     }
 
-    renderPageSize (size) {
-        return `<option value="${size}">${size}</option>`;
+    createPageJumper () {
+        this.pageJumper = new this.params.PageJumper(this.config);
+        this.pageJumper.events.on('change', this.onChangePage.bind(this));
+    }
+
+    createPageSizeSelect () {
+        this.pageSizeSelect = new this.params.PageSizeSelect(this.config, this);
+        this.pageSizeSelect.events.on('change', this.onChangePageSize.bind(this));
     }
 };

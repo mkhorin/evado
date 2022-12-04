@@ -39,7 +39,8 @@ Jam.ListFilterType = class ListFilterType {
     }
 
     append () {
-        this.$container = $(this.filter.$typeSamples.children(`[data-id="${this.name}"]`).html());
+        const $type = this.filter.$typeSamples.children(`[data-id="${this.name}"]`);
+        this.$container = $($type.html());
         this.condition.$attrContainer.after(this.$container);
     }
 

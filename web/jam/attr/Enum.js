@@ -13,6 +13,10 @@ Jam.EnumModelAttr = class EnumModelAttr extends Jam.ModelAttr {
         super.init();
     }
 
+    getSelect2 () {
+        return this.$select.data('select2');
+    }
+
     activate () {
         if (this.canActivate()) {
             if (this.select2Params) {
@@ -20,11 +24,6 @@ Jam.EnumModelAttr = class EnumModelAttr extends Jam.ModelAttr {
             }
             this.activated = true;
         }
-    }
-
-    enable (state) {
-        super.enable(state);
-        this.$select.attr('disabled', !state);
     }
 
     setValue (value) {

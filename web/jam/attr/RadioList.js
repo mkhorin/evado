@@ -10,13 +10,17 @@ Jam.RadioListModelAttr = class RadioListModelAttr extends Jam.ModelAttr {
         this.setValueToItems();
     }
 
+    getValueText () {
+        return Jam.Helper.getLabelTextByValue(this.getValue(), this.$attr);
+    }
+
     setValueToItems () {
         this.setValue(this.$value.val());
     }
 
     enable (state) {
-        this.$value.attr('readonly', !state);
-        this.$radioItems.attr('readonly', !state);
+        super.enable(state);
+        this.$radioItems.attr('disabled', !state);
     }
 
     setValue (value) {

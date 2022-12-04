@@ -13,9 +13,10 @@ Jam.StringHelper = class StringHelper {
     static DOUBLE_QUOTE_REGEX = /"/g;
 
     static clearTags (text) {
-        return typeof text === 'string'
-            ? text.replace(this.TAGS_REGEX, '')
-            : this.toString(text);
+        if (typeof text !== 'string') {
+            return this.toString(text);
+        }
+        return text.replace(this.TAGS_REGEX, '');
     }
 
     static escapeHtml (text) {
@@ -27,23 +28,31 @@ Jam.StringHelper = class StringHelper {
     }
 
     static escapeTags (text) {
-        return typeof text === 'string'
-            ? text.replace(this.TAG_START_REGEX, '&lt;')
-                  .replace(this.TAG_END_REGEX, '&gt;')
-            : this.toString(text);
+        if (typeof text !== 'string') {
+            return this.toString(text);
+        }
+        return text
+            .replace(this.TAG_START_REGEX, '&lt;')
+            .replace(this.TAG_END_REGEX, '&gt;');
     }
 
     static escapeQuotes (text) {
-        return typeof text === 'string'
-            ? text.replace(this.SINGLE_QUOTE_REGEX, '&#39;')
-                  .replace(this.DOUBLE_QUOTE_REGEX, '&quot;')
-            : this.toString(text);
+        if (typeof text !== 'string') {
+            return this.toString(text);
+        }
+        return text
+            .replace(this.SINGLE_QUOTE_REGEX, '&#39;')
+            .replace(this.DOUBLE_QUOTE_REGEX, '&quot;');
     }
 
     static camelToKebab (text) {
-        return typeof text === 'string'
-            ? text.replace(this.AZ_REGEX, '-$1').replace(this.DASH_REGEX, '').toLowerCase()
-            : this.toString(text);
+        if (typeof text !== 'string') {
+            return this.toString(text);
+        }
+        return text
+            .replace(this.AZ_REGEX, '-$1')
+            .replace(this.DASH_REGEX, '')
+            .toLowerCase();
     }
 
     static capitalize (text) {

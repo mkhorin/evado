@@ -39,7 +39,9 @@ Jam.Model = class Model extends Jam.Element {
         this.changeTracker = new Jam.ModelChangeTracker(this);
         this.error = new Jam.ModelError(this);
         this.changeTracker.start();
-        this.behaviors = Jam.ClassHelper.spawnInstances(this.params.behaviors, {owner: this});
+        this.behaviors = Jam.ClassHelper.spawnInstances(this.params.behaviors, {
+            owner: this
+        });
         this.behaviors.forEach(item => item.init());
     }
 
@@ -319,5 +321,9 @@ Jam.Model = class Model extends Jam.Element {
 
     toggleLoader (state) {
         this.$container.toggleClass('loading', state);
+    }
+
+    triggerChange () {
+        return this.events.trigger('change', ...arguments);
     }
 };

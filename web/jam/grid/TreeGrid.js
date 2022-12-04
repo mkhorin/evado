@@ -24,15 +24,20 @@ Jam.TreeGrid = class TreeGrid extends Jam.DataGrid {
     }
 
     getNode (id) {
-        return this.getNodeByItem(this.findItemById(id));
+        const item = this.findItemById(id);
+        return this.getNodeByItem(item);
     }
 
     getNodeByItem ($item) {
-        return Jam.TreeGridNode.get({grid: this, $item});
+        return Jam.TreeGridNode.get({
+            grid: this,
+            $item
+        });
     }
 
     onToggleNode ({currentTarget}) {
-        this.getNodeByItem($(currentTarget).closest('.data-item')).toggle();
+        const item = $(currentTarget).closest('.data-item');
+        this.getNodeByItem(item).toggle();
     }
 
     load (params = {}) {

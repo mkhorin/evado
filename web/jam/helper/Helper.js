@@ -14,6 +14,11 @@ Jam.Helper = class Helper {
         }
     }
 
+    static getLabelTextByValue (value, $container) {
+        const id = $container.find(`[value="${value}"]`).attr('id');
+        return $container.find(`[for="${id}"]`).text();
+    }
+
     static copyToClipboard (value, format = 'text/plain') {
         $(document).one('copy', event => {
             event.preventDefault();

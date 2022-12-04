@@ -76,7 +76,9 @@ module.exports = class Task extends Base {
     }
 
     saveDone () {
-        return this.directUpdate({lastDoneAt: new Date});
+        return this.directUpdate({
+            lastDoneAt: new Date
+        });
     }
 };
 module.exports.init(module);

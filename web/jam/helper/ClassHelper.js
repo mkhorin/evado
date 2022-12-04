@@ -25,7 +25,9 @@ Jam.ClassHelper = class ClassHelper {
 
     static spawn (config, params) {
         config = this.normalizeSpawn(config);
-        return config ? new config.Class(Object.assign(config, params)) : null;
+        return config
+            ? new config.Class(Object.assign(config, params))
+            : null;
     }
 
     static spawnInstances (items, params) {
