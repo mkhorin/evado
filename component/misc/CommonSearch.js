@@ -40,7 +40,7 @@ module.exports = class CommonSearch extends Base {
     }
 
     async resolveCondition (column, value) {
-        const method = this[this.CONDITION_METHODS[column.type]] || this.getDefaultTypeCondition;
+        const method = this.getConditionMethod(column.type) || this.getDefaultTypeCondition;
         const condition = method.call(this, column.name, value, column);
         if (!condition) {
             return null;
@@ -59,6 +59,12 @@ module.exports = class CommonSearch extends Base {
         const query = relation.model.find(condition);
         const refValue = await query.column(relation.refKey);
         this.conditions.push({[relation.linkKey]: refValue});
+    }
+
+    getConditionMethod (type) {
+        return Object.prototype.hasOwnProperty.call(this.CONDITION_METHODS, type)
+            ? this[this.CONDITION_METHODS[type]]
+            : null;
     }
 
     getDefaultTypeCondition (attr, value) {
