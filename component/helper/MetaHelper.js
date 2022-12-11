@@ -17,9 +17,12 @@ module.exports = class MetaHelper {
     }
 
     static addClosingChar (text, char) {
-        return typeof text === 'string' && text.length && text.slice(-1) !== char
-            ? text + char
-            : text;
+        if (typeof text === 'string') {
+            if (text.length && text.slice(-1) !== char) {
+                return text + char;
+            }
+        }
+        return text;
     }
 
     static sortByOrderNumber (items) {

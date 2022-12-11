@@ -47,7 +47,9 @@ module.exports = class Mailer extends Base {
     }
 
     getSender (key) {
-        return this.senderMap.hasOwnProperty(key) ? this.senderMap : null;
+        return Object.prototype.hasOwnProperty.call(this.senderMap, key)
+            ? this.senderMap[key]
+            : null;
     }
 
     async prepareData ({sender, recipient, subject, text}) {
@@ -60,11 +62,13 @@ module.exports = class Mailer extends Base {
     }
 
     beforeSend (data) {
-        return this.trigger(this.EVENT_BEFORE_SEND, new Event(data));
+        const event = new Event(data);
+        return this.trigger(this.EVENT_BEFORE_SEND, event);
     }
 
     afterSend (result, data) {
-        return this.trigger(this.EVENT_AFTER_SEND, new Event({result, data}));
+        const event = new Event({result, data});
+        return this.trigger(this.EVENT_AFTER_SEND, event);
     }
 
     async directSend (data) {
@@ -103,7 +107,6 @@ module.exports = class Mailer extends Base {
             time = this.formatter.format(time, 'duration');
             link = this.urlManager.createAbsolute(link);
             link = `${link}?key=${verification.get('key')}`;
-
             let text = this.translate(`${name}.text`, {name: user.getTitle(), link, time});
             await this.send({recipient, subject, text});
         } catch (error) {

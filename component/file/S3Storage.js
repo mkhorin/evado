@@ -52,7 +52,8 @@ module.exports = class S3Storage extends Base {
     }
 
     async getHash (filename) {
-        return (await this.getFileStat(filename)).hash;
+        const stat = await this.getFileStat(filename);
+        return stat.hash;
     }
 
     getSignedDownloadUrl (filename, name) {
@@ -78,8 +79,10 @@ module.exports = class S3Storage extends Base {
 
     generateFilename () {
         const now = new Date;
+        const year = now.getFullYear();
         const month = ('0' + (now.getMonth() + 1)).slice(-2);
-        return `${now.getFullYear()}-${month}/${MongoHelper.createId()}`;
+        const name = MongoHelper.createId();
+        return `${year}-${month}/${name}`;
     }
 
     async deleteFile (filename) {

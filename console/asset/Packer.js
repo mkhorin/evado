@@ -23,7 +23,8 @@ module.exports = class Packer extends Base {
         }
         result = this.prepareContent(result);
         const target = path.join(this.targetRoot, this.target);
-        await fs.promises.mkdir(path.dirname(target), {recursive: true});
+        const dir = path.dirname(target);
+        await fs.promises.mkdir(dir, {recursive: true});
         await fs.promises.writeFile(target, result, 'utf8');
     }
 
@@ -68,7 +69,11 @@ module.exports = class Packer extends Base {
     }
 
     resolveSourceFile (file) {
-        if (this.processedSources.has(file) || !this.extensions.includes(path.extname(file))) {
+        if (this.processedSources.has(file)) {
+            return '';
+        }
+        const extension = path.extname(file);
+        if (!this.extensions.includes(extension)) {
             return '';
         }
         this.processedSources.set(file, true);

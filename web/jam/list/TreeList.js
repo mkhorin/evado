@@ -25,12 +25,15 @@ Jam.TreeList = class TreeList extends Jam.List {
         if ($item.length !== 1) {
             return super.selectItemAfterLoad(id);
         }
-        const parent = this.grid.getNodeByItem($item).getParentNode();
+        const node = this.grid.getNodeByItem($item);
+        const parent = node.getParentNode();
         if (!parent) {
             return super.selectItemAfterLoad(id);
         }
         parent.load();
-        this.grid.events.one('afterDrawNode', this.onAfterDrawNode.bind(this, id, parent));
+        this.grid.events.one('afterDrawNode', () => {
+            this.onAfterDrawNode(id, parent);
+        });
     }
 
     onAfterDrawNode (id, parent) {

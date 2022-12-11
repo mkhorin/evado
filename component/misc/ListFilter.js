@@ -15,7 +15,8 @@ module.exports = class ListFilter extends Base {
     }
 
     async resolve () {
-        this.query.and(await this.resolveItems(this.items));
+        const conditions = await this.resolveItems(this.items);
+        this.query.and(conditions);
     }
 
     async resolveItems (items) {
@@ -106,7 +107,8 @@ module.exports = class ListFilter extends Base {
         let query = rel.model.createQuery();
         await this.spawnSelf({items, query}).resolve();
         if (!relation) {
-            return {[rel.linkKey]: await query.column(rel.refKey)};
+            const ids = await query.column(rel.refKey);
+            return {[rel.linkKey]: ids};
         }
         rel = this.getRelation(relation, rel.model);
         const models = await query.with(relation).all();
@@ -129,7 +131,8 @@ module.exports = class ListFilter extends Base {
             return this.parseEmptyRelation(...arguments);
         }
         const model = this.query.model;
-        const relative = await this.getRelation(attr, model).model.findById(value).one();
+        const query = this.getRelation(attr, model).model.findById(value);
+        const relative = await query.one();
         if (!relative) {
             this.throwBadRequest(`Related object not found: ${value}`);
         }

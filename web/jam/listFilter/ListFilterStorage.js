@@ -85,7 +85,7 @@ Jam.ListFilterStorage = class ListFilterStorage {
         this.toggleSave(true);
     }
 
-    onSave () {
+    async onSave () {
         this.clearErrors();
         const name = $.trim(this.$name.val());
         if (!name.length) {
@@ -98,8 +98,8 @@ Jam.ListFilterStorage = class ListFilterStorage {
         if (!found) {
             return this.insert(name);
         }
-        Jam.dialog.confirm('Update previously saved filter?')
-            .then(this.replace.bind(this, found));
+        await Jam.dialog.confirm('Update previously saved filter?');
+        this.replace(found);
     }
 
     update (name) {
@@ -154,9 +154,10 @@ Jam.ListFilterStorage = class ListFilterStorage {
         }
     }
 
-    onDelete () {
+    async onDelete () {
         if (this.getSelectedItem()) {
-            Jam.dialog.confirmDeletion().then(this.deleteItem.bind(this));
+            await Jam.dialog.confirmDeletion();
+            this.deleteItem();
         }
     }
 

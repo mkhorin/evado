@@ -110,7 +110,10 @@ module.exports = class File extends Base {
 
     async deleteRawFile () {
         const RawClass = this.getRawClass();
-        const models = await this.spawn(RawClass).find({owner: this.getId()}).all();
+        const query = this.spawn(RawClass).find({
+            owner: this.getId()
+        });
+        const models = await query.all();
         return RawClass.delete(models);
     }
 
@@ -144,7 +147,9 @@ module.exports = class File extends Base {
 
     async afterInsert () {
         if (this.rawFile) {
-            await this.rawFile.directUpdate({owner: this.getId()});
+            await this.rawFile.directUpdate({
+                owner: this.getId()
+            });
         }
         return super.afterInsert();
     }
@@ -152,7 +157,9 @@ module.exports = class File extends Base {
     async afterUpdate () {
         if (this.rawFile) {
             await this.deleteRawFile(); // delete current raw
-            await this.rawFile.directUpdate({owner: this.getId()}); // bind a new one
+            await this.rawFile.directUpdate({ // bind a new one
+                owner: this.getId()
+            });
         }
         return super.afterUpdate();
     }

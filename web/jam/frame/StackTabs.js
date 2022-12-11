@@ -75,7 +75,9 @@ Jam.StackTabs = class StackTabs {
         const left = frame.$container.offset().left;
         this.$tabs.offset({left});
 
-        const poolWidth = frame.$container.width() - this.$root.outerWidth();
+        const frameWidth = frame.$container.width();
+        const rootWidth = this.$root.outerWidth();
+        const poolWidth = frameWidth - rootWidth;
         this.$pool.width(poolWidth);
         $children.outerWidth('auto');
 

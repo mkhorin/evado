@@ -46,7 +46,8 @@ Jam.Helper = class Helper {
             image.addEventListener('load', processNext);
             image.addEventListener('error', processNext);
         });
-        $images.first().prop('src', $images.first().data('src'));
+        const source = $images.first().data('src');
+        $images.first().prop('src', source);
     }
 
     static fixMultipleBootstrapModals () {
@@ -76,6 +77,9 @@ Jam.Helper = class Helper {
     }
 
     static getTemplate (id, $container) {
+        if (!$container) {
+            $container = $(document.body);
+        }
         return $container.find('template').filter(`[data-id="${id}"]`).html();
     }
 

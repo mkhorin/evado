@@ -48,12 +48,12 @@ Jam.RelationModelAttr = class RelationModelAttr extends Jam.ModelAttr {
     }
 
     createList (afterInit) {
-        this.list = (new Jam.AttrList(this.$grid, {
+        this.list = new Jam.AttrList(this.$grid, {
             attr: this,
             changes: this.changes,
             model: this.model,
             afterInit
-        }));
+        });
         this.list.init();
     }
 

@@ -46,15 +46,16 @@ Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
     }
 
     getItemData ($item) {
-        return {
-            value: $.trim($item.find('.value-param').val()),
-            text: $.trim($item.find('.text-param').val())
-        };
+        const value = $.trim($item.find('.value-param').val());
+        const text = $.trim($item.find('.text-param').val());
+        return {value, text};
     }
 
     setItemData ($item, data) {
-        $item.find('.value-param').val(data ? $.trim(data.value) : '');
-        $item.find('.text-param').val(data ? $.trim(data.text) : '');
+        const value = data ? $.trim(data.value) : '';
+        $item.find('.value-param').val(value);
+        const text = data ? $.trim(data.text) : '';
+        $item.find('.text-param').val(text);
     }
 
     onAddItem (event) {
@@ -73,8 +74,8 @@ Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
         }
     }
 
-    onDownItem (event) {
-        const $item = this.getItem(event.target);
+    onDownItem ({target}) {
+        const $item = this.getItem(target);
         const $next = $item.next();
         if ($next.length) {
             $next.after($item);
@@ -82,10 +83,10 @@ Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
         }
     }
 
-    onDeleteItem (event) {
+    onDeleteItem ({target}) {
         const $items = this.getItems();
         if ($items.length > 1) {
-            this.getItem(event.target).remove();
+            this.getItem(target).remove();
         } else {
             this.setItemData($items.eq(0));
         }

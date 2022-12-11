@@ -13,7 +13,9 @@ Jam.ScrollHelper = class ScrollHelper {
     }
 
     static scrollTo (target, container, duration = 'fast', done) {
-        const top = Number.isFinite(target) ? target : this.getScrollTopOffset(target, container);
+        const top = Number.isFinite(target)
+            ? target
+            : this.getScrollTopOffset(target, container);
         const $container = $(container || document.documentElement);
         $container.animate({scrollTop: `${top}px`}, {duration}, done);
     }

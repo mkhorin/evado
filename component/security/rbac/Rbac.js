@@ -19,7 +19,13 @@ module.exports = class Rbac extends Base {
             UPDATE: 'update',
             DELETE: 'delete',
             HISTORY: 'history',
-            ALL_ACTIONS: ['read', 'create', 'update', 'delete', 'history'],
+            ALL_ACTIONS: [
+                'read',
+                'create',
+                'update',
+                'delete',
+                'history'
+            ],
 
             TARGET_CLASS: 'class',
             TARGET_VIEW: 'view',
@@ -191,7 +197,8 @@ module.exports = class Rbac extends Base {
     addDescendantClassMetaItems () {
         if (this.baseMeta) {
             for (const item of this.metaItems) {
-                this.metaItems.push(...this.getMetaItemDescendants(item));
+                const items = this.getMetaItemDescendants(item);
+                this.metaItems.push(...items);
             }
         }
     }
@@ -215,8 +222,10 @@ module.exports = class Rbac extends Base {
 
     addParentRoles (items) {
         for (const item of items) {
-            if (item.type === this.ALLOW && Array.isArray(item.roles)) {
-                item.roles = this.getParentRoles(item.roles);
+            if (item.type === this.ALLOW) {
+                if (Array.isArray(item.roles)) {
+                    item.roles = this.getParentRoles(item.roles);
+                }
             }
         }
     }
@@ -225,7 +234,9 @@ module.exports = class Rbac extends Base {
         for (const name of roles) {
             const item = this.itemMap[name];
             if (item instanceof this.Item && item.isRole() && Array.isArray(item.parents)) {
-                const parents = item.parents.filter(item => item.isRole()).map(item => item.name);
+                const parents = item.parents
+                    .filter(item => item.isRole())
+                    .map(item => item.name);
                 roles = roles.concat(parents);
             }
         }
@@ -270,7 +281,8 @@ module.exports = class Rbac extends Base {
     }
 
     filterMetaItem ({targetType}) {
-        return targetType !== this.TARGET_TRANSITION && targetType !== this.TARGET_ATTR;
+        return targetType !== this.TARGET_TRANSITION
+            && targetType !== this.TARGET_ATTR;
     }
 
     setMetaReadAllowedMap () {
@@ -297,7 +309,9 @@ module.exports = class Rbac extends Base {
     setMetaAttrMap () {
         let items = this.metaItems.filter(this.filterMetaAttrItem, this);
         let data = this.indexMetaItemsByRoleAction(items);
-        this.metaAttrMap = this.targetMetaAttrMap = this.objectTargetMetaAttrMap = null;
+        this.metaAttrMap = null;
+        this.targetMetaAttrMap = null;
+        this.objectTargetMetaAttrMap = null;
         if (Object.values(data).length) {
             this.metaAttrMap = data;
             this.targetMetaAttrMap = this.MetaAttrInspector.concatHierarchyItems(items);
@@ -438,8 +452,10 @@ module.exports = class Rbac extends Base {
     async getUserAssignmentsByRules (userId) {
         const items = [];
         for (const name of this.assignmentRuleItems) {
-            if (!items.includes(name) && await this.itemMap[name].resolveAssignmentRules(userId)) {
-                items.push(name);
+            if (!items.includes(name)) {
+                if (await this.itemMap[name].resolveAssignmentRules(userId)) {
+                    items.push(name);
+                }
             }
         }
         return items;
@@ -462,7 +478,8 @@ module.exports = class Rbac extends Base {
     }
 
     executeInspector (Inspector, assignments, data, params) {
-        return (new Inspector({rbac: this, assignments, params, ...data})).execute();
+        const inspector = new Inspector({rbac: this, assignments, params, ...data});
+        return inspector.execute();
     }
 
     // DEFAULTS

@@ -9,7 +9,8 @@ module.exports = class TestMailer extends Base {
 
     constructor (config) {
         super(config);
-        this.settings = Object.assign(htis.getDefaultSettings(), this.settings);
+        const defaults = this.getDefaultSettings();
+        this.settings = Object.assign(defaults, this.settings);
     }
 
     getDefaultSettings () {
@@ -28,7 +29,8 @@ module.exports = class TestMailer extends Base {
 
     async directSend (data) {
         const result = await super.directSend(data);
-        this.log('info', 'Preview:', this.engine.getTestMessageUrl(result));
+        const url = this.engine.getTestMessageUrl(result);
+        this.log('info', 'Preview:', url);
         return result;
     }
 };

@@ -52,11 +52,13 @@ Jam.StackFrame = class StackFrame {
         this.abort();
         this.toggleLoading(true);
         this.$frame.addClass('tabbed');
-        this.$frame.toggleClass('reopen', this.$content.children().length > 0);
+        const $children = this.$content.children();
+        this.$frame.toggleClass('reopen', $children.length > 0);
         this.url = url;
         this.initParams = initParams;
         this.loadParams = this.prepareLoadParams(params);
-        this.xhr = $.get(Jam.UrlHelper.addParams(url, this.loadParams))
+        url = Jam.UrlHelper.addParams(url, this.loadParams);
+        this.xhr = $.get(url)
             .always(this.onAlways.bind(this))
             .done(this.onDone.bind(this))
             .fail(this.onFail.bind(this));
@@ -80,17 +82,16 @@ Jam.StackFrame = class StackFrame {
         this.xhr = null;
     }
 
-    onDone (data) {
-        return Jam.insertContent(data, this.$content).then(() => {
-            const $container = this.$content.children().first();
-            this.createTitle($container);
-            this.createTabTitle($container);
-            Jam.PopoverHelper.initHints($container);
-            this.resize();
-            this.stack.afterLoad(this);
-            this.updateCsrfToken();
-            this.result.resolve();
-        });
+    async onDone (data) {
+        await Jam.insertContent(data, this.$content);
+        const $container = this.$content.children().first();
+        this.createTitle($container);
+        this.createTabTitle($container);
+        Jam.PopoverHelper.initHints($container);
+        this.resize();
+        this.stack.afterLoad(this);
+        this.updateCsrfToken();
+        this.result.resolve();
     }
 
     updateCsrfToken () {
@@ -167,7 +168,10 @@ Jam.StackFrame = class StackFrame {
         if (!this.checkLastActive()) {
             return $.Deferred().reject();
         }
-        this.forceClose({reload: true, ...data});
+        this.forceClose({
+            reload: true,
+            ...data
+        });
         return this.load(this.url, this.loadParams, this.initParams);
     }
 

@@ -58,7 +58,8 @@ Jam.Tabs = class Tabs extends Jam.Element {
         if (this.getActiveId() !== id) {
             this.unsetActive();
             this.getNav(id).addClass('active');
-            Jam.createElements(this.getPane(id).addClass('active'));
+            const $pane = this.getPane(id).addClass('active');
+            Jam.createElements($pane);
             this.events.trigger('change', {id});
         }
     }
@@ -70,12 +71,14 @@ Jam.Tabs = class Tabs extends Jam.Element {
 
     onTab (event) {
         event.preventDefault();
-        this.setActive(this.getNavByElement(event.currentTarget).data('id'));
+        const $nav = this.getNavByElement(event.currentTarget);
+        this.setActive($nav.data('id'));
     }
 
     onTabClose (event) {
         event.preventDefault();
-        const id = this.getNavByElement(event.currentTarget).data('id');
+        const $nav = this.getNavByElement(event.currentTarget);
+        const id = $nav.data('id');
         const data = {id, close: true};
         this.events.trigger('close', data);
         if (data.close) {
@@ -96,16 +99,24 @@ Jam.Tabs = class Tabs extends Jam.Element {
         if (this.getNav(id).length) {
             return true;
         }
+        const head = this.createTabHead(id, data);
+        this.getNavItems().parent()[method](head);
+        const pane = this.createTabPane(id, data);
+        this.getPanes().parent()[method](pane);
+        this.events.trigger('create', {id});
+    }
+
+    createTabHead (id, data) {
         const text = data.text || id;
         const hint = data.hint || text;
         const close = data.close ? 'closing' : '';
-        const content = data.content;
-        const node = `<li class="nav-tab ${close}" data-id="${id}">`
+        return `<li class="nav-tab ${close}" data-id="${id}">`
             + `<a href="javascript:void 0" title="${hint}">${text}</a>`
             + `<div class="tab-close">&times;</div></li>`;
-        this.getNavItems().parent()[method](node);
-        this.getPanes().parent()[method](`<div class="tab-pane" data-id="${id}">${content}</div>`);
-        this.events.trigger('create', {id});
+    }
+
+    createTabPane (id, {content}) {
+        return `<div class="tab-pane" data-id="${id}">${content}</div>`;
     }
 
     deleteTab (id) {

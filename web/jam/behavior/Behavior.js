@@ -13,7 +13,9 @@ Jam.Behavior = class Behavior {
 
     static create (data, owner, params) {
         const Class = Jam.getClass(data);
-        params = data.name ? Object.assign(data, params) : params;
+        if (data.name) {
+            params = Object.assign(data, params);
+        }
         return new Class(owner, params);
     }
 

@@ -190,7 +190,8 @@ Jam.List = class List extends Jam.Element {
 
     prepareItems () {
         this.findItems().each((index, item) => {
-            this.prepareItem(item, this.grid.getData(item.dataset.id), index);
+            const data = this.grid.getData(item.dataset.id);
+            this.prepareItem(item, data, index);
         });
     }
 
@@ -421,15 +422,18 @@ Jam.List = class List extends Jam.Element {
         }
     }
 
-    onDelete () {
+    async onDelete () {
         const $items = this.getSelectedItems();
         if ($items) {
-            Jam.dialog.confirmListDeletion().then(this.deleteObjects.bind(this, $items));
+            await Jam.dialog.confirmListDeletion();
+            this.deleteObjects($items);
         }
     }
 
     onSort () {
-        this.modalSort = this.modalSort || new Jam.ListSort(this, this.params.modalSort);
+        if (!this.modalSort) {
+            this.modalSort = new Jam.ListSort(this, this.params.modalSort);
+        }
         this.modalSort.execute();
     }
 

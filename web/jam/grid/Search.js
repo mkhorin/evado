@@ -35,7 +35,8 @@ Jam.DataGridSearch = class DataGridSearch {
     onKeyUp (event) {
         if (event.key === 'Enter' || event.key === 'Escape') {
             event.stopPropagation();
-            this.execute(this.$input.val());
+            const value = this.$input.val();
+            this.execute(value);
         }
     }
 

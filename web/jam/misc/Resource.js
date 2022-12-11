@@ -22,11 +22,13 @@ Jam.Resource = class Resource {
     }
 
     createElements (selector, key, container, elements) {
-        for (const node of container.querySelectorAll(selector)) {
+        const nodes = container.querySelectorAll(selector);
+        for (const node of nodes) {
             const id = node[key];
             const data = this.getData();
             if (data[id] !== true) {
-                elements.push(this.createElement(selector, key, node));
+                const element = this.createElement(selector, key, node);
+                elements.push(element);
                 data[id] = true;
             }
             node.remove();
@@ -57,7 +59,8 @@ Jam.Resource = class Resource {
     }
 
     indexElements (selector, key, data) {
-        for (const node of document.querySelectorAll(selector)) {
+        const nodes = document.querySelectorAll(selector);
+        for (const node of nodes) {
             data[node[key]] = true;
         }
     }

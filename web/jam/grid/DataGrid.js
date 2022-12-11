@@ -123,16 +123,19 @@ Jam.DataGrid = class DataGrid {
     }
 
     prepareColumns () {
-        const oneColumn = this.params.columns.length === 1;
-        for (const column of this.params.columns) {
+        const columns = this.params.columns;
+        const oneColumn = columns.length === 1;
+        for (const column of columns) {
             column.hidden = oneColumn ? false : column.hidden;
             this.resolveColumnTranslation(column);
         }
     }
 
     resolveColumnTranslation (column) {
-        if (!column.hasOwnProperty('translateData') && column.format === 'label') {
-            column.translateData = '';
+        if (column.format === 'label') {
+            if (!column.hasOwnProperty('translateData')) {
+                column.translateData = '';
+            }
         }
     }
 
@@ -149,7 +152,10 @@ Jam.DataGrid = class DataGrid {
     }
 
     getItemData ($items, column) {
-        return $items.map((index, item) => this.getData(item.dataset.id, column)).get();
+        const $data = $items.map((index, item) => {
+            return this.getData(item.dataset.id, column);
+        });
+        return $data.get();
     }
 
     getData (id, column) {
@@ -157,7 +163,9 @@ Jam.DataGrid = class DataGrid {
             return this.itemMap;
         }
         if (Object.keys(this.itemMap).includes(id)) {
-            return column === undefined ? this.itemMap[id] : this.itemMap[id][column];
+            return column === undefined
+                ? this.itemMap[id]
+                : this.itemMap[id][column];
         }
     }
 
@@ -166,7 +174,9 @@ Jam.DataGrid = class DataGrid {
     }
 
     getColumn (name) {
-        return Jam.ObjectHelper.has(name, this.columnMap) ? this.columnMap[name] : null;
+        return Jam.ObjectHelper.has(name, this.columnMap)
+            ? this.columnMap[name]
+            : null;
     }
 
     getVisibleColumns () {
@@ -244,7 +254,8 @@ Jam.DataGrid = class DataGrid {
     }
 
     drawContent () {
-        this.renderer.setColumns(this.getVisibleColumns());
+        const columns = this.getVisibleColumns();
+        this.renderer.setColumns(columns);
         this.renderer.drawHead();
         this.renderer.drawFooter();
         this.drawPage();

@@ -117,7 +117,8 @@ module.exports = class Utility extends Base {
     renderExternal (template) {
         this.renderParams.utility = this;
         const view = this.controller.getView();
-        return view.renderTemplate(view.get(template), this.renderParams);
+        const name = view.get(template);
+        return view.renderTemplate(name, this.renderParams);
     }
 
     log () {

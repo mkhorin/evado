@@ -64,7 +64,8 @@ Jam.ModelGrouping = class ModelGrouping {
     loadState (names, active) {
         if (Array.isArray(names)) {
             for (const name of names) {
-                this.getGroup(name)?.toggleActive(active);
+                const group = this.getGroup(name);
+                group?.toggleActive(active);
             }
         }
     }
@@ -112,7 +113,8 @@ Jam.ModelGrouping = class ModelGrouping {
     }
 
     onSet ({currentTarget}) {
-        $(currentTarget).closest('.form-set').data('group')?.toggleActive();
+        const group = $(currentTarget).closest('.form-set').data('group');
+        group?.toggleActive();
         this.saveStates();
     }
 

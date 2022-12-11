@@ -133,7 +133,7 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     isRunning () {
-        return this.attrs.map(attr => attr.isRunning()).find(message => message);
+        return this.attrs.map(attr => attr.isRunning()).find(v => v);
     }
 
     setReadOnly () {
@@ -176,7 +176,8 @@ Jam.Model = class Model extends Jam.Element {
 
     onCommand (event) {
         if (this.beforeCommand(event)) {
-            this.getCommandMethod(event.currentTarget.dataset.command)?.call(this, event);
+            const method = this.getCommandMethod(event.currentTarget.dataset.command);
+            method?.call(this, event);
         }
     }
 
@@ -224,8 +225,9 @@ Jam.Model = class Model extends Jam.Element {
         this.childFrame.load(this.params.update, {id: this.id});
     }
 
-    onDelete () {
-        Jam.dialog.confirmDeletion().then(this.deleteModel.bind(this));
+    async onDelete () {
+        await Jam.dialog.confirmDeletion();
+        this.deleteModel();
     }
 
     onReload () {
@@ -257,7 +259,8 @@ Jam.Model = class Model extends Jam.Element {
         this.toggleLoader(true);
         this.events.trigger('beforeSave');
         this.reopen = reopen;
-        return Jam.post(this.params.url, $.param(this.serialize()))
+        const params = $.param(this.serialize());
+        return Jam.post(this.params.url, params)
             .done(this.onDoneSaving.bind(this))
             .fail(this.onFailSaving.bind(this));
     }

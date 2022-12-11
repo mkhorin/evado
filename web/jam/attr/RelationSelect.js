@@ -315,13 +315,13 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         }
     }
 
-    onDelete () {
+    async onDelete () {
         const values = this.getMultipleSelectedValues();
         if (values) {
-            const deferred = this.params.confirmDeletion
-                ? Jam.dialog.confirmListDeletion()
-                : null;
-            $.when(deferred).then(() => this.delete(values));
+            if (this.params.confirmDeletion) {
+                await Jam.dialog.confirmListDeletion();
+            }
+            this.delete(values);
         }
     }
 

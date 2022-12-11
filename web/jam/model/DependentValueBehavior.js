@@ -14,7 +14,8 @@ Jam.DependentValueBehavior = class DependentValueBehavior {
     }
 
     onChangeSource () {
-        if (this.source.getValue() === this.params.sourceValue) {
+        const value = this.source.getValue();
+        if (value === this.params.sourceValue) {
             const target = this.model.getAttr(this.params.target);
             target.setValue(this.params.targetValue);
         }

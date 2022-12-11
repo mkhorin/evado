@@ -106,12 +106,14 @@ module.exports = class DataGrid extends Base {
     }
 
     async setModels () {
-        let links = this.request.changes && this.request.changes.links;
+        const links = this.request.changes?.links;
         if (Array.isArray(links) && links.length) {
             const key = this.query.model.PK;
-            this._models = await this.query.and(['notId', key, links]).all();
-            links = await this.query.model.find(['id', key, links]).with(this.query).offset(0).all();
-            this._models = links.concat(this._models);
+            this.query.and(['notId', key, links]);
+            this._models = await this.query.all();
+            const query = this.query.model.find(['id', key, links]).with(this.query).offset(0);
+            const linkedModels = await query.all();
+            this._models = linkedModels.concat(this._models);
         } else {
             this._models = await this.query.all();
         }

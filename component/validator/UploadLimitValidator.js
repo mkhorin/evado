@@ -14,12 +14,17 @@ module.exports = class UploadLimitValidator extends Base {
         }
         const creator = model.user.getId();
         const sizes = await model.find({creator}).column('size');
-        if (maxTotalUserFiles && sizes.length >= maxTotalUserFiles) {
-            return model.addError(attr, 'Too many uploaded files');
+        if (maxTotalUserFiles) {
+            if (sizes.length >= maxTotalUserFiles) {
+                return model.addError(attr, 'Too many uploaded files');
+            }
         }
-        const total = sizes.reduce((sum, value) => sum + value, model.getSize());
-        if (maxTotalUserFileSize && total >= maxTotalUserFileSize) {
-            return model.addError(attr, 'Total file size exceeded');
+        const size = model.getSize();
+        const total = sizes.reduce((sum, value) => sum + value, size);
+        if (maxTotalUserFileSize) {
+            if (total >= maxTotalUserFileSize) {
+                return model.addError(attr, 'Total file size exceeded');
+            }
         }
     }
 };

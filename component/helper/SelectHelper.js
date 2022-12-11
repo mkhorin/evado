@@ -35,7 +35,9 @@ module.exports = class SelectHelper {
     // QUERY
 
     static queryLabelItems (query) {
-        return this.queryItems(query, {getItemText: this.getLabelText});
+        return this.queryItems(query, {
+            getItemText: this.getLabelText
+        });
     }
 
     static async queryItems (query, params) {
@@ -45,7 +47,9 @@ module.exports = class SelectHelper {
     // MODEL
 
     static getModelLabelItems (models) {
-        return this.getModelItems(models, {getItemText: this.getLabelText});
+        return this.getModelItems(models, {
+            getItemText: this.getLabelText
+        });
     }
 
     static getModelItems (models, params) {
@@ -56,7 +60,10 @@ module.exports = class SelectHelper {
     // DOCS
 
     static getLabelItems (docs, params) {
-        return this.getItems(docs, {getItemText: this.getLabelText, ...params});
+        return this.getItems(docs, {
+            getItemText: this.getLabelText,
+            ...params
+        });
     }
 
     static getItems (docs, params) {

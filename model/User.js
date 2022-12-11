@@ -145,7 +145,8 @@ module.exports = class User extends Base {
     }
 
     setAuthKey () {
-        this.set('authKey', SecurityHelper.getRandomString(this.AUTH_KEY_LENGTH));
+        const key = SecurityHelper.getRandomString(this.AUTH_KEY_LENGTH);
+        this.set('authKey', key);
     }
 
     checkAuthKey (key) {

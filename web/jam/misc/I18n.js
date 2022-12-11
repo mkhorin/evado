@@ -87,7 +87,8 @@ Jam.I18n = class I18n {
 
     translateAttribute (name, category, element) {
         category = element.dataset[category] ?? element.dataset.t;
-        const message = this.getMessage(category, element.getAttribute(name));
+        const value = element.getAttribute(name);
+        const message = this.getMessage(category, value);
         if (message !== undefined) {
             element.setAttribute(name, message);
         }
@@ -106,21 +107,24 @@ Jam.I18n = class I18n {
         }
         if (params) {
             for (const key of Object.keys(params)) {
-                text = text.replace(new RegExp(`{${key}}`,'g'), params[key]);
+                const regex = new RegExp(`{${key}}`, 'g');
+                text = text.replace(regex, params[key]);
             }
         }
         return text;
     }
 
     getRegularMessage (category, message) {
-        const data = category ? this._data[category] : this._data.defaults;
+        const key = category || 'defaults';
+        const data = this._data[key];
         if (Jam.ObjectHelper.has(message, data)) {
             return data[message];
         }
         if (category) {
             const index = category.lastIndexOf('.');
             if (index !== -1) {
-                return this.getMessage(category.substring(0, index), message);
+                const parent = category.substring(0, index);
+                return this.getMessage(parent, message);
             }
         }
     }

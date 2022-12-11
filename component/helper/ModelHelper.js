@@ -41,7 +41,8 @@ module.exports = class ModelHelper {
     }
 
     static formatDefaultRule (attr, model, formatter, type, params) {
-        model.setViewAttr(attr, formatter.format(model.get(attr), type, params));
+        const value = model.get(attr);
+        model.setViewAttr(attr, formatter.format(value, type, params));
     }
 
     static resolveFilterColumns (columns, model) {
@@ -67,15 +68,19 @@ module.exports = class ModelHelper {
      * @param {boolean} inBulk - delete records at once, otherwise by loading the models first
      */
     static async truncateOverflow ({query, threshold, offset, inBulk}) {
-        if (await query.count() > threshold) {
-            const model = query.model;
-            query.order({[model.PK]: -1}).offset(offset);
-            if (inBulk) {
-                const ids = await query.ids();
-                return query.order(null).where({[model.PK]: ids}).delete();
-            }
-            return model.constructor.delete(await query.all());
+        const counter = await query.count();
+        if (counter <= threshold) {
+            return;
         }
+        const model = query.model;
+        query.order({[model.PK]: -1}).offset(offset);
+        if (inBulk) {
+            const ids = await query.ids();
+            query.order(null).where({[model.PK]: ids});
+            return query.delete();
+        }
+        const models = await query.all();
+        return model.constructor.delete(models);
     }
 };
 

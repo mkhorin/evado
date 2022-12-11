@@ -167,7 +167,9 @@ module.exports = class Item extends Base {
         const result = [];
         for (const target of this.data.targets) {
             if (this.isItemTarget(target, item)) {
-                this.store.log('warn', this.getMetaError(`Target already exists: ${JSON.stringify(target)}`));
+                const value = JSON.stringify(target);
+                const message = this.getMetaError(`Target already exists: ${value}`);
+                this.store.log('warn', message);
             } else {
                 result.push(target);
             }

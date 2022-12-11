@@ -17,7 +17,7 @@ Jam.PopoverHelper = class PopoverHelper {
     }
 
     static addEventListeners ($container, params) {
-        $container.on('mouseenter', params.targetSelector, ({target}) => this.create(target, params));
+        $container.on('mouseenter', params.targetSelector, this.onEnter.bind(this, params));
         $container.on('shown.bs.popover', this.onShow.bind(this));
         $container.on('hide.bs.popover', this.onHide.bind(this));
     }
@@ -35,8 +35,12 @@ Jam.PopoverHelper = class PopoverHelper {
         }
     }
 
-    static onShow (event) {
-        $(document.body).on(this.HIDE_EVENT, this.onHideEvent.bind(this, event.target));
+    static onEnter (params, {target}) {
+        this.create(target, params);
+    }
+
+    static onShow ({target}) {
+        $(document.body).on(this.HIDE_EVENT, this.onHideEvent.bind(this, target));
     }
 
     static onHide () {

@@ -24,19 +24,22 @@ Jam.Loadable = class Loadable extends Jam.Element {
         this.addClass('loaded');
     }
 
-    onDone (data) {
-        this.setContent(data);
+    async onDone (data) {
+        await this.setContent(data);
     }
 
-    onFail () {
-        this.setContent('');
+    async onFail () {
+        await this.setContent('');
     }
 
     load () {
         this.abort();
         this.removeClass('loaded');
         this.addClass('loading');
-        this.xhr = $[this.getMethod()](this.getUrl(), this.getRequestData())
+        const method = this.getMethod();
+        const url = this.getUrl();
+        const data = this.getRequestData();
+        this.xhr = $[method](url, data)
             .always(this.onAlways.bind(this))
             .done(this.onDone.bind(this))
             .fail(this.onFail.bind(this));
@@ -67,12 +70,11 @@ Jam.Loadable = class Loadable extends Jam.Element {
         return this.find('.loadable-content');
     }
 
-    setContent (data) {
-        Jam.resource.resolve(data).then(result => {
-            const $content = this.findContent();
-            $content.html(result);
-            Jam.t($content);
-            Jam.createElements($content);
-        });
+    async setContent (data) {
+        data = await Jam.resource.resolve(data);
+        const $content = this.findContent();
+        $content.html(data);
+        Jam.t($content);
+        Jam.createElements($content);
     }
 };

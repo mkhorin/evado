@@ -58,9 +58,11 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
     }
 
     onAppendFile (event, item) {
-        const bytes = Jam.FormatHelper.asBytes(item.file.size);
-        item.$item.find('.uploader-filename').text(`${item.file.name} (${bytes})`);
-        this.setNameAttr(item.file.name);
+        const {name, size} = item.file;
+        const bytes = Jam.FormatHelper.asBytes(size);
+        const $filename = item.$item.find('.uploader-filename');
+        $filename.text(`${name} (${bytes})`);
+        this.setNameAttr(name);
         this.events.trigger('append', item);
     }
 
@@ -83,8 +85,8 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         $item.find(this.fileMessageSelector).text('Uploading...');
     }
 
-    onProgressFile (event, item) {
-        item.$item.find('.progress-bar').css('width', `${item.percent}%`);
+    onProgressFile (event, {$item, percent}) {
+        $item.find('.progress-bar').css('width', `${percent}%`);
     }
 
     onUploadFile (event, item) {
@@ -106,10 +108,12 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         $item.find(this.fileMessageSelector).text(message);
     }
 
-    onConfirmFileDeletion (event, item) {
+    async onConfirmFileDeletion (event, item) {
         const message = this.$uploader.data('deletionConfirm');
-        const deferred = message ? Jam.dialog.confirmDeletion(message) : null;
-        $.when(deferred).then(() => item.delete());
+        if (message) {
+            await Jam.dialog.confirmDeletion(message);
+        }
+        item.delete();
     }
 
     onDeleteFile (event, {id}) {

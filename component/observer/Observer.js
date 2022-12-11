@@ -75,7 +75,8 @@ module.exports = class Observer extends Base {
         }
         const index = event.lastIndexOf('.');
         if (index !== -1) {
-            const events = this.parseEventName(event.substring(0, index));
+            const name = event.substring(0, index);
+            const events = this.parseEventName(name);
             if (events) {
                 result.push(...events);
             }

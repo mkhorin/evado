@@ -76,17 +76,21 @@ module.exports = class SortRelatedAction extends Base {
             orderAttr: this.sortOrderBehavior.orderAttr
         };
         await this.filterModels(data);
-        data.relController = data.relModel.createController().assignSource(this.controller);
+        data.relController = data.relModel.createController();
+        data.relController.assignSource(this.controller);
         const model = data.relController.createViewModel(this.template, {data});
         if (model) {
             await model.prepareModels(data.models);
             data = await model.getTemplateData();
         }
-        this.send(await data.relController.renderTemplate(this.template, data));
+        const content = await data.relController.renderTemplate(this.template, data);
+        this.send(content);
     }
 
     findModels () {
-        return this.relation.order({[this.sortOrderBehavior.orderAttr]: 1});
+        return this.relation.order({
+            [this.sortOrderBehavior.orderAttr]: 1
+        });
     }
 
     filterModels (data) {

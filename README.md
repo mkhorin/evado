@@ -22,6 +22,7 @@
 - [Boilerplate App](https://github.com/mkhorin/evado-app-boilerplate) - a full-featured web app template
 - [E-Champ](https://github.com/mkhorin/e-champ) - a platform for online games
 - [Neural Net](https://github.com/mkhorin/neural-net) - neural networks for digit recognition
+- [Crossword Maker](https://github.com/mkhorin/crossword-maker) - creating and solving crossword puzzles
 
 ### Ready to try
 

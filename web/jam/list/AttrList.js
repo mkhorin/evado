@@ -124,13 +124,13 @@ Jam.AttrList = class AttrList extends Jam.List {
         }
     }
 
-    onDelete () {
+    async onDelete () {
         const $items = this.getSelectedItems();
         if ($items) {
-            const deferred = this.params.confirmDeletion
-                ? Jam.dialog.confirmListDeletion()
-                : null;
-            $.when(deferred).then(() => this.deleteObjects($items));
+            if (this.params.confirmDeletion) {
+                await Jam.dialog.confirmListDeletion();
+            }
+            this.deleteObjects($items);
         }
     }
 

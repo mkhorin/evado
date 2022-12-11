@@ -148,7 +148,8 @@ Jam.Uploader = class Uploader {
         }
         if (files.length) {
             for (const file of Array.from(files)) {
-                this.files.push(new Jam.UploaderFile(file, this));
+                const uploaderFile = new Jam.UploaderFile(file, this);
+                this.files.push(uploaderFile);
             }
             this.hideDropZone(counter.total);
             Jam.Helper.resetFormElement(this.$input);
@@ -202,8 +203,10 @@ Jam.Uploader = class Uploader {
     getFirstFilesByStatus () {
         const result = {};
         for (const file of this.files) {
-            if (!file.deleted && !file.failed && !result.hasOwnProperty(file.status)) {
-                result[file.status] = file;
+            if (!file.deleted && !file.failed) {
+                if (!result.hasOwnProperty(file.status)) {
+                    result[file.status] = file;
+                }
             }
         }
         return result;

@@ -64,7 +64,8 @@ Jam.ActionBinderValue = class ActionBinderValue extends Jam.ActionBinderAction {
         }
         const item = this.getValidItem();
         if (item) {
-            this.attr.setValue(this.getItemValue(item));
+            const value = this.getItemValue(item);
+            this.attr.setValue(value);
         }
     }
 };

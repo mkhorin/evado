@@ -78,13 +78,12 @@ class Jam {
         }
     }
 
-    static insertContent (content, $container) {
-        return Jam.resource.resolve(content).then(content => {
-            $container.html(content);
-            Jam.t($container);
-            Jam.Helper.bindLabelsToInputs($container);
-            Jam.DateHelper.resolveClientDate($container);
-            Jam.createElements($container);
-        });
+    static async insertContent (data, $container) {
+        const content = await Jam.resource.resolve(data);
+        $container.html(content);
+        Jam.t($container);
+        Jam.Helper.bindLabelsToInputs($container);
+        Jam.DateHelper.resolveClientDate($container);
+        Jam.createElements($container);
     }
 }

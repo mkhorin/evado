@@ -36,14 +36,16 @@ module.exports = class DeleteExpiredFiles extends Base {
     async deleteModelFiles (config) {
         const model = this.spawn(config);
         const date = this.getEarliestValidCreationDate();
-        const files = await model.findExpired(date).all();
+        const query = model.findExpired(date);
+        const files = await query.all();
         for (const file of files) {
             await file.delete();
         }
     }
 
     getEarliestValidCreationDate () {
-        return new Date(Date.now() - DateHelper.parseDuration(this.lifetime));
+        const duration = DateHelper.parseDuration(this.lifetime);
+        return new Date(Date.now() - duration);
     }
 };
 

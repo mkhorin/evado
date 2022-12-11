@@ -158,7 +158,8 @@ Jam.UploaderFile = class UploaderFile {
     }
 
     isMatchFile () {
-        for (const item of Array.from(this.uploader.files)) {
+        const items = Array.from(this.uploader.files);
+        for (const item of items) {
             if (item.deleted) {
                 continue;
             }

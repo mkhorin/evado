@@ -89,7 +89,7 @@ Jam.ModelCondition = class ModelCondition {
 
     validateAnd (operator, operands) {
         if (operands.length === 0) {
-            return this.logDataError(operator, operands);
+            return this.logDataError(...arguments);
         }
         for (const operand of operands) {
             if (!this.validate(operand)) {
@@ -101,7 +101,7 @@ Jam.ModelCondition = class ModelCondition {
 
     validateOr (operator, operands) {
         if (operands.length === 0) {
-            return this.logDataError(operator, operands);
+            return this.logDataError(...arguments);
         }
         for (const operand of operands) {
             if (this.validate(operand)) {
@@ -116,14 +116,15 @@ Jam.ModelCondition = class ModelCondition {
     }
 
     validateNotEmpty (operator, operands) {
-        return operands.length !== 1
-            ? this.logDataError(operator, operands)
-            : this.hasValue(operands[0]);
+        if (operands.length !== 1) {
+            return this.logDataError(...arguments);
+        }
+        return this.hasValue(operands[0]);
     }
 
     validateBetween (operator, operands) {
         if (operands.length !== 3) {
-            return this.logDataError(operator, operands);
+            return this.logDataError(...arguments);
         }
         const value = this.getValue(operands[0]);
         return value >= operands[1] && value <= operands[2];
@@ -134,9 +135,11 @@ Jam.ModelCondition = class ModelCondition {
     }
 
     validateIn (operator, operands) {
-        return operands.length !== 2 || !Array.isArray(operands[1])
-            ? this.logDataError(operator, operands)
-            : operands[1].includes(this.getValue(operands[0]));
+        if (operands.length !== 2 || !Array.isArray(operands[1])) {
+            return this.logDataError(...arguments);
+        }
+        const value = this.getValue(operands[0]);
+        return operands[1].includes(value);
     }
 
     validateNotIn () {
@@ -144,15 +147,20 @@ Jam.ModelCondition = class ModelCondition {
     }
 
     validateRegex (operator, operands) {
-        return operands.length < 2
-            ? this.logDataError(operator, operands)
-            : (new RegExp(operands[1], operands[2])).test(this.getValue(operands[0]));
+        if (operands.length < 2) {
+            return this.logDataError(...arguments);
+        }
+        const regex = new RegExp(operands[1], operands[2]);
+        const value = this.getValue(operands[0]);
+        return regex.test(value);
     }
 
     validateEqual (operator, operands) {
-        return operands.length !== 2
-            ? this.logDataError(operator, operands)
-            : operands[1] === this.getValue(operands[0]);
+        if (operands.length !== 2) {
+            return this.logDataError(...arguments);
+        }
+        const value = this.getValue(operands[0]);
+        return operands[1] === value;
     }
 
     validateNotEqual () {
@@ -160,27 +168,35 @@ Jam.ModelCondition = class ModelCondition {
     }
 
     validateGreater (operator, operands) {
-        return operands.length !== 2
-            ? this.logDataError(operator, operands)
-            : this.getValue(operands[0]) > operands[1];
+        if (operands.length !== 2) {
+            return this.logDataError(...arguments);
+        }
+        const value = this.getValue(operands[0]);
+        return value > operands[1];
     }
 
     validateGreaterOrEqual (operator, operands) {
-        return operands.length !== 2
-            ? this.logDataError(operator, operands)
-            : this.getValue(operands[0]) >= operands[1];
+        if (operands.length !== 2) {
+            return this.logDataError(...arguments);
+        }
+        const value = this.getValue(operands[0]);
+        return value >= operands[1];
     }
 
     validateLess (operator, operands) {
-        return operands.length !== 2
-            ? this.logDataError(operator, operands)
-            : this.getValue(operands[0]) < operands[1];
+        if (operands.length !== 2) {
+            return this.logDataError(...arguments);
+        }
+        const value = this.getValue(operands[0]);
+        return value < operands[1];
     }
 
     validateLessOrEqual (operator, operands) {
-        return operands.length !== 2
-            ? this.logDataError(operator, operands)
-            : this.getValue(operands[0]) <= operands[1];
+        if (operands.length !== 2) {
+            return this.logDataError(...arguments);
+        }
+        const value = this.getValue(operands[0]);
+        return value <= operands[1];
     }
 
     validateTrue () {
@@ -210,11 +226,12 @@ Jam.ModelCondition = class ModelCondition {
      */
     validateTrigger (operator, operands, key = 'triggerAttr') {
         if (operands.length !== 1) {
-            return this.logDataError(operator, operands);
+            return this.logDataError(...arguments);
         }
         const tracker = this.model.changeTracker;
         if (tracker) {
-            return tracker[key] === this.getAttr(operands[0]);
+            const attr = this.getAttr(operands[0]);
+            return tracker[key] === attr;
         }
     }
 

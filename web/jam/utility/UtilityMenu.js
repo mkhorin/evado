@@ -41,8 +41,8 @@ Jam.UtilityMenu = class UtilityMenu {
         template = Jam.Helper.getTemplate(template, this.$container);
         data.css = data.css || 'btn-outline-primary';
         data.hint = data.hint || data.name;
-        const $item = $(Jam.Helper.resolveTemplate(template, data));
-        return this.manager.createUtility($item, data);
+        const content = Jam.Helper.resolveTemplate(template, data);
+        return this.manager.createUtility($(content), data);
     }
 
     load () {

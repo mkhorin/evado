@@ -51,7 +51,7 @@ Jam.ModelTools = class ModelTools {
 
     handlerDefault ($elem) {
         this.toggleLoading(true);
-        return Jam.post($elem.data('url'))
-            .done(this.alertSuccess.bind(this));
+        const url = $elem.data('url');
+        return Jam.post(url).done(this.alertSuccess.bind(this));
     }
 };

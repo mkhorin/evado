@@ -15,6 +15,8 @@ Jam.Dialog = class Dialog {
             translatable: true,
             translationCategory: null,
             escaping: true,
+            deletionMessage: 'Delete this object permanently?',
+            listDeletionMessage: 'Delete selected objects permanently?',
             ...params
         };
         this.$dialog = $(this.createElement());
@@ -32,11 +34,11 @@ Jam.Dialog = class Dialog {
     }
 
     confirmListDeletion (message, data) {
-        return this.confirmDeletion(message || 'Delete selected objects permanently?', data);
+        return this.confirmDeletion(message || this.params.listDeletionMessage, data);
     }
 
     confirmDeletion (message, data) {
-        return this.confirm(message || 'Delete this object permanently?', {
+        return this.confirm(message || this.params.deletionMessage, {
             css: 'danger',
             submitText: 'Delete',
             ...data

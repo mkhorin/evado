@@ -72,13 +72,15 @@ module.exports = class SortRelatedArrayAction extends Base {
             relModel: this.relation.model,
             models: await this.findModels().all()
         };
-        data.relController = data.relModel.createController().assignSource(this.controller);
+        data.relController = data.relModel.createController();
+        data.relController.assignSource(this.controller);
         const model = data.relController.createViewModel(this.template, {data});
         if (model) {
             await model.prepareModels(data.models);
             data = await model.getTemplateData();
         }
-        this.send(await data.relController.renderTemplate(this.template, data));
+        const content = await data.relController.renderTemplate(this.template, data);
+        this.send(content);
     }
 };
 

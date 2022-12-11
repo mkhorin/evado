@@ -133,7 +133,8 @@ Jam.ArrayHelper = class ArrayHelper {
     }
 
     static random (items) {
-        return items[Math.floor(Math.random() * items.length)];
+        const index = Math.floor(Math.random() * items.length);
+        return items[index];
     }
 
     static shuffle (items) {
@@ -163,13 +164,17 @@ Jam.ArrayHelper = class ArrayHelper {
     }
 
     static getByNestedValue (value, key, items) {
-        return items?.[this.searchByNestedValue(value, key, items)];
+        if (items) {
+            const index = this.searchByNestedValue(value, key, items);
+            return items[index];
+        }
     }
 
     static searchByNestedValue (value, key, items) {
         if (Array.isArray(items)) {
             for (let i = 0; i < items.length; ++i) {
-                if (Jam.ObjectHelper.getNestedValue(key, items[i]) === value) {
+                const nested = Jam.ObjectHelper.getNestedValue(key, items[i]);
+                if (nested === value) {
                     return i;
                 }
             }

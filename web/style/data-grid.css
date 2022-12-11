@@ -146,11 +146,11 @@
 }
 .data-grid .data-grid-body > tr.unlinked > td,
 .data-grid-cards .data-item.unlinked {
-    background-color: #fff0f0 !important;
+    background-color: #fff6f6 !important;
 }
 .data-grid .data-grid-body > tr.unlinked:nth-of-type(odd) > td,
 .data-grid-cards .data-item.unlinked:nth-of-type(odd) {
-    background-color: #ffe8e8 !important;
+    background-color: #ffebeb !important;
 }
 .data-grid .data-grid-body > tr.deleted > td,
 .data-grid-cards .data-item.deleted {
@@ -161,11 +161,9 @@
     background-color: #ffe0e0 !important;
 }
 .data-grid .data-grid-body > tr.deleted > td,
-.data-grid .data-grid-body > tr.unlinked > td,
-.data-grid-cards .data-item.deleted,
-.data-grid-cards .data-item.unlinked {
+.data-grid-cards .data-item.deleted {
     position: relative;
-    color: #a00;
+    color: #900;
 }
 .data-grid .data-grid-body > tr.deleted > td:after,
 .data-grid-cards .data-item.deleted:after {

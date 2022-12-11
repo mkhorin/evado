@@ -44,7 +44,8 @@ Jam.ListFilterCondition = class ListFilterCondition {
 
     onChangeAttr () {
         this.deleteType();
-        const params = this.group.getAttrParams(this.getAttr());
+        const attr = this.getAttr();
+        const params = this.group.getAttrParams(attr);
         if (params) {
             this.type = this.createType(params);
             this.type.focus();
@@ -75,7 +76,9 @@ Jam.ListFilterCondition = class ListFilterCondition {
     }
 
     getValue () {
-        return this.type ? this.type.getValue() : undefined;
+        if (this.type) {
+            return this.type.getValue();
+        }
     }
 
     getValueElement () {

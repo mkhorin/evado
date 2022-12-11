@@ -44,11 +44,13 @@ module.exports = class Uploader extends Base {
     }
 
     /**
-     * Generate directory name by months
+     * Generate directory name by date
      */
     generateDirectory () {
         const now = new Date;
-        return now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2);
+        const year = now.getFullYear();
+        const month = ('0' + (now.getMonth() + 1)).slice(-2);
+        return `${year}-${month}`;
     }
 
     generateDestination (dir, req, file, callback) {

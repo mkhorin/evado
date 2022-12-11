@@ -43,6 +43,10 @@
     height: auto;
     min-height: 100%;
 }
+:root:lang(en) [lang]:not([lang="en"]),
+:root:lang(ru) [lang]:not([lang="ru"]) {
+    display: none !important;
+}
 body {
     --body-background: #f0f4f8;
     --body-color: #111;
@@ -330,7 +334,7 @@ body.loading {
 }
 .dialog-box {
     position: relative;
-    top: 25%;
+    top: 20%;
     width: 98%;
     max-width: 30rem;
     margin: 0 auto;

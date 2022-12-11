@@ -15,7 +15,8 @@ module.exports = class PasswordAuthService extends Base {
         if (!lifetime) {
             return false;
         }
-        const password = await this.spawnPassword().findByUser(user.getId()).one();
+        const query = this.spawnPassword().findByUser(user.getId());
+        const password = await query.one();
         if (password?.isExpired(lifetime)) {
             return true;
         }
@@ -30,7 +31,8 @@ module.exports = class PasswordAuthService extends Base {
         if (!identity) {
             return this.failLogin(email, user);
         }
-        const model = await this.spawnPassword().findByUser(identity.getId()).one();
+        const query = this.spawnPassword().findByUser(identity.getId());
+        const model = await query.one();
         if (!model || !model.check(password)) {
             return this.failLogin(email, user);
         }
@@ -41,7 +43,8 @@ module.exports = class PasswordAuthService extends Base {
     }
 
     async failLogin (email, user) {
-        const data = {email, ip: user.getIp()};
+        const ip = user.getIp();
+        const data = {email, ip};
         this.module.log('warn', 'Authentication failed', data);
         await this.module.emit('auth.fail', data);
         throw 'auth.invalidAuth';
@@ -87,12 +90,14 @@ module.exports = class PasswordAuthService extends Base {
     async changePassword (newPassword, user, expired = false) {
         const model = this.spawnPassword();
         model.set('user', user.getId());
-        const passwords = await model.findByUser(user.getId()).all();
+        const query = model.findByUser(user.getId());
+        const passwords = await query.all();
         if (!passwords.length) { // insert new
             return this.executeUpdate(newPassword, model, user, expired);
         }
         const old = this.module.params.oldUserPasswords || 0;
-        if (model.constructor.isUsed(newPassword, passwords.slice(0, old + 1))) {
+        const oldPasswords = passwords.slice(0, old + 1);
+        if (model.constructor.isUsed(newPassword, oldPasswords)) {
             throw 'auth.passwordAlreadyUsed';
         }
         const current = passwords[0];
@@ -118,12 +123,17 @@ module.exports = class PasswordAuthService extends Base {
 
     async createVerification (user) {
         const model = this.spawnVerification();
-        let verification = await model.findByUser(user.getId()).one();
+        const query = model.findByUser(user.getId());
+        let verification = await query.one();
         if (verification) {
             const timeout = this.module.params.repeatVerificationTimeout;
-            const rest = DateHelper.parseDuration(timeout) - verification.getElapsedTime();
+            const duration = DateHelper.parseDuration(timeout);
+            const elapsedTime = verification.getElapsedTime();
+            const rest = duration - elapsedTime;
             if (rest > 0) {
-                throw ['auth.requestAlreadySent', {time: [rest, 'duration', {suffix: true}]}];
+                throw ['auth.requestAlreadySent', {
+                    time: [rest, 'duration', {suffix: true}]
+                }];
             }
         } else {
             verification = model;
@@ -138,7 +148,8 @@ module.exports = class PasswordAuthService extends Base {
 
     async getUserByVerification (model) {
         const id = model.get('user');
-        const user = await this.spawnUser().findById(id).one();
+        const query = this.spawnUser().findById(id);
+        const user = await query.one();
         if (!user) {
             throw 'auth.userNotFound';
         }
@@ -146,7 +157,8 @@ module.exports = class PasswordAuthService extends Base {
     }
 
     async getVerification (key) {
-        const model = await this.spawnVerification().find({key}).one();
+        const query = this.spawnVerification().find({key});
+        const model = await query.one();
         if (!model) {
             throw 'auth.verificationNotFound';
         }

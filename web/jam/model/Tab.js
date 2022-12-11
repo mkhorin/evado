@@ -16,7 +16,8 @@ Jam.ModelTab = class ModelTab extends Jam.ModelGroup {
     }
 
     getNav () {
-        return this.$navs.filter(`[data-id="${this.$group.data('id')}"]`);
+        const id = this.$group.data('id');
+        return this.$navs.filter(`[data-id="${id}"]`);
     }
 
     getGroups () {

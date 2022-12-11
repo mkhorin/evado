@@ -34,8 +34,10 @@ module.exports = class Select2 extends Base {
 
     async getListResult () {
         const total = await this.query.count();
-        const offset = (this._page - 1) * this._pageSize;
-        const models = await this.query.offset(offset).limit(this._pageSize).all();
+        const limit = this._pageSize;
+        const offset = (this._page - 1) * limit;
+        this.query.offset(offset).limit(limit);
+        const models = await this.query.all();
         const items = this.params.getItems
             ? await this.params.getItems.call(this, models, this.params)
             : this.getItems(models);

@@ -194,18 +194,20 @@ module.exports = class MetaInspector extends Base {
             return false;
         }
         let items = data[`${state.name}..${model.class.id}`] || data[`..${model.class.id}`];
-        if (items && await this.checkItems(items)) {
+        if (await this.checkItems(items)) {
             return true;
         }
         items = data[`..${model.class.id}`];
-        if (items && await this.checkItems(items)) {
+        if (await this.checkItems(items)) {
             return true;
         }
         if (model.view === model.class) {
             return false;
         }
         items = data[`${state.name}.${model.view.id}`] || data[`.${model.view.id}`];
-        return items ? this.checkItems(items) : false;
+        return items
+            ? this.checkItems(items)
+            : false;
     }
 
     async checkNewObjectTarget (model, data) {
@@ -214,18 +216,18 @@ module.exports = class MetaInspector extends Base {
             return false;
         }
         let items = data[`...${model.class.id}`];
-        if (items && await this.checkItems(items)) {
+        if (await this.checkItems(items)) {
             return true;
         }
         const state = model.getState();
         if (model.view !== model.class) {
             items = data[`..${model.view.id}`];
-            if (items && await this.checkItems(items)) {
+            if (await this.checkItems(items)) {
                 return true;
             }
             if (state) {
                 items = data[`.${state.name}.${model.view.id}`];
-                if (items && await this.checkItems(items)) {
+                if (await this.checkItems(items)) {
                     return true;
                 }
             }
@@ -234,7 +236,7 @@ module.exports = class MetaInspector extends Base {
             return false;
         }
         items = data[`.${state.name}..${model.class.id}`];
-        if (items && await this.checkItems(items)) {
+        if (await this.checkItems(items)) {
             return true;
         }
     }
@@ -245,36 +247,36 @@ module.exports = class MetaInspector extends Base {
             return false;
         }
         let items = data[`...${model.class.id}`];
-        if (items && await this.checkItems(items)) {
+        if (await this.checkItems(items)) {
             return true;
         }
         const oid = model.isNew() ? false : model.getId().toString();
         if (oid) {
             items = data[`${oid}...${model.class.id}`];
-            if (items && await this.checkItems(items)) {
+            if (await this.checkItems(items)) {
                 return true;
             }
         }
         const state = model.getState();
         if (model.view !== model.class) {
             items = data[`..${model.view.id}`];
-            if (items && await this.checkItems(items)) {
+            if (await this.checkItems(items)) {
                 return true;
             }
             if (oid) {
                 items = data[`${oid}..${model.view.id}`];
-                if (items && await this.checkItems(items)) {
+                if (await this.checkItems(items)) {
                     return true;
                 }
             }
             if (state) {
                 items = data[`.${state.name}.${model.view.id}`];
-                if (items && await this.checkItems(items)) {
+                if (await this.checkItems(items)) {
                     return true;
                 }
                 if (oid) {
                     items = data[`${oid}.${state.name}.${model.view.id}`];
-                    if (items && await this.checkItems(items)) {
+                    if (await this.checkItems(items)) {
                         return true;
                     }
                 }
@@ -284,12 +286,12 @@ module.exports = class MetaInspector extends Base {
             return false;
         }
         items = data[`.${state.name}..${model.class.id}`];
-        if (items && await this.checkItems(items)) {
+        if (await this.checkItems(items)) {
             return true;
         }
         if (oid) {
             items = data[`${oid}.${state.name}..${model.class.id}`];
-            if (items && await this.checkItems(items)) {
+            if (await this.checkItems(items)) {
                 return true;
             }
         }

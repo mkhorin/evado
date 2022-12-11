@@ -3,6 +3,10 @@
  */
 Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
 
+    static stringify (value, spaces) {
+        return JSON.stringify(JSON.parse(value), null, spaces);
+    }
+
     activate () {
         if (this.canActivate()) {
             this.$editor = this.find('.json-editor');
@@ -22,7 +26,7 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
         let value = this.$value.val();
         try {
             if (value) {
-                value = JSON.stringify(JSON.parse(value), null, 2);
+                value = this.constructor.stringify(value, 2);
             }
             this.$text.val(value);
         } catch (err) {
@@ -37,11 +41,11 @@ Jam.JsonModelAttr = class JsonModelAttr extends Jam.ModelAttr {
     }
 
     onSave () {
-        const value = this.$text.val();
+        let value = this.$text.val();
         try {
             if (value) {
-                const data = JSON.stringify(JSON.parse(value), null, 1);
-                this.$value.val(data).change();
+                value = this.constructor.stringify(value, 1);
+                this.$value.val(value).change();
             }
             this.modal.hide();
         } catch (err) {

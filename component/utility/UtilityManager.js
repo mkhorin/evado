@@ -44,8 +44,9 @@ module.exports = class UtilityManager extends Base {
     }
 
     async getActiveItems (params) {
+        const utilities = await this.createUtilities(params);
         const result = [];
-        for (const utility of await this.createUtilities(params)) {
+        for (const utility of utilities) {
             result.push(await utility.getJson());
         }
         return result;
@@ -59,8 +60,10 @@ module.exports = class UtilityManager extends Base {
         const result = [];
         for (let config of this._utilities) {
             const utility = this.createUtility(config, params);
-            if (await utility.isActive() && await utility.canAccess()) {
-                result.push(utility);
+            if (await utility.isActive()) {
+                if (await utility.canAccess()) {
+                    result.push(utility);
+                }
             }
         }
         return result;

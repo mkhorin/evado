@@ -20,9 +20,20 @@ Jam.LoadableNavTree = class LoadableNavTree extends Jam.NavTree {
             return false;
         }
         $item.addClass('loading');
+        const url = this.getData('url');
         const id = $item.data('id');
-        return $.get(this.getData('url'), {id})
-            .done(data => Jam.t($item.find('.nav-children').html(data)))
-            .always(() => $item.removeClass('loading').addClass('loaded'));
+        return $.get(url, {id})
+            .done(this.onDone.bind(this, $item))
+            .always(this.onAlways.bind(this, $item));
+    }
+
+    onDone ($item, data) {
+        const $children = $item.find('.nav-children');
+        $children.html(data);
+        Jam.t($children);
+    }
+
+    onAlways ($item) {
+        $item.removeClass('loading').addClass('loaded');
     }
 };

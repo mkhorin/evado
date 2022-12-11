@@ -18,6 +18,8 @@ Jam.SortListArray = class SortListArray extends Jam.SortList {
     onDoneSaveClose () {
         this.changed = false;
         this.saved = true;
-        this.frame.close({order: this.getChangedOrder()});
+        this.frame.close({
+            order: this.getChangedOrder()
+        });
     }
 };

@@ -79,15 +79,13 @@ module.exports = class Notification extends Base {
             const config = ClassHelper.resolveSpawn(this.getMessageTemplateConfig(), this.module);
             const template = this.spawn(config);
             template.data = await template.prepareData(data);
-            this.resolveMessageTemplateAttr('subject', template, messageSource);
-            this.resolveMessageTemplateAttr('text', template, messageSource);
+            const subject = this.translate(this.get('subject'), messageSource);
+            this.set('subject', template.resolveText(subject));
+            const text = this.translate(this.get('text'), messageSource);
+            this.set('text', template.resolveText(text));
         } catch (err) {
             this.log('error', 'Message template failed:', err);
         }
-    }
-
-    resolveMessageTemplateAttr (name, template, messageSource) {
-        this.set(name, template.resolveSubject(this.translate(this.get(name), messageSource)));
     }
 
     translate (message, source) {
@@ -95,12 +93,13 @@ module.exports = class Notification extends Base {
     }
 
     async getRecipients (data) {
-        const config = CommonHelper.parseJson(this.get('recipient'));
+        let config = CommonHelper.parseJson(this.get('recipient'));
         if (!config) {
             return null;
         }
         try {
-            const filter = this.spawn(ClassHelper.resolveSpawn(config, this.module));
+            config = ClassHelper.resolveSpawn(config, this.module);
+            const filter = this.spawn(config);
             return filter.getUsers(data);
         } catch (err) {
             this.log('error', 'Recipient filter failed:', err);
@@ -120,8 +119,10 @@ module.exports = class Notification extends Base {
     }
 
     async getRecipientUsersByFilter (id) {
-        const model = await this.spawn('model/UserFilter').findById(id).one();
-        return model ? model.getUsers() : [];
+        const filter = this.spawn('model/UserFilter');
+        const query = filter.findById(id);
+        const model = await query.one();
+        return model?.getUsers() || [];
     }
 };
 module.exports.init(module);

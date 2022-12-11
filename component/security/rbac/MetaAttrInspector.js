@@ -219,8 +219,10 @@ module.exports = class MetaAttrInspector extends Base {
 
     hasForbiddenItem (item) {
         for (const action of item.actions) {
-            if (this.actions.includes(action) && this.can(action, item.attr)) {
-                return false;
+            if (this.actions.includes(action)) {
+                if (this.can(action, item.attr)) {
+                    return false;
+                }
             }
         }
         return true;

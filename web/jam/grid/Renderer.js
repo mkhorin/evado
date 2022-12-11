@@ -233,7 +233,8 @@ Jam.DataGridRenderer = class DataGridRenderer {
     }
 
     renderHead () {
-        return this.createHeadByMatrix(this.createHeadMatrix(this.columns));
+        const matrix = this.createHeadMatrix(this.columns);
+        return this.createHeadByMatrix(matrix);
     }
 
     renderHeadColumn ({name, label, hint, translate}, columns, rows) {

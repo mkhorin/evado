@@ -36,9 +36,10 @@ Jam.Utility = class Utility {
         };
     }
 
-    onItem (event) {
+    async onItem (event) {
         event.preventDefault();
-        this.confirm().then(this.execute.bind(this));
+        await this.confirm();
+        this.execute();
     }
 
     checkModelChanges () {
@@ -47,10 +48,10 @@ Jam.Utility = class Utility {
         }
     }
 
-    confirm () {
-        return this.params.confirmation
-            ? Jam.dialog.confirm(this.params.confirmation)
-            : $.Deferred().resolve();
+    async confirm () {
+        if (this.params.confirmation) {
+            await Jam.dialog.confirm(this.params.confirmation);
+        }
     }
 
     /**

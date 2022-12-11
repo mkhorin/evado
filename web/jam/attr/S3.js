@@ -5,19 +5,16 @@ Jam.S3ModelAttr = class S3ModelAttr extends Jam.FileModelAttr {
 
     init () {
         super.init();
-        this.defaultUploadUrl = this.uploader.options.upload;
-        this.uploader.options.upload = this.getUploadUrl.bind(this);
-        this.uploader.options.prepareUploadData = this.prepareUploadData.bind(this);
+        const options = this.uploader.options;
+        this.defaultUploadUrl = options.upload;
+        options.upload = this.getUploadUrl.bind(this);
+        options.prepareUploadData = this.prepareUploadData.bind(this);
     }
 
     getUploadUrl (item) {
         const deferred = $.Deferred();
-        const data = {
-            name: item.file.name,
-            size: item.file.size,
-            type: item.file.type
-        };
-        $.post(this.defaultUploadUrl, data)
+        const {name, size, type} = item.file;
+        $.post(this.defaultUploadUrl, {name, size, type})
             .done(this.onUploadUrl.bind(this, deferred, item))
             .fail(this.onFailUrl.bind(this, deferred));
         return deferred;
@@ -32,16 +29,16 @@ Jam.S3ModelAttr = class S3ModelAttr extends Jam.FileModelAttr {
         deferred.reject(data.responseText || data.statusText);
     }
 
-    onUploadFile (event, item) {
-        item.$item.removeClass('pending processing').addClass('done');
-        item.$item.find(this.fileMessageSelector).html(Jam.t(item.info));
+    onUploadFile (event, {$item, info, id}) {
+        $item.removeClass('pending processing').addClass('done');
+        $item.find(this.fileMessageSelector).html(Jam.t(info));
         const value = this.uploader.options.maxFiles > 1
-            ? Jam.Helper.addCommaValue(item.id, this.$value.val())
-            : item.id;
+            ? Jam.Helper.addCommaValue(id, this.$value.val())
+            : id;
         this.$value.val(value).change();
     }
 
-    prepareUploadData (data, item) {
-        return item.file;
+    prepareUploadData (data, {file}) {
+        return file;
     }
 };

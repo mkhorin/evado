@@ -57,13 +57,15 @@ Jam.Alert = class Alert {
     }
 
     build (type, message) {
-        this.$element.removeClass().addClass(`${this.params.css} alert-${type} alert`);
+        const classes = `${this.params.css} alert-${type} alert`;
+        this.$element.removeClass().addClass(classes);
         this.$element.find('.message').html(message);
     }
 
     scrollTo () {
-        if (this.params.scrollable) {
-            Jam.ScrollHelper.scrollTo(this.$element, this.params.scrollable, this.params.scrollSpeed)
+        const {scrollable, scrollSpeed} = this.params;
+        if (scrollable) {
+            Jam.ScrollHelper.scrollTo(this.$element, scrollable, scrollSpeed);
         }
     }
 

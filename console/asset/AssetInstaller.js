@@ -28,7 +28,7 @@ module.exports = class AssetInstaller extends Base {
 
     async installVendors (dir) {
         if (await FileHelper.getStat(path.join(dir, 'package.json'))) {
-            this.log('info', `Install vendors: ${dir}`);
+            this.log('info', `Install asset vendors: ${dir}`);
             await SystemHelper.spawnProcess(dir, 'npm', ['install']);
         }
     }

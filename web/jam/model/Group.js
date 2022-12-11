@@ -60,14 +60,14 @@ Jam.ModelGroup = class ModelGroup {
         return $.get(url).done(this.onLoad.bind(this));
     }
 
-    onLoad (data) {
-        return Jam.insertContent(data, this.$content).then(() => {
-            this.grouping.model.appendAttrs(this.$content);
-            this.activateAttrs();
-        });
+    async onLoad (data) {
+        await Jam.insertContent(data, this.$content);
+        this.grouping.model.appendAttrs(this.$content);
+        this.activateAttrs();
     }
 
     activateAttrs () {
-        Jam.ModelAttr.getAttrs(this.$content).forEach(attr => attr.activate());
+        const attrs = Jam.ModelAttr.getAttrs(this.$content);
+        attrs.forEach(attr => attr.activate());
     }
 };

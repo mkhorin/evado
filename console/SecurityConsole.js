@@ -52,9 +52,11 @@ module.exports = class SecurityConsole extends Base {
     async clearUsers () {
         this.log('info', 'Deleting users...');
         const user = this.spawnUser();
-        await user.getDb().truncate(user.getTable());
+        const userTable = user.getTable();
+        await user.getDb().truncate(userTable);
         const password = this.spawn('security/UserPassword');
-        await password.getDb().truncate(password.getTable());
+        const passwordTable = password.getTable();
+        await password.getDb().truncate(passwordTable);
         this.log('info', 'Users deleted');
     }
 
@@ -78,7 +80,8 @@ module.exports = class SecurityConsole extends Base {
     }
 
     async updateUser (data = this.params) {
-        const user = await this.findUserByParams().one();
+        const query = this.findUserByParams();
+        const user = await query.one();
         if (!user) {
             return this.log('error', 'User not found');
         }
@@ -105,11 +108,12 @@ module.exports = class SecurityConsole extends Base {
 
     async createSecurity () {
         this.log('info', 'Creating security...');
-        await this.getRbac().load();
+        const rbac = this.getRbac();
+        await rbac.load();
         const data = this.app.getConfig('security');
         this.normalizeConfigData(data.rules);
         this.normalizeConfigData(data.assignmentRules);
-        await this.getRbac().createByData(data);
+        await rbac.createByData(data);
         this.log('info', 'Security ready');
     }
 
@@ -122,10 +126,14 @@ module.exports = class SecurityConsole extends Base {
     }
 
     async assignRole () {
-        const user = await this.findUserByParams().one();
-        return user
-            ? this.getStore().createAssignment(this.params.role, user.getId())
-            : this.log('error', 'User not found');
+        const query = this.findUserByParams();
+        const user = await query.one();
+        if (!user) {
+            return this.log('error', 'User not found');
+        }
+        const store = this.getStore();
+        const id = user.getId();
+        return store.createAssignment(this.params.role, id);
     }
 
     log () {

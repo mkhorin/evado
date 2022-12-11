@@ -62,7 +62,8 @@ Jam.NavTree = class NavTree extends Jam.Element {
         const $active = this.getCurrentActive();
         if ($active.length) {
             const $container = this.$element.closest('aside');
-            const scroll = $active.offset().top - $container.height() / 2;
+            const top = $active.offset().top;
+            const scroll = top - $container.height() / 2;
             if (scroll > 0) {
                 $container.prop('scrollTop', scroll);
             }

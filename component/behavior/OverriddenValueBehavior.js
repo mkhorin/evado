@@ -80,8 +80,10 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     async beforeSave () {
-        this.owner.set(this.stateAttr, this.filterStates(this.getStates()));
-        return this.setOriginalValues(await this.resolveOriginal());
+        const states = this.filterStates(this.getStates());
+        this.owner.set(this.stateAttr, states);
+        const values = await this.resolveOriginal();
+        return this.setOriginalValues(values);
     }
 
     filterStates (states = {}) {
@@ -143,7 +145,8 @@ module.exports = class OverriddenValueBehavior extends Base {
         const states = this.getStates();
         for (const name of this.attrs) {
             if (!states[name]) {
-                this.owner.set(name, await this.getOriginalValue(name, original));
+                const value = await this.getOriginalValue(name, original);
+                this.owner.set(name, value);
             }
         }
     }

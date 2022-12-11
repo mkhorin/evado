@@ -23,12 +23,14 @@ module.exports = class HierarchySolver extends Base {
     }
 
     async getDescendantAndParentQuery () {
-        const ids = await this.getDescendantAndParentIds([this.model.getId()]);
+        const root = this.model.getId();
+        const ids = await this.getDescendantAndParentIds([root]);
         return this.model.find({[this.model.PK]: ids}, ...arguments);
     }
 
     async getDescendantQuery () {
-        const ids = await this.getDescendantIds([this.model.getId()]);
+        const root = this.model.getId();
+        const ids = await this.getDescendantIds([root]);
         return this.model.find({[this.model.PK]: ids}, ...arguments);
     }
 
@@ -70,7 +72,8 @@ module.exports = class HierarchySolver extends Base {
         if (!parent) {
             return [];
         }
-        const item = await child.findById(parent).with(this.with).one();
+        const query = child.findById(parent).with(this.with);
+        const item = await query.one();
         if (!item) {
             return [];
         }

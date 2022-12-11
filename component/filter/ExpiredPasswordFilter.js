@@ -19,8 +19,9 @@ module.exports = class ExpiredPasswordFilter extends Base {
         if (!url) {
             return;
         }
+        const identity = controller.user.getIdentity();
         const service = this.spawn('security/PasswordAuthService');
-        if (await service.isPasswordExpired(controller.user.getIdentity())) {
+        if (await service.isPasswordExpired(identity)) {
             controller.setFlash('info', 'auth.expiredPassword');
             return controller.redirect(url);
         }

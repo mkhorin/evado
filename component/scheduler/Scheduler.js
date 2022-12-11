@@ -14,7 +14,8 @@ module.exports = class Scheduler extends Base {
 
     async load () {
         this.deleteAllTasks();
-        const models = await this.spawnTask().find().all();
+        const query = this.spawnTask().find();
+        const models = await query.all();
         for (const model of models) {
             this.addTask(model);
         }
@@ -36,7 +37,8 @@ module.exports = class Scheduler extends Base {
     }
 
     async taskDone ({sender}) {
-        const model = await this.spawnTask().findByName(sender.name).one();
+        const query = this.spawnTask().findByName(sender.name);
+        const model = await query.one();
         if (model) {
             await model.saveDone();
         }

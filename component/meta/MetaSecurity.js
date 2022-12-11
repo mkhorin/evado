@@ -10,7 +10,9 @@ module.exports = class MetaSecurity extends Base {
     constructor (config) {
         super(config);
         this.rbac = this.controller.module.getRbac();
-        this.params = {controller: this.controller};
+        this.params = {
+            controller: this.controller
+        };
         this.user = this.controller.user;
     }
 
@@ -23,7 +25,8 @@ module.exports = class MetaSecurity extends Base {
     }
 
     resolveAccess (data, params) {
-        return this.rbac.resolveAccess(this.user.assignments, data, this.mergeParams(params));
+        params = this.mergeParams(params);
+        return this.rbac.resolveAccess(this.user.assignments, data, params);
     }
 
     resolveAccessOnDelete (model) {

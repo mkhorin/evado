@@ -34,7 +34,8 @@ Jam.SortList = class SortList extends Jam.List {
         this.sourceOrderNumbers = [];
         const column = this.getSourceOrderColumn();
         for (const item of this.findItems()) {
-            this.sourceOrderNumbers.push(this.grid.getData(item.dataset.id, column));
+            const data = this.grid.getData(item.dataset.id, column);
+            this.sourceOrderNumbers.push(data);
         }
     }
 
@@ -58,23 +59,39 @@ Jam.SortList = class SortList extends Jam.List {
     }
 
     onDown () {
+        this.move(this.moveDown);
+    }
+
+    onUp () {
+        this.move(this.moveUp);
+    }
+
+    move (method) {
         const $items = this.getSelectedItems();
-        if ($items && this.swapItems($items.eq(-1).next(), $items.eq(-1))) {
-            for (let i = $items.length - 2; i >= 0; --i) {
-                this.swapItems($items.eq(i).next(), $items.eq(i));
-            }
+        if ($items) {
+            method.call(this, $items);
         }
         this.changed = this.getChangedOrder();
     }
 
-    onUp () {
-        const $items = this.getSelectedItems();
-        if ($items && this.swapItems($items.eq(0), $items.eq(0).prev())) {
-            for (let i = 1; i < $items.length; ++i) {
-                this.swapItems($items.eq(i), $items.eq(i).prev());
+    moveDown ($items) {
+        let $item = $items.eq(-1);
+        if (this.swapItems($item.next(), $item)) {
+            for (let i = $items.length - 2; i >= 0; --i) {
+                $item = $items.eq(i);
+                this.swapItems($item.next(), $item);
             }
         }
-        this.changed = this.getChangedOrder();
+    }
+
+    moveUp ($items) {
+        let $item = $items.eq(0);
+        if (this.swapItems($item, $item.prev())) {
+            for (let i = 1; i < $items.length; ++i) {
+                $item = $items.eq(i);
+                this.swapItems($item, $item.prev());
+            }
+        }
     }
 
     onMouseWheel (event) {

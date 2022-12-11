@@ -43,7 +43,9 @@ module.exports = class NotificationMessage extends Base {
     }
 
     findUnsent () {
-        return this.find({sentAt: null}, ['!=', 'notification', null]).order({[this.PK]: 1});
+        const hasNotification = ['!=', 'notification', null];
+        const unsent = {sentAt: null};
+        return this.find(unsent, hasNotification).order({[this.PK]: 1});
     }
 
     create (notification, recipients) {

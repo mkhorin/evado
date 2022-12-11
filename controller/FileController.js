@@ -44,7 +44,8 @@ module.exports = class FileController extends Base {
 
     async actionDelete () {
         const {id} = this.getPostParams();
-        const model = await this.spawn('model/RawFile').findById(id).one();
+        const query = this.spawn('model/RawFile').findById(id);
+        const model = await query.one();
         if (!model) {
             return this.sendStatus(Response.NOT_FOUND);
         }
@@ -63,7 +64,8 @@ module.exports = class FileController extends Base {
             model.log('error', 'File not found');
             return this.sendStatus(Response.NOT_FOUND);
         }
-        this.setHttpHeader(model.getFileHeaders());
+        const headers = model.getFileHeaders();
+        this.setHttpHeader(headers);
         this.sendFile(file);
     }
 
@@ -74,7 +76,8 @@ module.exports = class FileController extends Base {
         if (!file) {
             return this.sendStatus(Response.NOT_FOUND);
         }
-        this.setHttpHeader(model.getThumbnailHeaders());
+        const headers = model.getThumbnailHeaders();
+        this.setHttpHeader(headers);
         this.sendFile(file);
     }
 };

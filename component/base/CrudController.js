@@ -139,7 +139,8 @@ module.exports = class CrudController extends Base {
         }
         this.checkCsrfToken();
         const Class = this.getModelClass();
-        const models = await this.createDeletionQuery(ids.split(','), Class).all();
+        const query = this.createDeletionQuery(ids.split(','), Class);
+        const models = await query.all();
         await Class.delete(models);
         this.sendStatus(200);
     }
@@ -219,7 +220,8 @@ module.exports = class CrudController extends Base {
         const {groups, group} = this.getQueryParams();
         const loadedGroups = Array.isArray(groups) ? groups : null;
         const template = group ? `group/${group}` : data.template;
-        return this.render(template, {model, _layout, loadedGroups, ...data.templateData});
+        const params = {model, _layout, loadedGroups, ...data.templateData};
+        return this.render(template, params);
     }
 
     async saveModel (model, afterSave) {

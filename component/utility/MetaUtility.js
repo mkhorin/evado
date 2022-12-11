@@ -35,11 +35,13 @@ module.exports = class MetaUtility extends Base {
     }
 
     findModel (view, id, params) {
-        return view.createQuery(this.getSpawnConfig(params)).byId(id);
+        const config = this.getSpawnConfig(params);
+        return view.createQuery(config).byId(id);
     }
 
     async createModel (view, params) {
-        const model = view.createModel(this.getSpawnConfig(params));
+        const config = this.getSpawnConfig(params);
+        const model = view.createModel(config);
         await model.setDefaultValues();
         return model;
     }
@@ -55,13 +57,16 @@ module.exports = class MetaUtility extends Base {
         if (!meta) {
             return {};
         }
-        const result = {view: this.getBaseMeta().getView(meta)};
+        const result = {
+            view: this.getBaseMeta().getView(meta)
+        };
         if (!result.view) {
             throw new BadRequest('View not found');
         }
         result.class = result.view.class;
         if (model) {
-            result.model = await this.findModel(result.view, model).one();
+            const query = this.findModel(result.view, model);
+            result.model = await query.one();
             if (!result.model) {
                 throw new BadRequest('Model not found');
             }

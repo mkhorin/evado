@@ -43,8 +43,8 @@ Jam.NavSearch = class NavSearch extends Jam.Element {
     load () {
         if (!this.hasClass('loading')) {
             this.addClass('loading');
-            $.post(this.getData('url'), {search: this.value})
-                .done(this.onLoad.bind(this));
+            const url = this.getData('url');
+            $.post(url, {search: this.value}).done(this.onLoad.bind(this));
         }
     }
 

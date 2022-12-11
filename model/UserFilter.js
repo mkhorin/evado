@@ -49,7 +49,8 @@ module.exports = class UserFilter extends Base {
     async resolveRbacItemUsers () {
         const result = [];
         const rbac = this.module.getRbac();
-        for (let item of this.get('items')) {
+        const items = this.get('items');
+        for (let item of items) {
             item = rbac.store.getItem(item);
             if (item) {
                 if (Array.isArray(rbac.itemUserMap[item.name])) {

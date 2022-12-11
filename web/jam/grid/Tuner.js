@@ -72,8 +72,10 @@ Jam.DataGridTuner = class DataGridTuner {
     }
 
     onTarget ($target) {
-        if (!$target.closest(this.$toggle).length && !$target.closest(this.$menu).length) {
-            this.hideMenu();
+        if (!$target.closest(this.$toggle).length) {
+            if (!$target.closest(this.$menu).length) {
+                this.hideMenu();
+            }
         }
     }
 
@@ -106,9 +108,12 @@ Jam.DataGridTuner = class DataGridTuner {
 
     showMenu () {
         const offset = this.$toggle.offset();
+        const toggleWidth = this.$toggle.outerWidth();
+        const toggleHeight = this.$toggle.outerHeight();
+        const menuWidth = this.$menu.outerWidth();
         this.$menu.show().offset({
-            left: offset.left + this.$toggle.outerWidth() - this.$menu.outerWidth(),
-            top: offset.top + this.$toggle.outerHeight() + 1
+            left: offset.left + toggleWidth - menuWidth,
+            top: offset.top + toggleHeight + 1
         });
     }
 
@@ -117,7 +122,8 @@ Jam.DataGridTuner = class DataGridTuner {
     }
 
     load () {
-        const {items, grouping} = Jam.localStorage.get(this.getStorageKey()) || {};
+        const key = this.getStorageKey();
+        const {items, grouping} = Jam.localStorage.get(key) || {};
         if (!this.checkStorageItems(items)) {
             this.save();
             return this.load();
@@ -125,7 +131,9 @@ Jam.DataGridTuner = class DataGridTuner {
         if (items.length === 1) {
             items[0].hidden = false;
         }
-        items.forEach((item, index) => this.columns[index].hidden = item.hidden);
+        items.forEach((item, index) => {
+            this.columns[index].hidden = item.hidden;
+        });
         if (grouping && this.checkStorageGrouping(grouping)) {
             this.grid.grouping = grouping;
         }

@@ -20,12 +20,13 @@ Jam.LastValueStoreBehavior = class LastValueStoreBehavior extends Jam.Behavior {
         this.owner.setValue(this.defaultValue);
     }
 
-    onValue (event) {
-        this.owner.setValue(event.currentTarget.dataset.value);
+    onValue ({currentTarget}) {
+        this.owner.setValue(currentTarget.dataset.value);
     }
 
     onSaveModel () {
-        Jam.localStorage.set(this.getStorageKey(), this.owner.getValue());
+        const value = this.owner.getValue();
+        Jam.localStorage.set(this.getStorageKey(), value);
     }
 
     setStorageValue () {

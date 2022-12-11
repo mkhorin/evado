@@ -40,7 +40,8 @@ Jam.DataGridProvider = class DataGridProvider {
         const keys = [];
         for (const column of this.params.columns) {
             if (column.searchable) {
-                keys.push(this.createColumnFilterValues(column, data));
+                const key = this.createColumnFilterValues(column, data);
+                keys.push(key);
             }
         }
         return data.filter(this.filterItem.bind(this, value, keys));

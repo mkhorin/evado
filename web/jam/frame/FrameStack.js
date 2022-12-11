@@ -24,7 +24,8 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
         event.preventDefault();
         const link = event.currentTarget;
         const url = link.getAttribute('href') || link.dataset.url;
-        if (!Jam.frameStack || event.ctrlKey || link.getAttribute('target') === '_blank') {
+        const target = link.getAttribute('target');
+        if (!Jam.frameStack || event.ctrlKey || target === '_blank') {
             Jam.UrlHelper.openNewPageFrame(url, link.dataset.base);
         } else {
             Jam.dialog.close();
@@ -143,8 +144,10 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
     }
 
     onKeyUp ({key, target: {tagName: tag}}) {
-        if (key === 'Escape' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
-            this.closeLast();
+        if (key === 'Escape') {
+            if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+                this.closeLast();
+            }
         }
     }
 

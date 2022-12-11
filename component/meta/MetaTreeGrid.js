@@ -29,7 +29,8 @@ module.exports = class MetaTreeGrid extends Base {
             // await this.security.access.assignObjectFilter(query);
             data[this.HAS_CHILDREN_KEY] = !!await query.order(null).id();
         }
-        return Object.assign(await super.renderModel(model), data);
+        const result = await super.renderModel(model);
+        return Object.assign(result, data);
     }
 };
 module.exports.init();

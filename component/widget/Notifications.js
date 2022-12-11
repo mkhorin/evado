@@ -29,12 +29,14 @@ module.exports = class Notifications extends Base {
     }
 
     async render () {
-        const counter = await this.user.findUnreadMessages().count();
+        const query = this.user.findUnreadMessages();
+        const counter = await query.count();
         return this.renderTemplate('_widget/notifications', {counter});
     }
 
     async readMessage (id) {
-        const model = await this.spawnMessage().findById(id).one();
+        const query = this.spawnMessage().findById(id);
+        const model = await query.one();
         if (!model) {
             throw new BadRequest('Message not found');
         }
@@ -49,7 +51,8 @@ module.exports = class Notifications extends Base {
     }
 
     async getUnreadMessages () {
-        const ids = await this.user.findUnreadMessages().column('message');
+        const query = this.user.findUnreadMessages();
+        const ids = await query.column('message');
         const counter = ids.length;
         const items = counter ? await this.getUnreadMessageItems(ids) : [];
         return {counter, items};

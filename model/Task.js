@@ -63,13 +63,16 @@ module.exports = class Task extends Base {
     }
 
     async execute () {
-        const task = this.module.getScheduler().getTask(this.getName());
+        const name = this.getName();
+        const task = this.module.getScheduler().getTask(name);
         if (!task) {
             return this.addError('error', 'Task not found');
         }
         const result = new Promise(done => {
             task.once(task.EVENT_DONE, done);
-            task.once(task.EVENT_FAIL, ({error}) => done(this.addError('error', error)));
+            task.once(task.EVENT_FAIL, ({error}) => {
+                return done(this.addError('error', error));
+            });
         });
         await task.execute();
         return result;

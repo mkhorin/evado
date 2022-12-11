@@ -16,7 +16,8 @@ Jam.Fetch = class Fetch {
     }
 
     async execute (url, data, options) {
-        const res = await fetch(url, this.getOptions(data, options));
+        options = this.getOptions(data, options);
+        const res = await fetch(url, options);
         return res.status !== 200
             ? this.throwError(res)
             : res;
