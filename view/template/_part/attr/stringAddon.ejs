@@ -1,36 +1,36 @@
 <!-- _part/attr/stringAddon -->
 <%
 const p = {
-    before: typeof before === 'undefined' ? null : before,
-    beforeCss: typeof beforeCss === 'undefined' ? null : beforeCss,
-    after: typeof after === 'undefined' ? null : after,
-    afterCss: typeof afterCss === 'undefined' ? null : afterCss
+  before: typeof before === 'undefined' ? null : before,
+  beforeCss: typeof beforeCss === 'undefined' ? null : beforeCss,
+  after: typeof after === 'undefined' ? null : after,
+  afterCss: typeof afterCss === 'undefined' ? null : afterCss
 };
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
-     data-handler="<%= p.handler %>"
-     data-behaviors="<%= p.behaviors %>"
-     data-action-binder="<%= p.actionBinder %>"
-     data-mask="<%= p.mask %>">
+   data-handler="<%= p.handler %>"
+   data-behaviors="<%= p.behaviors %>"
+   data-action-binder="<%= p.actionBinder %>"
+   data-mask="<%= p.mask %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <div class="input-group">
-            <% if (p.before) { %>
-            <span class="input-group-text <%- p.beforeCss %>"><%- p.before %></span>
-            <% } %>
-            <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
-                   autocomplete="<%- p.autocomplete %>"
-                   value="<%= p.value %>" <%- p.required %> class="form-control form-value">
-            <% if (p.after) { %>
-            <span class="input-group-text <%- p.afterCss %>"><%- p.after %></span>
-            <% } %>
-        </div>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  <div class="<%- p.valueCss %>">
+    <div class="input-group">
+      <% if (p.before) { %>
+      <span class="input-group-text <%- p.beforeCss %>"><%- p.before %></span>
+      <% } %>
+      <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
+           autocomplete="<%- p.autocomplete %>"
+           value="<%= p.value %>" <%- p.required %> class="form-control form-value">
+      <% if (p.after) { %>
+      <span class="input-group-text <%- p.afterCss %>"><%- p.after %></span>
+      <% } %>
     </div>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 </div>

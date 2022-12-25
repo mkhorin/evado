@@ -1,29 +1,29 @@
 <!-- _part/attr/date -->
 <%
 const p = {
-    handler: 'Date',
-    utc: typeof utc === 'undefined' ? true : utc,
-    options: typeof options === 'undefined' ? '' : JSON.stringify(options)
+  handler: 'Date',
+  utc: typeof utc === 'undefined' ? true : utc,
+  options: typeof options === 'undefined' ? '' : JSON.stringify(options)
 };
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.required %>"
-     data-handler="<%= p.handler %>"
-     data-action-binder="<%= p.actionBinder %>"
-     data-utc="<%- p.utc %>"
-     data-params="<%= p.options %>">
+   data-handler="<%= p.handler %>"
+   data-action-binder="<%= p.actionBinder %>"
+   data-utc="<%- p.utc %>"
+   data-params="<%= p.options %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" type="hidden" value="<%- p.value %>" class="form-value">
-        <div class="input-group">
-            <input type="text" <%- p.required %> class="datepicker form-control">
-            <span class="input-group-text"><i class="far fa-calendar"></i></span>
-        </div>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  <div class="<%- p.valueCss %>">
+    <input name="<%- p.name %>" type="hidden" value="<%- p.value %>" class="form-value">
+    <div class="input-group">
+      <input type="text" <%- p.required %> class="datepicker form-control">
+      <span class="input-group-text"><i class="far fa-calendar"></i></span>
     </div>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 </div>

@@ -1,23 +1,23 @@
 <!-- _part/misc/table -->
 <div class="table-responsive">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-            <% for (const column of columns) { %>
-                <th><%= column.attr %></th>
-            <% } %>
-            </tr>
-        </thead>
-        <tbody>
-        <% for (const model of models) { %>
-            <tr>
-            <% for (const column of columns) { %>
-                <td>
-                    <%= model.get(column.attr) %>
-                </td>
-            <% } %>
-            </tr>
-        <% } %>
-        </tbody>
-    </table>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+      <% for (const column of columns) { %>
+        <th><%= column.attr %></th>
+      <% } %>
+      </tr>
+    </thead>
+    <tbody>
+    <% for (const model of models) { %>
+      <tr>
+      <% for (const column of columns) { %>
+        <td>
+          <%= model.get(column.attr) %>
+        </td>
+      <% } %>
+      </tr>
+    <% } %>
+    </tbody>
+  </table>
 </div>

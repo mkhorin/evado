@@ -1,9 +1,9 @@
 <!-- _part/attr/checkboxList -->
 <%
 const p = {
-    allValue: typeof allValue === 'undefined' ? null : allValue,
-    inline: typeof inline === 'undefined' ? true : inline,
-    handler: 'CheckboxList'
+  allValue: typeof allValue === 'undefined' ? null : allValue,
+  inline: typeof inline === 'undefined' ? true : inline,
+  handler: 'CheckboxList'
 };
 const params = {p};
 const cssList = p.inline ? 'form-check-list-inline' : '';
@@ -12,38 +12,38 @@ const cssItem = p.inline ? 'form-check-inline' : '';
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr <%- p.css %> <%- p.required %> form-group row"
-     data-handler="<%= p.handler %>"
-     data-action-binder="<%= p.actionBinder %>"
-     data-all="<%- p.allValue %>">
+   data-handler="<%= p.handler %>"
+   data-action-binder="<%= p.actionBinder %>"
+   data-all="<%- p.allValue %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
-        <div class="<%- cssList %> form-check-list">
-            <% if (Array.isArray(items)) {
-               for (const item of items) { %>
-            <div class="<%- cssItem %> form-check">
-                <input class="form-check-input" value="<%= item.value %>" type="checkbox">
-                <% if (item.hint) { %>
-                <div class="form-check-label-wrapper">
-                    <label class="form-check-label"
-                           data-t="<%- p.translate %>"><%- item.text %></label><i
-                           class="hint-icon" data-t="<%- p.translate %>" title="<%= item.hint %>"></i>
-                </div>
-                <% } else { %>
-                <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label>
-                <% } %>
-            </div>
-            <% }} else {
-               for (const key of Object.keys(items)) { %>
-            <div class="<%- cssItem %> form-check">
-                <input class="form-check-input" value="<%= key %>" type="checkbox">
-                <label class="form-check-label" data-t="<%- p.translate %>"><%- items[key] %></label>
-            </div>
-            <% }} %>
+  <div class="<%- p.valueCss %>">
+    <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
+    <div class="<%- cssList %> form-check-list">
+      <% if (Array.isArray(items)) {
+         for (const item of items) { %>
+      <div class="<%- cssItem %> form-check">
+        <input class="form-check-input" value="<%= item.value %>" type="checkbox">
+        <% if (item.hint) { %>
+        <div class="form-check-label-wrapper">
+          <label class="form-check-label"
+               data-t="<%- p.translate %>"><%- item.text %></label><i
+               class="hint-icon" data-t="<%- p.translate %>" title="<%= item.hint %>"></i>
         </div>
-        <div class="error-block"></div>
-        <div class="hint-block"><%- p.hint %></div>
+        <% } else { %>
+        <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label>
+        <% } %>
+      </div>
+      <% }} else {
+         for (const key of Object.keys(items)) { %>
+      <div class="<%- cssItem %> form-check">
+        <input class="form-check-input" value="<%= key %>" type="checkbox">
+        <label class="form-check-label" data-t="<%- p.translate %>"><%- items[key] %></label>
+      </div>
+      <% }} %>
     </div>
+    <div class="error-block"></div>
+    <div class="hint-block"><%- p.hint %></div>
+  </div>
 </div>

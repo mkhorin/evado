@@ -14,19 +14,19 @@ block('title', title);
 
 <form method="post" class="form">
 
-    <%- include(_view.get('auth/_signInForm')) %>
+  <%- include(_view.get('auth/_signInForm')) %>
 
-    <div class="form-submit form-attr form-group">
-        <button type="submit" class="btn-primary btn">
-            <%- title %>
-        </button>
-    </div>
+  <div class="form-submit form-attr form-group">
+    <button type="submit" class="btn-primary btn">
+      <%- title %>
+    </button>
+  </div>
 </form>
 
 <div class="login-box-footer">
 <% if (_controller.canSignUp()) { %>
-    <a href="auth/sign-up" class="btn-link btn"><%- _t('auth.register') %></a>
+  <a href="auth/sign-up" class="btn-link btn"><%- _t('auth.register') %></a>
 <% } if (_controller.canResetPassword()) { %>
-    <a href="auth/request-reset" class="btn-link btn"><%- _t('auth.forgotPassword') %></a>
+  <a href="auth/request-reset" class="btn-link btn"><%- _t('auth.forgotPassword') %></a>
 <% } %>
 </div>

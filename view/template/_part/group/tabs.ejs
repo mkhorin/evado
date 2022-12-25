@@ -1,48 +1,48 @@
 <!-- _part/group/tabs -->
 <%
 const p = {
-    actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
-    translate: typeof translate === 'undefined' ? '' : translate,
-    loadedGroups: typeof loadedGroups === 'undefined' ? null : loadedGroups
+  actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
+  translate: typeof translate === 'undefined' ? '' : translate,
+  loadedGroups: typeof loadedGroups === 'undefined' ? null : loadedGroups
 };
 %>
 <div class="tabs" data-action-binder="<%= p.actionBinder %>">
-    <div class="nav-tabs nav" role="tablist">
-        <% for (const item of items) { %>
-        <a class="nav-item nav-link <%- item.active ? 'active' : '' %>" href="javascript:void 0" role="tab"
-           data-id="<%- item.id %>"><span data-t="<%- p.translate %>"><%- item.label || item.id %></span><% if (item.hint) {
-            %><i class="hint-icon" title="<%= item.hint %>" data-t="<%- p.translate %>"></i><% } %></a>
-        <% } %>
-    </div>
-    <div class="tab-content">
-        <% for (const item of items) {
-            const loaded = !item.loadable || (p.loadedGroups ? p.loadedGroups.includes(item.id) : item.active);
-            const content = item.content;
-        %>
-        <div class="tab-pane model-group <%- item.active ? 'active' : '' %>" role="tabpanel"
-             data-id="<%- item.id %>"
-             data-action-binder="<%= item.actionBinder === undefined ? '' : JSON.stringify(item.actionBinder) %>"
-             data-loadable="<%- item.loadable %>"
-             data-loaded="<%- loaded %>">
-            <div class="tab-pane-title" data-t="<%- p.translate %>"><%- item.label || item.id %></div>
-            <div class="model-group-body">
-            <% if (!loaded) { %>
-                <div class="model-group-loader">
-                    <i class="fa fa-spinner fa-spin"></i>
-                </div>
-            <% } else if (typeof content === 'string') { %>
-                <%- include(content) %>
-            <% } else if (Array.isArray(content)) {
-                for (const data of content) {
-                    if (data.template) { %>
-                    <%- include(data.template, data) %>
-                    <% } else { %>
-                    <%- data %>
-             <% }}} else if (content) { %>
-                <%- include(content.template, content) %>
-            <% } %>
-            </div>
+  <div class="nav-tabs nav" role="tablist">
+    <% for (const item of items) { %>
+    <a class="nav-item nav-link <%- item.active ? 'active' : '' %>" href="javascript:void 0" role="tab"
+       data-id="<%- item.id %>"><span data-t="<%- p.translate %>"><%- item.label || item.id %></span><% if (item.hint) {
+      %><i class="hint-icon" title="<%= item.hint %>" data-t="<%- p.translate %>"></i><% } %></a>
+    <% } %>
+  </div>
+  <div class="tab-content">
+    <% for (const item of items) {
+      const loaded = !item.loadable || (p.loadedGroups ? p.loadedGroups.includes(item.id) : item.active);
+      const content = item.content;
+    %>
+    <div class="tab-pane model-group <%- item.active ? 'active' : '' %>" role="tabpanel"
+       data-id="<%- item.id %>"
+       data-action-binder="<%= item.actionBinder === undefined ? '' : JSON.stringify(item.actionBinder) %>"
+       data-loadable="<%- item.loadable %>"
+       data-loaded="<%- loaded %>">
+      <div class="tab-pane-title" data-t="<%- p.translate %>"><%- item.label || item.id %></div>
+      <div class="model-group-body">
+      <% if (!loaded) { %>
+        <div class="model-group-loader">
+          <i class="fa fa-spinner fa-spin"></i>
         </div>
-        <% } %>
+      <% } else if (typeof content === 'string') { %>
+        <%- include(content) %>
+      <% } else if (Array.isArray(content)) {
+        for (const data of content) {
+          if (data.template) { %>
+          <%- include(data.template, data) %>
+          <% } else { %>
+          <%- data %>
+       <% }}} else if (content) { %>
+        <%- include(content.template, content) %>
+      <% } %>
+      </div>
     </div>
+    <% } %>
+  </div>
 </div>

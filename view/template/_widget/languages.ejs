@@ -1,8 +1,8 @@
 <!-- _widget/languages -->
 <div data-cookie="<%- _module.params.languageCookie %>"
-     data-max-age="<%- _widget.cookieMaxAge %>">
+   data-max-age="<%- _widget.cookieMaxAge %>">
 <% for (const item of items) { %>
-    <a class="dropdown-item <%- item === active ? 'active' : '' %>"
-        href="javascript:void 0" data-code="<%- item.code %>"><%- item.label %></a>
+  <a class="dropdown-item <%- item === active ? 'active' : '' %>"
+    href="javascript:void 0" data-code="<%- item.code %>"><%- item.label %></a>
 <% } %>
 </div>

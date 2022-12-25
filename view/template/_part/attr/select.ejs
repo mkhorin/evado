@@ -1,15 +1,15 @@
 <!-- _part/attr/select -->
 <%
 const p = {
-    handler: 'Select',
-    hasEmpty: typeof hasEmpty === 'undefined' ? true : hasEmpty,
-    emptyText: typeof emptyText === 'undefined' ? '' : emptyText,
-    valueKey: typeof valueKey === 'undefined' ? 'value' : valueKey,
-    textKey: typeof textKey === 'undefined' ? 'text' : textKey,
-    select2: typeof select2 === 'undefined' ? '{}' : JSON.stringify(select2),
-    update: typeof update === 'undefined' ? '' : update,
-    depends: typeof depends === 'undefined' ? '' : JSON.stringify(depends),
-    itemTranslate: typeof itemTranslate === 'undefined' ? '' : itemTranslate
+  handler: 'Select',
+  hasEmpty: typeof hasEmpty === 'undefined' ? true : hasEmpty,
+  emptyText: typeof emptyText === 'undefined' ? '' : emptyText,
+  valueKey: typeof valueKey === 'undefined' ? 'value' : valueKey,
+  textKey: typeof textKey === 'undefined' ? 'text' : textKey,
+  select2: typeof select2 === 'undefined' ? '{}' : JSON.stringify(select2),
+  update: typeof update === 'undefined' ? '' : update,
+  depends: typeof depends === 'undefined' ? '' : JSON.stringify(depends),
+  itemTranslate: typeof itemTranslate === 'undefined' ? '' : itemTranslate
 };
 const params = {p};
 %>
@@ -17,45 +17,45 @@ const params = {p};
 <%
 let content = p.hasEmpty ? `<option value="">${p.emptyText}</option>` : '';
 if (typeof items !== 'undefined' && items) {
-    if (items === 'labels') {
-        items = _view.ModelHelper.getLabelSelectItems(attr, model);
+  if (items === 'labels') {
+    items = _view.ModelHelper.getLabelSelectItems(attr, model);
+  }
+  for (const item of items) {
+    if (item.separator) {
+      const text = item[p.textKey] === undefined ? '------' : item[p.textKey];
+      content += `<option disabled>${text}</option>`;
+    } else {
+      const text = p.escape ? _escape(item[p.textKey]) : item[p.textKey];
+      const selected = item[p.valueKey] == p.value ? 'selected' : '';
+      content += `<option ${selected} value="${item[p.valueKey]}" data-t="${p.itemTranslate}">${text}</option>`;
     }
-    for (const item of items) {
-        if (item.separator) {
-            const text = item[p.textKey] === undefined ? '------' : item[p.textKey];
-            content += `<option disabled>${text}</option>`;
-        } else {
-            const text = p.escape ? _escape(item[p.textKey]) : item[p.textKey];
-            const selected = item[p.valueKey] == p.value ? 'selected' : '';
-            content += `<option ${selected} value="${item[p.valueKey]}" data-t="${p.itemTranslate}">${text}</option>`;
-        }
-    }
+  }
 } else if (p.value !== '') {
-    content += `<option selected value="${p.value}">${p.escape ? _escape(p.displayValue) : p.displayValue}</option>`;
+  content += `<option selected value="${p.value}">${p.escape ? _escape(p.displayValue) : p.displayValue}</option>`;
 }
 content = `<select name="${p.name}" ${p.disabled} ${p.required} class="form-select form-value">${content}</select>`;
 %>
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
-     data-handler="<%= p.handler %>"
-     data-select2="<%= p.select2 %>"
-     data-depends="<%= p.depends %>"
-     data-action-binder="<%= p.actionBinder %>">
+   data-handler="<%= p.handler %>"
+   data-select2="<%= p.select2 %>"
+   data-depends="<%= p.depends %>"
+   data-action-binder="<%= p.actionBinder %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <% if (p.update) { %>
-        <div class="input-group">
-            <%- content %>
-            <button class="btn-outline-primary btn" type="button" tabindex="-1" data-action="update"
-                    data-url="<%- p.update %>">
-                <i class="fas fa-pencil-alt"></i>
-            </button>
-        </div>
-        <% } else { %>
-        <%- content %>
-        <% } %>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  <div class="<%- p.valueCss %>">
+    <% if (p.update) { %>
+    <div class="input-group">
+      <%- content %>
+      <button class="btn-outline-primary btn" type="button" tabindex="-1" data-action="update"
+          data-url="<%- p.update %>">
+        <i class="fas fa-pencil-alt"></i>
+      </button>
     </div>
+    <% } else { %>
+    <%- content %>
+    <% } %>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 </div>

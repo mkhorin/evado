@@ -1,86 +1,86 @@
 <!-- _part/list/grid -->
 <%
 if (data.key === undefined) {
-    data.key = model.PK;
+  data.key = model.PK;
 }
 if (data.list !== null) {
-    if (data.list === undefined && typeof params !== 'undefined' && params.list) {
-        data.list = params.list;
-    }
-    data.list = _url(data.list === undefined ? 'list' : data.list);
+  if (data.list === undefined && typeof params !== 'undefined' && params.list) {
+    data.list = params.list;
+  }
+  data.list = _url(data.list === undefined ? 'list' : data.list);
 }
 if (Array.isArray(data.select)) {
-    data.select = _url(data.select);
+  data.select = _url(data.select);
 }
 if (data.create !== null) {
-    data.create = _url(data.create === undefined ? 'create' : data.create);
+  data.create = _url(data.create === undefined ? 'create' : data.create);
 }
 if (data.update !== null) {
-    data.update = _url(data.update === undefined ? 'update' : data.update);
+  data.update = _url(data.update === undefined ? 'update' : data.update);
 }
 if (data.updateAttr !== null) {
-    data.updateAttr = _url(data.updateAttr === undefined ? 'update-attr' : data.updateAttr);
+  data.updateAttr = _url(data.updateAttr === undefined ? 'update-attr' : data.updateAttr);
 }
 if (data.delete !== null) {
-    data.delete = _url(data.delete === undefined ? 'delete-list' : data.delete);
+  data.delete = _url(data.delete === undefined ? 'delete-list' : data.delete);
 }
 if (data.clone === true) {
-    data.clone = _url('clone');
+  data.clone = _url('clone');
 } else if (Array.isArray(data.clone)) {
-    data.clone = _url(data.clone);
+  data.clone = _url(data.clone);
 }
 if (data.order === undefined && model.PK) {
-    data.order = {[model.PK]: -1};
+  data.order = {[model.PK]: -1};
 }
 let hasKeyColumn = false;
 for (const column of data.columns) {
-    if (column.label === undefined) {
-        column.label = model.getAttrLabel(column.name);
-    }
-    if (column.name === data.key) {
-        hasKeyColumn = true;
-    }
+  if (column.label === undefined) {
+    column.label = model.getAttrLabel(column.name);
+  }
+  if (column.name === data.key) {
+    hasKeyColumn = true;
+  }
 }
 if (!hasKeyColumn) {
-    data.columns.unshift({
-        type: 'id',
-        name: model.PK,
-        label: 'ID',
-        hidden: true,
-        searchable: true,
-        sortable: true
-    });
+  data.columns.unshift({
+    type: 'id',
+    name: model.PK,
+    label: 'ID',
+    hidden: true,
+    searchable: true,
+    sortable: true
+  });
 }
 if (data.multiple === undefined) {
-    data.multiple = true;
+  data.multiple = true;
 }
 if (data.filter && !data.filter.url) {
-    data.filter.url = _url('filter');
+  data.filter.url = _url('filter');
 }
 if (data.showTop === undefined) {
-    data.showTop = true;
+  data.showTop = true;
 }
 if (data.jam === undefined) {
-    data.jam = 'MainList';
+  data.jam = 'MainList';
 }
 data.id = _controller.getCurrentRoute();
 %>
 <div class="data-grid" data-jam="<%- data.jam %>" data-params="<%= JSON.stringify(data) %>">
 
-    <%- include(_view.get('_part/list/commands')) %>
+  <%- include(_view.get('_part/list/commands')) %>
 
-    <% if (data.filter) { %>
-    <div class="list-filter">
-        <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
-    </div>
-    <% } if (data.showTop) { %>
-    <%- include(_view.get('_part/list/top')) %>
-    <% } %>
-    <div class="data-grid-content"></div>
+  <% if (data.filter) { %>
+  <div class="list-filter">
+    <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
+  </div>
+  <% } if (data.showTop) { %>
+  <%- include(_view.get('_part/list/top')) %>
+  <% } %>
+  <div class="data-grid-content"></div>
 
-    <%- include(_view.get('_part/list/bottom')) %>
+  <%- include(_view.get('_part/list/bottom')) %>
 
-    <div class="overlay">
-        <i class="fa fa-spinner fa-spin"></i>
-    </div>
+  <div class="overlay">
+    <i class="fa fa-spinner fa-spin"></i>
+  </div>
 </div>

@@ -1,34 +1,34 @@
 <!-- _part/tool/utilities -->
 <%
 if (typeof utilities !== 'undefined' && utilities.length) {
-    const res = {
-        action: _controller.action.name,
-        items: utilities,
-        menu: typeof utilityMenu !== 'undefined' ? utilityMenu : null
-    };
-    if (typeof params !== 'undefined') {
-        Object.assign(res, params);
-    }
+  const res = {
+    action: _controller.action.name,
+    items: utilities,
+    menu: typeof utilityMenu !== 'undefined' ? utilityMenu : null
+  };
+  if (typeof params !== 'undefined') {
+    Object.assign(res, params);
+  }
 %>
 <div class="utility-container nav-group" data-jam="UtilityManager" data-command="utilities"
-     data-url="<%- _url('default/utility') %>"
-     data-params="<%= JSON.stringify(res) %>">
+   data-url="<%- _url('default/utility') %>"
+   data-params="<%= JSON.stringify(res) %>">
 
-    <div class="utility-menu btn-group hidden">
-        <button type="button" class="dropdown-toggle btn-outline-secondary btn" title="Utilities"
-                data-bs-toggle="dropdown" data-t="">
-        </button>
-        <div class="dropdown-menu"></div>
-    </div>
+  <div class="utility-menu btn-group hidden">
+    <button type="button" class="dropdown-toggle btn-outline-secondary btn" title="Utilities"
+        data-bs-toggle="dropdown" data-t="">
+    </button>
+    <div class="dropdown-menu"></div>
+  </div>
 
-    <template data-id="button">
-        <button type="button" class="utility-item btn {{css}}" title="{{hint}}" data-t="">
-            <span data-t="">{{name}}</span>
-        </button>
-    </template>
+  <template data-id="button">
+    <button type="button" class="utility-item btn {{css}}" title="{{hint}}" data-t="">
+      <span data-t="">{{name}}</span>
+    </button>
+  </template>
 
-    <template data-id="menuItem">
-        <a class="utility-item dropdown-item" href="javascript:void 0" title="{{hint}}" data-t="">{{name}}</a>
-    </template>
+  <template data-id="menuItem">
+    <a class="utility-item dropdown-item" href="javascript:void 0" title="{{hint}}" data-t="">{{name}}</a>
+  </template>
 </div>
 <% } %>

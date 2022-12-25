@@ -1,34 +1,33 @@
 <!-- _part/misc/frameStack -->
-
 <div class="frame-stack" data-jam="FrameStack">
 
-    <div class="frame-stack-tabs">
-        <div class="frame-stack-tab root">
-            <i class="fas fa-caret-left"></i>
-        </div>
-        <div class="frame-stack-tabs-pool"></div>
+  <div class="frame-stack-tabs">
+    <div class="frame-stack-tab root">
+      <i class="fas fa-caret-left"></i>
     </div>
+    <div class="frame-stack-tabs-pool"></div>
+  </div>
 
-    <div class="frame-stack-pool"></div>
+  <div class="frame-stack-pool"></div>
 
-    <template data-id="tab">
-        <div class="frame-stack-tab">
-            <span class="text">{{text}}</span>
-            <span class="close">&times;</span>
+  <template data-id="tab">
+    <div class="frame-stack-tab">
+      <span class="text">{{text}}</span>
+      <span class="close">&times;</span>
+    </div>
+  </template>
+
+  <template data-id="frame">
+    <div class="stack-frame with-header" tabindex="0">
+      <div class="stack-frame-container">
+        <div class="stack-frame-header">
+          <h3 class="stack-frame-title"></h3>
         </div>
-    </template>
-
-    <template data-id="frame">
-        <div class="stack-frame with-header" tabindex="0">
-            <div class="stack-frame-container">
-                <div class="stack-frame-header">
-                    <h3 class="stack-frame-title"></h3>
-                </div>
-                <div class="stack-frame-content"></div>
-            </div>
-            <div class="overlay">
-                <i class="fa fa-spinner fa-spin"></i>
-            </div>
-        </div>
-    </template>
+        <div class="stack-frame-content"></div>
+      </div>
+      <div class="overlay">
+        <i class="fa fa-spinner fa-spin"></i>
+      </div>
+    </div>
+  </template>
 </div>

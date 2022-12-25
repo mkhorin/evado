@@ -10,7 +10,7 @@ block('title', title);
 <% if (success) { %>
 <div class="alert alert-success"><%- success %></div>
 <div class="text-center">
-    <a href="/"><%- _t('Home') %></a>
+  <a href="/"><%- _t('Home') %></a>
 </div>
 <% } else { %>
 
@@ -22,19 +22,19 @@ block('title', title);
 
 <form method="post" class="form">
 
-    <%- include(_view.get('auth/_input'), {
-        attr: 'email',
-        type: 'email',
-        iconClass: 'fas fa-at',
-        autocomplete: 'on'
-    }) %>
+  <%- include(_view.get('auth/_input'), {
+    attr: 'email',
+    type: 'email',
+    iconClass: 'fas fa-at',
+    autocomplete: 'on'
+  }) %>
 
-    <%- include(_view.get('auth/_captcha')) %>
+  <%- include(_view.get('auth/_captcha')) %>
 
-    <div class="form-submit form-attr form-group">
-        <button type="submit" class="btn-primary btn">
-            <%- _t('Send') %>
-        </button>
-    </div>
+  <div class="form-submit form-attr form-group">
+    <button type="submit" class="btn-primary btn">
+      <%- _t('Send') %>
+    </button>
+  </div>
 </form>
 <% } %>

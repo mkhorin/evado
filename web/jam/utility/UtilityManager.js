@@ -25,17 +25,17 @@ Jam.UtilityManager = class UtilityManager extends Jam.Element {
         };
     }
 
-    getUtilityClass ({frontClass}) {
-        if (!frontClass) {
+    getUtilityClass ({clientClass}) {
+        if (!clientClass) {
             return null;
         }
-        const Class = Jam.Utility[frontClass];
+        const Class = Jam.Utility[clientClass];
         if (typeof Class === 'function') {
-            if (Jam.Utility.hasOwnProperty(frontClass)) {
+            if (Jam.Utility.hasOwnProperty(clientClass)) {
                 return Class;
             }
         }
-        console.error('Invalid utility class:', frontClass);
+        console.error('Invalid utility class:', clientClass);
     }
 
     createUtility ($item, data) {

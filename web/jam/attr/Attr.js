@@ -146,7 +146,7 @@ Jam.ModelAttr = class ModelAttr {
         return Array.isArray(names) ? names : names ? [names] : [];
     }
 
-    getDependencyValue () {
+    getActualValue () {
         return this.getValue();
     }
 

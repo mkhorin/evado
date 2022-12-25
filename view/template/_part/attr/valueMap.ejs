@@ -1,49 +1,49 @@
 <!-- _part/attr/valueMap -->
 <%
 const p = {
-    handler: 'ValueMap'
+  handler: 'ValueMap'
 };
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="value-map form-attr form-group row <%- p.required %>"
-     data-handler="<%= p.handler %>"
-     data-action-binder="<%= p.actionBinder %>">
+   data-handler="<%= p.handler %>"
+   data-action-binder="<%= p.actionBinder %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" type="hidden" value="<%= p.value %>" class="form-value">
-        <div class="value-map-items">
-            <div class="value-map-item">
-                <div class="row">
-                    <div class="col-6">
-                        <input type="text" <%- p.required %>
-                               class="form-control text-end param value-param" placeholder="Value">
-                    </div>
-                    <div class="col-6">
-                        <input type="text" <%- p.required %>
-                               class="form-control param text-param" placeholder="Text">
-                    </div>
-                </div>
-                <div class="value-map-item-control btn-group">
-                    <button data-id="add" type="button" class="btn-outline-success btn" title="Add">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <button data-id="down" type="button" class="btn-outline-secondary btn" title="Down">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <button data-id="up" type="button" class="btn-outline-secondary btn" title="Up">
-                        <i class="fas fa-chevron-up"></i>
-                    </button>
-                    <button data-id="delete" type="button" class="btn-outline-danger btn" title="Delete">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
+  <div class="<%- p.valueCss %>">
+    <input name="<%- p.name %>" type="hidden" value="<%= p.value %>" class="form-value">
+    <div class="value-map-items">
+      <div class="value-map-item">
+        <div class="row">
+          <div class="col-6">
+            <input type="text" <%- p.required %>
+                 class="form-control text-end param value-param" placeholder="Value">
+          </div>
+          <div class="col-6">
+            <input type="text" <%- p.required %>
+                 class="form-control param text-param" placeholder="Text">
+          </div>
         </div>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+        <div class="value-map-item-control btn-group">
+          <button data-id="add" type="button" class="btn-outline-success btn" title="Add">
+            <i class="fas fa-plus"></i>
+          </button>
+          <button data-id="down" type="button" class="btn-outline-secondary btn" title="Down">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <button data-id="up" type="button" class="btn-outline-secondary btn" title="Up">
+            <i class="fas fa-chevron-up"></i>
+          </button>
+          <button data-id="delete" type="button" class="btn-outline-danger btn" title="Delete">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
     </div>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 </div>

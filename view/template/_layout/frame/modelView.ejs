@@ -1,48 +1,48 @@
 <!-- _layout/frame/modelView -->
 <%
 const p = {
-    jam: 'Model',
-    id: model.getId(),
-    key: model.PK,
-    className: model.getBaseName()
+  jam: 'Model',
+  id: model.getId(),
+  key: model.PK,
+  className: model.getBaseName()
 };
 if (typeof params !== 'undefined') {
-    Object.assign(p, params);
+  Object.assign(p, params);
 }
 %>
 <div class="frame-box scroll-container"
-     data-tab="<%= blocks.tab %>"
-     data-title="<%= blocks.title %>"
-     data-t-tab="<%- blocks.tabTranslation %>"
-     data-t-title="<%- blocks.titleTranslation %>">
+   data-tab="<%= blocks.tab %>"
+   data-title="<%= blocks.title %>"
+   data-t-tab="<%- blocks.tabTranslation %>"
+   data-t-title="<%- blocks.titleTranslation %>">
 
-    <div class="frame-box-header scroll-header">
-        <div class="commands">
-            <div class="nav-group">
-                <button data-command="reload" class="btn-outline-secondary btn" type="button" title="Reload">
-                    <i class="fa fa-redo-alt"></i>
-                </button>
-            </div>
-            <button data-command="copyId" class="btn-outline-secondary btn" type="button"
-                    title="Copy <%- p.id %>">ID</button>
+  <div class="frame-box-header scroll-header">
+    <div class="commands">
+      <div class="nav-group">
+        <button data-command="reload" class="btn-outline-secondary btn" type="button" title="Reload">
+          <i class="fa fa-redo-alt"></i>
+        </button>
+      </div>
+      <button data-command="copyId" class="btn-outline-secondary btn" type="button"
+        title="Copy <%- p.id %>">ID</button>
 
-            <%- include(_view.get('_part/tool/modelHistory')) %>
+      <%- include(_view.get('_part/tool/modelHistory')) %>
 
-            <% if (blocks.commands) { %>
-            <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
-            <% } %>
-        </div>
+      <% if (blocks.commands) { %>
+      <%- include(_view.get('_part/misc/render'), {data: blocks.commands.get()}) %>
+      <% } %>
     </div>
-    <div class="frame-box-body scroll-body">
+  </div>
+  <div class="frame-box-body scroll-body">
 
-        <%- include(_view.get('_part/misc/frameDescription')) %>
+    <%- include(_view.get('_part/misc/frameDescription')) %>
 
-        <div class="model-view model form"
-             data-jam="<%- p.jam %>"
-             data-params="<%= JSON.stringify(p) %>">
+    <div class="model-view model form"
+       data-jam="<%- p.jam %>"
+       data-params="<%= JSON.stringify(p) %>">
 
-            <%- body %>
+      <%- body %>
 
-        </div>
     </div>
+  </div>
 </div>

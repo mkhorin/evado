@@ -2,35 +2,35 @@
 <%
 let value = overridden[attr].originalValue;
 if (Array.isArray(value)) {
-    value = value.join();
+  value = value.join();
 }
 let data = {
-    enable: {[overridden[attr].name]: true},
-    value: [value, {[overridden[attr].name]: false}]
+  enable: {[overridden[attr].name]: true},
+  value: [value, {[overridden[attr].name]: false}]
 };
 if (typeof actionBinder !== 'undefined') {
-    Object.assign(data, actionBinder);
+  Object.assign(data, actionBinder);
 }
 if (typeof params !== 'undefined') {
-    const binder = params.actionBinder;
-    if (binder) {
-        binder.enable = binder.enable ? ['and', data.enable, binder.enable] : data.enable;
-        binder.value = data.value;
-    }
+  const binder = params.actionBinder;
+  if (binder) {
+    binder.enable = binder.enable ? ['and', data.enable, binder.enable] : data.enable;
+    binder.value = data.value;
+  }
 }
 %>
 <div class="form-override form-group">
 
-    <%- include(template, Object.assign({
-        css: 'form-override-target',
-        actionBinder: data
-    }, typeof params === 'undefined' ? null : params)) %>
+  <%- include(template, Object.assign({
+    css: 'form-override-target',
+    actionBinder: data
+  }, typeof params === 'undefined' ? null : params)) %>
 
-    <%- include(_view.get('_part/attr/checkbox'), {
-        attr: overridden[attr].attr,
-        label: null,
-        name: overridden[attr].name,
-        value: overridden[attr].overridden,
-        css: 'form-override-toggle'
-    }) %>
+  <%- include(_view.get('_part/attr/checkbox'), {
+    attr: overridden[attr].attr,
+    label: null,
+    name: overridden[attr].name,
+    value: overridden[attr].overridden,
+    css: 'form-override-toggle'
+  }) %>
 </div>

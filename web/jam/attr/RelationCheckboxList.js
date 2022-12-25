@@ -34,10 +34,10 @@ Jam.RelationCheckboxListModelAttr = class RelationCheckboxListModelAttr extends 
     }
 
     hasValue () {
-        return !!this.getDependencyValue();
+        return !!this.getActualValue();
     }
 
-    getDependencyValue () {
+    getActualValue () {
         const values = this.getCheckedValues();
         return values.length ? values : null;
     }
@@ -47,7 +47,7 @@ Jam.RelationCheckboxListModelAttr = class RelationCheckboxListModelAttr extends 
     }
 
     getValueText () {
-        return this.getDependencyValue();
+        return this.getActualValue();
     }
 
     setValue (value) {

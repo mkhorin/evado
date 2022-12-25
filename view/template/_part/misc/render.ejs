@@ -1,11 +1,11 @@
 <!-- _part/misc/render -->
 <%
 if (Array.isArray(data)) {
-    for (const item of data) {
+  for (const item of data) {
 %>
 <%- include('render', {data: item}) %>
 <% }} else if (typeof data === 'string') { %>
-    <%- data %>
+  <%- data %>
 <% } else if (data?.template) { %>
-    <%- include(data.template, data) %>
+  <%- include(data.template, data) %>
 <% } %>

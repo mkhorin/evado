@@ -1,35 +1,35 @@
 <!-- _part/group/columns -->
 <%
 const p = {
-    actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
-    css: typeof css === 'undefined' ? '' : css,
-    columnCss: typeof columnCss === 'undefined' ? 'col-xl-6' : columnCss,
-    labelCss: typeof labelCss === 'undefined' ? 'col-xl-4 col-lg-3' : labelCss,
-    valueCss: typeof valueCss === 'undefined' ? 'col-xl-8 col-lg-9' : valueCss
+  actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
+  css: typeof css === 'undefined' ? '' : css,
+  columnCss: typeof columnCss === 'undefined' ? 'col-xl-6' : columnCss,
+  labelCss: typeof labelCss === 'undefined' ? 'col-xl-4 col-lg-3' : labelCss,
+  valueCss: typeof valueCss === 'undefined' ? 'col-xl-8 col-lg-9' : valueCss
 };
 %>
 <div class="form-columns form-group row <%- p.css %>" data-action-binder="<%= p.actionBinder %>">
-    <% for (const item of items) {
-        item.params = item.params || {};
-        item.params.labelCss = item.params.labelCss === undefined ? p.labelCss : item.params.labelCss;
-        item.params.valueCss = item.params.valueCss === undefined ? p.valueCss : item.params.valueCss;
+  <% for (const item of items) {
+    item.params = item.params || {};
+    item.params.labelCss = item.params.labelCss === undefined ? p.labelCss : item.params.labelCss;
+    item.params.valueCss = item.params.valueCss === undefined ? p.valueCss : item.params.valueCss;
+  %>
+  <div class="form-column <%- item.css === undefined ? p.columnCss : item.css %>">
+    <% if (Array.isArray(item.items)) {
+      for (const child of item.items) {
+        if (child.template) {
+        child.params = child.params || {};
+        child.params.labelCss = child.params.labelCss === undefined ? item.params.labelCss : child.params.labelCss;
+        child.params.valueCss = child.params.valueCss === undefined ? item.params.valueCss : child.params.valueCss;
     %>
-    <div class="form-column <%- item.css === undefined ? p.columnCss : item.css %>">
-        <% if (Array.isArray(item.items)) {
-            for (const child of item.items) {
-                if (child.template) {
-                child.params = child.params || {};
-                child.params.labelCss = child.params.labelCss === undefined ? item.params.labelCss : child.params.labelCss;
-                child.params.valueCss = child.params.valueCss === undefined ? item.params.valueCss : child.params.valueCss;
-        %>
-        <%- include(child.template, child.params) %>
-        <% } else { %>
-        <%- child.content %>
-        <% }}} else if (item.template) { %>
-        <%- include(item.template, item.params) %>
-        <% } else { %>
-        <%- item.content %>
-        <% } %>
-    </div>
+    <%- include(child.template, child.params) %>
+    <% } else { %>
+    <%- child.content %>
+    <% }}} else if (item.template) { %>
+    <%- include(item.template, item.params) %>
+    <% } else { %>
+    <%- item.content %>
     <% } %>
+  </div>
+  <% } %>
 </div>

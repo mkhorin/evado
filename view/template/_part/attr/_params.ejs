@@ -21,35 +21,35 @@ p.mask = typeof mask === 'undefined' ? null : typeof mask === 'string' ? mask : 
 
 p.sourceValue = typeof value === 'undefined' ? model.get(attr) : value;
 if (p.sourceValue === undefined && typeof defaultValue !== 'undefined') {
-    p.sourceValue = defaultValue;
+  p.sourceValue = defaultValue;
 }
 p.value = p.sourceValue;
 if (p.value instanceof Date) {
-    p.value = p.value.toISOString();
+  p.value = p.value.toISOString();
 }
 if (_view.MongoHelper.isObjectId(p.value)) {
-    p.value = p.value.toString();
+  p.value = p.value.toString();
 }
 p.displayValue = typeof displayValue === 'undefined' ? p.value : displayValue;
 
 if (p.format) {
-    switch (p.format) {
-        case 'label': {
-            p.displayValue = model.constructor.getAttrValueLabel(attr, p.value) || p.displayValue;
-            break;
-        }
-        default: {
-            p.displayValue = Array.isArray(p.format)
-                ? _format(p.displayValue, ...p.format)
-                : _format(p.displayValue, p.format);
-        }
+  switch (p.format) {
+    case 'label': {
+      p.displayValue = model.constructor.getAttrValueLabel(attr, p.value) || p.displayValue;
+      break;
     }
+    default: {
+      p.displayValue = Array.isArray(p.format)
+        ? _format(p.displayValue, ...p.format)
+        : _format(p.displayValue, p.format);
+    }
+  }
 }
 if (p.displayValue === undefined || p.displayValue === null) {
-    p.displayValue = _format(null);
-    p.escape = false;
+  p.displayValue = _format(null);
+  p.escape = false;
 }
 if (p.value === null || p.value === undefined) {
-    p.value = '';
+  p.value = '';
 }
 %>

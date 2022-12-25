@@ -1,14 +1,14 @@
 <%
 const p = {
-    name: typeof name === 'undefined' ?  model.getFormAttrName(attr) : name,
-    value: typeof value === 'undefined' ?  !!model.get(attr) : value,
-    label: typeof label === 'undefined' ? model.getAttrLabel(attr) : label
+  name: typeof name === 'undefined' ?  model.getFormAttrName(attr) : name,
+  value: typeof value === 'undefined' ?  !!model.get(attr) : value,
+  label: typeof label === 'undefined' ? model.getAttrLabel(attr) : label
 };
 %>
 <div class="form-attr form-group">
-    <div class="form-check">
-        <input class="form-check-input" name="<%- p.name %>"
-               id="<%- p.name %>" <%- p.value ? 'checked' : '' %> type="checkbox">
-        <label class="form-check-label" for="<%- p.name %>"><%- _t(p.label) %></label>
-    </div>
+  <div class="form-check">
+    <input class="form-check-input" name="<%- p.name %>"
+         id="<%- p.name %>" <%- p.value ? 'checked' : '' %> type="checkbox">
+    <label class="form-check-label" for="<%- p.name %>"><%- _t(p.label) %></label>
+  </div>
 </div>

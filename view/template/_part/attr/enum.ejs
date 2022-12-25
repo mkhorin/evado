@@ -1,28 +1,28 @@
 <!-- _part/attr/enum -->
 <%
 const p = {
-    handler: 'Enum',
-    select2: typeof select2 === 'undefined' ? '{}' : JSON.stringify(select2),
-    sets: typeof sets === 'undefined' ? '' : JSON.stringify(sets)
+  handler: 'Enum',
+  select2: typeof select2 === 'undefined' ? '{}' : JSON.stringify(select2),
+  sets: typeof sets === 'undefined' ? '' : JSON.stringify(sets)
 };
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
-     data-handler="<%= p.handler %>"
-     data-value="<%= p.value %>"
-     data-sets="<%= p.sets %>"
-     data-t-sets="<%- p.translate %>"
-     data-select2="<%= p.select2 %>"
-     data-action-binder="<%= p.actionBinder %>">
+   data-handler="<%= p.handler %>"
+   data-value="<%= p.value %>"
+   data-sets="<%= p.sets %>"
+   data-t-sets="<%- p.translate %>"
+   data-select2="<%= p.select2 %>"
+   data-action-binder="<%= p.actionBinder %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <input type="hidden" name="<%- p.name %>" value="<%= p.value %>" class="form-value">
-        <select <%- p.disabled %> <%- p.required %> class="form-select"></select>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
-    </div>
+  <div class="<%- p.valueCss %>">
+    <input type="hidden" name="<%- p.name %>" value="<%= p.value %>" class="form-value">
+    <select <%- p.disabled %> <%- p.required %> class="form-select"></select>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 </div>

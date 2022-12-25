@@ -3,40 +3,40 @@
 const user = _controller.user;
 %>
 <div class="card">
-    <% if (user.identity) { %>
-    <div class="card-body">
-        <div class="user-name">
-            <i class="text-primary fa fa-user"></i>
-            <b><%- _controller.user.getTitle() %></b>
-        </div>
-        <% if (user.assignments) { %>
-        <div class="user-roles">
-            <div class="user-role-label" data-t="">Roles:</div>
-            <div class="user-role-list">
-                <% for (const role of roles) { %>
-                <div class="user-role" data-t=""><%- role %></div>
-                <% } %>
-            </div>
-        </div>
+  <% if (user.identity) { %>
+  <div class="card-body">
+    <div class="user-name">
+      <i class="text-primary fa fa-user"></i>
+      <b><%- _controller.user.getTitle() %></b>
+    </div>
+    <% if (user.assignments) { %>
+    <div class="user-roles">
+      <div class="user-role-label" data-t="">Roles:</div>
+      <div class="user-role-list">
+        <% for (const role of roles) { %>
+        <div class="user-role" data-t=""><%- role %></div>
         <% } %>
-    </div>
-    <div class="card-footer">
-        <form action="auth/sign-out" method="post">
-            <input type="hidden" name="csrf" value="<%- _controller.getCsrfToken() %>">
-            <div class="float-start">
-                <button type="submit" class="btn-danger btn" data-t="">Sign out</button>
-            </div>
-            <% if (enablePasswordChange) { %>
-            <div class="float-end">
-                <a href="<%- changePasswordUrl %>"
-                   class="btn-outline-dark btn" data-t="">Change password</a>
-            </div>
-            <% } %>
-        </form>
-    </div>
-    <% } else { %>
-    <div class="card-footer">
-        <a href="auth/sign-in" class="btn-primary btn w-100" data-t="">Sign in</a>
+      </div>
     </div>
     <% } %>
+  </div>
+  <div class="card-footer">
+    <form action="auth/sign-out" method="post">
+      <input type="hidden" name="csrf" value="<%- _controller.getCsrfToken() %>">
+      <div class="float-start">
+        <button type="submit" class="btn-danger btn" data-t="">Sign out</button>
+      </div>
+      <% if (enablePasswordChange) { %>
+      <div class="float-end">
+        <a href="<%- changePasswordUrl %>"
+           class="btn-outline-dark btn" data-t="">Change password</a>
+      </div>
+      <% } %>
+    </form>
+  </div>
+  <% } else { %>
+  <div class="card-footer">
+    <a href="auth/sign-in" class="btn-primary btn w-100" data-t="">Sign in</a>
+  </div>
+  <% } %>
 </div>

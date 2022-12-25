@@ -1,26 +1,26 @@
 <!-- _part/group/set -->
 <%
 const p = {
-    active: typeof active !== 'undefined' && active ? 'active' : '',
-    actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
-    translate: typeof translate === 'undefined' ? '' : translate
+  active: typeof active !== 'undefined' && active ? 'active' : '',
+  actionBinder: typeof actionBinder === 'undefined' ? '' : JSON.stringify(actionBinder),
+  translate: typeof translate === 'undefined' ? '' : translate
 };
 %>
 <fieldset class="form-set model-group <%- p.active %>"
-          data-id="<%- id %>"
-          data-action-binder="<%= p.actionBinder %>">
-    <legend>
-        <span class="form-set-toggle">
-            <span class="icon fas fa-chevron-right"></span>
-            <span data-t="<%- p.translate %>"><%- title %></span>
-        </span>
-    </legend>
-    <div class="form-set-body model-group-body">
-    <% for (const item of items) {
-        if (item.template) { %>
-        <%- include(item.template, item.params) %>
-        <% } else { %>
-        <%- item %>
-    <% }} %>
-    </div>
+      data-id="<%- id %>"
+      data-action-binder="<%= p.actionBinder %>">
+  <legend>
+    <span class="form-set-toggle">
+      <span class="icon fas fa-chevron-right"></span>
+      <span data-t="<%- p.translate %>"><%- title %></span>
+    </span>
+  </legend>
+  <div class="form-set-body model-group-body">
+  <% for (const item of items) {
+    if (item.template) { %>
+    <%- include(item.template, item.params) %>
+    <% } else { %>
+    <%- item %>
+  <% }} %>
+  </div>
 </fieldset>

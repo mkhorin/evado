@@ -2,30 +2,30 @@
 <% layout(_view.get('_layout/main')) %>
 
 <header class="main-header">
-    <nav class="navbar-super navbar navbar-dark">
-        <%- include(_view.get('_part/nav/logo')) %>
-    </nav>
-    <nav class="navbar navbar-expand-md navbar-dark">
+  <nav class="navbar-super navbar navbar-dark">
+    <%- include(_view.get('_part/nav/logo')) %>
+  </nav>
+  <nav class="navbar navbar-expand-md navbar-dark">
 
-        <%- include(_view.get('_part/nav/logo')) %>
-        <%- include(_view.get('_part/nav/commonMenu')) %>
-        <%- include(_view.get('_part/nav/frameStackBack')) %>
+    <%- include(_view.get('_part/nav/logo')) %>
+    <%- include(_view.get('_part/nav/commonMenu')) %>
+    <%- include(_view.get('_part/nav/frameStackBack')) %>
 
-        <div class="ms-auto"></div>
+    <div class="ms-auto"></div>
 
-        <%- _view.placeWidget('notifications') %>
-        <%- include(_view.get('_part/nav/user')) %>
-        <%- include(_view.get('_part/nav/language')) %>
-    </nav>
+    <%- _view.placeWidget('notifications') %>
+    <%- include(_view.get('_part/nav/user')) %>
+    <%- include(_view.get('_part/nav/language')) %>
+  </nav>
 </header>
 
 <section class="main-content">
-    <div class="main-container container-fluid">
+  <div class="main-container container-fluid">
 
-        <%- include(_view.get('_part/misc/alert')) %>
+    <%- include(_view.get('_part/misc/alert')) %>
 
-        <%- body %>
+    <%- body %>
 
-    </div>
-    <%- include(_view.get('_part/misc/footer')) %>
+  </div>
+  <%- include(_view.get('_part/misc/footer')) %>
 </section>

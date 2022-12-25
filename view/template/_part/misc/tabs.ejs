@@ -1,32 +1,32 @@
 <!-- _part/misc/tabs -->
 <%
 const p = {
-    jam: typeof jam === 'undefined' ? 'Tabs' : jam,
-    tabsCss: typeof tabsCss === 'undefined' ? '' : tabsCss
+  jam: typeof jam === 'undefined' ? 'Tabs' : jam,
+  tabsCss: typeof tabsCss === 'undefined' ? '' : tabsCss
 };
 %>
 <div class="<%- p.tabsCss %> tabs" data-jam="<%- p.jam %>">
-    <div class="nav-tabs nav" role="tablist">
-    <% for (const item of items) { %>
-    <a href="javascript:void 0" class="nav-link nav-item <%- item.active ? 'active' : '' %>"
-       data-id="<%- item.id %>" data-t=""><%- item.label || item.id %></a>
+  <div class="nav-tabs nav" role="tablist">
+  <% for (const item of items) { %>
+  <a href="javascript:void 0" class="nav-link nav-item <%- item.active ? 'active' : '' %>"
+     data-id="<%- item.id %>" data-t=""><%- item.label || item.id %></a>
+  <% } %>
+  </div>
+  <div class="tab-content">
+    <% for (const {active, id, content} of items) { %>
+    <div class="tab-pane <%- active ? 'active' : '' %>" data-id="<%- id %>">
+      <% if (typeof content === 'string') { %>
+        <%- include(item.content) %>
+      <% } else if (Array.isArray(content)) {
+        for (const item of content) {
+        if (item.template) { %>
+        <%- include(item.template, item) %>
+        <% } else { %>
+        <%- item %>
+      <% }}} else { %>
+      <%- include(content.template, content) %>
+      <% } %>
+    </div>
     <% } %>
-    </div>
-    <div class="tab-content">
-        <% for (const {active, id, content} of items) { %>
-        <div class="tab-pane <%- active ? 'active' : '' %>" data-id="<%- id %>">
-            <% if (typeof content === 'string') { %>
-                <%- include(item.content) %>
-            <% } else if (Array.isArray(content)) {
-                for (const item of content) {
-                if (item.template) { %>
-                <%- include(item.template, item) %>
-                <% } else { %>
-                <%- item %>
-            <% }}} else { %>
-            <%- include(content.template, content) %>
-            <% } %>
-        </div>
-        <% } %>
-    </div>
+  </div>
 </div>

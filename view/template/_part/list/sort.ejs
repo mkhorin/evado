@@ -4,13 +4,13 @@ block('tab').defaults('Sort');
 block('title').defaults('Sorting');
 
 if (!data.id) {
-    data.id = data.list;
+  data.id = data.list;
 }
 if (data.update !== null) {
-    data.update = relController.createUrl(data.update === undefined ? 'update' : data.update);
+  data.update = relController.createUrl(data.update === undefined ? 'update' : data.update);
 }
 if (data.order === undefined) {
-    data.order = {[orderAttr]: 1};
+  data.order = {[orderAttr]: 1};
 }
 data.key = relModel.PK;
 data.multiple = true;
@@ -19,72 +19,72 @@ data.pageSize = 0;
 
 let hasKeyColumn = false;
 for (const column of data.columns) {
-    if (column.label === undefined) {
-        column.label = relModel.getAttrLabel(column.name);
-    }
-    if (column.name === data.key) {
-        hasKeyColumn = true;
-    }
+  if (column.label === undefined) {
+    column.label = relModel.getAttrLabel(column.name);
+  }
+  if (column.name === data.key) {
+    hasKeyColumn = true;
+  }
 }
 if (!hasKeyColumn) {
-    data.columns.unshift({
-        name: relModel.PK,
-        label: 'ID',
-        hidden: true,
-        searchable: true,
-        sortable: true
-    });
+  data.columns.unshift({
+    name: relModel.PK,
+    label: 'ID',
+    hidden: true,
+    searchable: true,
+    sortable: true
+  });
 }
 data.data = [];
 for (const model of models) {
-    const map = {};
-    for (const {name, format} of data.columns) {
-        if (format === 'label') {
-            map[name] = model.getAttrValueLabel(name);
-        } else if (format === 'relation') {
-            map[name] = model.getRelatedTitle(name);
-        } else {
-            map[name] = model.getViewAttr(name);
-        }
+  const map = {};
+  for (const {name, format} of data.columns) {
+    if (format === 'label') {
+      map[name] = model.getAttrValueLabel(name);
+    } else if (format === 'relation') {
+      map[name] = model.getRelatedTitle(name);
+    } else {
+      map[name] = model.getViewAttr(name);
     }
-    data.data.push(map);
+  }
+  data.data.push(map);
 }
 if (data.jam === undefined) {
-    data.jam = 'SortList';
+  data.jam = 'SortList';
 }
 %>
 <div class="data-grid" data-jam="<%- data.jam %>" data-params="<%= JSON.stringify(data) %>">
-    <div class="commands">
-        <button data-command="saveClose" class="btn-primary btn" type="button" title="Save and close">
-            <i class="fas fa-check"></i>
-        </button>
-        <div class="nav-group">
-            <button data-command="up" class="btn-outline-success btn" type="button">
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            <button data-command="down" class="btn-outline-success btn" type="button">
-                <i class="fas fa-arrow-down"></i>
-            </button>
-        </div>
-        <% if (data.update) { %>
-        <button data-command="update" class="btn-outline-primary btn" type="button" title="Edit">
-            <i class="fas fa-pencil-alt"></i>
-        </button>
-        <% } %>
-        <div class="nav-group">
-            <button data-command="reload" class="btn-outline-secondary btn" type="button" title="Reload">
-                <i class="fa fa-redo-alt"></i>
-            </button>
-        </div>
-        <% if (typeof tools !== 'undefined') { %>
-        <%- include(_view.get('_part/misc/render'), {data: tools}) %>
-        <% } %>
+  <div class="commands">
+    <button data-command="saveClose" class="btn-primary btn" type="button" title="Save and close">
+      <i class="fas fa-check"></i>
+    </button>
+    <div class="nav-group">
+      <button data-command="up" class="btn-outline-success btn" type="button">
+        <i class="fas fa-arrow-up"></i>
+      </button>
+      <button data-command="down" class="btn-outline-success btn" type="button">
+        <i class="fas fa-arrow-down"></i>
+      </button>
     </div>
-    <div class="data-grid-content"></div>
-
-    <%- include(_view.get('_part/list/bottom')) %>
-
-    <div class="overlay">
-        <i class="fa fa-spinner fa-spin"></i>
+    <% if (data.update) { %>
+    <button data-command="update" class="btn-outline-primary btn" type="button" title="Edit">
+      <i class="fas fa-pencil-alt"></i>
+    </button>
+    <% } %>
+    <div class="nav-group">
+      <button data-command="reload" class="btn-outline-secondary btn" type="button" title="Reload">
+        <i class="fa fa-redo-alt"></i>
+      </button>
     </div>
+    <% if (typeof tools !== 'undefined') { %>
+    <%- include(_view.get('_part/misc/render'), {data: tools}) %>
+    <% } %>
+  </div>
+  <div class="data-grid-content"></div>
+
+  <%- include(_view.get('_part/list/bottom')) %>
+
+  <div class="overlay">
+    <i class="fa fa-spinner fa-spin"></i>
+  </div>
 </div>

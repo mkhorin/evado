@@ -5,14 +5,14 @@ layout(_view.get('_layout/auth'));
 block('title', blocked);
 %>
 <div class="alert-danger alert">
-    <% if (model.getAttempts()) { %>
-    <%- _t('Access blocked for') %>
-    <b><%- _format(model.getDuration(), 'duration') %></b>
-    <% } else { %>
-    <%- blocked %>
-    <% } %>
+  <% if (model.getAttempts()) { %>
+  <%- _t('Access blocked for') %>
+  <b><%- _format(model.getDuration(), 'duration') %></b>
+  <% } else { %>
+  <%- blocked %>
+  <% } %>
 </div>
 
 <div class="text-center">
-    <a href="/"><%- _t('Home') %></a>
+  <a href="/"><%- _t('Home') %></a>
 </div>

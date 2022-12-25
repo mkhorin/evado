@@ -1,29 +1,29 @@
 <!-- _part/attr/download -->
 <%
 const p = {
-    preload: typeof preload === 'undefined' ? '' : preload,
-    thumbnail: typeof thumbnail === 'undefined' ? 'lg' : thumbnail,
-    thumbnailPath: typeof thumbnailPath === 'undefined' ? 'file/thumbnail' : thumbnailPath,
-    url: `${typeof downloadPath === 'undefined' ? 'file/download' : downloadPath}?id=${model.getId()}`
+  preload: typeof preload === 'undefined' ? '' : preload,
+  thumbnail: typeof thumbnail === 'undefined' ? 'lg' : thumbnail,
+  thumbnailPath: typeof thumbnailPath === 'undefined' ? 'file/thumbnail' : thumbnailPath,
+  url: `${typeof downloadPath === 'undefined' ? 'file/download' : downloadPath}?id=${model.getId()}`
 };
 const thumbnailUrl = p.thumbnail && model.isImage()
-    ? `${p.thumbnailPath}?id=${model.getId()}&s=${p.thumbnail}&t=${_controller.timestamp}`
-    : null;
+  ? `${p.thumbnailPath}?id=${model.getId()}&s=${p.thumbnail}&t=${_controller.timestamp}`
+  : null;
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.css %>" data-handler="<%= p.handler %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <p class="form-control-plaintext">
-            <a href="<%- p.url %>" target="_blank" title="Download" tabindex="-1"
-               data-preload="<%- p.preload %>"><%= model.getTitle() %></a>
-        </p>
-        <% if (thumbnailUrl) { %>
-        <img src="<%- thumbnailUrl %>" class="img-thumbnail img-fluid" alt="<%= model.getTitle() %>">
-        <% } %>
-    </div>
+  <div class="<%- p.valueCss %>">
+    <p class="form-control-plaintext">
+      <a href="<%- p.url %>" target="_blank" title="Download" tabindex="-1"
+         data-preload="<%- p.preload %>"><%= model.getTitle() %></a>
+    </p>
+    <% if (thumbnailUrl) { %>
+    <img src="<%- thumbnailUrl %>" class="img-thumbnail img-fluid" alt="<%= model.getTitle() %>">
+    <% } %>
+  </div>
 </div>

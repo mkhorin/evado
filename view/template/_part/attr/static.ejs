@@ -1,7 +1,7 @@
 <!-- _part/attr/static -->
 <%
 const p = {
-    hideEmpty: typeof hideEmpty === 'undefined' ? false : hideEmpty
+  hideEmpty: typeof hideEmpty === 'undefined' ? false : hideEmpty
 };
 const params = {p};
 %>
@@ -9,25 +9,25 @@ const params = {p};
 <%
 p.translateValue = typeof translateValue === 'undefined' ? 'none' : translateValue;
 if (p.escape) {
-    p.displayValue = _escape(p.displayValue);
+  p.displayValue = _escape(p.displayValue);
 }
 if (p.value && typeof url !== 'undefined') {
-    p.displayValue = `<a href="${_url(url)}" class="frame-link" tabindex="-1" data-t="${p.translateValue}">${p.displayValue}</a>`;
+  p.displayValue = `<a href="${_url(url)}" class="frame-link" tabindex="-1" data-t="${p.translateValue}">${p.displayValue}</a>`;
 }
 if (p.hideEmpty && p.value === '') {
 %>
 <div class="form-attr hidden" data-handler="<%= p.handler %>">
-    <input name="<%- p.name %>" type="hidden" value="" class="form-value">
+  <input name="<%- p.name %>" type="hidden" value="" class="form-value">
 </div>
 <% } else { %>
 <div class="form-attr-static form-attr form-group row <%- p.css %>" data-handler="<%= p.handler %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <input type="hidden" name="<%- p.name %>" value="<%= p.value %>" class="form-value">
-        <div class="form-control-plaintext" data-t="<%- p.translateValue %>"><%- p.displayValue %></div>
-        <div class="error-block"></div>
-    </div>
+  <div class="<%- p.valueCss %>">
+    <input type="hidden" name="<%- p.name %>" value="<%= p.value %>" class="form-value">
+    <div class="form-control-plaintext" data-t="<%- p.translateValue %>"><%- p.displayValue %></div>
+    <div class="error-block"></div>
+  </div>
 </div>
 <% } %>

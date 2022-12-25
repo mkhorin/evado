@@ -6,20 +6,20 @@ const holder = _t(typeof placeholder === 'undefined' ? model.getAttrLabel(attr) 
 const error = _t(model.getFirstError(attr), null, 'areto');
 %>
 <div class="captcha-container form-group" data-jam="Captcha">
-    <div class="captcha">
-        <img src="auth/captcha?_=<%- _controller.timestamp %>" class="captcha-image">
-        <a href="javascript:void 0" class="captcha-refresh" tabindex="-1">
-            <i class="fa fa-redo-alt"></i>
-        </a>
+  <div class="captcha">
+    <img src="auth/captcha?_=<%- _controller.timestamp %>" class="captcha-image">
+    <a href="javascript:void 0" class="captcha-refresh" tabindex="-1">
+      <i class="fa fa-redo-alt"></i>
+    </a>
+  </div>
+  <div class="form-attr form-group <%- error ? 'has-error' : '' %>">
+    <div class="input-group">
+      <input name="<%- name %>" type="search" class="form-control" required
+           placeholder="<%- holder %>" autocomplete="off">
+      <span class="input-group-text text-muted">
+        <i class="fas fa-check"></i>
+      </span>
     </div>
-    <div class="form-attr form-group <%- error ? 'has-error' : '' %>">
-        <div class="input-group">
-            <input name="<%- name %>" type="search" class="form-control" required
-                   placeholder="<%- holder %>" autocomplete="off">
-            <span class="input-group-text text-muted">
-                <i class="fas fa-check"></i>
-            </span>
-        </div>
-        <div class="error-block"><%- error %></div>
-    </div>
+    <div class="error-block"><%- error %></div>
+  </div>
 </div>

@@ -31,10 +31,10 @@ Jam.RelationRadioListModelAttr = class RelationRadioListModelAttr extends Jam.Ra
     }
 
     hasValue () {
-        return !!this.getDependencyValue();
+        return !!this.getActualValue();
     }
 
-    getDependencyValue () {
+    getActualValue () {
         return this.$radioItems.filter(':checked').attr('value');
     }
 
@@ -43,7 +43,7 @@ Jam.RelationRadioListModelAttr = class RelationRadioListModelAttr extends Jam.Ra
     }
 
     getValueText () {
-        return Jam.Helper.getLabelTextByValue(this.getDependencyValue(), this.$attr);
+        return Jam.Helper.getLabelTextByValue(this.getActualValue(), this.$attr);
     }
 
     setValue (value) {

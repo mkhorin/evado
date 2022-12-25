@@ -92,7 +92,7 @@ module.exports = class Utility extends Base {
             hint: this.hint,
             confirmation: this.confirmation,
             css: this.css,
-            frontClass: this.frontClass,
+            clientClass: this.clientClass,
             ...data
         };
     }

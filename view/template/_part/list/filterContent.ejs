@@ -1,259 +1,260 @@
 <!-- _part/list/filterContent -->
 <div class="list-filter" data-params="<%= JSON.stringify(data) %>">
 
-    <div class="filter-content"></div>
+  <div class="filter-content"></div>
 
-    <div class="filter-group hidden"></div>
+  <div class="filter-group hidden"></div>
 
-    <div class="filter-condition hidden">
-        <div class="condition-logical">
-            <span class="condition-logical-and">AND</span>
-            <span class="condition-logical-or">OR</span>
-        </div>
-        <div class="delete-condition">
-            <span class="fa fa-times"></span>
-        </div>
-        <div class="condition-content row">
-            <div class="col-md-5 condition-attr-container">
-                <select class="condition-attr form-select"></select>
-            </div>
-        </div>
-        <div class="condition-group"></div>
+  <div class="filter-condition hidden">
+    <div class="condition-logical">
+      <span class="condition-logical-and">AND</span>
+      <span class="condition-logical-or">OR</span>
+    </div>
+    <div class="delete-condition">
+      <span class="fa fa-times"></span>
+    </div>
+    <div class="condition-content row">
+      <div class="col-md-5 condition-attr-container">
+        <select class="condition-attr form-select"></select>
+      </div>
+    </div>
+    <div class="condition-group"></div>
+  </div>
+
+  <div class="filter-types hidden">
+
+    <div data-id="boolean">
+      <div class="col-md-2">
+        <select class="condition-operation form-select">
+          <option>=</option>
+        </select>
+      </div>
+      <div class="col-md-5">
+        <input class="condition-value" type="checkbox">
+      </div>
     </div>
 
-    <div class="filter-types hidden">
-
-        <div data-id="boolean">
-            <div class="col-md-2">
-                <select class="condition-operation form-select">
-                    <option>=</option>
-                </select>
-            </div>
-            <div class="col-md-5">
-                <input class="condition-value" type="checkbox">
-            </div>
+    <div data-id="date">
+      <div class="col-md-2">
+        <select class="condition-operation form-select">
+          <option>=</option>
+          <option>!=</option>
+          <option><</option>
+          <option>></option>
+          <option><=</option>
+          <option>>=</option>
+        </select>
+      </div>
+      <div class="col-md-5">
+        <input class="condition-value" type="hidden">
+        <div class="input-group">
+          <input class="form-control datepicker" type="text" placeholder="Select date...">
+          <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
         </div>
-
-        <div data-id="date">
-            <div class="col-md-2">
-                <select class="condition-operation form-select">
-                    <option>=</option>
-                    <option>!=</option>
-                    <option><</option>
-                    <option>></option>
-                    <option><=</option>
-                    <option>>=</option>
-                </select>
-            </div>
-            <div class="col-md-5">
-                <input class="condition-value" type="hidden">
-                <div class="input-group">
-                    <input class="form-control datepicker" type="text" placeholder="Select date...">
-                    <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
-                </div>
-            </div>
-        </div>
-
-        <div data-id="datetime">
-            <div class="col-md-2">
-                <select class="condition-operation form-select">
-                    <option>=</option>
-                    <option>!=</option>
-                    <option><</option>
-                    <option>></option>
-                    <option><=</option>
-                    <option>>=</option>
-                </select>
-            </div>
-            <div class="col-md-5">
-                <input class="condition-value" type="hidden">
-                <div class="input-group">
-                    <input class="form-control datepicker" type="text" placeholder="Select date and time...">
-                    <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
-                </div>
-            </div>
-        </div>
-
-        <div data-id="descendant">
-            <div class="col-md-7">
-                <input class="condition-operation" type="hidden" value="nested">
-                <div class="row">
-                    <div class="col-10">
-                        <select class="condition-value form-select"></select>
-                    </div>
-                    <div class="col-2">
-                        <button class="add-condition btn-outline-success btn" type="button" title="Add condition">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div data-id="id">
-            <div class="col-md-2">
-                <select class="condition-operation form-select">
-                    <option value="equal" data-t="">equal</option>
-                    <option value="notEqual" data-t="">not equal</option>
-                    <option value="nested" data-t="">nested</option>
-                </select>
-            </div>
-            <div class="col-md-5">
-                <div class="simple-condition-content">
-                    <input class="condition-value form-control default-focus" type="text" placeholder="Input ID...">
-                </div>
-                <div class="nested-condition-content">
-                    <button class="add-condition btn-outline-success btn" type="button" title="Add condition">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div data-id="nested">
-            <div class="col-md-7">
-                <input class="condition-operation" type="hidden" value="nested">
-                <div class="row">
-                    <div class="col-12">
-                        <button class="add-condition btn-outline-success btn" type="button" title="Add condition">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div data-id="number">
-            <div class="col-md-2">
-                <select class="condition-operation form-select">
-                    <option>=</option>
-                    <option>!=</option>
-                    <option><</option>
-                    <option>></option>
-                    <option><=</option>
-                    <option>>=</option>
-                </select>
-            </div>
-            <div class="col-md-5">
-                <input class="condition-value form-control default-focus" type="number" step="any" placeholder="Input number...">
-            </div>
-        </div>
-
-        <div data-id="selector">
-            <div class="col-md-2">
-                <select class="condition-operation form-select">
-                    <option value="equal" data-t="">equal</option>
-                    <option value="notEqual" data-t="">not equal</option>
-                    <option value="nested" data-t="">nested</option>
-                </select>
-            </div>
-            <div class="col-md-5">
-                <div class="simple-condition-content">
-                    <select class="condition-value form-select"></select>
-                </div>
-                <div class="nested-condition-content">
-                    <button class="add-condition btn-outline-success btn" type="button" title="Add condition">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div data-id="string">
-            <div class="col-md-2">
-                <select class="condition-operation form-select">
-                    <option value="contains" data-t="">contains</option>
-                    <option value="equal" data-t="">equal</option>
-                    <option value="equalCaseInsensitive" data-t="">equal (case-insensitive)</option>
-                    <option value="notEqual" data-t="">not equal</option>
-                    <option value="notEqualCaseInsensitive" data-t="">not equal (case-insensitive)</option>
-                    <option value="begins" data-t="">begins</option>
-                    <option value="ends" data-t="">ends</option>
-                    <option value="lt">&lt;</option>
-                    <option value="gt">&gt;</option>
-                </select>
-            </div>
-            <div class="col-md-5">
-                <input class="condition-value form-control default-focus" type="text" placeholder="Input value...">
-            </div>
-        </div>
+      </div>
     </div>
 
-    <div class="filter-commands">
-        <button data-id="add" class="btn-outline-success btn" type="button" title="Add condition">
+    <div data-id="datetime">
+      <div class="col-md-2">
+        <select class="condition-operation form-select">
+          <option>=</option>
+          <option>!=</option>
+          <option><</option>
+          <option>></option>
+          <option><=</option>
+          <option>>=</option>
+        </select>
+      </div>
+      <div class="col-md-5">
+        <input class="condition-value" type="hidden">
+        <div class="input-group">
+          <input class="form-control datepicker" type="text" placeholder="Select date and time...">
+          <span class="input-group-text bg-white"><i class="far fa-calendar"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <div data-id="descendant">
+      <div class="col-md-7">
+        <input class="condition-operation" type="hidden" value="nested">
+        <div class="row">
+          <div class="col-10">
+            <select class="condition-value form-select"></select>
+          </div>
+          <div class="col-2">
+            <button class="add-condition btn-outline-success btn" type="button" title="Add condition">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-id="id">
+      <div class="col-md-2">
+        <select class="condition-operation form-select">
+          <option value="equal" data-t="">equal</option>
+          <option value="notEqual" data-t="">not equal</option>
+          <option value="nested" data-t="">nested</option>
+        </select>
+      </div>
+      <div class="col-md-5">
+        <div class="simple-condition-content">
+          <input class="condition-value form-control default-focus" type="text" placeholder="Input ID...">
+        </div>
+        <div class="nested-condition-content">
+          <button class="add-condition btn-outline-success btn" type="button" title="Add condition">
             <i class="fas fa-plus"></i>
-        </button>
-        <button data-id="apply" class="btn-primary btn" type="button" data-t="">Apply</button>
-        <button data-id="reset" class="btn-outline-danger btn" type="button" title="Reset filter">
-            <i class="fa fa-times"></i>
-        </button>
-        <button data-id="save" class="btn-outline-success btn" type="button" title="Save filter">
-            <i class="fa fa-download"></i>
-        </button>
-        <button data-id="select" class="btn-outline-primary btn" type="button" title="Select filter">
-            <i class="fa fa-upload"></i>
-        </button>
-    </div>
-
-    <div class="overlay"><i class="fa fa-spinner fa-spin"></i></div>
-
-    <div class="select-modal modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" data-t="">Select filter</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="list-group-container">
-                        <div class="commands">
-                            <button data-id="apply" class="btn-success btn" type="button" title="Apply">
-                                <i class="fas fa-check"></i>
-                            </button>
-                            <button data-id="update" class="btn-outline-primary btn" type="button" title="Edit">
-                                <i class="fas fa-pencil-alt"></i>
-                            </button>
-                            <button data-id="delete" type="button" class="btn-outline-danger btn" title="Delete">
-                                <i class="far fa-trash-alt"></i>
-                            </button>
-                        </div>
-                        <div class="list-group-striped list-group"></div>
-                        <div class="alert-empty alert-warning alert" data-t="">No saved filters yet</div>
-                    </div>
-                </div>
-            </div>
+          </button>
         </div>
+      </div>
     </div>
 
-    <div class="save-modal modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" data-t="">Save filter</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form">
-                        <div class="form-group required">
-                            <label class="col-form-label" data-t="">Name</label>
-                            <input name="name" type="text" class="form-control" required>
-                            <div class="error-block"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-success btn" title="Save" data-id="save">
-                        <i class="fas fa-download"></i>
-                    </button>
-                    <button class="btn-outline-secondary btn" data-bs-dismiss="modal" title="Cancel">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
+    <div data-id="nested">
+      <div class="col-md-7">
+        <input class="condition-operation" type="hidden" value="nested">
+        <div class="row">
+          <div class="col-12">
+            <button class="add-condition btn-outline-success btn" type="button" title="Add condition">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
-    <template data-id="item">
-        <button type="button" class="list-group-item list-group-item-action">{{name}}</button>
-    </template>
+    <div data-id="number">
+      <div class="col-md-2">
+        <select class="condition-operation form-select">
+          <option>=</option>
+          <option>!=</option>
+          <option><</option>
+          <option>></option>
+          <option><=</option>
+          <option>>=</option>
+        </select>
+      </div>
+      <div class="col-md-5">
+        <input class="condition-value form-control default-focus" type="number" step="any"
+               placeholder="Input number...">
+      </div>
+    </div>
+
+    <div data-id="selector">
+      <div class="col-md-2">
+        <select class="condition-operation form-select">
+          <option value="equal" data-t="">equal</option>
+          <option value="notEqual" data-t="">not equal</option>
+          <option value="nested" data-t="">nested</option>
+        </select>
+      </div>
+      <div class="col-md-5">
+        <div class="simple-condition-content">
+          <select class="condition-value form-select"></select>
+        </div>
+        <div class="nested-condition-content">
+          <button class="add-condition btn-outline-success btn" type="button" title="Add condition">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div data-id="string">
+      <div class="col-md-2">
+        <select class="condition-operation form-select">
+          <option value="contains" data-t="">contains</option>
+          <option value="equal" data-t="">equal</option>
+          <option value="equalCaseInsensitive" data-t="">equal (case-insensitive)</option>
+          <option value="notEqual" data-t="">not equal</option>
+          <option value="notEqualCaseInsensitive" data-t="">not equal (case-insensitive)</option>
+          <option value="begins" data-t="">begins</option>
+          <option value="ends" data-t="">ends</option>
+          <option value="lt">&lt;</option>
+          <option value="gt">&gt;</option>
+        </select>
+      </div>
+      <div class="col-md-5">
+        <input class="condition-value form-control default-focus" type="text" placeholder="Input value...">
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-commands">
+    <button data-id="add" class="btn-outline-success btn" type="button" title="Add condition">
+      <i class="fas fa-plus"></i>
+    </button>
+    <button data-id="apply" class="btn-primary btn" type="button" data-t="">Apply</button>
+    <button data-id="reset" class="btn-outline-danger btn" type="button" title="Reset filter">
+      <i class="fa fa-times"></i>
+    </button>
+    <button data-id="save" class="btn-outline-success btn" type="button" title="Save filter">
+      <i class="fa fa-download"></i>
+    </button>
+    <button data-id="select" class="btn-outline-primary btn" type="button" title="Select filter">
+      <i class="fa fa-upload"></i>
+    </button>
+  </div>
+
+  <div class="overlay"><i class="fa fa-spinner fa-spin"></i></div>
+
+  <div class="select-modal modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" data-t="">Select filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="list-group-container">
+            <div class="commands">
+              <button data-id="apply" class="btn-success btn" type="button" title="Apply">
+                <i class="fas fa-check"></i>
+              </button>
+              <button data-id="update" class="btn-outline-primary btn" type="button" title="Edit">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <button data-id="delete" type="button" class="btn-outline-danger btn" title="Delete">
+                <i class="far fa-trash-alt"></i>
+              </button>
+            </div>
+            <div class="list-group-striped list-group"></div>
+            <div class="alert-empty alert-warning alert" data-t="">No saved filters yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="save-modal modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" data-t="">Save filter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form">
+            <div class="form-group required">
+              <label class="col-form-label" data-t="">Name</label>
+              <input name="name" type="text" class="form-control" required>
+              <div class="error-block"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-success btn" title="Save" data-id="save">
+            <i class="fas fa-download"></i>
+          </button>
+          <button class="btn-outline-secondary btn" data-bs-dismiss="modal" title="Cancel">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template data-id="item">
+    <button type="button" class="list-group-item list-group-item-action">{{name}}</button>
+  </template>
 </div>

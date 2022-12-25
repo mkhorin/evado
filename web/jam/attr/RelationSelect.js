@@ -50,7 +50,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
     }
 
     hasValue () {
-        return !!this.getDependencyValue();
+        return !!this.getActualValue();
     }
 
     getDefaultParams () {
@@ -69,7 +69,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
         });
     }
 
-    getDependencyValue () {
+    getActualValue () {
         const data = this.$select.val();
         return !Array.isArray(data) || data.length ? data : null;
     }

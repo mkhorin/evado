@@ -1,23 +1,23 @@
 <!-- _part/attr/text -->
 <%
 const p = {
-    rows: typeof rows === 'undefined' ? 20 : rows,
-    handler: 'Text'
+  rows: typeof rows === 'undefined' ? 20 : rows,
+  handler: 'Text'
 };
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
-     data-handler="<%= p.handler %>"
-     data-action-binder="<%= p.actionBinder %>">
+   data-handler="<%= p.handler %>"
+   data-action-binder="<%= p.actionBinder %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <textarea name="<%- p.name %>" class="form-control form-value" <%- p.required %>
-                  rows="<%- p.rows %>"><%= p.value %></textarea>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
-    </div>
+  <div class="<%- p.valueCss %>">
+    <textarea name="<%- p.name %>" class="form-control form-value" <%- p.required %>
+          rows="<%- p.rows %>"><%= p.value %></textarea>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 </div>

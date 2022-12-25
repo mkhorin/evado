@@ -319,7 +319,7 @@ Jam.Model = class Model extends Jam.Element {
         if (!attr) {
             return console.error(`Dependency attribute not found: ${name}`);
         }
-        data[name] = attr.getDependencyValue();
+        data[name] = attr.getActualValue();
     }
 
     toggleLoader (state) {

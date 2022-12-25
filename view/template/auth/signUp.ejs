@@ -7,7 +7,7 @@ block('title', title);
 %>
 
 <p class="login-box-msg">
-    <%- _t('auth.registerNewUser') %>
+  <%- _t('auth.registerNewUser') %>
 </p>
 
 <% if (error) { %>
@@ -16,17 +16,17 @@ block('title', title);
 
 <form method="post" class="form">
 
-    <%- include(_view.get('auth/_signUpForm')) %>
+  <%- include(_view.get('auth/_signUpForm')) %>
 
-    <div class="form-submit form-attr form-group">
-        <button type="submit" class="btn-primary btn">
-            <%- title %>
-        </button>
-    </div>
+  <div class="form-submit form-attr form-group">
+    <button type="submit" class="btn-primary btn">
+      <%- title %>
+    </button>
+  </div>
 </form>
 
 <div class="login-box-footer">
-    <a href="auth/sign-in" class="btn-link btn">
-        <%- _t('Sign in') %>
-    </a>
+  <a href="auth/sign-in" class="btn-link btn">
+    <%- _t('Sign in') %>
+  </a>
 </div>

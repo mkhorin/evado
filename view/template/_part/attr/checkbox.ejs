@@ -1,30 +1,30 @@
 <!-- _part/attr/checkbox -->
 <%
 const p = {
-    handler: 'Checkbox'
+  handler: 'Checkbox'
 };
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.css %>"
-     data-handler="<%= p.handler %>"
-     data-action-binder="<%= p.actionBinder %>">
-    <div class="<%- p.labelCss %>"></div>
-    <div class="<%- p.valueCss %>">
-        <input class="form-value" name="<%- p.name %>" type="hidden" value="<%- p.value %>">
-        <div class="form-check">
-            <input class="form-check-input"<%- p.value ? ' checked' : '' %> type="checkbox">
-            <% if (p.extHint) { %>
-            <div class="form-check-label-wrapper">
-                <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label><i
-                       class="hint-icon" title="<%= p.extHint %>" data-t="<%- p.translate %>"></i>
-            </div>
-            <% } else { %>
-            <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label>
-            <% } %>
-        </div>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+   data-handler="<%= p.handler %>"
+   data-action-binder="<%= p.actionBinder %>">
+  <div class="<%- p.labelCss %>"></div>
+  <div class="<%- p.valueCss %>">
+    <input class="form-value" name="<%- p.name %>" type="hidden" value="<%- p.value %>">
+    <div class="form-check">
+      <input class="form-check-input"<%- p.value ? ' checked' : '' %> type="checkbox">
+      <% if (p.extHint) { %>
+      <div class="form-check-label-wrapper">
+        <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label><i
+             class="hint-icon" title="<%= p.extHint %>" data-t="<%- p.translate %>"></i>
+      </div>
+      <% } else { %>
+      <label class="form-check-label" data-t="<%- p.translate %>"><%- p.label %></label>
+      <% } %>
     </div>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 </div>

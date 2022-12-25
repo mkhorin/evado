@@ -68,6 +68,4 @@ describe('MetaHelper', ()=> {
         expect(MetaHelper.splitByPrefix('none/base', '/', ['super'])).to.eql(undefined);
         expect(MetaHelper.splitByPrefix(null)).to.eql(undefined);
     });
-
-
 });

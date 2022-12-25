@@ -1,19 +1,19 @@
 <!-- _part/group/inline -->
 <%
 const p = {
-    labelCss: typeof labelCss === 'undefined' ? 'col-xl-2 col-lg-3' : labelCss,
-    valueCss: typeof valueCss === 'undefined' ? 'col-xl-10 col-lg-9' : valueCss
+  labelCss: typeof labelCss === 'undefined' ? 'col-xl-2 col-lg-3' : labelCss,
+  valueCss: typeof valueCss === 'undefined' ? 'col-xl-10 col-lg-9' : valueCss
 };
 %>
 <div class="inline-group-container form-group">
-    <div class="row">
-        <div class="<%- p.labelCss %>"></div>
-        <div class="<%- p.valueCss %>">
-            <%- include(_view.get('_part/group/columns'), {
-                columnCss: typeof columnCss === 'undefined' ? 'no-gap' : columnCss,
-                labelCss: 'no-gap',
-                valueCss: 'no-gap'
-            }) %>
-        </div>
+  <div class="row">
+    <div class="<%- p.labelCss %>"></div>
+    <div class="<%- p.valueCss %>">
+      <%- include(_view.get('_part/group/columns'), {
+        columnCss: typeof columnCss === 'undefined' ? 'no-gap' : columnCss,
+        labelCss: 'no-gap',
+        valueCss: 'no-gap'
+      }) %>
     </div>
+  </div>
 </div>

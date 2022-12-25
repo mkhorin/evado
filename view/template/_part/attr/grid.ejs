@@ -1,119 +1,119 @@
 <!-- _part/attr/grid -->
 <%
 const p = {
-    handler: 'Grid'
+  handler: 'Grid'
 };
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 <%
 const d = {
-    attr: attr,
-    showTop: false,
-    multiple: true,
-    pageSize: 10,
-    delete: true,
-    unlink: true,
-    confirmDeletion: true,
-    id: attr + _controller.getCurrentRoute(),
-    ...data
+  attr: attr,
+  showTop: false,
+  multiple: true,
+  pageSize: 10,
+  delete: true,
+  unlink: true,
+  confirmDeletion: true,
+  id: attr + _controller.getCurrentRoute(),
+  ...data
 };
 if (d.order === undefined && targetModel.PK) {
-    d.order = {[targetModel.PK]: -1};
+  d.order = {[targetModel.PK]: -1};
 }
 if (d.list !== null) {
-    if (d.list === undefined && typeof params !== 'undefined' && params.list) {
-        d.list = params.list;
-    }
-    d.list = _url(d.list === undefined ? 'list' : d.list);
+  if (d.list === undefined && typeof params !== 'undefined' && params.list) {
+    d.list = params.list;
+  }
+  d.list = _url(d.list === undefined ? 'list' : d.list);
 }
 if (d.create !== null) {
-    d.create = _url(d.create === undefined ? 'create' : d.create);
+  d.create = _url(d.create === undefined ? 'create' : d.create);
 }
 if (d.update !== null) {
-    d.update = _url(d.update === undefined ? 'update' : d.update);
+  d.update = _url(d.update === undefined ? 'update' : d.update);
 }
 if (d.updateAttr !== null) {
-    d.updateAttr = _url(d.updateAttr === undefined ? 'update-attr' : d.updateAttr);
+  d.updateAttr = _url(d.updateAttr === undefined ? 'update-attr' : d.updateAttr);
 }
 if (d.delete !== null) {
-    d.delete = _url(d.delete === undefined ? 'delete-list' : d.delete);
+  d.delete = _url(d.delete === undefined ? 'delete-list' : d.delete);
 }
 let hasKeyColumn = false;
 for (const column of d.columns) {
-    if (column.label === undefined) {
-        column.label = targetModel.getAttrLabel(column.name);
-    }
-    if (column.name === d.key) {
-        hasKeyColumn = true;
-    }
+  if (column.label === undefined) {
+    column.label = targetModel.getAttrLabel(column.name);
+  }
+  if (column.name === d.key) {
+    hasKeyColumn = true;
+  }
 }
 if (!hasKeyColumn) {
-    d.columns.unshift({
-        type: 'id',
-        name: targetModel.PK,
-        label: 'ID',
-        hidden: true,
-        searchable: true,
-        sortable: true
-    });
+  d.columns.unshift({
+    type: 'id',
+    name: targetModel.PK,
+    label: 'ID',
+    hidden: true,
+    searchable: true,
+    sortable: true
+  });
 }
 if (d.filter && !d.filter.url) {
-    d.filter.url = _url('filter');
+  d.filter.url = _url('filter');
 }
 %>
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>" data-handler="<%= p.handler %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" type="hidden" class="form-value">
-        <div class="data-grid" data-params="<%= JSON.stringify(d) %>">
-            <button class="btn-demand-load btn-outline-primary btn" type="button" data-t>Load</button>
-            <div class="hidden-commands commands" data-jam="IndexSorting">
-                <% if (d.create) { %>
-                <button data-command="create" data-index="30" title="Create" type="button"
-                        class="btn-white btn-outline-success btn">
-                    <i class="fas fa-plus"></i>
-                </button>
-                <% } if (d.update) { %>
-                <button data-command="update" data-index="40" title="Edit" type="button"
-                        class="btn-white btn-outline-primary btn">
-                    <i class="fas fa-pencil-alt"></i>
-                </button>
-                <% } if (d.delete) { %>
-                <button data-command="delete" data-index="50" title="Delete" type="button"
-                        class="btn-white btn-outline-danger btn">
-                    <i class="far fa-trash-alt"></i>
-                </button>
-                <% } %>
-                <div class="nav-group" data-index="60">
-                    <button data-command="reload" title="Reload" type="button"
-                            class="btn-white btn-outline-secondary btn">
-                        <i class="fa fa-redo-alt"></i>
-                    </button>
-                </div>
-                <% if (typeof tools !== 'undefined') { %>
-                <%- include(_view.get('_part/misc/render'), {data: tools}) %>
-                <% } %>
-            </div>
-            <% if (d.filter) { %>
-            <div class="list-filter">
-                <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
-            </div>
-            <% } if (d.showTop) { %>
-            <%- include(_view.get('_part/list/top')) %>
-            <% } %>
-            <div class="data-grid-content"></div>
-
-            <% if (d.showBottom) { %>
-            <%- include(_view.get('_part/list/bottom')) %>
-            <% } %>
-            <div class="overlay">
-                <i class="fa fa-spinner fa-spin"></i>
-            </div>
+  <div class="<%- p.valueCss %>">
+    <input name="<%- p.name %>" type="hidden" class="form-value">
+    <div class="data-grid" data-params="<%= JSON.stringify(d) %>">
+      <button class="btn-demand-load btn-outline-primary btn" type="button" data-t>Load</button>
+      <div class="hidden-commands commands" data-jam="IndexSorting">
+        <% if (d.create) { %>
+        <button data-command="create" data-index="30" title="Create" type="button"
+            class="btn-white btn-outline-success btn">
+          <i class="fas fa-plus"></i>
+        </button>
+        <% } if (d.update) { %>
+        <button data-command="update" data-index="40" title="Edit" type="button"
+            class="btn-white btn-outline-primary btn">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <% } if (d.delete) { %>
+        <button data-command="delete" data-index="50" title="Delete" type="button"
+            class="btn-white btn-outline-danger btn">
+          <i class="far fa-trash-alt"></i>
+        </button>
+        <% } %>
+        <div class="nav-group" data-index="60">
+          <button data-command="reload" title="Reload" type="button"
+              class="btn-white btn-outline-secondary btn">
+            <i class="fa fa-redo-alt"></i>
+          </button>
         </div>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+        <% if (typeof tools !== 'undefined') { %>
+        <%- include(_view.get('_part/misc/render'), {data: tools}) %>
+        <% } %>
+      </div>
+      <% if (d.filter) { %>
+      <div class="list-filter">
+        <div class="text-center"><i class="fa fa-spinner fa-spin"></i></div>
+      </div>
+      <% } if (d.showTop) { %>
+      <%- include(_view.get('_part/list/top')) %>
+      <% } %>
+      <div class="data-grid-content"></div>
+
+      <% if (d.showBottom) { %>
+      <%- include(_view.get('_part/list/bottom')) %>
+      <% } %>
+      <div class="overlay">
+        <i class="fa fa-spinner fa-spin"></i>
+      </div>
     </div>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 </div>

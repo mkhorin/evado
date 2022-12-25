@@ -1,50 +1,50 @@
 <!-- _part/attr/json -->
 <%
 const p = {
-    handler: 'Json'
+  handler: 'Json'
 };
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
-     data-handler="<%= p.handler %>"
-     data-action-binder="<%= p.actionBinder %>">
+   data-handler="<%= p.handler %>"
+   data-action-binder="<%= p.actionBinder %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <div class="input-group">
-            <input name="<%- p.name %>" type="text" value="<%= p.value %>" <%- p.required %>
-                   class="form-control form-value">
-            <button class="btn-outline-secondary btn" type="button" title="Editor" tabindex="-1" data-command="edit">
-                <i class="fas fa-code"></i>
-            </button>
-        </div>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  <div class="<%- p.valueCss %>">
+    <div class="input-group">
+      <input name="<%- p.name %>" type="text" value="<%= p.value %>" <%- p.required %>
+           class="form-control form-value">
+      <button class="btn-outline-secondary btn" type="button" title="Editor" tabindex="-1" data-command="edit">
+        <i class="fas fa-code"></i>
+      </button>
     </div>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 
-    <div class="json-editor modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" data-t="">JSON editor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger"></div>
-                    <textarea class="json-editor-text form-control" spellcheck="false"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-primary btn" title="Save" data-command="save">
-                        <i class="fas fa-download"></i>
-                    </button>
-                    <button type="button" class="btn-outline-secondary btn" data-bs-dismiss="modal" title="Cancel">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
+  <div class="json-editor modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" data-t="">JSON editor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
+        <div class="modal-body">
+          <div class="alert alert-danger"></div>
+          <textarea class="json-editor-text form-control" spellcheck="false"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-primary btn" title="Save" data-command="save">
+            <i class="fas fa-download"></i>
+          </button>
+          <button type="button" class="btn-outline-secondary btn" data-bs-dismiss="modal" title="Cancel">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

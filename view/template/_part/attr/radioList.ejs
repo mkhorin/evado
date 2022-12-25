@@ -1,11 +1,11 @@
 <!-- _part/attr/radioList ++ -->
 <%
 const p = {
-    handler: 'RadioList',
-    inline: typeof inline === 'undefined' ? true : inline
+  handler: 'RadioList',
+  inline: typeof inline === 'undefined' ? true : inline
 };
 if (items === 'labels') {
-    items = _view.ModelHelper.getLabelSelectItems(attr, model);
+  items = _view.ModelHelper.getLabelSelectItems(attr, model);
 }
 const params = {p};
 const cssList = p.inline ? 'form-check-list-inline' : '';
@@ -14,39 +14,39 @@ const cssItem = p.inline ? 'form-check-inline' : '';
 <%- include(_view.get('_part/attr/_params'), params) %>
 
 <div class="form-attr <%- p.css %> <%- p.required %> form-group row"
-     data-handler="<%= p.handler %>"
-     data-action-binder="<%= p.actionBinder %>">
+   data-handler="<%= p.handler %>"
+   data-action-binder="<%= p.actionBinder %>">
 
-    <%- include(_view.get('_part/attr/_label'), params) %>
+  <%- include(_view.get('_part/attr/_label'), params) %>
 
-    <div class="<%- p.valueCss %>">
-        <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
-        <div class="<%- cssList %> form-check-list">
-            <% if (!p.required && typeof emptyText !== 'undefined') { %>
-            <div class="<%- cssItem %> form-check">
-                <input class="form-check-input" value="" type="radio">
-                <label class="form-check-label" data-t="<%- p.translate %>"><%- emptyText %></label>
-            </div>
-            <% } if (Array.isArray(items)) {
-               for (const item of items) { %>
-            <div class="<%- cssItem %> form-check">
-                <input class="form-check-input" value="<%= item.value %>" type="radio">
-                <% if (item.hint) { %>
-                <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label><i
-                       class="hint-icon" data-t="<%- p.translate %>" title="<%= item.hint %>"></i>
-                <% } else { %>
-                <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label>
-                <% } %>
-            </div>
-            <% }} else {
-               for (const key of Object.keys(items)) { %>
-            <div class="<%- cssItem %> form-check">
-                <input class="form-check-input" value="<%= key %>" type="radio">
-                <label class="form-check-label" data-t="<%- p.translate %>"><%- items[key] %></label>
-            </div>
-            <% }} %>
-        </div>
-        <div class="error-block"></div>
-        <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  <div class="<%- p.valueCss %>">
+    <input name="<%- p.name %>" value="<%- p.value %>" type="hidden" class="form-value">
+    <div class="<%- cssList %> form-check-list">
+      <% if (!p.required && typeof emptyText !== 'undefined') { %>
+      <div class="<%- cssItem %> form-check">
+        <input class="form-check-input" value="" type="radio">
+        <label class="form-check-label" data-t="<%- p.translate %>"><%- emptyText %></label>
+      </div>
+      <% } if (Array.isArray(items)) {
+         for (const item of items) { %>
+      <div class="<%- cssItem %> form-check">
+        <input class="form-check-input" value="<%= item.value %>" type="radio">
+        <% if (item.hint) { %>
+        <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label><i
+             class="hint-icon" data-t="<%- p.translate %>" title="<%= item.hint %>"></i>
+        <% } else { %>
+        <label class="form-check-label" data-t="<%- p.translate %>"><%- item.text %></label>
+        <% } %>
+      </div>
+      <% }} else {
+         for (const key of Object.keys(items)) { %>
+      <div class="<%- cssItem %> form-check">
+        <input class="form-check-input" value="<%= key %>" type="radio">
+        <label class="form-check-label" data-t="<%- p.translate %>"><%- items[key] %></label>
+      </div>
+      <% }} %>
     </div>
+    <div class="error-block"></div>
+    <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>
+  </div>
 </div>
