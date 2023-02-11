@@ -21,7 +21,8 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     getInitialValue () {
         if (!this.changes.hasLinks()) {
-            return $.map(this.$select.children(), item => item.getAttribute('value'));
+            const $options = this.$select.children();
+            return $.map($options, item => item.getAttribute('value'));
         }
     }
 

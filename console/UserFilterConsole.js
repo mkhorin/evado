@@ -16,12 +16,16 @@ module.exports = class UserFilterConsole extends Base {
 
     async createModel (name, data) {
         const model = this.spawn('model/UserFilter');
+        const config = this.owner.stringifyData(data.config);
+        const includes = await this.owner.resolveUsers(data.includes);
+        const excludes = await this.owner.resolveUsers(data.excludes);
+        const items = await this.resolveItems(data.items);
         model.assign(data);
         model.set('name', name);
-        model.set('config', this.owner.stringifyData(data.config));
-        model.set('includes', await this.owner.resolveUsers(data.includes));
-        model.set('excludes', await this.owner.resolveUsers(data.excludes));
-        model.set('items', await this.resolveItems(data.items));
+        model.set('config', config);
+        model.set('includes', includes);
+        model.set('excludes', excludes);
+        model.set('items', items);
         await this.saveModel(model, name);
     }
 
@@ -29,7 +33,8 @@ module.exports = class UserFilterConsole extends Base {
         const result = [];
         const store = this.module.getRbac().store;
         for (const name of StringHelper.split(names)) {
-            const item = await store.findItem().and({name}).id();
+            const query = store.findItem().and({name});
+            const item = await query.id();
             item ? result.push(item)
                  : this.log('error', `Item not found: ${name}`);
         }

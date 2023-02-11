@@ -10,9 +10,12 @@ Jam.RelationRadioListModelAttr = class RelationRadioListModelAttr extends Jam.Ra
 
     createChanges () {
         this.changes = new Jam.RelationChanges(this);
-        this.changes.setDefaultValue(this.getValue());
-        this.changes.setInitialValue(this.getInitialValue());
-        this.setRadioItem(this.changes.getValues()[0]);
+        const defaultValue = this.getValue();
+        this.changes.setDefaultValue(defaultValue);
+        const initialValue = this.getInitialValue();
+        this.changes.setInitialValue(initialValue);
+        const value = this.changes.getValues()[0];
+        this.setRadioItem(value);
         this.setValueByChanges();
     }
 
@@ -43,7 +46,8 @@ Jam.RelationRadioListModelAttr = class RelationRadioListModelAttr extends Jam.Ra
     }
 
     getValueText () {
-        return Jam.Helper.getLabelTextByValue(this.getActualValue(), this.$attr);
+        const value = this.getActualValue();
+        return Jam.Helper.getLabelTextByValue(value, this.$attr);
     }
 
     setValue (value) {

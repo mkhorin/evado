@@ -59,7 +59,9 @@ module.exports = class Notification extends Base {
 
     async createMessage (data, messageSource, recipients) {
         await this.resolveMessageTemplate(data, messageSource);
-        recipients = recipients || await this.getRecipients(data);
+        if (!recipients) {
+            recipients = await this.getRecipients(data);
+        }
         const message = this.spawn('notifier/NotificationMessage');
         if (await message.create(this, recipients)) {
             return message;
@@ -76,13 +78,18 @@ module.exports = class Notification extends Base {
 
     async resolveMessageTemplate (data, messageSource) {
         try {
-            const config = ClassHelper.resolveSpawn(this.getMessageTemplateConfig(), this.module);
+            const templateConfig = this.getMessageTemplateConfig();
+            const config = ClassHelper.resolveSpawn(templateConfig, this.module);
             const template = this.spawn(config);
             template.data = await template.prepareData(data);
-            const subject = this.translate(this.get('subject'), messageSource);
-            this.set('subject', template.resolveText(subject));
-            const text = this.translate(this.get('text'), messageSource);
-            this.set('text', template.resolveText(text));
+            const sourceSubject = this.get('subject');
+            const translatedSubject = this.translate(sourceSubject, messageSource);
+            const subject = template.resolveText(translatedSubject);
+            this.set('subject', subject);
+            const sourceText = this.get('text');
+            const translatedText = this.translate(sourceText, messageSource);
+            const text = template.resolveText(translatedText);
+            this.set('text', text);
         } catch (err) {
             this.log('error', 'Message template failed:', err);
         }
@@ -112,7 +119,8 @@ module.exports = class Notification extends Base {
         const filters = this.get('userFilters');
         if (Array.isArray(filters)) {
             for (const filter of filters) {
-                users.push(...await this.getRecipientUsersByFilter(filter));
+                const values = await this.getRecipientUsersByFilter(filter);
+                users.push(...values);
             }
         }
         return users;

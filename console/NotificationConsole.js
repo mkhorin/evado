@@ -16,13 +16,18 @@ module.exports = class NotificationConsole extends Base {
 
     async createModel (name, data) {
         const model = this.spawn('notifier/Notification');
+        const template = this.owner.stringifyData(data.messageTemplate);
+        const options = this.owner.stringifyData(data.options);
+        const recipients = this.owner.stringifyData(data.recipient);
+        const users = await this.owner.resolveUsers(data.users);
+        const filters = await this.resolveUserFilters(data.userFilters);
         model.assign(data);
         model.set('name', name);
-        model.set('messageTemplate', this.owner.stringifyData(data.messageTemplate));
-        model.set('options', this.owner.stringifyData(data.options));
-        model.set('recipient', this.owner.stringifyData(data.recipient));
-        model.set('users', await this.owner.resolveUsers(data.users));
-        model.set('userFilters', await this.resolveUserFilters(data.userFilters));
+        model.set('messageTemplate', template);
+        model.set('options', options);
+        model.set('recipient', recipients);
+        model.set('users', users);
+        model.set('userFilters', filters);
         await this.saveModel(model, name);
     }
 

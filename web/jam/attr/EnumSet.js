@@ -7,7 +7,8 @@ Jam.EnumSet = class EnumSet {
         const sets = [];
         if (Array.isArray(data)) {
             for (const item of data) {
-                sets.push(new this(item, owner));
+                const enumSet = new this(item, owner);
+                sets.push(enumSet);
             }
         }
         return sets;
@@ -24,12 +25,11 @@ Jam.EnumSet = class EnumSet {
         return result.sort((a, b)=> a.orderNumber - b.orderNumber);
     }
 
-    constructor (data, owner) {
+    constructor ({items, condition}, owner) {
         this.owner = owner;
-        this.items = this.parseItems(data.items);
-        this.condition = data.condition;
-        if (this.condition) {
-            this.condition = new Jam.ModelCondition(this.condition, this.owner.model);
+        this.items = this.parseItems(items);
+        if (condition) {
+            this.condition = new Jam.ModelCondition(condition, this.owner.model);
         }
     }
 

@@ -57,7 +57,8 @@ module.exports = class MetaModel extends Base {
 
     async dropTablesByPrefix (prefix) {
         const db = this.getDb();
-        for (const name of await db.getTableNames()) {
+        const names = await db.getTableNames();
+        for (const name of names) {
             if (name.indexOf(prefix) === 0) {
                 await db.drop(name);
             }

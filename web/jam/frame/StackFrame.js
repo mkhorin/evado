@@ -95,7 +95,8 @@ Jam.StackFrame = class StackFrame {
     }
 
     updateCsrfToken () {
-        for (const holder of this.$content.find('[data-csrf]')) {
+        const holders = this.$content.find('[data-csrf]');
+        for (const holder of holders) {
             $(document.body).data('csrf', holder.dataset.csrf);
         }
     }
@@ -230,7 +231,8 @@ Jam.StackFrame = class StackFrame {
 
     scrollTo ($target) {
         const $scroll = this.findScrollBody();
-        const top = $target.first().offset().top - $scroll.offset().top;
+        const targetTop = $target.first().offset().top;
+        const top = targetTop - $scroll.offset().top;
         const scrollTop = $scroll.scrollTop() + top;
         $scroll.animate({scrollTop});
     }

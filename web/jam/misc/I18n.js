@@ -37,14 +37,18 @@ Jam.I18n = class I18n {
 
     translateDocumentTitle () {
         const title = document.head.querySelector('title');
-        if (!title.dataset.hasOwnProperty('t')) {
+        const data = title.dataset;
+        if (!data.hasOwnProperty('t')) {
             return;
         }
-        const category = title.dataset.t;
+        const category = data.t;
         const text = this.translateMessage(title.innerHTML, category);
-        title.innerHTML = title.dataset.text
-            ? `${this.translateMessage(title.dataset.text, category)} - ${text}`
-            : text;
+        if (data.text) {
+            const prefix = this.translateMessage(data.text, category);
+            title.innerHTML = `${prefix} - ${text}`;
+        } else {
+            title.innerHTML = text;
+        }
     }
 
     translateContainer ($container) {
@@ -53,7 +57,8 @@ Jam.I18n = class I18n {
     }
 
     translateElements ($container) {
-        for (const element of $container.find('[data-t]')) {
+        const elements = $container.find('[data-t]');
+        for (const element of elements) {
             this.translateElement(element)
         }
     }
@@ -66,9 +71,11 @@ Jam.I18n = class I18n {
     }
 
     translateAttributes ($container) {
-        for (const name of this.getAttributes($container)) {
+        const names = this.getAttributes($container);
+        for (const name of names) {
             const category = 't' + Jam.StringHelper.capitalize(name);
-            for (const element of $container.find(`[${name}]`)) {
+            const elements = $container.find(`[${name}]`);
+            for (const element of elements) {
                 this.translateAttribute(name, category, element);
             }
         }

@@ -72,10 +72,22 @@ module.exports = class MetaInspector extends Base {
     ensureTargets () {
         this._targets = [[this.checkAllTarget]];
         switch (this.targetType) {
-            case Rbac.TARGET_NODE: this.addNodeTargets(); break;
-            case Rbac.TARGET_VIEW: this.addViewTargets(); break;
-            case Rbac.TARGET_CLASS: this.addClassTargets(); break;
-            case Rbac.TARGET_OBJECT: this.addObjectTargets(); break;
+            case Rbac.TARGET_NODE: {
+                this.addNodeTargets();
+                break;
+            }
+            case Rbac.TARGET_VIEW: {
+                this.addViewTargets();
+                break;
+            }
+            case Rbac.TARGET_CLASS: {
+                this.addClassTargets();
+                break;
+            }
+            case Rbac.TARGET_OBJECT: {
+                this.addObjectTargets();
+                break;
+            }
         }
     }
 
@@ -105,9 +117,11 @@ module.exports = class MetaInspector extends Base {
         }
         for (const role of this.assignments) {
             const data = this.rbac.metaReadAllowedMap[role];
-            if (data && (data[classKey] === true || data[viewKey] === true)) {
-                this.access[Rbac.READ] = true;
-                break;
+            if (data) {
+                if (data[classKey] === true || data[viewKey] === true) {
+                    this.access[Rbac.READ] = true;
+                    break;
+                }
             }
         }
     }
@@ -120,7 +134,8 @@ module.exports = class MetaInspector extends Base {
             this._targets.push([this.checkViewTarget, this.targetView]);
         }
         this._targets.push([this.checkSectionTarget, this.target.section]);
-        for (const parent of this.target.getParents()) {
+        const parents = this.target.getParents();
+        for (const parent of parents) {
             this._targets.push([this.checkNodeTarget, parent]);
         }
         this._targets.push([this.checkNodeTarget, this.target]);

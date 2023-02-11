@@ -40,9 +40,12 @@ module.exports = class UserFilter extends Base {
     async getUsers () {
         let users = this.get('includes');
         users = Array.isArray(users) ? users: [];
-        users.push(...await this.resolveCustomFilterUsers());
-        users.push(...await this.resolveRbacItemUsers());
-        users = MongoHelper.exclude(this.get('excludes'), users);
+        const customUsers = await this.resolveCustomFilterUsers();
+        users.push(...customUsers);
+        const rbacUsers = await this.resolveRbacItemUsers();
+        users.push(...rbacUsers);
+        const excludedUsers = this.get('excludes');
+        users = MongoHelper.exclude(excludedUsers, users);
         return users;
     }
 
@@ -58,7 +61,8 @@ module.exports = class UserFilter extends Base {
                 }
                 item = rbac.itemMap[item.name];
                 if (item) {
-                    result.push(...await item.getAssignmentUsers());
+                    const users = await item.getAssignmentUsers();
+                    result.push(...users);
                 }
             }
         }

@@ -27,7 +27,8 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
             if (options.maxDate) {
                 options.maxDate = new Date(options.maxDate);
             }
-            options.defaultDate = this.getDefaultDate(this.$value.val());
+            const value = this.$value.val();
+            options.defaultDate = this.getDefaultDate(value);
             options.format = this.getFormat(options);
             options.widgetParent = this.$picker.parent();
             this.$picker.datetimepicker({

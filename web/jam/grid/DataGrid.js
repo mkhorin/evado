@@ -304,7 +304,8 @@ Jam.DataGrid = class DataGrid {
 
     onGroupOrder (event) {
         const $group = $(event.currentTarget).closest('.group');
-        this.setGrouping(this.getGroupName(), -this.renderer.getDirection($group));
+        const direction = this.renderer.getDirection($group);
+        this.setGrouping(this.getGroupName(), -direction);
         this.load();
     }
 

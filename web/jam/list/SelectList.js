@@ -29,7 +29,8 @@ Jam.SelectList = class SelectList extends Jam.FrameList {
             ? this.getSelectedItems()
             : this.getSelectedItem();
         if ($items) {
-            this.frame.close({result: this.serializeObjectIds($items)});
+            const result = this.serializeObjectIds($items);
+            this.frame.close({result});
         }
     }
 

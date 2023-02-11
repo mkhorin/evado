@@ -12,7 +12,8 @@ Jam.Element = class Element {
     }
 
     static findInstanceByClass (instanceClass, $container) {
-        for (const element of $container.find('[data-jam]')) {
+        const elements = $container.find('[data-jam]');
+        for (const element of elements) {
             const instance = this.getInstance($(element));
             if (instance instanceof instanceClass) {
                 return instance;

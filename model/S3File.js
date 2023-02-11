@@ -26,15 +26,19 @@ module.exports = class S3File extends Base {
     }
 
     getFileStat () {
-        return this.getStorage().getFileStat(this.getFilename());
+        const file = this.getFilename();
+        return this.getStorage().getFileStat(file);
     }
 
     getSignedDownloadUrl () {
-        return this.getStorage().getSignedDownloadUrl(this.getFilename(), this.getName());
+        const file = this.getFilename();
+        const name = this.getName();
+        return this.getStorage().getSignedDownloadUrl(file, name);
     }
 
     getSignedUploadUrl () {
-        return this.getStorage().getSignedUploadUrl(this.getFilename());
+        const file = this.getFilename();
+        return this.getStorage().getSignedUploadUrl(file);
     }
 
     setData (data) {
@@ -53,7 +57,8 @@ module.exports = class S3File extends Base {
     }
 
     prepareFilename () {
-        this.set('file', this.getStorage().generateFilename());
+        const file = this.getStorage().generateFilename();
+        this.set('file', file);
     }
 
     deleteInvalidFile () {

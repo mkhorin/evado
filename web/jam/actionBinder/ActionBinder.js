@@ -17,7 +17,8 @@ Jam.ActionBinder = class ActionBinder {
 
     createElements ($container) {
         const elements = [];
-        for (const item of $container.find('[data-action-binder]')) {
+        const items = $container.find('[data-action-binder]');
+        for (const item of items) {
             const element = this.createElement($(item));
             if (element) {
                 elements.push(element);

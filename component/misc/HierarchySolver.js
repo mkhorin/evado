@@ -57,7 +57,8 @@ module.exports = class HierarchySolver extends Base {
             return children;
         }
         if (ArrayHelper.includes(this.model.getId(), children)) {
-            throw new Error(this.constructor.getCircularError(this.model));
+            const message = this.constructor.getCircularError(this.model);
+            throw new Error(message);
         }
         const descendants = await this.getDescendantIds(children);
         return children.concat(descendants);
@@ -78,7 +79,8 @@ module.exports = class HierarchySolver extends Base {
             return [];
         }
         if (this.model.getId().equals(item.getId())) {
-            throw new Error(this.constructor.getCircularError(this.model));
+            const message = this.constructor.getCircularError(this.model);
+            throw new Error(message);
         }
         const ancestors = await this.getAncestors(item);
         ancestors.push(item);

@@ -43,7 +43,8 @@ module.exports = class MetaNavInspector extends Base {
         const result = {};
         for (const item of this.items) {
             if (item.parent) {
-                result[item.id] = await this.checkParents(item.getParents(), data, result);
+                const parents = item.getParents();
+                result[item.id] = await this.checkParents(parents, data, result);
             }
             if (!result[item.id] && data[item.id]) {
                 result[item.id] = await this.checkItems(data[item.id]);

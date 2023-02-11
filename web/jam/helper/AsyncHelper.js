@@ -17,7 +17,8 @@ Jam.AsyncHelper = class AsyncHelper {
         if (!Array.isArray(items) || !items.length) {
             return callback();
         }
-        (new this({items, handler, callback, counter: 0})).each();
+        const instance = new this({items, handler, callback, counter: 0});
+        instance.each();
     }
 
     static series (items, callback) {
@@ -29,14 +30,16 @@ Jam.AsyncHelper = class AsyncHelper {
         if (!keys.length) {
             return callback(null, result);
         }
-        (new this({items, callback, keys, result})).series();
+        const instance = new this({items, callback, keys, result});
+        instance.series();
     }
 
     static eachSeries (items, handler, callback) {
         if (!Array.isArray(items) || !items.length) {
             return callback();
         }
-        (new this({items, handler, callback})).eachSeries();
+        const instance = new this({items, handler, callback});
+        instance.eachSeries();
     }
 
     static eachOfSeries (items, handler, callback) {
@@ -47,7 +50,8 @@ Jam.AsyncHelper = class AsyncHelper {
         if (!keys.length) {
             return callback();
         }
-        (new this({items, handler, callback, keys})).eachOfSeries();
+        const instance = new this({items, handler, callback, keys});
+        instance.eachOfSeries();
     }
 
     static mapSeries (items, handler, callback) {
@@ -55,7 +59,8 @@ Jam.AsyncHelper = class AsyncHelper {
         if (!Array.isArray(items) || !items.length) {
             return callback(null, result);
         }
-        (new this({items, handler, callback, result})).mapSeries();
+        const instance = new this({items, handler, callback, result});
+        instance.mapSeries();
     }
 
     constructor (config) {
@@ -64,8 +69,11 @@ Jam.AsyncHelper = class AsyncHelper {
 
     each () {
         const process = err => {
-            if (err || ++this.counter === this.items.length) {
-                this.callback(err);
+            if (err) {
+                return this.callback(err);
+            }
+            if (++this.counter === this.items.length) {
+                return this.callback();
             }
         };
         for (const item of this.items) {

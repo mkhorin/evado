@@ -58,8 +58,10 @@ Jam.List = class List extends Jam.Element {
     }
 
     addFrameCommands () {
-        this.$commands.prepend(this.$frame.find('.prepend-commands').children());
-        this.$commands.append(this.$frame.find('.append-commands').children());
+        const $before = this.$frame.find('.prepend-commands').children();
+        this.$commands.prepend($before);
+        const $after = this.$frame.find('.append-commands').children();
+        this.$commands.append($after);
     }
 
     createDataFormatter () {
@@ -89,7 +91,8 @@ Jam.List = class List extends Jam.Element {
 
     onBuildFilter () {
         this.filter.events.on('toggleActive', this.onActiveFilter.bind(this));
-        for (const name of this.filter.getAttrNames()) {
+        const names = this.filter.getAttrNames();
+        for (const name of names) {
             this.grid.renderer.findHeadByName(name).addClass('searchable');
         }
         this.grid.addListener('click', '.searchable .search-toggle', this.onFilterAttr.bind(this));
@@ -212,7 +215,8 @@ Jam.List = class List extends Jam.Element {
         if (!this.multiple || !event.ctrlKey) {
             this.deselectExceptOneItem(event.currentTarget);
         }
-        this.toggleItemSelect($(event.currentTarget), event.ctrlKey ? undefined : true);
+        const state = event.ctrlKey ? undefined : true;
+        this.toggleItemSelect($(event.currentTarget), state);
     }
 
     onDoubleClickItem (event) {
@@ -229,13 +233,15 @@ Jam.List = class List extends Jam.Element {
     openNewPage () {
         const $item = this.getSelectedItem();
         if ($item) {
-            const url = Jam.UrlHelper.addParams(this.getUpdateUrl(), this.getObjectIdParam($item));
+            const param = this.getObjectIdParam($item);
+            const url = Jam.UrlHelper.addParams(this.getUpdateUrl(), param);
             Jam.UrlHelper.openNewPageFrame(url);
         }
     }
 
     deselectExceptOneItem ($item) {
-        this.toggleItemSelect(this.findSelectedItems().not($item), false);
+        const $items = this.findSelectedItems().not($item);
+        this.toggleItemSelect($items, false);
     }
 
     toggleItemSelect ($item, state) {
@@ -315,8 +321,9 @@ Jam.List = class List extends Jam.Element {
     }
 
     deleteObjects ($items) {
+        const url = this.getDeleteUrl($items);
         const ids = this.serializeObjectIds($items);
-        this.post(this.getDeleteUrl($items), {ids}).done(this.onDoneDeletion.bind(this));
+        this.post(url, {ids}).done(this.onDoneDeletion.bind(this));
     }
 
     onDoneDeletion (data) {
@@ -400,7 +407,8 @@ Jam.List = class List extends Jam.Element {
     onView () {
         const $item = this.getSelectedItem();
         if ($item) {
-            this.childFrame.load(this.getViewUrl(), this.getObjectIdParam($item));
+            const param = this.getObjectIdParam($item);
+            this.childFrame.load(this.getViewUrl(), param);
         }
     }
 
@@ -411,14 +419,16 @@ Jam.List = class List extends Jam.Element {
     onClone () {
         const $item = this.getSelectedItem();
         if ($item) {
-            this.openFrame(this.getCloneUrl(), this.getCloneParams($item));
+            const params = this.getCloneParams($item);
+            this.openFrame(this.getCloneUrl(), params);
         }
     }
 
     onUpdate () {
         const $item = this.getSelectedItem();
         if ($item)  {
-            this.openFrame(this.getUpdateUrl(), this.getObjectIdParam($item));
+            const param = this.getObjectIdParam($item);
+            this.openFrame(this.getUpdateUrl(), param);
         }
     }
 

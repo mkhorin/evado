@@ -54,12 +54,13 @@ module.exports = class Uploader extends Base {
     }
 
     generateDestination (dir, req, file, callback) {
-        dir = path.join(this.basePath, dir);
-        fs.mkdir(dir, {recursive: true}, err => callback(err, dir));
+        const destination = path.join(this.basePath, dir);
+        fs.mkdir(destination, {recursive: true}, err => callback(err, destination));
     }
 
     generateFilename (req, file, callback) {
-        callback(null, MongoHelper.createId().toString());
+        const filename = MongoHelper.createId().toString();
+        callback(null, filename);
     }
 };
 

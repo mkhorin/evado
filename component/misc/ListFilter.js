@@ -97,7 +97,8 @@ module.exports = class ListFilter extends Base {
         const models = await query.all();
         const result = [];
         for (const model of models) {
-            result.push(...await this.getRelation(relation, model).ids());
+            const ids = await this.getRelation(relation, model).ids();
+            result.push(...ids);
         }
         return {[this.query.model.PK]: result};
     }
@@ -190,7 +191,7 @@ module.exports = class ListFilter extends Base {
             return null;
         }
         date.setHours(0, 0, 0, 0);
-        const next = new Date(date.getTime() + 86400000);
+        const next = new Date(date.getTime() + 86400000); // ms per day
         switch (op) {
             case '=': return ['and', ['>=', attr, date], ['<', attr, next]];
             case '!=': return ['or', ['<', attr, date], ['>=', attr, next]];
@@ -254,14 +255,34 @@ module.exports = class ListFilter extends Base {
         }
         value = EscapeHelper.escapeRegex(value);
         switch (op) {
-            case 'contains': break;
-            case 'equalCaseInsensitive': value = `^${value}$`; break;
-            case 'notEqualCaseInsensitive': value = `^((?!${value}).)*$`; break;
-            case 'begins': value = `^${value}`; break;
-            case 'ends': value = `${value}$`; break;
-            case 'lt': return ['<', attr, value];
-            case 'gt': return ['>', attr, value];
-            default: this.throwInvalidOperation(op);
+            case 'contains': {
+                break;
+            }
+            case 'equalCaseInsensitive': {
+                value = `^${value}$`;
+                break;
+            }
+            case 'notEqualCaseInsensitive': {
+                value = `^((?!${value}).)*$`;
+                break;
+            }
+            case 'begins': {
+                value = `^${value}`;
+                break;
+            }
+            case 'ends': {
+                value = `${value}$`;
+                break;
+            }
+            case 'lt': {
+                return ['<', attr, value];
+            }
+            case 'gt': {
+                return ['>', attr, value];
+            }
+            default: {
+                return this.throwInvalidOperation(op);
+            }
         }
         return {[attr]: new RegExp(value, 'i')};
     }
@@ -281,8 +302,8 @@ module.exports = class ListFilter extends Base {
         return [op, attr, [null, '']];
     }
 
-    formatByValueType (value, valueType) {
-        switch (valueType) {
+    formatByValueType (value, type) {
+        switch (type) {
             case 'id': return this.query.getDb().normalizeId(value);
             case 'integer': return parseInt(value);
             case 'number': return parseFloat(value);

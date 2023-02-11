@@ -58,7 +58,8 @@ Jam.TreeGridNode = class TreeGridNode {
 
     collapse () {
         const $children = this.getChildren();
-        for (const item of $children.filter('.opened')) {
+        const $items = $children.filter('.opened');
+        for (const item of $items) {
             this.grid.getNodeByItem($(item)).toggle(false);
         }
         if (this.grid.params.clearCollapsedNode) {

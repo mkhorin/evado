@@ -11,7 +11,10 @@ Jam.ArrayHelper = class ArrayHelper {
     }
 
     static equals (a, b) {
-        if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+        if (!Array.isArray(a) || !Array.isArray(b)) {
+            return false;
+        }
+        if (a.length !== b.length) {
             return false;
         }
         for (let i = 0; i < a.length; ++i) {

@@ -19,12 +19,11 @@ module.exports = class ListFilterController extends Base {
 
     async actionInlineList () {
         const {target} = this.getQueryParams();
-        const query = this.createModel().findByTarget(target);
         const author = this.user.getId();
-        const models = await query.and({author}).all();
-        this.sendJson({
-            data: models.map(model => model.getAttrMap())
-        });
+        const query = this.createModel().findByTarget(target).and({author});
+        const models = await query.all();
+        const data = models.map(model => model.getAttrMap());
+        this.sendJson({data});
     }
 
     async actionInlineCreate () {
@@ -38,8 +37,9 @@ module.exports = class ListFilterController extends Base {
 
     async actionInlineUpdate () {
         const model = await this.getModel();
-        return await model.load(this.getPostParams()).save()
-            ? this.sendJson(model.getAttrMaps())
+        model.load(this.getPostParams());
+        return await model.save()
+            ? this.sendJson(model.getAttrMap())
             : this.handleError(model);
     }
 };

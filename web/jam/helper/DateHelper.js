@@ -30,7 +30,8 @@ Jam.DateHelper = class DateHelper {
     }
 
     static resolveClientDate ($container) {
-        for (const item of $container.find('time[data-format]')) {
+        const items = $container.find('time[data-format]');
+        for (const item of items) {
             const $item = $(item);
             const format = $item.attr('data-format');
             if (format) {
@@ -38,7 +39,8 @@ Jam.DateHelper = class DateHelper {
                 const value = $item.attr('datetime');
                 const date = this.formatByUtc(value, utc);
                 const momentFormat = this.getMomentFormat(format);
-                $item.html(moment(date).format(momentFormat));
+                const result = moment(date).format(momentFormat);
+                $item.html(result);
             }
             $item.removeAttr('data-format');
         }

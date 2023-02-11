@@ -53,7 +53,10 @@ if ($.fn.daterangepicker && typeof moment === 'function') {
             'последние 7 дней': [moment().subtract(6, 'days'), moment()],
             'последние 30 дней': [moment().subtract(29, 'days'), moment()],
             'текущий месяц': [moment().startof('month'), moment().endof('month')],
-            'предыдущий месяц': [moment().subtract(1, 'month').startof('month'), moment().subtract(1, 'month').endof('month')]
+            'предыдущий месяц': [
+                moment().subtract(1, 'month').startof('month'),
+                moment().subtract(1, 'month').endof('month')
+            ]
         },
         startdate: moment().subtract(29, 'days'),
         enddate: moment()

@@ -57,8 +57,9 @@ module.exports = class S3Storage extends Base {
     }
 
     getSignedDownloadUrl (filename, name) {
+        const uri = encodeURIComponent(name || filename);
         return this.client.presignedGetObject(this.bucket, filename, this.downloadExpiryTime, {
-            'response-content-disposition': `attachment; filename=${encodeURIComponent(name || filename)}`
+            'response-content-disposition': `attachment; filename=${uri}`
         });
     }
 

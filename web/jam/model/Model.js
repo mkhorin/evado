@@ -81,11 +81,13 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     getAttr (name, className) {
-        return Jam.ModelAttr.get(this.findAttrValueByName(name, className));
+        const $value = this.findAttrValueByName(name, className);
+        return Jam.ModelAttr.get($value);
     }
 
     getAttrByElement (element) {
-        return Jam.ModelAttr.get(this.findAttr(element));
+        const $attr = this.findAttr(element);
+        return Jam.ModelAttr.get($attr);
     }
 
     findAttrValueByName (name, className) {
@@ -102,7 +104,13 @@ Jam.Model = class Model extends Jam.Element {
     }
 
     formatAttrName (name, className = this.params.className) {
-        return typeof name !== 'string' || name.includes('[') ? name : `${className}[${name}]`;
+        if (typeof name !== 'string') {
+            return name;
+        }
+        if (name.includes('[')) {
+            return name;
+        }
+        return `${className}[${name}]`;
     }
 
     findAction (name) {
@@ -144,8 +152,9 @@ Jam.Model = class Model extends Jam.Element {
 
     serialize () {
         const data = {};
-        for (const element of this.$form.find('.form-value')) {
-            data[element.name] = element.value;
+        const elements = this.$form.find('.form-value');
+        for (const {name, value} of elements) {
+            data[name] = value;
         }
         Object.assign(data, this.serializeAttrs());
         data.dependency = this.getDependencyData();

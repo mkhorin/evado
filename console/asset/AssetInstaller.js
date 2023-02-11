@@ -18,16 +18,20 @@ module.exports = class AssetInstaller extends Base {
     }
 
     async execute () {
-        for (const module of this.module.getOriginalHierarchy()) {
+        const modules = this.module.getOriginalHierarchy();
+        for (const module of modules) {
             const dir = this.getParams(module).vendorDir;
             if (typeof dir === 'string') {
-                await this.installVendors(module.getPath(dir));
+                const source = module.getPath(dir);
+                await this.installVendors(source);
             }
         }
     }
 
     async installVendors (dir) {
-        if (await FileHelper.getStat(path.join(dir, 'package.json'))) {
+        const file = path.join(dir, 'package.json');
+        const stat = await FileHelper.getStat(file);
+        if (stat) {
             this.log('info', `Install asset vendors: ${dir}`);
             await SystemHelper.spawnProcess(dir, 'npm', ['install']);
         }

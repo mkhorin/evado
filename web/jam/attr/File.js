@@ -11,6 +11,9 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
     init () {
         this.$uploader = this.find('.uploader');
         this.fileMessageSelector = '.uploader-message';
+        this.filenameSelector = '.uploader-filename';
+        this.overflowSelector = '.uploader-overflow';
+        this.thumbnailSelector = '.uploader-thumbnail';
         this.uploader = Jam.Uploader.create(this.$uploader);
         this.uploader.on('select', this.onSelectFile.bind(this));
         this.uploader.on('overflow', this.onOverflowFile.bind(this));
@@ -50,17 +53,17 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
     }
 
     onSelectFile () {
-        this.$uploader.find('.uploader-overflow').hide();
+        this.$uploader.find(this.overflowSelector).hide();
     }
 
     onOverflowFile (event, message) {
-        this.$uploader.find('.uploader-overflow').text(message).show();
+        this.$uploader.find(this.overflowSelector).text(message).show();
     }
 
     onAppendFile (event, item) {
         const {name, size} = item.file;
         const bytes = Jam.FormatHelper.asBytes(size);
-        const $filename = item.$item.find('.uploader-filename');
+        const $filename = item.$item.find(this.filenameSelector);
         $filename.text(`${name} (${bytes})`);
         this.setNameAttr(name);
         this.events.trigger('append', item);
@@ -118,7 +121,8 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
 
     onDeleteFile (event, {id}) {
         if (id) {
-            const value = Jam.Helper.removeCommaValue(id, this.$value.val());
+            let value = this.$value.val();
+            value = Jam.Helper.removeCommaValue(id, value);
             this.$value.val(value).change();
             if (this.uploader.options.delete) {
                 $.post(this.uploader.options.delete, {id});
@@ -133,16 +137,18 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
         if (download) {
             name = `<a href="${download}${file.id}" target="_blank">${file.name}</a>`;
         }
-        $item.find('.uploader-filename').html(`${name} (${file.size})`);
+        $item.find(this.filenameSelector).html(`${name} (${file.size})`);
         $item.find(this.fileMessageSelector).html(file.message);
-        const thumbnail = this.uploader.options.thumbnail;
-        if (file.isImage && thumbnail) {
-            this.setThumbnail($item, `${thumbnail}${file.id}`);
+        if (file.isImage) {
+            const thumbnail = this.uploader.options.thumbnail;
+            if (thumbnail) {
+                this.setThumbnail($item, `${thumbnail}${file.id}`);
+            }
         }
     }
 
     setThumbnail ($item, url) {
-        $item.find('.uploader-thumbnail').css('background-image', `url(${url})`);
+        $item.find(this.thumbnailSelector).css('background-image', `url(${url})`);
         $item.addClass('with-thumbnail');
     }
 };

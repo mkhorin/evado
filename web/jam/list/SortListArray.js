@@ -9,7 +9,8 @@ Jam.SortListArray = class SortListArray extends Jam.SortList {
 
     getChangedOrder () {
         const result = [];
-        for (const item of this.findItems()) {
+        const items = this.findItems();
+        for (const item of items) {
             result.push(item.dataset.id);
         }
         return result;
@@ -18,8 +19,7 @@ Jam.SortListArray = class SortListArray extends Jam.SortList {
     onDoneSaveClose () {
         this.changed = false;
         this.saved = true;
-        this.frame.close({
-            order: this.getChangedOrder()
-        });
+        const order = this.getChangedOrder();
+        this.frame.close({order});
     }
 };

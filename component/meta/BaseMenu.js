@@ -35,7 +35,11 @@ module.exports = class BaseMenu extends Base {
     }
 
     getItemUrl (item) {
-        return item.data.url || `${this.getItemModule(item)}/model/?n=${item.id}${item.serializeUrlParams()}`;
+        if (item.data.url) {
+            return item.data.url;
+        }
+        const params = item.serializeUrlParams();
+        return `${this.getItemModule(item)}/model/?n=${item.id}${params}`;
     }
 
     getItemModule (item) {

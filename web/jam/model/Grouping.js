@@ -10,7 +10,8 @@ Jam.ModelGrouping = class ModelGrouping {
     }
 
     static getStorageKey (url) {
-        return `model-grouping-${Jam.UrlHelper.getKey(url, this.URL_PATTERNS)}`;
+        const key = Jam.UrlHelper.getKey(url, this.URL_PATTERNS);
+        return `model-grouping-${key}`;
     }
 
     constructor (model) {

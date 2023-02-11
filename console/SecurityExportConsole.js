@@ -15,7 +15,8 @@ module.exports = class SecurityExportConsole extends Base {
 
     async execute () {
         this.data = await this.getStore().loadData();
-        this.assignmentRuleMap = IndexHelper.indexObjects(this.data.assignmentRules, this.getKey());
+        const key = this.getKey();
+        this.assignmentRuleMap = IndexHelper.indexObjects(this.data.assignmentRules, key);
         this.childMap = IndexHelper.indexObjectArrays(this.data.links, 'parent', 'child');
         const data = {
             rules: this.getRules(),
@@ -25,8 +26,8 @@ module.exports = class SecurityExportConsole extends Base {
             roles: this.getItems('role')
         };
         if (this.params.users) {
-            const query = this.spawnUser().createQuery();
-            this.userMap = await query.indexByKey().raw().all();
+            const query = this.spawnUser().createQuery().indexByKey().raw();
+            this.userMap = await query.all();
             data.users = await this.getUsers();
             data.assignments = this.getAssignments();
         }
@@ -40,7 +41,8 @@ module.exports = class SecurityExportConsole extends Base {
     }
 
     async saveData (data, file) {
-        await FileHelper.createDirectory(path.dirname(file));
+        const dir = path.dirname(file);
+        await FileHelper.createDirectory(dir);
         data = JSON.stringify(data, null, parseInt(this.params.space));
         await fs.promises.writeFile(file, data);
     }
@@ -176,8 +178,8 @@ module.exports = class SecurityExportConsole extends Base {
     async getUsers () {
         const key = this.getKey();
         const password = this.spawn('security/UserPassword');
-        const query = password.createQuery().orderByKey().raw();
-        const passwordMap = await query.index('user').all();
+        const query = password.createQuery().orderByKey().raw().index('user');
+        const passwordMap = await query.all();
         const result = [];
         for (const item of Object.values(this.userMap)) {
             const password = passwordMap[item[key]];

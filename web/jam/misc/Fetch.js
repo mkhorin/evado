@@ -8,19 +8,22 @@ Jam.Fetch = class Fetch {
     }
 
     async getJson () {
-        return (await this.execute(...arguments))?.json();
+        const res = await this.execute(...arguments);
+        return res?.json();
     }
 
     async getText () {
-        return (await this.execute(...arguments))?.text();
+        const res = await this.execute(...arguments);
+        return res?.text();
     }
 
     async execute (url, data, options) {
         options = this.getOptions(data, options);
         const res = await fetch(url, options);
-        return res.status !== 200
-            ? this.throwError(res)
-            : res;
+        if (res.status === 200) {
+            return res;
+        }
+        await this.throwError(res);
     }
 
     isAborted () {

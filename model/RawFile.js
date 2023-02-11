@@ -123,7 +123,8 @@ module.exports = class RawFile extends Base {
     }
 
     createFileValidators (validators) {
-        this.addValidatorByRule(this.getStorage().rule, validators);
+        const rule = this.getStorage().rule;
+        this.addValidatorByRule(rule, validators);
         this.addValidatorByRule(this.customRule, validators);
     }
 
@@ -160,7 +161,8 @@ module.exports = class RawFile extends Base {
     }
 
     deleteFile () {
-        return this.getStorage().deleteFile(this.getFilename());
+        const file = this.getFilename();
+        return this.getStorage().deleteFile(file);
     }
 
     // RELATIONS

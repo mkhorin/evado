@@ -53,7 +53,10 @@ module.exports = class NotificationMessage extends Base {
         this.set('subject', notification.get('subject'));
         this.set('text', notification.get('text'));
         this.set('createdAt', new Date);
-        this.set('recipients', Array.isArray(recipients) ? recipients : recipients ? [recipients] : null);
+        if (!Array.isArray(recipients)) {
+            recipients = recipients ? [recipients] : null;
+        }
+        this.set('recipients', recipients);
         return this.save();
     }
 
@@ -69,7 +72,8 @@ module.exports = class NotificationMessage extends Base {
         if (!recipients.length) {
             return this.log('error', 'No recipients found');
         }
-        for (const method of notification.get('methods')) {
+        const methods = notification.get('methods');
+        for (const method of methods) {
             switch (method) {
                 case 'popup': {
                     await this.sendAsPopup(recipients);
@@ -97,7 +101,8 @@ module.exports = class NotificationMessage extends Base {
     }
 
     sendAsPopup (users) {
-        return this.spawn('notifier/PopupNotification').create(this.getId(), users);
+        const popup = this.spawn('notifier/PopupNotification');
+        return popup.create(this.getId(), users);
     }
 
     async sendAsEmail (users) {
@@ -105,7 +110,8 @@ module.exports = class NotificationMessage extends Base {
         const recipient = await query.column('email');
         const subject = this.get('subject');
         const text = this.get('text');
-        return this.module.getMailer().send({recipient, subject, text});
+        const mailer = this.module.getMailer();
+        return mailer.send({recipient, subject, text});
     }
 
     async truncate () {

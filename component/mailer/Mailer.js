@@ -25,6 +25,8 @@ module.exports = class Mailer extends Base {
             senderMap: {},
             defaultSender: '',
             defaultMessageSource: 'mail',
+            passwordResetUrl: '/auth/reset-password',
+            verificationUrl: '/auth/verify',
             ...config
         });
     }
@@ -92,14 +94,14 @@ module.exports = class Mailer extends Base {
     }
 
     sendPasswordReset () {
-        return this.executeVerificationSubmit('passwordReset', '/auth/reset-password', ...arguments);
+        return this.executeAuthSubmit('passwordReset', this.passwordResetUrl, ...arguments);
     }
 
     sendVerification () {
-        return this.executeVerificationSubmit('verification', '/auth/verify', ...arguments);
+        return this.executeAuthSubmit('verification', this.verificationUrl, ...arguments);
     }
 
-    async executeVerificationSubmit (name, link, verification, user) {
+    async executeAuthSubmit (name, link, verification, user) {
         try {
             let recipient = user.getEmail();
             let subject = this.translate(`${name}.subject`);

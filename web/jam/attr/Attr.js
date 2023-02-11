@@ -5,8 +5,9 @@ Jam.ModelAttr = class ModelAttr {
 
     static createAll ($container, model) {
         const attrs = [];
-        for (let attr of $container.find('.form-attr')) {
-            attr = Jam.ModelAttr.create($(attr), model);
+        const elements = $container.find('.form-attr');
+        for (const element of elements) {
+            const attr = Jam.ModelAttr.create($(element), model);
             if (attr) {
                 attrs.push(attr);
             }
@@ -65,7 +66,8 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     createMask () {
-        this.mask = new Jam.ValueMask(this.getData('mask'), this.$value);
+        const data = this.getData('mask');
+        this.mask = new Jam.ValueMask(data, this.$value);
     }
 
     formatDisplayValue () {
@@ -199,7 +201,8 @@ Jam.ModelAttr = class ModelAttr {
     }
 
     addDependencyListeners () {
-        this.getDependencyNames().forEach(this.addDependencyListener, this);
+        const names = this.getDependencyNames();
+        names.forEach(this.addDependencyListener, this);
     }
 
     addDependencyListener (name) {

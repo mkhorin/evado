@@ -11,7 +11,7 @@ Jam.Tabs = class Tabs extends Jam.Element {
 
     init () {
         this.$container.on('click', '.nav-tabs a', this.onTab.bind(this));
-        this.$container.on('click', '.tab-close', this.onTabClose.bind(this));
+        this.$container.on('click', '.tab-close', this.onCloseTab.bind(this));
     }
 
     isActive (id) {
@@ -75,7 +75,7 @@ Jam.Tabs = class Tabs extends Jam.Element {
         this.setActive($nav.data('id'));
     }
 
-    onTabClose (event) {
+    onCloseTab (event) {
         event.preventDefault();
         const $nav = this.getNavByElement(event.currentTarget);
         const id = $nav.data('id');
@@ -99,10 +99,12 @@ Jam.Tabs = class Tabs extends Jam.Element {
         if (this.getNav(id).length) {
             return true;
         }
+        const navParent = this.getNavItems().parent();
         const head = this.createTabHead(id, data);
-        this.getNavItems().parent()[method](head);
+        navParent[method](head);
+        const paneParent = this.getPanes().parent();
         const pane = this.createTabPane(id, data);
-        this.getPanes().parent()[method](pane);
+        paneParent[method](pane);
         this.events.trigger('create', {id});
     }
 

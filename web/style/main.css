@@ -26,9 +26,10 @@
   --bg-light-danger: #feeaee;
   --border-light-danger: #edc0c0;
 
-  --scrollbar-width: 6px;
+  --scrollbar-width: .35rem;
+  --scrollbar-height: .35rem;
   --scrollbar-track-color: #f0f0f0;
-  --scrollbar-thumb-color: #b0b0b0;
+  --scrollbar-thumb-color: #a8a8a8;
   --scrollbar-thumb-hover: #e0b0b0;
 
   --form-bg-disabled: #f4f6f8;
@@ -206,6 +207,7 @@ ul:last-child {
 
 :not(textarea)::-webkit-scrollbar {
   width: var(--scrollbar-width);
+  height: var(--scrollbar-height);
 }
 :not(textarea)::-webkit-scrollbar-track {
   background-color: var(--scrollbar-track-color);
@@ -1454,6 +1456,17 @@ form.was-validated select:valid ~ .select2-container .select2-selection {
 }
 .tab-pane.active {
   display: block;
+}
+.nav-tabs {
+  align-items: center;
+}
+.tabs-nowrap > .nav-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.tabs-nowrap > .nav-tabs .nav-item {
+  white-space: nowrap;
 }
 
 /* POPOVER */

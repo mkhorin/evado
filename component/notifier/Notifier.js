@@ -21,7 +21,8 @@ module.exports = class Notifier extends Base {
     }
 
     async execute (name, recipients, data) {
-        const notification = await this.findNotificationByName(name).one();
+        const query = this.findNotificationByName(name);
+        const notification = await query.one();
         if (!notification) {
             return this.log('error', `Notification not found: ${name}`);
         }
@@ -30,12 +31,14 @@ module.exports = class Notifier extends Base {
     }
 
     async executeByNames (names, data) {
-        const models = await this.findNotificationByName(names).all();
+        const query = this.findNotificationByName(names);
+        const models = await query.all();
         return this.executeNotifications(models, data);
     }
 
     async executeById (id, data) {
-        const models = await this.findNotificationById(id).all();
+        const query = this.findNotificationById(id);
+        const models = await query.all();
         return this.executeNotifications(models, data);
     }
 

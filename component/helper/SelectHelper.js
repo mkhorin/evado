@@ -25,11 +25,13 @@ module.exports = class SelectHelper {
     // QUERY HANDLER
 
     static async handleQueryLabelItems (handler) {
-        return this.queryLabelItems(await handler());
+        const items = await handler();
+        return this.queryLabelItems(items);
     }
 
     static async handleQueryItems (handler, params) {
-        return this.queryLabelItems(await handler(), params);
+        const items = await handler();
+        return this.queryLabelItems(items, params);
     }
 
     // QUERY
@@ -41,7 +43,8 @@ module.exports = class SelectHelper {
     }
 
     static async queryItems (query, params) {
-        return this.getItems(await query.raw().all(), params);
+        const items = await query.raw().all();
+        return this.getItems(items, params);
     }
 
     // MODEL

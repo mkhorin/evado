@@ -47,7 +47,8 @@ module.exports = class AuthController extends Base {
             return this.render('signIn', {model});
         }
         model.captchaAction = this.createAction('captcha');
-        if (!await model.load(this.getPostParams()).login()) {
+        const params = this.getPostParams();
+        if (!await model.load(params).login()) {
             return this.render('signIn', {model});
         }
         if (this.user.getIdentity().isVerified()) {
@@ -70,17 +71,18 @@ module.exports = class AuthController extends Base {
             return this.render('signUp', {model});
         }
         model.captchaAction = this.createAction('captcha');
-        const user = await model.load(this.getPostParams()).register();
+        const params = this.getPostParams();
+        const user = await model.load(params).register();
         if (!user) {
             return this.render('signUp', {model});
         }
-        let verified = user.isVerified();
-        let type = verified ? 'success' : 'info';
-        let email = model.get('email');
-        let message = verified
+        const verified = user.isVerified();
+        const type = verified ? 'success' : 'info';
+        const email = model.get('email');
+        const messageCode = verified
             ? 'auth.registrationCompleted'
             : 'auth.verificationSent';
-        message = this.translate(message, {email});
+        const message = this.translate(messageCode, {email});
         return this.render('alert', {type, message});
     }
 
@@ -91,7 +93,8 @@ module.exports = class AuthController extends Base {
         }
         this.checkCsrfToken();
         model.captchaAction = this.createAction('captcha');
-        if (!await model.load(this.getPostParams()).changePassword()) {
+        const params = this.getPostParams();
+        if (!await model.load(params).changePassword()) {
             return this.render('changePassword', {model});
         }
         this.setFlash('success', 'auth.passwordChanged');
@@ -104,7 +107,8 @@ module.exports = class AuthController extends Base {
             return this.render('requestReset', {model});
         }
         model.captchaAction = this.createAction('captcha');
-        if (!await model.load(this.getPostParams()).request()) {
+        const params = this.getPostParams();
+        if (!await model.load(params).request()) {
             return this.render('requestReset', {model});
         }
         const email = model.get('email');
@@ -117,7 +121,8 @@ module.exports = class AuthController extends Base {
         if (this.isGetRequest()) {
             return this.render('resetPassword', {model});
         }
-        await model.load(this.getPostParams());
+        const params = this.getPostParams();
+        await model.load(params);
         const {key} = this.getQueryParams();
         model.set('key', key);
         model.captchaAction = this.createAction('captcha');
@@ -134,7 +139,8 @@ module.exports = class AuthController extends Base {
             return this.render('requestVerification', {model});
         }
         model.captchaAction = this.createAction('captcha');
-        if (!await model.load(this.getPostParams()).request()) {
+        const params = this.getPostParams();
+        if (!await model.load(params).request()) {
             return this.render('requestVerification', {model});
         }
         const email = model.get('email');
@@ -147,13 +153,13 @@ module.exports = class AuthController extends Base {
         const {key} = this.getQueryParams();
         model.set('key', key);
         if (!await model.verify()) {
-            this.setFlash('error', model.getFirstError());
+            const message = model.getFirstError();
+            this.setFlash('error', message);
             return this.redirect('request-verification');
         }
-        return this.render('alert', {
-            type: 'success',
-            message: this.translate('auth.userVerified')
-        });
+        const type = 'success';
+        const message = this.translate('auth.userVerified');
+        return this.render('alert', {type, message});
     }
 
     canChangePassword () {

@@ -51,7 +51,8 @@ module.exports = class CrudController extends Base {
 
     async actionViewTitle (params) {
         const model = await this.getModel(params);
-        this.sendJson(model.getTitle());
+        const title = model.getTitle();
+        this.sendJson(title);
     }
 
     async actionCreate (params) {

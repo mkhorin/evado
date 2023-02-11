@@ -173,7 +173,8 @@ module.exports = class MetaGrid extends Base {
     }
 
     isForbiddenAttr (name, model) {
-        return this._forbiddenAttrs?.includes(name) || model.forbiddenReadAttrs?.includes(name);
+        return this._forbiddenAttrs?.includes(name)
+            || model.forbiddenReadAttrs?.includes(name);
     }
 
     setForbiddenAttr (name, result) {
@@ -204,18 +205,19 @@ module.exports = class MetaGrid extends Base {
         if (attr.isFile()) {
             return this.renderFileAttr(attr, model);
         }
+        const key = this._columnMap[attr.name].titleName;
         if (attr.enum) {
-            result[this._columnMap[attr.name].titleName] = value;
+            result[key] = value;
             return model.get(attr);
         }
         if (attr.isEmbeddedModel()) {
-            result[this._columnMap[attr.name].titleName] = model.related.getTitle(attr);
+            result[key] = model.related.getTitle(attr);
         } else if (attr.isStateView()) {
-            result[this._columnMap[attr.name].titleName] = model.class.getState(value)?.title;
+            result[key] = model.class.getState(value)?.title;
         } else if (attr.isClassView()) {
-            result[this._columnMap[attr.name].titleName] = model.class.meta.getClass(value)?.title;
+            result[key] = model.class.meta.getClass(value)?.title;
         } else if (attr.isClassesView()) {
-            result[this._columnMap[attr.name].titleName] = model.class.meta.getClassTitles(value);
+            result[key] = model.class.meta.getClassTitles(value);
         }
         return value;
     }

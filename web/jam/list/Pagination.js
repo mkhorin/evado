@@ -47,7 +47,12 @@ Jam.Pagination = class Pagination {
     }
 
     getNumPages () {
-        return (this.pageSize && Math.ceil(this.getTotalSize() / this.pageSize)) || 1;
+        if (!this.pageSize) {
+            return 1;
+        }
+        const total = this.getTotalSize();
+        const pages = Math.ceil(total / this.pageSize);
+        return pages > 0 ? pages : 1;
     }
 
     getTotalSize () {

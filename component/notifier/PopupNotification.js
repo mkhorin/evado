@@ -21,7 +21,8 @@ module.exports = class PopupNotification extends Base {
     create (message, users) {
         const read = false;
         const items = [];
-        for (const user of this.getDb().normalizeId(users)) {
+        const ids = this.getDb().normalizeId(users);
+        for (const user of ids) {
             items.push({read, message, user});
         }
         if (items.length) {

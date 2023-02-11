@@ -48,9 +48,10 @@ module.exports = class DataImportConsole extends Base {
 
     async importData () {
         const files = await FileHelper.readDirectory(this.directory);
-        for (const file of files) {
-            if (FileHelper.isJsonExtension(file)) {
-                await this.importDataFile(path.join(this.directory, file));
+        for (const name of files) {
+            if (FileHelper.isJsonExtension(name)) {
+                const file = path.join(this.directory, name);
+                await this.importDataFile(file);
             }
         }
         await this.app.getMetaHub().afterDataImport();

@@ -52,7 +52,8 @@ module.exports = class Item extends Base {
             for (const config of this.assignmentRules) {
                 try {
                     const rule = this.createAssignmentRule(config);
-                    users.push(...await rule.getUsers(this));
+                    const values = await rule.getUsers(this);
+                    users.push(...values);
                 } catch (err) {
                     this.rbac.log('error', `Item: ${this.name}: ${config.name}`, err);
                 }
@@ -99,7 +100,8 @@ module.exports = class Item extends Base {
         if (!this.data.targets.length) {
             return false;
         }
-        const item = await this.store.findMetaItem().insert({
+        const itemQuery = this.store.findMetaItem();
+        const item = await itemQuery.insert({
             description: this.data.description,
             type: this.data.type,
             actions: this.data.actions,
@@ -111,7 +113,8 @@ module.exports = class Item extends Base {
             target.item = item;
             targets.push(target);
         }
-        return this.store.findMetaTarget().insert(targets);
+        const targetQuery = this.store.findMetaTarget();
+        return targetQuery.insert(targets);
     }
 
     prepareMetaTargets () {
@@ -120,7 +123,8 @@ module.exports = class Item extends Base {
         }
         const result = [];
         for (const data of this.data.targets) {
-            result.push(...ObjectHelper.expandArrayValues(data));
+            const values = ObjectHelper.expandArrayValues(data);
+            result.push(...values);
         }
         this.data.targets = result;
     }
@@ -144,9 +148,12 @@ module.exports = class Item extends Base {
     }
 
     isEqualActions (actions) {
-        return actions.length === this.store.rbac.ALL_ACTIONS.length
-            && this.data.actions[0] === this.store.rbac.ALL
-            || ArrayHelper.hasDiff(actions, this.data.actions) === false;
+        if (actions.length === this.store.rbac.ALL_ACTIONS.length) {
+            if (this.data.actions[0] === this.store.rbac.ALL) {
+                return true;
+            }
+        }
+        return !ArrayHelper.hasDiff(actions, this.data.actions);
     }
 
     isEqualRoles (roles) {
@@ -224,8 +231,8 @@ module.exports = class Item extends Base {
         if (!names.length) {
             return names;
         }
-        const query = this.store.findRoleItem().and({name: names});
-        const roleMap = await query.index('name').all();
+        const query = this.store.findRoleItem().and({name: names}).index('name');
+        const roleMap = await query.all();
         const result = [];
         for (const name of names) {
             if (!roleMap.hasOwnProperty(name)) {
@@ -271,14 +278,38 @@ module.exports = class Item extends Base {
         this._target = {};
         this._targetError = null;
         switch (data.type) {
-            case rbac.TARGET_CLASS: this.validateMetadataClass(data); break;
-            case rbac.TARGET_VIEW: this.validateMetadataView(data); break;
-            case rbac.TARGET_STATE: this.validateMetadataState(data); break;
-            case rbac.TARGET_OBJECT: this.validateMetadataObject(data); break;
-            case rbac.TARGET_TRANSITION: this.validateMetadataTransition(data); break;
-            case rbac.TARGET_ATTR: this.validateMetadataAttr(data); break;
-            case rbac.TARGET_SECTION: this.validateMetadataSection(data); break;
-            case rbac.TARGET_NODE: this.validateMetadataNode(data); break;
+            case rbac.TARGET_CLASS: {
+                this.validateMetadataClass(data);
+                break;
+            }
+            case rbac.TARGET_VIEW: {
+                this.validateMetadataView(data);
+                break;
+            }
+            case rbac.TARGET_STATE: {
+                this.validateMetadataState(data);
+                break;
+            }
+            case rbac.TARGET_OBJECT: {
+                this.validateMetadataObject(data);
+                break;
+            }
+            case rbac.TARGET_TRANSITION: {
+                this.validateMetadataTransition(data);
+                break;
+            }
+            case rbac.TARGET_ATTR: {
+                this.validateMetadataAttr(data);
+                break;
+            }
+            case rbac.TARGET_SECTION: {
+                this.validateMetadataSection(data);
+                break;
+            }
+            case rbac.TARGET_NODE: {
+                this.validateMetadataNode(data);
+                break;
+            }
         }
         if (this._targetError) {
             throw new Error(this.getMetaError(this._targetError));
@@ -306,7 +337,7 @@ module.exports = class Item extends Base {
     }
 
     validateMetadataState (data) {
-        if (this.validateMetadataClass(data) && data.state) {
+        if (data.state && this.validateMetadataClass(data)) {
             if (!this._target.class.getState(data.state)) {
                 this._targetError = `Invalid state: ${data.state}`;
             }
@@ -317,7 +348,7 @@ module.exports = class Item extends Base {
     }
 
     validateMetadataTransition (data) {
-        if (this.validateMetadataClass(data) && data.transition) {
+        if (data.transition && this.validateMetadataClass(data)) {
             if (!this._target.class.getTransition(data.transition)) {
                 this._targetError = `Invalid transition: ${data.transition}`;
             }
@@ -347,7 +378,7 @@ module.exports = class Item extends Base {
     }
 
     validateMetadataNode (data) {
-        if (this.validateMetadataSection(data) && data.node) {
+        if (data.node && this.validateMetadataSection(data)) {
             if (!this._target.section.getNode(data.node)) {
                 this._targetError = `Invalid navigation node: ${data.node}`;
             }

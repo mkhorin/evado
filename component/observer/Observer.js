@@ -14,7 +14,8 @@ module.exports = class Observer extends Base {
     async load () {
         this._eventMap = {};
         this._parsedMap = {};
-        this._listeners = await this.spawn('observer/Listener').findActive().all();
+        const query = this.spawn('observer/Listener').findActive();
+        this._listeners = await query.all();
         for (const listener of this._listeners) {
             const events = listener.get('events');
             const handlers = listener.resolveHandlers();
@@ -26,10 +27,13 @@ module.exports = class Observer extends Base {
         if (typeof events === 'string') {
             events = events.split(',');
         }
+        if (!Array.isArray(events)) {
+            return;
+        }
         if (typeof handlers === 'function') {
             handlers = [handlers];
         }
-        if (!Array.isArray(events) || !Array.isArray(handlers) || !handlers.length) {
+        if (!Array.isArray(handlers) || !handlers.length) {
             return;
         }
         for (const name of events) {

@@ -27,7 +27,8 @@ module.exports = class RateLimit extends Base {
 
     async resolveModel (type, ip) {
         const data = {type, ip};
-        const model = await this.find(data).one();
+        const query = this.find(data);
+        const model = await query.one();
         if (model) {
             return model;
         }

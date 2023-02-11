@@ -105,9 +105,13 @@ module.exports = class SortRelatedAction extends Base {
         const result = [];
         for (const model of models) {
             const behavior = model.getBehavior(overridden);
-            const states = behavior.getStates();
-            if (!behavior.hasOriginal() || !behavior.attrs.includes(orderAttr) || states[orderAttr] === true) {
+            if (!behavior.hasOriginal() || !behavior.attrs.includes(orderAttr)) {
                 result.push(model);
+            } else {
+                const states = behavior.getStates();
+                if (states[orderAttr] === true) {
+                    result.push(model);
+                }
             }
         }
         return result;

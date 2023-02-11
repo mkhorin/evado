@@ -22,8 +22,9 @@ module.exports = class PasswordAuthService extends Base {
         }
     }
 
-    async getUserByEmail (email) {
-        return this.spawnUser().findByEmail(email).one();
+    getUserByEmail (email) {
+        const query = this.spawnUser().findByEmail(email);
+        return query.one();
     }
 
     async login (email, password, user) {

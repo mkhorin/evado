@@ -32,8 +32,9 @@ Jam.EnumModelAttr = class EnumModelAttr extends Jam.ModelAttr {
     }
 
     changeValue () {
-        if (this.$value.val() !== this.$select.val()) {
-            this.$value.val(this.$select.val());
+        const value = this.$select.val();
+        if (this.$value.val() !== value) {
+            this.$value.val(value);
             this.triggerChange();
         }
         this.toggleBlank();
@@ -42,7 +43,8 @@ Jam.EnumModelAttr = class EnumModelAttr extends Jam.ModelAttr {
     onUpdate () {
         if (this.updateItems()) {
             const value = this.getValue();
-            this.$select.html(this.build());
+            const content = this.build();
+            this.$select.html(content);
             this.$select.val(value);
             if (value !== this.$select.val()) {
                 this.$value.val('');

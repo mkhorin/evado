@@ -28,8 +28,9 @@ module.exports = class Thumbnail extends Base {
     }
 
     getHeaders (name) {
+        const uri = encodeURIComponent(`${name}.${this.extension}`);
         return {
-            'Content-Disposition': `inline; filename=${encodeURIComponent(`${name}.${this.extension}`)}`,
+            'Content-Disposition': `inline; filename=${uri}`,
             'Content-Transfer-Encoding': 'binary',
             'Content-Type': this.type
         };
@@ -100,7 +101,8 @@ module.exports = class Thumbnail extends Base {
 
     async delete (filename) {
         for (const key of Object.keys(this.sizes)) {
-            await FileHelper.delete(this.getSizePath(key, filename));
+            const file = this.getSizePath(key, filename);
+            await FileHelper.delete(file);
         }
     }
 
@@ -109,9 +111,11 @@ module.exports = class Thumbnail extends Base {
     }
 
     deleteSize (key) {
-        return this.getSize(key)
-            ? FileHelper.delete(path.join(this.basePath, key))
-            : false;
+        if (!this.getSize(key)) {
+            return false;
+        }
+        const file = path.join(this.basePath, key);
+        return FileHelper.delete(file);
     }
 
     log () {

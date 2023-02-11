@@ -1,3 +1,13 @@
+## 5.6.0
+ 
+* component/misc/CommonSearch
+    - check unwanted value types
+* web/jam/actionBinder/ActionBinder
+    - prevent looping after model modification
+* web/jam/list/PageJumper 
+    - replace page jumper select with input
+* upgrade dependencies
+
 ## 5.5.0
  
 * component/meta/MetaListFilter

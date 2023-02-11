@@ -255,8 +255,12 @@ module.exports = class Rbac extends Base {
         const rules = [];
         for (const id of item.rules) {
             const rule = this.ruleMap[id];
-            rule ? rules.push(this.constructor.getItemRuleData(item, rule))
-                 : this.log('error', `Rule not found: ${id}`);
+            if (rule) {
+                const data = this.constructor.getItemRuleData(item, rule);
+                rules.push(data);
+            } else {
+                this.log('error', `Rule not found: ${id}`);
+            }
         }
         item.rules = rules.length ? rules : null;
     }

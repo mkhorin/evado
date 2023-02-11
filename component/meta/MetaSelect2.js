@@ -62,7 +62,8 @@ module.exports = class MetaSelect2 extends Base {
         if (attr.isEagerLoading()) {
             const query = attr.embeddedModel.findByTitle(value);
             if (query) {
-                return conditions.push({[attr.name]: await query.ids()});
+                const ids = await query.ids();
+                return conditions.push({[attr.name]: ids});
             }
         }
     }

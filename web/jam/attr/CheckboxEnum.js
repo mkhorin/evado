@@ -30,7 +30,8 @@ Jam.CheckboxEnumModelAttr = class CheckboxEnumModelAttr extends Jam.ModelAttr {
         let values = this.parseValues(data);
         this.setCheckboxes(values);
         values = this.getCheckedValues();
-        this.$value.val(this.serializeValues(values));
+        let value = this.serializeValues(values);
+        this.$value.val(value);
     }
 
     parseValues (data) {
@@ -43,7 +44,8 @@ Jam.CheckboxEnumModelAttr = class CheckboxEnumModelAttr extends Jam.ModelAttr {
     }
 
     setCheckboxes (values) {
-        for (const checkbox of this.getCheckboxes()) {
+        const checkboxes = this.getCheckboxes();
+        for (const checkbox of checkboxes) {
             checkbox.checked = values.includes(checkbox.value);
         }
     }

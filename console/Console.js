@@ -26,6 +26,7 @@ module.exports = class Console extends Base {
             SecurityImportConsole: require('./SecurityImportConsole'),
             TaskConsole: require('./TaskConsole'),
             UserFilterConsole: require('./UserFilterConsole'),
+            outputResultDelay: 250, // wait for previous console output, ms
             ...config
         });
         this.params = {...this.params};
@@ -245,7 +246,7 @@ module.exports = class Console extends Base {
     // LOG
 
     async logResult () {
-        await PromiseHelper.setTimeout(250); // wait for previous console output
+        await PromiseHelper.setTimeout(this.outputResultDelay);
         const logger = this.app.get('logger');
         const counters = logger.getCounters(['error', 'warn']);
         if (counters.length) {

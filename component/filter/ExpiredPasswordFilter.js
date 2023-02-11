@@ -12,7 +12,9 @@ module.exports = class ExpiredPasswordFilter extends Base {
             return;
         }
         const controller = action.controller;
-        if (controller.isAjax() || controller.isPostRequest() || controller.user.isGuest()) {
+        if (controller.isAjax()
+            || controller.isPostRequest()
+            || controller.user.isGuest()) {
             return;
         }
         const url = this.module.params.changePasswordUrl;

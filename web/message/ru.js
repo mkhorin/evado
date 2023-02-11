@@ -39,7 +39,6 @@ Jam.I18n.defaults = {
     'Advanced search': 'Расширенный поиск',
     'All notifications': 'Все уведомления',
     'Apply': 'Применить',
-    'Attributes of descendant classes': 'Атрибуты классов-потомков',
 
     'Back to page tabs': 'Вернуться к вкладкам страниц',
     'Blocked': 'Блокирован',
@@ -206,6 +205,7 @@ Jam.I18n.defaults = {
     'Yes': 'Да',
     'You have no new notifications': 'Нет новых уведомлений',
 
+    '[Attributes of descendant classes]': '[Атрибуты классов-потомков]',
     '[Nested condition]': '[Вложенное условие]',
 
     '[invalid data]': '[неверные данные]',

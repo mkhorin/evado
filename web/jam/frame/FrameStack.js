@@ -63,12 +63,13 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
 
     setActive (frame) {
         this.$pool.children('.active').removeClass('active');
-        if (!frame) {
-            return $(document.body).addClass('frame-stack-collapsed');
+        if (frame) {
+            this.toggleDocumentActive(true);
+            frame.setActive();
+            this.tabs.resize();
+        } else {
+            this.toggleDocumentCollapse(true);
         }
-        $(document.body).addClass('frame-stack-active');
-        frame.setActive();
-        this.tabs.resize();
     }
 
     isLast ($frame) {
@@ -128,18 +129,18 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
         frame.$frame.removeClass('tabbed active');
         const last = this.getLast();
         last?.setActive();
-        $(document.body).toggleClass('frame-stack-active', !!last);
+        this.toggleDocumentActive(!!last);
         this.tabs.detach(frame);
     }
 
     onResize () {
-        const children = this.$pool.children();
-        children.each((index, element) => $(element).data('frame').resize());
+        const $children = this.$pool.children();
+        $children.each((index, element) => $(element).data('frame').resize());
         this.tabs.resize();
     }
 
     onBack () {
-        $(document.body).removeClass('frame-stack-collapsed');
+        this.toggleDocumentCollapse(false);
         this.setActive(this.getLast());
     }
 
@@ -149,6 +150,14 @@ Jam.FrameStack = class FrameStack extends Jam.Element {
                 this.closeLast();
             }
         }
+    }
+
+    toggleDocumentActive (state) {
+        $(document.body).toggleClass('frame-stack-active', state);
+    }
+
+    toggleDocumentCollapse (state) {
+        $(document.body).toggleClass('frame-stack-collapsed', state);
     }
 
     closeLast () {

@@ -41,7 +41,8 @@ Jam.StackTabs = class StackTabs {
     attach (frame) {
         const title = Jam.escape(frame.title);
         const text = frame.tabTitle;
-        const $new = $(Jam.Helper.resolveTemplate(this.template, {title, text}));
+        const content = Jam.Helper.resolveTemplate(this.template, {title, text});
+        const $new = $(content);
         const $frame = this.findFrame(frame);
         if ($frame.length) {
             $frame.html($new.html());
@@ -66,7 +67,8 @@ Jam.StackTabs = class StackTabs {
         $children.filter('.active').removeClass('active');
         this.findFrame(frame).addClass('active');
         frame.$frame.prepend(this.$tabs);
-        if (this.$tabs.css('position') === 'fixed') {
+        const position = this.$tabs.css('position');
+        if (position === 'fixed') {
             this.resolveMaxWidth(frame, $children);
         }
     }

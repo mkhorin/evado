@@ -92,7 +92,8 @@ module.exports = class SecurityConsole extends Base {
     }
 
     async changePassword () {
-        const user = await this.findUserByParams().one();
+        const query = this.findUserByParams();
+        const user = await query.one();
         if (!user) {
             return this.log('error', `User not found`);
         }

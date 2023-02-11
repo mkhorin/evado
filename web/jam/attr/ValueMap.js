@@ -10,7 +10,8 @@ Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
         this.$list.on('click', '[data-id="up"]', this.onUpItem.bind(this));
         this.$list.on('click', '[data-id="delete"]', this.onDeleteItem.bind(this));
         this.$list.on('keyup', '.param', this.onUpdate.bind(this));
-        this.createItems(Jam.Helper.parseJson(this.$value.val()) || []);
+        const items = Jam.Helper.parseJson(this.$value.val());
+        this.createItems(items || []);
     }
 
     stringify () {
@@ -94,6 +95,7 @@ Jam.ValueMapModelAttr = class ValueMapModelAttr extends Jam.ModelAttr {
     }
 
     onUpdate () {
-        this.$value.val(this.stringify()).change();
+        const value = this.stringify();
+        this.$value.val(value).change();
     }
 };

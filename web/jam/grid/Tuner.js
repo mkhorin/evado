@@ -118,7 +118,9 @@ Jam.DataGridTuner = class DataGridTuner {
     }
 
     save () {
-        Jam.localStorage.set(this.getStorageKey(), this.getStorageData());
+        const key = this.getStorageKey();
+        const data = this.getStorageData();
+        Jam.localStorage.set(key, data);
     }
 
     load () {
@@ -162,9 +164,10 @@ Jam.DataGridTuner = class DataGridTuner {
     }
 
     getStorageData () {
+        const items = this.columns.map(({name, hidden}) => ({name, hidden}));
         return {
-            items: this.columns.map(({name, hidden}) => ({name, hidden})),
-            grouping: this.grid.grouping
+            grouping: this.grid.grouping,
+            items
         };
     }
 };

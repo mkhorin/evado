@@ -38,7 +38,8 @@ module.exports = class FileStorage extends Base {
     }
 
     isFileExists (filename) {
-        return FileHelper.getStat(this.getPath(filename));
+        const file = this.getPath(filename);
+        return FileHelper.getStat(file);
     }
 
     isThumbnails () {
@@ -61,7 +62,8 @@ module.exports = class FileStorage extends Base {
     }
 
     getHash (filename) {
-        return SecurityHelper.hashFile(this.getPath(filename), this.hashingAlgorithm);
+        const file = this.getPath(filename);
+        return SecurityHelper.hashFile(file, this.hashingAlgorithm);
     }
 
     getHeaders () {
@@ -73,7 +75,9 @@ module.exports = class FileStorage extends Base {
     }
 
     resolvePath (target) {
-        return path.isAbsolute(target) ? target : this.module.getPath(target);
+        return path.isAbsolute(target)
+            ? target
+            : this.module.getPath(target);
     }
 
     upload () {
@@ -81,7 +85,8 @@ module.exports = class FileStorage extends Base {
     }
 
     ensureThumbnail (key, filename) {
-        return this.thumbnail.ensureSize(key, filename, this.getPath(filename));
+        const file = this.getPath(filename);
+        return this.thumbnail.ensureSize(key, filename, file);
     }
 
     async copyTo (destination) {
@@ -98,7 +103,8 @@ module.exports = class FileStorage extends Base {
     }
 
     async deleteFile (filename) {
-        await FileHelper.delete(this.getPath(filename));
+        const file = this.getPath(filename);
+        await FileHelper.delete(file);
         await this.thumbnail.delete(filename);
     }
 

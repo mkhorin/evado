@@ -182,10 +182,14 @@ module.exports = class DatabaseStore extends Base {
     }
 
     async createAssignmentRule (name, data) {
-        const rule = await this.findAssignmentRuleByName(name).one();
-        return rule
-            ? this.log('warn', `Assignment rule already exists: ${name}`)
-            : this.findAssignmentRule().insert({name, ...data});
+        const query = this.findAssignmentRuleByName(name);
+        const rule = await query.one();
+        if (rule) {
+            this.log('warn', `Assignment rule already exists: ${name}`)
+        } else {
+            const query = this.findAssignmentRule();
+            await query.insert({name, ...data});
+        }
     }
 
     async createMetaItems (items) {

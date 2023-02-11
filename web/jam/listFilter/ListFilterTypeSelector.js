@@ -83,9 +83,10 @@ Jam.ListFilterTypeSelector = class ListFilterTypeSelector extends Jam.ListFilter
         params.page = params.page || 1;
         const items = typeof data.items === 'object' ? data.items : data;
         const more = params.page * this.params.pageSize < data.total;
+        const results = Jam.SelectHelper.normalizeItems(items);
         return {
             pagination: {more},
-            results: Jam.SelectHelper.normalizeItems(items)
+            results
         };
     }
 

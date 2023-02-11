@@ -91,10 +91,11 @@ module.exports = class MetaHelper {
         for (const doc of docs) {
             const value = doc[newKey];
             if (value !== '' && value !== null && value !== undefined) {
+                const oldValue = buckets.docs[doc[oldKey]];
                 if (Array.isArray(newDocs[value])) {
-                    newDocs[value] = newDocs[value].concat(buckets.docs[doc[oldKey]]);
+                    newDocs[value] = newDocs[value].concat(oldValue);
                 } else {
-                    newDocs[value] = buckets.docs[doc[oldKey]];
+                    newDocs[value] = oldValue;
                     buckets.values.push(value);
                 }
             }
@@ -137,11 +138,12 @@ module.exports = class MetaHelper {
     }
 
     static getModelsValues (models, attrs) {
-        const values = [];
+        const result = [];
         for (const model of models) {
-            values.push(...this.getModelValues(model, attrs));
+            const values = this.getModelValues(model, attrs);
+            result.push(...values);
         }
-        return values;
+        return result;
     }
 
     static getModelValues (model, attrs) {

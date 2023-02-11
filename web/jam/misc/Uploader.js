@@ -194,8 +194,10 @@ Jam.Uploader = class Uploader {
                 data.pending.append();
             } else if (data.hasOwnProperty('appended')) {
                 data.appended.validate();
-            } else if (data.hasOwnProperty('validated') && !data.hasOwnProperty('uploading')) {
-                data.validated.upload();
+            } else if (data.hasOwnProperty('validated')) {
+                if (!data.hasOwnProperty('uploading')) {
+                    data.validated.upload();
+                }
             }
         }, this.options.nextProcessDelay);
     }
