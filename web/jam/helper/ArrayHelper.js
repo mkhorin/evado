@@ -4,10 +4,10 @@
 Jam.ArrayHelper = class ArrayHelper {
 
     static normalize (data) {
-        if (Array.isArray(data)) {
-            return data;
+        if (data === null && data === undefined) {
+            return [];
         }
-        return data === null && data === undefined ? [] : [data];
+        return Array.isArray(data) ? data : [data];
     }
 
     static equals (a, b) {
@@ -17,10 +17,23 @@ Jam.ArrayHelper = class ArrayHelper {
         if (a.length !== b.length) {
             return false;
         }
+        return !a.find((v, index) => v !== b[index]);
+    }
+
+    static equalsUnordered (a, b) {
+        if (!Array.isArray(a) || !Array.isArray(b)) {
+            return false;
+        }
+        if (a.length !== b.length) {
+            return false;
+        }
+        const values = Array.from(b);
         for (let i = 0; i < a.length; ++i) {
-            if (a[i] !== b[i]) {
+            const index = values.indexOf(a[i]);
+            if (index === -1) {
                 return false;
             }
+            delete values[index];
         }
         return true;
     }
