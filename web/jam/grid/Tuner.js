@@ -9,6 +9,7 @@ Jam.DataGridTuner = class DataGridTuner {
         this.columns = this.params.columns;
         this.$container = grid.$container.find('.data-grid-tuner');
         if (this.$container.length) {
+            this.defaultData = this.getStorageData();
             this.load();
             this.createMenu();
             this.$toggle = this.$container.find('.toggle');
@@ -19,8 +20,10 @@ Jam.DataGridTuner = class DataGridTuner {
     }
 
     createMenu () {
-        this.grouping = !!this.columns.find(({grouping}) => grouping);
         this.$menu = this.renderMenu();
+        this.$menu.on('click', '.reset-item', this.onReset.bind(this));
+        this.$menu.on('click', '.order-up', this.onOrderUp.bind(this));
+        this.$menu.on('click', '.order-down', this.onOrderDown.bind(this));
         this.$menu.on('change', 'input.show', this.onShowItem.bind(this));
         this.$menu.on('change', 'input.group', this.onGroupItem.bind(this));
         this.grid.$container.append(this.$menu);
@@ -28,23 +31,32 @@ Jam.DataGridTuner = class DataGridTuner {
 
     renderMenu () {
         this._groupName = this.grid.getGroupName();
-        const grouping = this.grouping ? 'grouping' : '';
         const items = this.columns.map(this.createItem, this).join('');
-        return $(`<div class="data-grid-tuner-menu ${grouping}">${items}</div>`);
+        const reset = `<div class="reset-item">${Jam.t('Reset to default')}</div>`;
+        return $(`<div class="data-grid-tuner-menu">${items}${reset}</div>`);
     }
 
     createItem ({label, name, hidden, grouping, translate}) {
         const show = this.createInput(name, 'Show', 'show', !hidden);
         const checked = this._groupName === name;
         const group = grouping ? this.createInput(name, 'Group', 'group', checked) : '';
+        const up = this.createItemOrder('up', name);
+        const down = this.createItemOrder('down', name);
         label = Jam.escape(Jam.t(label || name, translate));
-        return `<label class="item-label" title="${Jam.escape(name)}">${show}${group}${label}</label>`;
+        label = `<label title="${Jam.escape(name)}">${show}${label}</label>`;
+        return `<div class="item">${up}${label}${group}${down}</div>`;
     }
 
     createInput (name, title, css, checked) {
         title = Jam.escape(Jam.t(title));
         checked = checked ? 'checked' : '';
         return `<input class="${css}" title="${title}" type="checkbox" ${checked} value="${name}">`;
+    }
+
+    createItemOrder (code, name) {
+        const icon = `<i class="fas fa-chevron-${code}"></i>`;
+        name = Jam.escape(name);
+        return `<div class="order-${code}" data-name="${name}">${icon}</div>`;
     }
 
     isMenuActive () {
@@ -85,7 +97,8 @@ Jam.DataGridTuner = class DataGridTuner {
 
     onShowItem (event) {
         const input = event.currentTarget;
-        this.grid.getColumn(input.value).hidden = !input.checked;
+        const column = this.columns.find(({name}) => name === input.value);
+        column.hidden = !input.checked;
         this.grid.drawContent();
         this.save();
         $(input).blur();
@@ -102,6 +115,40 @@ Jam.DataGridTuner = class DataGridTuner {
         this.grid.load();
     }
 
+    onOrderUp (event) {
+        this.moveItem(event.currentTarget.dataset.name, -1);
+    }
+
+    onOrderDown (event) {
+        this.moveItem(event.currentTarget.dataset.name, 1);
+    }
+
+    onReset () {
+        const key = this.getStorageKey();
+        Jam.localStorage.set(key, this.defaultData);
+        this.load();
+        this.$menu.remove();
+        this.createMenu();
+        Jam.localStorage.remove(key);
+        this.grid.drawContent();
+        this.grid.load();
+    }
+
+    moveItem (name, direction) {
+        const source = this.columns.findIndex((column) => column.name === name);
+        const target = source + direction;
+        if (target >= 0 && target < this.columns.length) {
+            const buffer = this.columns[source];
+            this.columns[source] = this.columns[target];
+            this.columns[target] = buffer;
+            const $items = this.$menu.find('.item');
+            const action = direction < 0 ? 'before' : 'after';
+            $items.eq(target)[action]($items.get(source));
+            this.save();
+            this.grid.drawContent();
+        }
+    }
+
     hideMenu () {
         this.$menu.hide();
     }
@@ -111,30 +158,37 @@ Jam.DataGridTuner = class DataGridTuner {
         const toggleWidth = this.$toggle.outerWidth();
         const toggleHeight = this.$toggle.outerHeight();
         const menuWidth = this.$menu.outerWidth();
-        this.$menu.show().offset({
-            left: offset.left + toggleWidth - menuWidth,
-            top: offset.top + toggleHeight + 1
-        });
+        const left = offset.left + toggleWidth - menuWidth;
+        const top = offset.top + toggleHeight + 1;
+        this.$menu.show().offset({left, top});
     }
 
     save () {
         const key = this.getStorageKey();
         const data = this.getStorageData();
         Jam.localStorage.set(key, data);
+        return data;
     }
 
     load () {
         const key = this.getStorageKey();
-        const {items, grouping} = Jam.localStorage.get(key) || {};
+        let {items, grouping} = Jam.localStorage.get(key) || {};
         if (!this.checkStorageItems(items)) {
-            this.save();
-            return this.load();
+            const data = this.save();
+            items = data.items || [];
+            grouping = data.grouping;
         }
-        if (items.length === 1) {
+        const visible = items.find(({hidden}) => !hidden);
+        if (!visible && items[0]) {
             items[0].hidden = false;
         }
-        items.forEach((item, index) => {
-            this.columns[index].hidden = item.hidden;
+        const itemIndexes = {};
+        items.forEach(({name}, index) => itemIndexes[name] = index);
+        this.columns.sort((a, b) => {
+            return itemIndexes[a.name] - itemIndexes[b.name];
+        });
+        items.forEach(({hidden}, index) => {
+            this.columns[index].hidden = hidden;
         });
         if (grouping && this.checkStorageGrouping(grouping)) {
             this.grid.grouping = grouping;
@@ -143,17 +197,19 @@ Jam.DataGridTuner = class DataGridTuner {
 
     checkStorageItems (items) {
         if (Array.isArray(items)) {
-            items = items.map(item => item.name);
+            const names = items.map(item => item.name);
             const columns = this.columns.map(item => item.name);
-            return Jam.ArrayHelper.equals(items, columns);
+            return Jam.ArrayHelper.equalsUnordered(names, columns);
         }
+        return false;
     }
 
     checkStorageGrouping (data) {
-        for (const name of Object.keys(data)) {
-            const column = this.grid.getColumn(name);
-            if (!column || !column.grouping) {
-                return false;
+        for (const {name, grouping} of this.columns) {
+            if (Object.prototype.hasOwnProperty.call(data, name)) {
+                if (!grouping) {
+                    return false;
+                }
             }
         }
         return true;
@@ -164,10 +220,8 @@ Jam.DataGridTuner = class DataGridTuner {
     }
 
     getStorageData () {
+        const grouping = this.grid.grouping;
         const items = this.columns.map(({name, hidden}) => ({name, hidden}));
-        return {
-            grouping: this.grid.grouping,
-            items
-        };
+        return {grouping, items};
     }
 };

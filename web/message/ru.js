@@ -147,6 +147,7 @@ Jam.I18n.defaults = {
     'Remove': 'Убрать',
     'Remove from related objects': 'Убрать из связанных объектов',
     'Reset filter': 'Сбросить фильтр',
+    'Reset to default': 'Сбросить по умолчанию',
     'Restore selected values?': 'Востановить выбранные значения?',
     'Role': 'Роль',
     'Roles': 'Роли',

@@ -256,43 +256,72 @@
   position: absolute;
   max-height: 25rem;
   overflow: auto;
-  padding: .25rem 0;
+  padding: .25rem 0 0;
   background: #fff;
   border: 1px solid #ccc;
   z-index: 2002;
   user-select: none;
 }
-.data-grid-tuner-menu .item-label {
-  display: block;
+.data-grid-tuner-menu .item {
+  display: flex;
+  column-gap: .5rem;
   position: relative;
-  max-width: 25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
   margin: 0;
-  padding: .25rem 1rem .25rem 2rem;
+  padding: .25rem .25rem;
   white-space: nowrap;
   font-weight: normal;
 }
-.data-grid-tuner-menu .item-label:hover {
+.data-grid-tuner-menu .item:hover {
   background: #eee;
 }
-.data-grid-tuner-menu .item-label input.show,
-.data-grid-tuner-menu .item-label input.group {
-  position: absolute;
-  left: .7rem;
-  top: 50%;
-  margin-top: -.41rem;
+.data-grid-tuner-menu .item label {
+  margin-right: auto;
+  max-width: 26rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.data-grid-tuner-menu .item-label input.group {
-  display: none;
-  left: auto;
-  right: .7rem;
+.data-grid-tuner-menu .item label input {
+  margin-right: .5rem;
 }
-.data-grid-tuner-menu.grouping .item-label {
-  padding-right: 2rem;
+.data-grid-tuner-menu .order-up,
+.data-grid-tuner-menu .order-down {
+  padding: 0 .35rem;
+  color: var(--link);
+  cursor: pointer;
+  opacity: .6;
 }
-.data-grid-tuner-menu.grouping input.group {
-  display: block;
+.data-grid-tuner-menu .order-up:hover,
+.data-grid-tuner-menu .order-down:hover {
+  color: var(--link-active);
+  opacity: 1;
+}
+.data-grid-tuner-menu .item:first-child .order-up,
+.data-grid-tuner-menu .item:nth-last-child(2) .order-down {
+  visibility: hidden;
+}
+.data-grid-tuner-menu .order-down {
+  padding: 0 .35rem;
+  color: var(--link);
+  cursor: pointer;
+}
+.data-grid-tuner-menu .reset-item {
+  margin-top: .5rem;
+  padding: .35rem .35rem .5rem;
+  border-top: 1px solid #ddd;
+  cursor: pointer;
+  color: var(--link);
+  text-align: center;
+}
+.data-grid-tuner-menu .reset-item:hover {
+  background: #eee;
+  color: var(--link-active);
+}
+
+@media (max-width: 480px) {
+
+  .data-grid-tuner-menu .item label {
+    max-width: calc(100vw - 8rem);
+  }
 }
 
 /* PAGINATION */
@@ -593,7 +622,8 @@
   .data-grid .list-filter,
   .data-grid .row-top,
   .data-grid .column .order-toggle,
-  .data-grid-pagination {
+  .data-grid-pagination,
+  .data-grid-tuner-menu {
     display: none !important;
   }
   .data-grid-head > tr > .column.sortable {
