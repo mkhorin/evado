@@ -253,6 +253,9 @@ module.exports = class ListFilter extends Base {
         if (op === 'notEqual') {
             return ['!=', attr, value];
         }
+        if (op === 'regex') {
+            return {[attr]: new RegExp(value)};
+        }
         value = EscapeHelper.escapeRegex(value);
         switch (op) {
             case 'contains': {

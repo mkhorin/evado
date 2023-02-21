@@ -217,14 +217,19 @@ Jam.I18n.defaults = {
 
     'begins': 'начинается',
 
-    'ends': 'заканчивается',
-
     'contains': 'содержит',
 
+    'ends': 'заканчивается',
     'equal': 'равно',
     'equal (case-insensitive)': 'равно (без учёта регистра)',
+
+    'greater than': 'больше чем',
+
+    'less than': 'меньше чем',
 
     'nested': 'вложенный',
     'not equal': 'не равно',
     'not equal (case-insensitive)': 'не равно (без учёта регистра)',
+
+    'regular expression': 'регулярное выражение',
 };
