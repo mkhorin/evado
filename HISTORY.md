@@ -16,11 +16,11 @@
     - add case-sensitive filter
     - add string as empty filter value
 * web/jam/attr/CheckboxEnum
-    - add multiple choice of enumeration values    
+    - add multiple choice of enumeration values
 * web/jam/attr/RelationCheckboxList
     - add checkbox list view to relation
 * web/jam/attr/RelationRadioList
-    - add radio list view to relation  
+    - add radio list view to relation
 * web/jam/frame/FrameStack
     - ignore frame close by escape on input elements
 * web/jam/helper/PopoverHelper
@@ -30,7 +30,7 @@
 * web/jam/helper/SelectHelper
     - fix selection rendering
 * web/jam/list/DataFormatter
-    - add customizable separator    
+    - add customizable separator
 * web/jam/list/List
     - add custom command parameters
 * web/jam/listFilter/ListFilterTypeSelector
@@ -43,23 +43,23 @@
 * component/job/DeleteExpiredFiles
     - delete expired S3 file records
 * component/job/DeleteExpiredSessions
-    - add a task to delete expired sessions   
+    - add a task to delete expired sessions 
 * component/misc/DataGrid
     - override request data using params
 * component/helper/ModelHelper
     - rename overflow truncation params
 * component/security/Auth
-    - add login and logout events        
+    - add login and logout events
 * component/security/rbac/Item
     - accept assignment rule as a string
 * model/RawFile
-    - catch file deletion errors from storage  
+    - catch file deletion errors from storage
 * web/jam/listFilter/ListFilterTypeNumber
     - fix numeric type for list filter
 * web/jam/misc/ValueMask
     - add input masks
 * web/style/main.css
-    - wrap overflowed menu labels            
+    - wrap overflowed menu labels
 
 ## 5.3.0
 
@@ -69,19 +69,19 @@
 * web/jam/helper/CookieHelper
     - move cookie management to a separate helper
 * web/jam/helper/SelectHelper
-    - fix select2 focus    
+    - fix select2 focus
 * web/jam/grid/CardRenderer
     - fix grid card view
 * web/jam/grid/TreeGridNode
-    - fix tree list view    
+    - fix tree list view
 * web/jam/grid/Tuner
     - fix grid tuner position
 * web/jam/list/Pagination
     - fix pagination toggles
 * web/jam/listFilter/ListFilterCondition
-    - fix default filter type    
+    - fix default filter type
 * web/jam/listFilter/ListFilterTypeNested
-    - add nested condition to filter        
+    - add nested condition to filter
 * web/jam/misc/Dialog
     - close popup on press mouse down
 

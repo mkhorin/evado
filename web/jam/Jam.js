@@ -68,7 +68,8 @@ class Jam {
             }
             const Class = this.getClass(name);
             if (Class?.prototype instanceof Jam.Element) {
-                instances.push(this[name].createInstance($(element)));
+                const instance = this[name].createInstance($(element));
+                instances.push(instance);
             } else {
                 console.error(`Invalid Jam element: ${name}`);
             }

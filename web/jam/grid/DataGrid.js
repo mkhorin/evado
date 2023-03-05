@@ -263,7 +263,8 @@ Jam.DataGrid = class DataGrid {
 
     drawPage () {
         this.pagination.update();
-        this.$info.html(this.getInfo());
+        const info = this.getInfo();
+        this.$info.html(info);
         this.renderer.drawBody(this.items);
         this.events.trigger('afterDrawPage', this);
     }

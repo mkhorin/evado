@@ -111,7 +111,7 @@ module.exports = class MetaGrid extends Base {
     async setModels () {
         let links = this.request.changes?.links;
         if (Array.isArray(links) && links.length) {
-            const key =  this.query.view.getKey();
+            const key = this.query.view.getKey();
             this._models = await this.query.and(['notId', key, links]).all();
             links = await this.query.where(['id', key, links]).offset(0).all();
             this._models = links.concat(this._models);

@@ -235,7 +235,7 @@ module.exports = class Item extends Base {
         const roleMap = await query.all();
         const result = [];
         for (const name of names) {
-            if (!roleMap.hasOwnProperty(name)) {
+            if (!Object.prototype.hasOwnProperty.call(roleMap, name)) {
                 throw new Error(this.getMetaError(`Role not found: ${name}`));
             }
             result.push(roleMap[name][this.store.key]);

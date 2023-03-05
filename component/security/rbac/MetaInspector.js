@@ -331,7 +331,7 @@ module.exports = class MetaInspector extends Base {
         this._metaObjectRuleCache = {};
         const conditions = ['or'];
         for (const role of this.assignments) {
-            if (!this.rbac.metaObjectFilterMap.hasOwnProperty(role)) {
+            if (!Object.prototype.hasOwnProperty.call(this.rbac.metaObjectFilterMap, role)) {
                 return null; // no filter to role
             }
             const data = this.rbac.metaObjectFilterMap[role];

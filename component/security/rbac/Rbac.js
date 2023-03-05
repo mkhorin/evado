@@ -211,7 +211,8 @@ module.exports = class Rbac extends Base {
         if (!cls) {
             return descendants;
         }
-        for (const {name} of cls.getDescendants()) {
+        const classDescendants = cls.getDescendants();
+        for (const {name} of classDescendants) {
             const child = Object.assign({}, item);
             child.class = name;
             child.key = prefix + name;

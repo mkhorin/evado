@@ -21,7 +21,8 @@ module.exports = class VerifyForm extends Base {
         }
         try {
             const service = this.spawn('security/PasswordAuthService');
-            const user = await service.verify(this.get('key'));
+            const key = this.get('key');
+            const user = await service.verify(key);
             await this.user.log('verify', undefined, user);
             return true;
         } catch (err) {

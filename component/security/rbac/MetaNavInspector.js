@@ -28,7 +28,7 @@ module.exports = class MetaNavInspector extends Base {
         if (!data) {
             return {};
         }
-        const forbiddenSection = data.hasOwnProperty(this.section.id)
+        const forbiddenSection = Object.prototype.hasOwnProperty.call(data, this.section.id)
             ? await this.checkItems(data[this.section.id]) // check deny
             : false;
         if (forbiddenSection) {

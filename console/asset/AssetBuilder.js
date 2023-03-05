@@ -15,7 +15,8 @@ module.exports = class AssetBuilder extends Base {
     }
 
     async execute () {
-        for (const module of this.module.getOriginalHierarchy()) {
+        const modules = this.module.getOriginalHierarchy();
+        for (const module of modules) {
             const params = this.getParams(module);
             if (params.build) {
                 const root = module.getPath();

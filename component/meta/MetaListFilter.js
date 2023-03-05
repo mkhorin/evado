@@ -48,8 +48,9 @@ module.exports = class MetaListFilter extends Base {
 
     parseByType (data) {
         switch (data.type) {
-            case 'class':
+            case 'class': {
                 return this.parseClass(data);
+            }
         }
         return super.parseByType(data);
     }

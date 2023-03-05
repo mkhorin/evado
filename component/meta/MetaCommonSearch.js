@@ -43,7 +43,11 @@ module.exports = class MetaCommonSearch extends Base {
             return {[attr.name]: id};
         }
         const query = attr.embeddedModel.findByTitle(value);
-        return query ? {[attr.name]: await query.ids()} : null;
+        if (!query) {
+            return null;
+        }
+        const ids = await query.ids();
+        return {[attr.name]: ids};
     }
 
     getDateValue (value) {

@@ -51,7 +51,7 @@ module.exports = class HierarchySolver extends Base {
     }
 
     async getDescendantIds (parentIds) {
-        const query =  this.model.find({[this.parentAttr]: parentIds});
+        const query = this.model.find({[this.parentAttr]: parentIds});
         const children = await query.column(this.model.PK);
         if (children.length === 0) {
             return children;

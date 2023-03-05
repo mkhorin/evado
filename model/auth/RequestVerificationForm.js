@@ -37,7 +37,8 @@ module.exports = class RequestVerificationForm extends Base {
     }
 
     async getUser (service) {
-        const user = await service.getUserByEmail(this.get('email'));
+        const email = this.get('email');
+        const user = await service.getUserByEmail(email);
         if (!user) {
             throw 'auth.userNotFound';
         }

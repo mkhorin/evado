@@ -1,6 +1,6 @@
 :root {
-  --link: #3c8ddd;
-  --link-active: #25;
+  --link: #0d6efd;
+  --link-active: #0a58ca;
 
   --light-primary: #0b80dc;
   --dark-primary: #096dbd;
@@ -299,10 +299,10 @@ ul:last-child {
   height: 100%;
   width: 100%;
   z-index: 49;
-  background: rgba(255, 255, 255, .2) !important;
+  background: rgba(255, 255, 255, .3) !important;
 }
 .overlay > i {
-  color: #ccc;
+  color: #bbb;
   font-size: 1.2rem;
   position: absolute;
   top: 50%;
@@ -484,7 +484,7 @@ body.loading {
   background: #344047;
 }
 .nav-tree > .nav-item.active > .nav-link:before,
-.nav-tree > .nav-item.has-active > .nav-link:before  {
+.nav-tree > .nav-item.has-active > .nav-link:before {
   content: '';
   display: block;
   position: absolute;
@@ -1912,7 +1912,7 @@ body.frame-stack-collapsed .frame-stack {
   .main-content {
     margin-left: 0;
   }
-  .main-footer  {
+  .main-footer {
     left: 0;
   }
   .main-header .navbar-brand {

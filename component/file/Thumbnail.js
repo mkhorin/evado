@@ -58,7 +58,9 @@ module.exports = class Thumbnail extends Base {
     }
 
     resolvePath (target) {
-        return path.isAbsolute(target) ? target : this.module.getPath(target);
+        return path.isAbsolute(target)
+            ? target
+            : this.module.getPath(target);
     }
 
     async ensureSize (key, filename, source) {

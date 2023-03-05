@@ -98,7 +98,7 @@ Jam.List = class List extends Jam.Element {
         this.grid.addListener('click', '.searchable .search-toggle', this.onFilterAttr.bind(this));
     }
 
-    onActiveFilter  (event, data) {
+    onActiveFilter (event, data) {
         this.toggleClass('active-advanced-search', !!data);
     }
 

@@ -199,7 +199,7 @@ module.exports = class MetaAttrInspector extends Base {
             }
         }
         if (!data) {
-            data =  model.view !== model.class
+            data = model.view !== model.class
                 ? map[`${id}..${model.view.id}`] || map[`${id}...${model.class.id}`]
                 : map[`${id}...${model.class.id}`];
         }

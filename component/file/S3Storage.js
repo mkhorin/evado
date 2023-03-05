@@ -42,8 +42,8 @@ module.exports = class S3Storage extends Base {
         return false;
     }
 
-    async getFileStat (filename) {
-        const data = await this.client.statObject(this.bucket, filename);
+    async getFileStat (file) {
+        const data = await this.client.statObject(this.bucket, file);
         return {
             hash: data.etag,
             type: data.metaData['content-type'],
@@ -51,20 +51,20 @@ module.exports = class S3Storage extends Base {
         };
     }
 
-    async getHash (filename) {
-        const stat = await this.getFileStat(filename);
+    async getHash (file) {
+        const stat = await this.getFileStat(file);
         return stat.hash;
     }
 
-    getSignedDownloadUrl (filename, name) {
-        const uri = encodeURIComponent(name || filename);
-        return this.client.presignedGetObject(this.bucket, filename, this.downloadExpiryTime, {
+    getSignedDownloadUrl (file, name) {
+        const uri = encodeURIComponent(name || file);
+        return this.client.presignedGetObject(this.bucket, file, this.downloadExpiryTime, {
             'response-content-disposition': `attachment; filename=${uri}`
         });
     }
 
-    getSignedUploadUrl (filename) {
-        return this.client.presignedPutObject(this.bucket, filename, this.uploadExpiryTime);
+    getSignedUploadUrl (file) {
+        return this.client.presignedPutObject(this.bucket, file, this.uploadExpiryTime);
     }
 
     createClient () {
@@ -86,8 +86,8 @@ module.exports = class S3Storage extends Base {
         return `${year}-${month}/${name}`;
     }
 
-    async deleteFile (filename) {
-        await this.client.removeObject(this.bucket, filename);
+    async deleteFile (file) {
+        await this.client.removeObject(this.bucket, file);
     }
 
     async deleteAll () {

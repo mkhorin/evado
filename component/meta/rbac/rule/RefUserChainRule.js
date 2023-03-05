@@ -59,7 +59,8 @@ module.exports = class RefUserChainRule extends Base {
 
     async getObjectFilter () {
         if (this.objectFilter) {
-            return {[this.refAttrs[0]]: await this.resolveRefValues()};
+            const values = await this.resolveRefValues();
+            return {[this.refAttrs[0]]: values};
         }
     }
 };

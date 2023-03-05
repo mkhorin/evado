@@ -36,8 +36,9 @@ module.exports = class ErrorAction extends Base {
         switch (status) {
             case Response.BAD_REQUEST:
             case Response.FORBIDDEN:
-            case Response.NOT_FOUND:
+            case Response.NOT_FOUND: {
                 return this.render(status);
+            }
         }
         return this.render(Response.INTERNAL_SERVER_ERROR);
     }
@@ -46,7 +47,8 @@ module.exports = class ErrorAction extends Base {
         if (!this.user.isGuest()) {
             return false;
         }
-        this.user.setReturnUrl(this.controller.getOriginalUrl());
+        const original = this.controller.getOriginalUrl();
+        this.user.setReturnUrl(original);
         const url = this.user.getLoginUrl();
         if (url) {
             this.controller.redirect(url);

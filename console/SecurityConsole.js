@@ -62,7 +62,8 @@ module.exports = class SecurityConsole extends Base {
 
     async createUsers () {
         this.log('info', 'Creating users...');
-        for (const data of this.getUserItems()) {
+        const items = this.getUserItems();
+        for (const data of items) {
             await this.createUser(data);
         }
         this.log('info', 'Users ready');

@@ -32,11 +32,10 @@ module.exports = class DatabaseStore extends Base {
 
     async loadData () {
         this.data = await super.loadData();
-        return Object.assign(this.data, {
-            metaTargets: await this.findMetaTarget().all(),
-            metaItems: await this.findMetaItem().all(),
-            assignmentRules: await this.findAssignmentRule().all()
-        });
+        const metaTargets = await this.findMetaTarget().all();
+        const metaItems = await this.findMetaItem().all();
+        const assignmentRules = await this.findAssignmentRule().all();
+        return Object.assign(this.data, {metaTargets, metaItems, assignmentRules});
     }
 
     getItem (id) {

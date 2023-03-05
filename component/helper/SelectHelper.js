@@ -13,11 +13,8 @@ module.exports = class SelectHelper {
             return [];
         }
         const items = [];
-        for (const key of Object.keys(map)) {
-            items.push({
-                text: map[key],
-                value: key
-            });
+        for (const [value, text] of Object.entries(map)) {
+            items.push({value, text});
         }
         return items;
     }
