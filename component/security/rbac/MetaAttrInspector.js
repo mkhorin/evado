@@ -123,7 +123,7 @@ module.exports = class MetaAttrInspector extends Base {
     filterMetaAttrData (data, items) {
         const result = [];
         for (let role of this.assignments) {
-            if (!Object.prototype.hasOwnProperty.call(data, role)) {
+            if (!Object.hasOwn(data, role)) {
                 return []; // no attributes filter to role
             }
             role = data[role];

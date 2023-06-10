@@ -105,7 +105,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     }
 
     getOriginalValue (attrName, original) {
-        return Object.prototype.hasOwnProperty.call(this.originalValueMethodMap, attrName)
+        return Object.hasOwn(this.originalValueMethodMap, attrName)
             ? this.originalValueMethodMap[attrName](original, this)
             : original.get(attrName);
     }
@@ -155,7 +155,7 @@ module.exports = class OverriddenValueBehavior extends Base {
     setStatesByData (data) {
         const states = {};
         for (const name of this.attrs) {
-            states[name] = data[name] !== undefined && Object.prototype.hasOwnProperty.call(data, name);
+            states[name] = data[name] !== undefined && Object.hasOwn(data, name);
         }
         this.setStates(states);
     }

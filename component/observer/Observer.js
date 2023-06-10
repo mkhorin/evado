@@ -47,7 +47,7 @@ module.exports = class Observer extends Base {
     }
 
     handle (event, data) {
-        if (!Object.prototype.hasOwnProperty.call(this._parsedMap, event)) {
+        if (!Object.hasOwn(this._parsedMap, event)) {
             this._parsedMap[event] = this.parseEventName(event);
         }
         if (this._parsedMap[event]) {

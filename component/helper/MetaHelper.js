@@ -107,12 +107,12 @@ module.exports = class MetaHelper {
         const result = {};
         for (const row of rows) {
             const value = row[rowKey];
-            const rowValue = Object.prototype.hasOwnProperty.call(row, valueKey)
+            const rowValue = Object.hasOwn(row, valueKey)
                 ? row[valueKey]
                 : row;
             if (Array.isArray(value)) {
                 for (const val of value) {
-                    if (Object.prototype.hasOwnProperty.call(docs, val)) {
+                    if (Object.hasOwn(docs, val)) {
                         if (Array.isArray(result[val])) {
                             result[val].push(rowValue);
                         } else {

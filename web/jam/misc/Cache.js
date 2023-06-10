@@ -8,7 +8,7 @@ Jam.Cache = class Cache {
     }
 
     has (key) {
-        return Object.prototype.hasOwnProperty.call(this._data, key);
+        return Object.hasOwn(this._data, key);
     }
 
     get (key, defaults) {

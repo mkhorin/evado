@@ -49,7 +49,7 @@ module.exports = class Mailer extends Base {
     }
 
     getSender (key) {
-        return Object.prototype.hasOwnProperty.call(this.senderMap, key)
+        return Object.hasOwn(this.senderMap, key)
             ? this.senderMap[key]
             : null;
     }

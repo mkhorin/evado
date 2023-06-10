@@ -435,7 +435,7 @@ module.exports = class Rbac extends Base {
     indexMetaItemsByRole (items) {
         const data = IndexHelper.indexObjectArrays(items, 'roles');
         for (const role of Object.keys(data)) {
-            if (!Object.prototype.hasOwnProperty.call(this.itemMap, role)) {
+            if (!Object.hasOwn(this.itemMap, role)) {
                 delete data[role];
             }
         }

@@ -85,7 +85,7 @@ Jam.Helper = class Helper {
 
     static resolveTemplate (content, data = {}) {
         return content.replace(/{{(\w+)}}/gm, (match, key) => {
-            return Object.prototype.hasOwnProperty.call(data, key) ? data[key] : '';
+            return Object.hasOwn(data, key) ? data[key] : '';
         });
     }
 
@@ -117,8 +117,8 @@ Jam.Helper = class Helper {
 
     static sortChildrenByInteger ($container, key = 'index') {
         const compare = (a, b) => {
-            if (Object.prototype.hasOwnProperty.call(a.dataset, key)) {
-                if (Object.prototype.hasOwnProperty.call(b.dataset, key)) {
+            if (Object.hasOwn(a.dataset, key)) {
+                if (Object.hasOwn(b.dataset, key)) {
                     return parseInt(a.dataset[key]) - parseInt(b.dataset[key]);
                 }
             }

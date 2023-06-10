@@ -28,7 +28,7 @@ module.exports = class MetaNavInspector extends Base {
         if (!data) {
             return {};
         }
-        const forbiddenSection = Object.prototype.hasOwnProperty.call(data, this.section.id)
+        const forbiddenSection = Object.hasOwn(data, this.section.id)
             ? await this.checkItems(data[this.section.id]) // check deny
             : false;
         if (forbiddenSection) {
@@ -56,7 +56,7 @@ module.exports = class MetaNavInspector extends Base {
     async checkParents (parents, data, forbiddenAccess) {
         for (let i = parents.length - 1; i >= 0; --i) { // start from the root
             let id = parents[i].id;
-            if (!Object.prototype.hasOwnProperty.call(forbiddenAccess, id)) {
+            if (!Object.hasOwn(forbiddenAccess, id)) {
                 forbiddenAccess[id] = data[id]
                     ? await this.checkItems(data[id])
                     : false;
@@ -81,7 +81,7 @@ module.exports = class MetaNavInspector extends Base {
     filterMeta (data) {
         let result = null;
         for (const role of this.assignments) {
-            if (!Object.prototype.hasOwnProperty.call(data, role)) {
+            if (!Object.hasOwn(data, role)) {
                 return null; // no role data
             }
             result = result

@@ -206,10 +206,8 @@ Jam.DataGridTuner = class DataGridTuner {
 
     checkStorageGrouping (data) {
         for (const {name, grouping} of this.columns) {
-            if (Object.prototype.hasOwnProperty.call(data, name)) {
-                if (!grouping) {
-                    return false;
-                }
+            if (Object.hasOwn(data, name) && !grouping) {
+                return false;
             }
         }
         return true;

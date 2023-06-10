@@ -171,7 +171,7 @@ Jam.ArrayHelper = class ArrayHelper {
     static uniqueByKey (key, items) {
         const data = {}, result = [];
         for (const item of items) {
-            if (!Object.prototype.hasOwnProperty.call(data, item[key])) {
+            if (!Object.hasOwn(data, item[key])) {
                 data[item[key]] = item;
                 result.push(item);
             }

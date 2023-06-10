@@ -4,7 +4,7 @@
 Jam.ObjectHelper = class ObjectHelper {
 
     static has (key, data) {
-        return data && Object.prototype.hasOwnProperty.call(data, key);
+        return data && Object.hasOwn(data, key);
     }
 
     static push (value, key, data) {
@@ -46,7 +46,7 @@ Jam.ObjectHelper = class ObjectHelper {
         if (!data || typeof key !== 'string') {
             return defaults;
         }
-        if (Object.prototype.hasOwnProperty.call(data, key)) {
+        if (Object.hasOwn(data, key)) {
             return data[key];
         }
         const pos = key.indexOf('.');

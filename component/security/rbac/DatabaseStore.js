@@ -108,7 +108,7 @@ module.exports = class DatabaseStore extends Base {
         const roles = [];
         if (Array.isArray(item.roles)) {
             for (const key of item.roles) {
-                Object.prototype.hasOwnProperty.call(itemMap, key)
+                Object.hasOwn(itemMap, key)
                     ? roles.push(itemMap[key].name)
                     : this.log('error', `Role not found: ${key}`);
             }

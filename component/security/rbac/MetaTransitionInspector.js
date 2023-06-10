@@ -48,7 +48,7 @@ module.exports = class MetaTransitionInspector extends Base {
         this._objectKey = `.${this.target.getId()}.${this.target.class.id}`;
         this._classKey = `..${this.target.class.id}`;
         for (const role of this.assignments) {
-            if (Object.prototype.hasOwnProperty.call(this.rbac.metaTransitionMap, role)) {
+            if (Object.hasOwn(this.rbac.metaTransitionMap, role)) {
                 await this.resolveTransitionsByRole(this.rbac.metaTransitionMap[role]);
             }
         }
@@ -59,7 +59,7 @@ module.exports = class MetaTransitionInspector extends Base {
         const result = {};
         if (data[Rbac.ALLOW]) {
             for (const transition of this._transitions) {
-                if (!Object.prototype.hasOwnProperty.call(this._result, transition.name)) {
+                if (!Object.hasOwn(this._result, transition.name)) {
                     if (await this.checkTransition(transition, data[Rbac.ALLOW])) {
                         result[transition.name] = transition;
                     }

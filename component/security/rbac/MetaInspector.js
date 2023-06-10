@@ -45,7 +45,7 @@ module.exports = class MetaInspector extends Base {
         this.access = {};
         if (this.actions) {
             for (const role of this.assignments) {
-                if (Object.prototype.hasOwnProperty.call(this.rbac.metaMap, role)) {
+                if (Object.hasOwn(this.rbac.metaMap, role)) {
                     await this.resolveRoleAccess(this.rbac.metaMap[role]);
                 }
             }
@@ -331,7 +331,7 @@ module.exports = class MetaInspector extends Base {
         this._metaObjectRuleCache = {};
         const conditions = ['or'];
         for (const role of this.assignments) {
-            if (!Object.prototype.hasOwnProperty.call(this.rbac.metaObjectFilterMap, role)) {
+            if (!Object.hasOwn(this.rbac.metaObjectFilterMap, role)) {
                 return null; // no filter to role
             }
             const data = this.rbac.metaObjectFilterMap[role];
@@ -393,7 +393,7 @@ module.exports = class MetaInspector extends Base {
         const result = ['and'];
         const cache = this._metaObjectRuleCache;
         for (const config of rules) {
-            const condition = Object.prototype.hasOwnProperty.call(cache, config.name)
+            const condition = Object.hasOwn(cache, config.name)
                 ? cache[config.name]
                 : await this.getRuleObjectFilter(config);
             if (condition) {

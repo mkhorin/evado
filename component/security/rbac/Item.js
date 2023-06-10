@@ -22,7 +22,7 @@ module.exports = class Item extends Base {
                 this.assignmentRules = [this.assignmentRules];
             }
             for (const key of this.assignmentRules) {
-                if (Object.prototype.hasOwnProperty.call(data, key)) {
+                if (Object.hasOwn(data, key)) {
                     rules.push(data[key]);
                 }
             }
@@ -235,7 +235,7 @@ module.exports = class Item extends Base {
         const roleMap = await query.all();
         const result = [];
         for (const name of names) {
-            if (!Object.prototype.hasOwnProperty.call(roleMap, name)) {
+            if (!Object.hasOwn(roleMap, name)) {
                 throw new Error(this.getMetaError(`Role not found: ${name}`));
             }
             result.push(roleMap[name][this.store.key]);

@@ -39,6 +39,7 @@
   --form-set-space: 2.7rem;
   --text-monospace: Consolas,"Liberation Mono","Courier New",monospace;
   --text-placeholder: #a8a8a8;
+  --bs-border-color: #ced4da;
 
   font-size: 14px;
   height: auto;

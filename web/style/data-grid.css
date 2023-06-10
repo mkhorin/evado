@@ -1,6 +1,9 @@
 .data-grid {
   --border-color: #ddd;
   --content-color: #111;
+  --odd-row-color: rgba(0, 0, 0, .03);
+  --ordered-column-color: rgba(0, 0, 0, .02);
+  --odd-ordered-column-color: rgba(0, 0, 0, .06);
   --selected-row-color: #fffae8;
   position: relative;
   margin-top: .1rem;
@@ -116,22 +119,20 @@
   margin: 0;
   display: inline-block;
 }
-.data-grid-body:not(.grouped) > tr:nth-of-type(odd),
-.data-grid-body.grouped > tr.odd,
+.data-grid-body:not(.grouped) > tr:nth-of-type(odd) > td,
+.data-grid-body.grouped > tr.odd > td,
 .data-grid-body:not(.grouped) .data-grid-card:nth-of-type(odd),
 .data-grid-body.grouped .data-grid-card.odd {
-  background-color: rgba(0, 0, 0, .04);
+  background-color: var(--odd-row-color);
 }
 .data-grid-body > tr > .ordered {
-  background: rgba(0, 0, 0, .01);
+  background: var(--ordered-column-color);
 }
 .data-grid-body:not(.grouped) > tr:nth-of-type(odd) > .ordered,
 .data-grid-body.grouped > tr.odd > .ordered {
-  background: rgba(0, 0, 0, .02);
+  background: var(--odd-ordered-column-color);
 }
-.data-grid .data-grid-content .data-grid-body .data-item.selected {
-  background-color: var(--selected-row-color);
-}
+.data-grid .data-grid-content .data-grid-body .data-item.selected > td,
 .data-grid .data-grid-body > tr.selected > .ordered {
   background-color: var(--selected-row-color);
 }

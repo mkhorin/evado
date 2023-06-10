@@ -62,7 +62,7 @@ module.exports = class CommonSearch extends Base {
     }
 
     getConditionMethod (type) {
-        return Object.prototype.hasOwnProperty.call(this.CONDITION_METHODS, type)
+        return Object.hasOwn(this.CONDITION_METHODS, type)
             ? this[this.CONDITION_METHODS[type]]
             : null;
     }
