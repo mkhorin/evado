@@ -1,3 +1,13 @@
+## 5.7.0
+ 
+* component/misc/ListFilter
+    - add filter by regular expression 
+* web/jam/helper/ArrayHelper
+    - add comparison of unordered arrays
+* web/jam/grid/Tuner
+    - customize order of grid columns    
+* upgrade dependencies
+
 ## 5.6.0
  
 * component/misc/CommonSearch

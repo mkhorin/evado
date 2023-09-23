@@ -74,19 +74,26 @@ module.exports = class NotificationMessage extends Base {
         }
         const methods = notification.get('methods');
         for (const method of methods) {
-            switch (method) {
-                case 'popup': {
-                    await this.sendAsPopup(recipients);
-                    break;
-                }
-                case 'email': {
-                    await this.sendAsEmail(recipients);
-                    break;
-                }
-            }
+            await this.sendByMethod(method, recipients);
         }
         await this.directUpdate({sentAt: new Date});
         return true;
+    }
+
+    async sendByMethod (method, recipients) {
+        switch (method) {
+            case 'popup': {
+                await this.sendAsPopup(recipients);
+                break;
+            }
+            case 'email': {
+                await this.sendAsEmail(recipients);
+                break;
+            }
+            default: {
+                this.log('error', `Sending method is not defined: ${method}`);
+            }
+        }
     }
 
     async resolveRecipients () {
@@ -110,8 +117,12 @@ module.exports = class NotificationMessage extends Base {
         const recipient = await query.column('email');
         const subject = this.get('subject');
         const text = this.get('text');
-        const mailer = this.module.getMailer();
+        const mailer = this.getSendingMailer();
         return mailer.send({recipient, subject, text});
+    }
+
+    getSendingMailer () {
+        return this.module.getMailer();
     }
 
     async truncate () {

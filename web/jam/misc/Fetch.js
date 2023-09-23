@@ -50,7 +50,8 @@ Jam.Fetch = class Fetch {
         return {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify(data),
             signal: this.controller.signal,
