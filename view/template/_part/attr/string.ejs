@@ -4,6 +4,9 @@ const p = {};
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
+<%
+const autocomplete = p.autocomplete ? `autocomplete="${p.autocomplete}"` : '';
+%>
 
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
    data-handler="<%= p.handler %>"
@@ -14,8 +17,7 @@ const params = {p};
   <%- include(_view.get('_part/attr/_label'), params) %>
 
   <div class="<%- p.valueCss %>">
-    <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
-         autocomplete="<%- p.autocomplete %>"
+    <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>" <%- autocomplete %>
          value="<%= p.value %>" <%- p.required %> class="form-control form-value">
     <div class="error-block"></div>
     <div class="hint-block" data-t="<%- p.translate %>"><%- p.hint %></div>

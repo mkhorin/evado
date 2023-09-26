@@ -9,6 +9,9 @@ const p = {
 const params = {p};
 %>
 <%- include(_view.get('_part/attr/_params'), params) %>
+<%
+const autocomplete = p.autocomplete ? `autocomplete="${p.autocomplete}"` : '';
+%>
 
 <div class="form-attr form-group row <%- p.required %> <%- p.css %>"
    data-handler="<%= p.handler %>"
@@ -23,8 +26,7 @@ const params = {p};
       <% if (p.before) { %>
       <span class="input-group-text <%- p.beforeCss %>"><%- p.before %></span>
       <% } %>
-      <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>"
-           autocomplete="<%- p.autocomplete %>"
+      <input name="<%- p.name %>" type="text" placeholder="<%- p.placeholder %>" <%- autocomplete %>
            value="<%= p.value %>" <%- p.required %> class="form-control form-value">
       <% if (p.after) { %>
       <span class="input-group-text <%- p.afterCss %>"><%- p.after %></span>
