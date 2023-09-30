@@ -27,7 +27,7 @@ module.exports = class User extends Base {
             ],
             RULES: [
                 [['name', 'email'], 'required'],
-                ['name', 'regex', {pattern: /^[a-z0-9а-я\s-]+$/i}],
+                ['name', 'validator/UserNameValidator'],
                 ['email', 'email'],
                 [['blocked', 'verified', 'expiredPassword'], 'checkbox'],
                 ['unlockAt', 'date'],

@@ -10,7 +10,7 @@ module.exports = class BaseModule extends Base {
     static getConstants () {
         return {
             INHERITED_UNDEFINED_CONFIGURATION_KEYS:
-                super.INHERITED_UNDEFINED_CONFIGURATION_KEYS.concat(['sideMenu'])
+                [...super.INHERITED_UNDEFINED_CONFIGURATION_KEYS, 'sideMenu']
         };
     }
 
