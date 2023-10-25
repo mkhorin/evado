@@ -14,6 +14,9 @@ module.exports = {
     'enablePasswordReset': false,
     'enableSignUp': false,
     'enableSignUpVerification': true,
+    'autoLoginAfterRegistration': false,
+    'afterSignUpUrl': '',
+    'afterSignOutUrl': '',
 
     'languageCookie': 'language',
     'languageToggle': false,

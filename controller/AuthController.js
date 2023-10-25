@@ -56,7 +56,7 @@ module.exports = class AuthController extends Base {
             return this.goBack(returnUrl);
         }
         this.setFlash('error', 'auth.userNotVerified');
-        return this.redirect('request-verification');
+        this.redirect('request-verification');
     }
 
     async actionSignOut () {
@@ -77,6 +77,11 @@ module.exports = class AuthController extends Base {
             return this.render('signUp', {model});
         }
         const verified = user.isVerified();
+        const {afterSignUpUrl, autoLoginAfterRegistration} = this.module.params;
+        if (autoLoginAfterRegistration) {
+            await this.user.login({identity: user});
+            return this.redirect(afterSignUpUrl || this.module.getHomeUrl());
+        }
         const type = verified ? 'success' : 'info';
         const email = model.get('email');
         const messageCode = verified
