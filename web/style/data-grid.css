@@ -104,6 +104,7 @@
 }
 .data-grid-body > tr > td {
   padding: 0;
+  background-clip: padding-box;
 }
 .data-grid-body > tr > td > .value {
   overflow: auto;
