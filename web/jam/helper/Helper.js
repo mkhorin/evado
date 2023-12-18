@@ -19,12 +19,8 @@ Jam.Helper = class Helper {
         return $container.find(`[for="${id}"]`).text();
     }
 
-    static copyToClipboard (value, format = 'text/plain') {
-        $(document).one('copy', event => {
-            event.preventDefault();
-            event.originalEvent.clipboardData.setData(format, value);
-        });
-        document.execCommand('copy');
+    static copyToClipboard (value) {
+        return window.navigator.clipboard?.writeText(value);
     }
 
     static createSerialImageLoading ($container = $(document.body)) {
