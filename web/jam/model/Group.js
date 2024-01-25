@@ -53,8 +53,8 @@ Jam.ModelGroup = class ModelGroup {
 
     load () {
         this.loading = true;
-        const model = this.grouping.model;
-        const id = model.id;
+        const {model} = this.grouping;
+        const {id} = model;
         const group = this.id;
         const url = Jam.UrlHelper.addParams(model.frame.url, {id, group});
         return $.get(url).done(this.onLoad.bind(this));

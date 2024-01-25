@@ -28,18 +28,24 @@ module.exports = class SignUpForm extends Base {
             return false;
         }
         try {
-            this.set('verified', !this.module.params.enableSignUpVerification);
+            const {enableSignUpVerification} = this.module.params;
+            this.set('verified', !enableSignUpVerification);
             const service = this.spawn('security/PasswordAuthService');
             const user = await service.register(this.getAttrMap());
             if (!user.isVerified()) {
-                const verification = await service.createVerification(user);
-                await this.module.getMailer().sendVerification(verification, user);
+                await this.sendVerification(user, service);
             }
             await this.user.log('register', undefined, user);
             return user;
         } catch (err) {
             this.addError('register', err);
         }
+    }
+
+    async sendVerification (user, service) {
+        const verification = await service.createVerification(user);
+        const mailer = this.module.getMailer();
+        await mailer.sendVerification(verification, user);
     }
 };
 module.exports.init(module);

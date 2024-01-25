@@ -35,7 +35,7 @@ module.exports = class UserLog extends Base {
     }
 
     async truncate (user, event) {
-        const params = this.module.params;
+        const {params} = this.module;
         return ModelHelper.truncateOverflow({
             query: this.find({user, event}),
             threshold: params.userLogTruncationOverflow || this.TRUNCATION_THRESHOLD,

@@ -18,7 +18,7 @@ Jam.ListFilterNested = class ListFilterNested {
     }
 
     resolve () {
-        const columns = this.params.columns;
+        const {columns} = this.params;
         if (!Array.isArray(columns) || !columns.length) {
             return this.condition.removeOperation('nested');
         }

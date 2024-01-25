@@ -14,7 +14,7 @@ module.exports = class MetaActionView extends Base {
     }
 
     getViewModelClass () {
-        const view = this.controller.meta.view;
+        const {view} = this.controller.meta;
         if (!view) {
             return super.getViewModelClass(...arguments);
         }
@@ -28,7 +28,7 @@ module.exports = class MetaActionView extends Base {
     }
 
     get (name) {
-        const view = this.controller.meta.view;
+        const {view} = this.controller.meta;
         if (!view) {
             return super.get(name);
         }

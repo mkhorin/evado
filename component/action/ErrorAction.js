@@ -16,13 +16,13 @@ module.exports = class ErrorAction extends Base {
     }
 
     execute () {
-        const controller = this.controller;
-        const err = controller.err;
+        const {controller} = this;
+        const {err} = controller;
         if (!err) {
             return this.render(Response.NOT_FOUND);
         }
         controller.log('error', err);
-        const status = err.status;
+        const {status} = err;
         controller.setHttpStatus(status);
         const message = err.isServerError()
             ? this.serverErrorMessage
@@ -50,10 +50,11 @@ module.exports = class ErrorAction extends Base {
         const original = this.controller.getOriginalUrl();
         this.user.setReturnUrl(original);
         const url = this.user.getLoginUrl();
-        if (url) {
-            this.controller.redirect(url);
-            return true;
+        if (!url) {
+            return false;
         }
+        this.controller.redirect(url);
+        return true;
     }
 };
 

@@ -28,7 +28,7 @@ module.exports = class MetadataClassInstantiation extends Base {
     }
 
     createModel (params) {
-        const module = this.module;
+        const {module} = this;
         const cls = module.getBaseMeta().getClass(this.className);
         return cls.createModel({module, ...params});
     }

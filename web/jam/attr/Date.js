@@ -57,8 +57,8 @@ Jam.DateModelAttr = class DateModelAttr extends Jam.ModelAttr {
     }
 
     onChangeDate (event) {
-        const date = event.date;
-        const format = this.picker.options().format;
+        const {date} = event;
+        const {format} = this.picker.options();
         // if date format then remove time
         const value = date ? moment(moment(date).format(format), format) : '';
         this.$value.val(value ? Jam.DateHelper.stringify(value, this.utc) : '');

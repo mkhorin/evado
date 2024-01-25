@@ -17,7 +17,7 @@ const p = {
   <div class="tab-content">
     <% for (const item of items) {
       const loaded = !item.loadable || (p.loadedGroups ? p.loadedGroups.includes(item.id) : item.active);
-      const content = item.content;
+      const {content} = item;
     %>
     <div class="tab-pane model-group <%- item.active ? 'active' : '' %>" role="tabpanel"
        data-id="<%- item.id %>"

@@ -17,7 +17,7 @@ Jam.TimeModelAttr = class TimeModelAttr extends Jam.DateModelAttr {
     }
 
     onChangeDate (event) {
-        const date = event.date;
+        const {date} = event;
         const format = 'HH:mm:ss';
         const value = date
             ? moment.duration(moment(date).format(format), format).asSeconds()

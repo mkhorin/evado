@@ -112,8 +112,7 @@ Jam.UploaderFile = class UploaderFile {
     }
 
     validateFile () {
-        const options = this.options;
-        const file = this.file;
+        const {file, options} = this;
         if (this.isMatchFile()) {
             return this.createMessage(options.alreadyExists);
         }
@@ -176,7 +175,7 @@ Jam.UploaderFile = class UploaderFile {
     }
 
     validateImage () {
-        const options = this.options;
+        const {options} = this;
         if (options.maxHeight && options.maxHeight < this.image.height) {
             return this.createMessage(options.overHeight, {
                 limit: options.maxHeight

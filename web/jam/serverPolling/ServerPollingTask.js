@@ -58,12 +58,12 @@ Jam.ServerPollingTask = class ServerPollingTask {
     }
 
     getUrl () {
-        const url = this.data.url;
+        const {url} = this.data;
         return typeof url === 'function' ? url() : url;
     }
 
     getParams () {
-        const params = this.data.params;
+        const {params} = this.data;
         return typeof params === 'function' ? params() : params;
     }
 };

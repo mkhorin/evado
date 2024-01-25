@@ -47,7 +47,7 @@ module.exports = class MetaSelect2 extends Base {
     }
 
     resolveKeyCondition (value, conditions) {
-        const key = this.query.view.class.key;
+        const {key} = this.query.view.class;
         value = key.normalize(value);
         if (value) {
             conditions.push({[key.name]: value});

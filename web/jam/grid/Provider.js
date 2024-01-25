@@ -18,7 +18,7 @@ Jam.DataGridProvider = class DataGridProvider {
     }
 
     load () {
-        let data = this.params.data;
+        let {data} = this.params;
         const maxSize = data.length;
         data = this.useCommonSearch(data);
         this.sortData(data, this.getOrder());

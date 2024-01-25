@@ -123,7 +123,7 @@ module.exports = class RawFile extends Base {
     }
 
     createFileValidators (validators) {
-        const rule = this.getStorage().rule;
+        const {rule} = this.getStorage();
         this.addValidatorByRule(rule, validators);
         this.addValidatorByRule(this.customRule, validators);
     }

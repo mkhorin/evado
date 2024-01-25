@@ -182,7 +182,7 @@ module.exports = class MetaSecurity extends Base {
 
     async resolveRelations (view, params) {
         const data = {};
-        const assignments = this.user.assignments;
+        const {assignments} = this.user;
         params = this.mergeParams(params);
         this.relationAccessMap = {};
         for (const attr of view.relationAttrs) {
@@ -190,7 +190,8 @@ module.exports = class MetaSecurity extends Base {
             data.targetType = data.target.isClass()
                 ? Rbac.TARGET_CLASS
                 : Rbac.TARGET_VIEW;
-            data.actions = this.controller.extraMeta.getAttrData(attr).actions;
+            const attrData = this.controller.extraMeta.getAttrData(attr);
+            data.actions = attrData.actions;
             this.relationAccessMap[attr.name] = await this.rbac.resolveAccess(assignments, data, params);
         }
     }

@@ -132,15 +132,15 @@ Jam.FileModelAttr = class FileModelAttr extends Jam.ModelAttr {
 
     onSaveFile (event, {$item, file}) {
         $item.removeClass('pending').addClass('saved');
-        let name = file.name;
-        let download = this.uploader.options.download;
+        let {name} = file;
+        let {download} = this.uploader.options;
         if (download) {
             name = `<a href="${download}${file.id}" target="_blank">${file.name}</a>`;
         }
         $item.find(this.filenameSelector).html(`${name} (${file.size})`);
         $item.find(this.fileMessageSelector).html(file.message);
         if (file.isImage) {
-            const thumbnail = this.uploader.options.thumbnail;
+            const {thumbnail} = this.uploader.options;
             if (thumbnail) {
                 this.setThumbnail($item, `${thumbnail}${file.id}`);
             }

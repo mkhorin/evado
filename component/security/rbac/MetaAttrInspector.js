@@ -79,7 +79,7 @@ module.exports = class MetaAttrInspector extends Base {
     }
 
     getTargetAttrItems (map) {
-        const target = this.target;
+        const {target} = this;
         switch (this.targetType) {
             case Rbac.TARGET_CLASS: {
                 return map[`...${target.id}`];

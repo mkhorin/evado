@@ -8,7 +8,7 @@ const Base = require('../misc/CommonSearch');
 module.exports = class MetaCommonSearch extends Base {
 
     async resolve (query, value) {
-        const view = query.view;
+        const {view} = query;
         const conditions = [];
         for (const attr of view.commonSearchAttrs) {
             const condition = await this.getAttrCondition(attr, value);

@@ -123,7 +123,7 @@ Jam.DataGrid = class DataGrid {
     }
 
     prepareColumns () {
-        const columns = this.params.columns;
+        const {columns} = this.params;
         const oneColumn = columns.length === 1;
         for (const column of columns) {
             column.hidden = oneColumn ? false : column.hidden;
@@ -270,7 +270,7 @@ Jam.DataGrid = class DataGrid {
     }
 
     getInfo () {
-        let info = this.locale.info;
+        let {info} = this.locale;
         if (this.pagination.page > 0 || this.items.length) {
             const interval = this.pagination.getDataInterval(this.itemTotalSize);
             info = info.replace('#{START}', interval[0] + 1);

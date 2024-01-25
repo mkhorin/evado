@@ -98,13 +98,13 @@ module.exports = class SortRelatedAction extends Base {
     }
 
     filterOverriddenModels ({models, orderAttr}) {
-        const overridden = this.sortOrderBehavior.overriddenBehavior;
-        if (!overridden) {
+        const {overriddenBehavior} = this.sortOrderBehavior;
+        if (!overriddenBehavior) {
             return models;
         }
         const result = [];
         for (const model of models) {
-            const behavior = model.getBehavior(overridden);
+            const behavior = model.getBehavior(overriddenBehavior);
             if (!behavior.hasOriginal() || !behavior.attrs.includes(orderAttr)) {
                 result.push(model);
             } else {

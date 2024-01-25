@@ -21,8 +21,8 @@ Jam.ListFilterTypeDate = class ListFilterTypeDate extends Jam.ListFilterType {
     }
 
     onChangeDate (event) {
-        let date = event.date;
-        let format = this.picker.options().format;
+        let {date} = event;
+        let {format} = this.picker.options();
         // if date format then remove time
         date = date && moment(moment(date).format(format), format);
         this.setValue(date ? Jam.DateHelper.stringify(date, this.params.utc) : '');

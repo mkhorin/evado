@@ -31,7 +31,7 @@ module.exports = class UserFilterConsole extends Base {
 
     async resolveItems (names) {
         const result = [];
-        const store = this.module.getRbac().store;
+        const {store} = this.module.getRbac();
         for (const name of StringHelper.split(names)) {
             const query = store.findItem().and({name});
             const item = await query.id();

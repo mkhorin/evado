@@ -169,7 +169,7 @@ Jam.RelationSelectModelAttr = class RelationSelectModelAttr extends Jam.ModelAtt
 
     onCommand (event) {
         if (this.beforeCommand(event)) {
-            const command = event.currentTarget.dataset.command;
+            const {command} = event.currentTarget.dataset;
             this.getCommandMethod(command).call(this, event);
         }
     }

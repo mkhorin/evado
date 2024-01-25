@@ -60,7 +60,7 @@ Jam.RelationCheckboxListModelAttr = class RelationCheckboxListModelAttr extends 
     }
 
     onChangeSelection ({target}) {
-        const value = target.value;
+        const {value} = target;
         target.checked
             ? this.changes.linkValue(value)
             : this.changes.unlinkValue(value);

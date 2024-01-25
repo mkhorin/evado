@@ -8,8 +8,8 @@ const Base = require('areto/security/WebUser');
 module.exports = class WebUser extends Base {
 
     getAssignmentTitles () {
-        const data = this.module.getRbac().itemTitleMap;
-        return this.assignments.map(name => data[name]);
+        const {itemTitleMap} = this.module.getRbac();
+        return this.assignments.map(name => itemTitleMap[name]);
     }
 
     getEmail () {

@@ -72,7 +72,7 @@ module.exports = class MetaGrid extends Base {
     }
 
     setOrder () {
-        const order = this.request.order;
+        const {order} = this.request;
         if (!order) {
             return false;
         }
@@ -129,7 +129,8 @@ module.exports = class MetaGrid extends Base {
             return this._models;
         }
         this._forbiddenAttrs = this.security.getForbiddenReadAttrs();
-        this._columnMap = this.controller.extraMeta.getData(this.meta.view).columnMap;
+        const viewData = this.controller.extraMeta.getData(this.meta.view);
+        this._columnMap = viewData.columnMap;
         this._attrTemplateMap = this.getAttrTemplateMap();
         return PromiseHelper.map(this._models, this.renderModel, this);
     }
@@ -147,7 +148,7 @@ module.exports = class MetaGrid extends Base {
             _title: model.getTitle()
         };
         await PromiseHelper.setImmediate();
-        const view = this.meta.view;
+        const {view} = this.meta;
         for (const attr of view.attrs) {
             await this.renderCell(attr, model, result);
         }
@@ -159,7 +160,7 @@ module.exports = class MetaGrid extends Base {
     }
 
     async renderCell (attr, model, result) {
-        const name = attr.name;
+        const {name} = attr;
         if (this.isForbiddenAttr(name, model)) {
             this.setForbiddenAttr(name, result);
         } else if (this._attrTemplateMap[name]) {

@@ -231,8 +231,8 @@ Jam.StackFrame = class StackFrame {
 
     scrollTo ($target) {
         const $scroll = this.findScrollBody();
-        const targetTop = $target.first().offset().top;
-        const top = targetTop - $scroll.offset().top;
+        const {top: targetTop} = $target.first().offset();
+        const {top} = targetTop - $scroll.offset();
         const scrollTop = $scroll.scrollTop() + top;
         $scroll.animate({scrollTop});
     }

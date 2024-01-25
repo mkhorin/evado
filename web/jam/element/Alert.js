@@ -15,7 +15,7 @@ Jam.Alert = class Alert {
 
     init () {
         this.$element = $(this.createElement());
-        const container = this.params.container;
+        const {container} = this.params;
         if (typeof container === 'function') {
             container(this.$element);
         } else if (container) {

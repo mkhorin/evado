@@ -413,7 +413,7 @@ module.exports = class Rbac extends Base {
 
     createAssignmentRuleMap (items) {
         const data = {};
-        const module = this.module;
+        const {module} = this;
         for (const {_id, name, config} of items) {
             try {
                 data[_id] = ClassHelper.resolveSpawn(config, module, {module, name});

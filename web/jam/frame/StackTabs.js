@@ -74,7 +74,7 @@ Jam.StackTabs = class StackTabs {
     }
 
     resolveMaxWidth (frame, $children) {
-        const left = frame.$container.offset().left;
+        const {left} = frame.$container.offset();
         this.$tabs.offset({left});
 
         const frameWidth = frame.$container.width();

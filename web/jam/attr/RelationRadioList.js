@@ -62,7 +62,7 @@ Jam.RelationRadioListModelAttr = class RelationRadioListModelAttr extends Jam.Ra
     onChangeSelection ({target}) {
         this.$radioItems.not(target).prop('checked', false);
         this.changes.clearLinks();
-        const value = target.value;
+        const {value} = target;
         if (value) {
             this.changes.linkValue(value);
         }

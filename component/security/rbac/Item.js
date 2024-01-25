@@ -132,8 +132,8 @@ module.exports = class Item extends Base {
     // MATCHES
 
     skipExistingTargets () {
-        const items = this.store.rbac.metaItems;
-        for (const item of items) {
+        const {metaItems} = this.store.rbac;
+        for (const item of metaItems) {
             if (this.checkItemMatch(item)) {
                 this.data.targets = this.filterTargets(item);
             }

@@ -218,7 +218,7 @@ Jam.DataGridTuner = class DataGridTuner {
     }
 
     getStorageData () {
-        const grouping = this.grid.grouping;
+        const {grouping} = this.grid;
         const items = this.columns.map(({name, hidden}) => ({name, hidden}));
         return {grouping, items};
     }

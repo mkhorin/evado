@@ -20,9 +20,9 @@ module.exports = class AssetInstaller extends Base {
     async execute () {
         const modules = this.module.getOriginalHierarchy();
         for (const module of modules) {
-            const dir = this.getParams(module).vendorDir;
-            if (typeof dir === 'string') {
-                const source = module.getPath(dir);
+            const {vendorDir} = this.getParams(module);
+            if (typeof vendorDir === 'string') {
+                const source = module.getPath(vendorDir);
                 await this.installVendors(source);
             }
         }

@@ -11,21 +11,21 @@ module.exports = class ExpiredPasswordFilter extends Base {
         if (!this.module.params.enablePasswordChange) {
             return;
         }
-        const controller = action.controller;
+        const {controller} = action;
         if (controller.isAjax()
             || controller.isPostRequest()
             || controller.user.isGuest()) {
             return;
         }
-        const url = this.module.params.changePasswordUrl;
-        if (!url) {
+        const {changePasswordUrl} = this.module.params;
+        if (!changePasswordUrl) {
             return;
         }
         const identity = controller.user.getIdentity();
         const service = this.spawn('security/PasswordAuthService');
         if (await service.isPasswordExpired(identity)) {
             controller.setFlash('info', 'auth.expiredPassword');
-            return controller.redirect(url);
+            return controller.redirect(changePasswordUrl);
         }
     }
 };

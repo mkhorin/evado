@@ -91,7 +91,7 @@ module.exports = class DataGrid extends Base {
     }
 
     setOrder () {
-        const order = this.request.order;
+        const {order} = this.request;
         if (!order) {
             return false;
         }
@@ -145,7 +145,7 @@ module.exports = class DataGrid extends Base {
     }
 
     prepareViewModels () {
-        const params = this.params;
+        const {params} = this;
         const view = this.controller.createViewModel(params.viewModel, {params});
         return view?.prepareModels(this._models);
     }

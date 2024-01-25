@@ -131,7 +131,7 @@ module.exports = class ListFilter extends Base {
         if (!value) {
             return this.parseEmptyRelation(...arguments);
         }
-        const model = this.query.model;
+        const {model} = this.query;
         const query = this.getRelation(attr, model).model.findById(value);
         const relative = await query.one();
         if (!relative) {

@@ -72,7 +72,7 @@ module.exports = class ModelHelper {
         if (counter <= threshold) {
             return;
         }
-        const model = query.model;
+        const {model} = query;
         query.order({[model.PK]: -1}).offset(offset);
         if (inBulk) {
             const ids = await query.ids();

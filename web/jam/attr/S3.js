@@ -5,7 +5,7 @@ Jam.S3ModelAttr = class S3ModelAttr extends Jam.FileModelAttr {
 
     init () {
         super.init();
-        const options = this.uploader.options;
+        const {options} = this.uploader;
         this.defaultUploadUrl = options.upload;
         options.upload = this.getUploadUrl.bind(this);
         options.prepareUploadData = this.prepareUploadData.bind(this);
