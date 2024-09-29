@@ -1,3 +1,15 @@
+## 5.8.0
+ 
+* controller/AuthController
+    - add auto-login after registration
+* view/template/_part/attr/string
+    - fix autocomplete attribute
+* web/jam/helper/Helper
+    - update deprecated clipboard copy method    
+* web/style/data-grid
+    - fix table borders in firefox
+* upgrade dependencies
+
 ## 5.7.0
  
 * component/misc/ListFilter

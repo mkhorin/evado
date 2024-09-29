@@ -1,6 +1,6 @@
 {
   "name": "evado",
-  "version": "5.7.2",
+  "version": "5.8.0",
   "description": "Declarative Node.js Framework for rapid web app development",
   "author": {
     "name": "Maxim Khorin",
@@ -8,7 +8,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=16.20.1"
+    "node": ">=18.20.4"
   },
   "homepage": "https://github.com/mkhorin/evado",
   "repository": {
@@ -16,13 +16,13 @@
     "url": "https://github.com/mkhorin/evado.git"
   },
   "dependencies": {
-    "areto": "~3.6.0",
+    "areto": "~3.7.0",
     "areto-ejs": "~1.0.0",
     "multer": "~1.4.5-lts.1",
-    "nodemailer": "~6.9.0"
+    "nodemailer": "~6.9.14"
   },
   "devDependencies": {
-    "chai": "~4.3.6"
+    "chai": "~4.4.1"
   },
   "scripts": {
     "test": "mocha test/run --recursive"
